@@ -5,7 +5,7 @@ public class Bookshelf_box {
     private boolean occupied;
 
 
-
+/*
     public Item_tile getTile(){
         return tile;
     }
@@ -14,7 +14,7 @@ public class Bookshelf_box {
         return occupied;
     }
 
-
+*/
     public void changeOccupied(){
         if(occupied=false)
             occupied=true;

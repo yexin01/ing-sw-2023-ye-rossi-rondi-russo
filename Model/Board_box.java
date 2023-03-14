@@ -4,7 +4,7 @@ public class Board_box {
     public Item_tile tile;
     public boolean occupiable;
     public boolean occupied;
-    public boolean freeEdge;
+    public int freeEdge;
 
 
 

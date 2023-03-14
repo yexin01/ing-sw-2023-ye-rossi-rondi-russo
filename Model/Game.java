@@ -3,7 +3,6 @@ package org.example;
 public class Game {
     public static int numplayers;
     private Player player[];
-
     public Common_goal_card common_goal[]=new Common_goal_card[2];
 
 
@@ -22,6 +21,8 @@ public class Game {
         return false;
     }
     public void start_game(){
+    }
+    public void next_player(){
     }
     public void create_public_goals(){
         /*
@@ -42,7 +43,7 @@ public class Game {
     public void end_game(Player player){
         /*
         termina il giro e incrementa di uno il punteggio del
-        giocatore che ha vinto
+        giocatore che ha vinto chiamando
         player.end_point();
          */
     }
