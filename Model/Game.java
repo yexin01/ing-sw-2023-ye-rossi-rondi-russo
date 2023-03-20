@@ -2,41 +2,51 @@ package org.example;
 
 public class Game {
     public static int numplayers;
-    private Player player[];
-    public Common_goal_card common_goal[]=new Common_goal_card[2];
+    public Player player[];
+    public commonGoal[]=new CommonGoalCard[2];
 
 
 
-    public boolean refill(){
+    public boolean refillNeeded(){
         /*
         prima controlla che tutte le tessere siano isolate(freeEdge==4)
         se ciò non avviene ritorna falso,
-        altrimenti chiama fill di board   e ritorna vero
+        altrimenti 
+        1) aggiorna i contatori di bag
+        2)chiama fill di board
+        3)ritorna vero
          */
 
         return false;
     }
 
-    public boolean unique_nickname(){
+    public boolean uniqueNickname(){
         return false;
     }
-    public void start_game(){
+    public void startGame(){
+        /*
+        
+        crea i due obiettivi comuni...
+        fill la board
+         */
     }
-    public void next_player(){
-    }
-    public void create_public_goals(){
+    /*
+    public void createCommonoGoalCards(){
         /*
         estraendo a caso due numeri da 1 a 12,
         Common_goal_card esempiox1=new Common_goal_cardx1;
         staticamente common_goal_card dinamicamente common_goal_cardx1
          */
     }
-    public void play_turn(Player player){
+    */
+    public Player nextPlayer(){}
+    
+    
+    public void playTurn(Player player){
         /*
         chiama refill_board
-        chiama player.play_turn_player()
-        se ritorna false si passa al prossimo giocatore
-        altrimenti si chiama end game
+        chiama player.play()
+        se ritorna true si chiama end game
          */
     }
 

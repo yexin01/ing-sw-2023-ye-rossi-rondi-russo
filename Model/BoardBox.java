@@ -1,7 +1,9 @@
 package org.example;
 
-public class Board_box {
-    public Item_tile tile;
+public class BoardBox {
+    public int x;
+    public int y;
+    public ItemTile tile;
     public boolean occupiable;
     public boolean occupied;
     public int freeEdge;

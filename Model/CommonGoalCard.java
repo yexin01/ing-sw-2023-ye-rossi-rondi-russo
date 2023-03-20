@@ -1,12 +1,12 @@
 package org.example;
 
-public abstract class Common_goal_card {
+public abstract class CommonGoalCard {
     //inizializzato a 8
-    public int points_left;
+    public int pointsLeft;
 
-    public int change_points(){
+    public int changePoints(){
         /*
-        se l'obiettivo non é stato raggiunto ritorna -1
+        
         se viene raggiunto l'obiettivo
         viene ritornato il numero presente in points_left
         e in base al numero di giocatori si decrementa di 4 o 2
@@ -14,6 +14,6 @@ public abstract class Common_goal_card {
          */
         return 0;
     }
-    abstract boolean check_goal();
+    abstract boolean checkGoal();
 
 }

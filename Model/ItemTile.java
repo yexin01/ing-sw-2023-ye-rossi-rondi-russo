@@ -1,5 +1,5 @@
 package org.example;
 
-public class Item_tile {
+public class ItemTile {
     public Type type;
 }

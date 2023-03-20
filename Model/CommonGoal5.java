@@ -1,6 +1,6 @@
 package org.example;
 
-public class Common_goal6 extends Common_goal_card{
+public class CommonGoal5 extends CommonGoalCard{
 
     @Override
     boolean check_goal() {

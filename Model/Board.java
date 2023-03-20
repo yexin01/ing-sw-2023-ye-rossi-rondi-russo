@@ -1,9 +1,12 @@
 package org.example;
 
 public class Board {
-    public Board_box matrix[][]= new Board_box[9][9];
-
-    public int position_selected[]=new int[6];
+    public matrix[][]= new Board_box[9][9];
+    public BoardBox[] selectedPosition;
+    public selectedPosition[]=new BoardBox[3];
+    public selectable[]=new BoardBox[4];
+    
+    
     
     public void initialize(){
 
@@ -13,35 +16,35 @@ public class Board {
 
     }
 
-    public boolean selectable_1(int[] selezionate){
+    public boolean isSelectable1(BoardBox tile1){
         /*
         inizializza position_selected a null
-        Controlla che almeno un bordo della casella sia libero
+        1) Controlla che almeno un bordo della casella sia libero
         matrix[selezionate[0]][selezionate[1]].freeEdge>0
-
-        Se é selezionabile
-        1)inserisce le coordinate in position_selected in
-        posizione 0 e 1
-
-         2) ritorna true
-        
+        2) se >0 restituisce true e inserisce le coordinate in position_selected
+        nelle posizioni 0 e 1
+            
+            altrimenti restituisce false
+       
         */
 
     }
-    public boolean selectable_2(int[] selezionate){
+    public boolean isSelectable2(BoardBox tile2){
         /*
         1)Controlla che almeno un bordo della casella sia libero
         matrix[selezionate[0]][selezionate[1]].freeEdge>0
-        2) Controlla che o la riga o la colonna siano uguali
+        2) Controlla che o la riga o la colonna siano uguali alla prima
+            x==position_selected[0] or y==position_selected[1]
         3)  Se é selezionabile inserisce le coordinate
         in position_selected in
         posizione 2 e 3
        4) se é selezionabile ritorna true
-       chiama possible_selectable_tile1(selezionate[0],selezionate[1])
+       
+       chiama possible_selectable_tile1(position_selected[0]+1,position_selected[0]+1)
         */
 
     }
-    public boolean selectable_3(int[] selezionate){
+    public boolean isSelectable3(BoardBox tile3){
         /*
         1)Controlla che almeno un bordo della casella sia libero
         matrix[selezionate[0]][selezionate[1]].freeEdge>0
@@ -55,24 +58,41 @@ public class Board {
         */
 
     }
-    
+  /*  
     public int[] possible_selectable_tile1(int x, int y){
         /*
+        Controlla nelle 4 direzioni della prima tessera:
+        le tessera deve avere 
+        matrix[selezionate[0]][selezionate[1]].freeEdge>0
+        
+        1)Controlla che almeno un bordo della casella sia libero
+        matrix[selezionate[0]][selezionate[1]].freeEdge>0
+        2) Controlla che o la riga o la colonna siano uguali alla prima
+            x==position_selected[0] or y==position_selected[1]
+        3)  Se é selezionabile inserisce le coordinate
+        in position_selected in
+        posizione 2 e 3
+       4) se é selezionabile ritorna true
+       chiama possible_selectable_tile1(selezionate[0],selezionate[1])
+        
         il metodo ritorna il puntatore ad un array che contiene le coordinate
         delle carte selezionabili, verifica in tutte 4 le direzioni della tessera e se 
         la tessera é occupata e presenta almeno un bordo libero inserisce le coordinate nel vettore ritornato
-         */
+        
     }
     public int[] possible_selectable_tile2(int x, int y){
+        /*
+
+         */   
         /*
         il metodo ritorna il puntatore ad un array che contiene le coordinate
         delle carte selezionabili, varifica se le prime due carte si trovano sulla stessa
         riga o sulla stessa colonna, di conseguenza verifica se l'unica carta selezionabile
         ha il bordo libero ed é occupata da una tessera
-         */
+         
     }
-
-    public void final_check_board(int[] selezionate){
+*/
+    public void updateBoard(){
         /*
         Resetta a 0 il flag di quelle selezionate
         riesegue un controllo per i bordi liberi di quelle vicine a quelle selezionate

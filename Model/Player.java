@@ -5,12 +5,12 @@ public class Player {
     private int playerPoints;
     private Bookshelf bookshelf;
     private PersonalGoalCard personalGoalcard;
-    private boolean commonGoal1Token;
-    private boolean commonGoal2Token;
+    private boolean ScoringToken1;
+    private boolean ScoringToken2;
     //ALTERNATIVA utilizzare un arraylist che ogni volta viene cancellato
-    private Item_tile selected_items[]= new Item_tile[3];
+    private selectedItems[]= new ItemTile[3];
 
-
+/*
     public void column(){
         /*
         controlla quali colonne possono essere selezionate dal'utente
@@ -18,43 +18,74 @@ public class Player {
         maggiore di 3 oppure maggiore del numero di tessere selezionate
         ritornando il puntatore ad un array che contiene le colonne selezionabili
         numerate a partire da 1 da sinistra
-         */
+         
     }
+    */
+    /*
     public void takeToken1(){
-        /*
-        1)prima controlla che l'obiettivo non sia già stato raggiunto,
-        tramite l'attributo booleano
-        2)chiama metodo check_goal() del'obiettivo
-        comune 1 e se l'obiettivo viene raggiunto aggiorna il punteggio del giocatore
-         con il valore ritornato
-        se ritorna -1 significa che l'obiettivo non é stato raggiunto
-         */
+        
 
 
     }
     public void takeToken2(){
         /*
         uguale a taketoken1 
-         */
+         
 
 
     }
-
-    public void update_player_points(){
+*/
+    public void updatePlayerPoints(){
        /*
-    somma le varie tipologie di ottenimento punti:
-
-    1) obiettivo personale
+      
+       
+        somma le varie tipologie di ottenimento punti:
+       a) obiettivi comuni
+        Per entrambi gli obiettivi comuni:
+        1)prima controlla che l'obiettivo non sia già stato raggiuto,
+        tramite l'attributo booleano ScoringTokenX
+        2)chiama metodo check_goal() dell'obiettivo
+        comune e se l'obiettivo viene raggiunto aggiorna il punteggio del giocatore
+        il punteggio da aggiungere viene ritornato dalla funzione game.CommonGoal[0].changePoints()
+   
+    b) obiettivo personale
     personalGoal.checkPoints();
-    2) carte adiacenti
+    c) carte adiacenti
     bookshelf.computeAdjacent();
 
-    i punti dell'obiettivo comuni vengono aggiornati dal metodo taketoken 1/2
     */
     }
 
-    public void insert(){
+    public void insert(int column){
         /*
+        
+       1)Controlla che la colonna selezionata dall'utente sia corretta
+       altrimenti richiede all'utente la collona
+       lo Esegu
+       2) chiede all'utente la prima tessera da inserire in bookshelf
+       inserisce la tessera bookshelf.matrix[[freeShelves[column]--][column-1]
+       aggiornando direttamente il contatore
+       
+        
+        
+        
+        
+        ordinato=new item...[3];
+       while(! bookshelf.checkColumn(colonna)){};
+       chiedi all'utente quale vuole selezionare =x
+       bookshelf.insert(colonna,selected[x])
+       
+       
+       
+       
+        e cambia l'ordine in selected_items
+        while(!)
+        bookshelf.insert(column,selected I..[]);
+        
+        
+        
+        
+        
         DA RIGUARDARE
         controlla che la colonna selezionata dall'utente sia selezionabile
         mediante il metodo column,
@@ -70,7 +101,7 @@ public class Player {
     }
 
 
-    public void pick(Board board){
+    public void pick(){
         /*
         
         int[] coordinate=new int[2];
@@ -89,26 +120,26 @@ public class Player {
          board.selectable_2(coordinate[0],coordinate[1])..
          ..possible_selectable_tile2(coordinate[0],coordinate[1])..
         4)...board.selectable_3(coordinate[0],coordinate[1])..
-        5) chiama board.check_final_board 
+        5) chiama board.update_board 
 
          */
 
 
     }
-    public boolean play_turn_player(){
+    public boolean play(){
         /*
-        chiama:pick,insert,update_player_points,takeToken1/2 ,
+        chiama:pick,bookshelf.insert,update_player_points,takeToken1/2 ,
         e ritorna bookshelf.shelf_full()
 
          */
         return false;
     }
-
+/*
     public void end_point(){
         playerPoints++;
     }
 
-
+*/
 
 
 }
