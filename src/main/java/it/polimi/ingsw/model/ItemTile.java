@@ -1,24 +1,31 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.Type;
+import java.util.Observable;
 
-public class ItemTile {
+public class ItemTile extends Observable {
     private Type type;
-    private int value;
 
-
-    //COSTRUTTORE
-    public ItemTile(Type type,int i){
-        this.type=type;
-        value=i;
-    }
-
-    public Type getType(){
+    public Type getType() {
         return type;
     }
 
-    public int getvalue(){
+    public ItemTile(Type type,int value) {
+        this.type = type;
+        this.value=value;
+        setChanged();
+        notifyObservers(type);
+    }
+
+    private int value;
+
+    public int getValue() {
         return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+        setChanged();
+        notifyObservers(value);
     }
 
 
