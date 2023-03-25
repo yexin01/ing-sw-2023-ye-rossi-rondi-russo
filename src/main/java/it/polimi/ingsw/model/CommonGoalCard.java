@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 public abstract class CommonGoalCard {
-    private ScoringToken[] tokens;
+    //private ScoringToken[] tokens;
 
     abstract boolean checkGoal(); // uso game.player.bookshelf per fare i vari controlli
 

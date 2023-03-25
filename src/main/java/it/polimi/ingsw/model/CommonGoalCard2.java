@@ -1,24 +1,25 @@
 package it.polimi.ingsw.model;
 
-public class CommonGoalCard1 extends CommonGoalCard{
+public class CommonGoalCard2 extends CommonGoalCard{
     /*
-      Due gruppi separati di 4 tessere dello stesso tipo che formano un quadrato 2x2.
-      Le tessere dei due gruppi devono essere dello stesso tipo.
+      Due colonne formate ciascuna da 6 diversi tipi di tessere.
     */
 
     @Override
     boolean checkGoal(){
         int N=6, M=5;
+        int dimType=6;
         int goals;
+        int [] seen = new int[dimType]; // matrice di contatori per tipo
+        int notseen; // contatore
         int [][] mat = {
-                { 1, 1, 2, 3, 1 },
-                { 1, 1, 3, 2, 3 },
-                { 1, 1, 4, 3, 3 },
-                { 2, 3, 2, 4, 5 },
-                { 3, 3, 4, 5, 6 },
-                { 1, 2, 3, 4, 5 }
+                { 1, 1, 1, 3, 1 },
+                { 2, 2, 2, 3, 2 },
+                { 3, 3, 3, 3, 3 },
+                { 4, 4, 3, 3, 5 },
+                { 5, 1, 3, 3, 6 },
+                { 6, 1, 3, 3, 4 }
         };
-        int goali, goalj;
         // stampo matrice
         System.out.println("Matrice: ");
         for(int i=0; i<N; i++){
@@ -29,26 +30,33 @@ public class CommonGoalCard1 extends CommonGoalCard{
         }
         //controllo il goal
         goals=0;
-        goali=-2;
-        goalj=-2;
-        for(int i=0; i<N-1 && goals<2; i++){
-            for(int j=0; j<M-1 && goals<2; j++){
-                //non controllo quelli vicini a quello del goal
-                if( goals==1 && (
-                        (i==goali+1 && ((j==goalj-2)||(j==goalj-1)||(j==goalj)) ) || (i==goali+2 && ((j==goalj-2)||(j==goalj-1)||(j==goalj)) ))
-                ){
-                    j=goalj+2;
-                }
-                if(mat[i][j]!=0 /*da sostituire con occupied*/
-                        && mat[i][j]==mat[i+1][j+1] && mat[i][j]==mat[i+1][j] && mat[i][j]==mat[i][j+1]){
-                    goals++;
-                    goali=i;
-                    goalj=j;
-                    j=j+2; //alla fine del for fa j++
+        for(int j=0; j<M && goals<2; j++){
+            // per ogni colonna inizializzo a zeri la matrice
+            for(int a=0; a<dimType; a++){
+                seen[a]=0;
+            }
+            for(int i=0; i<N; i++){
+                switch (mat[i][j]) {
+                    case 1 -> seen[0]++;
+                    case 2 -> seen[1]++;
+                    case 3 -> seen[2]++;
+                    case 4 -> seen[3]++;
+                    case 5 -> seen[4]++;
+                    case 6 -> seen[5]++;
+                    default -> System.out.println("type_tile non valido!");
                 }
             }
+            notseen=0;
+            for(int a=0; a<dimType; a++){
+                if(seen[a]==0){
+                    notseen++;
+                }
+            }
+            if(notseen==0){
+                goals++;
+            }
         }
-        System.out.println("quadrati trovati: "+goals+" o più");
+        System.out.println("colonne formate ciascuna da 6 diversi tipi di tessere: "+goals+" o più");
         return goals >= 2;
     }
 
