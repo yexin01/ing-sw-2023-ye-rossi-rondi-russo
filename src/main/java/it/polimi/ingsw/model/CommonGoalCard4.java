@@ -11,18 +11,10 @@ public class CommonGoalCard4 extends CommonGoalCard{
     */
 
     @Override
-    boolean checkGoal(){
-        int N=6, M=5;
+    boolean checkGoal(Bookshelf bookshelf){
         int goals;
-        int [][] mat = {
-                { 1, 1, 3, 5, 5 },
-                { 2, 3, 4, 5, 6 },
-                { 1, 2, 3, 4, 5 },
-                { 2, 3, 3, 5, 6 },
-                { 1, 3, 3, 3, 5 },
-                { 2, 3, 4, 5, 5 }
-        };
-        int [][] checkable = { //saranno nella bookshelf box come boolean
+        BookshelfBox[][] mat = bookshelf.getMatrix();
+        int [][] checkable = {
                 { 1, 1, 1, 1, 1 },
                 { 1, 1, 1, 1, 1 },
                 { 1, 1, 1, 1, 1 },
@@ -32,24 +24,24 @@ public class CommonGoalCard4 extends CommonGoalCard{
         };
         // stampo matrice
         System.out.println("Matrice: ");
-        for(int i=0; i<N; i++){
-            for(int j=0; j<M; j++){
-                System.out.print(mat[i][j] + " ");
+        for(int i=0; i<mat.length; i++){
+            for(int j=0; j<mat[i].length; j++){
+                System.out.print(mat[i][j].getItemTile().getType() + " ");
             }
             System.out.println(" ");
         }
         //controllo il goal
         goals=0;
-        for(int i=0; i<N && goals<6; i++){
-            for(int j=0; j<M-1 && goals<6; j++){
-                while(checkable[i][j]==0 && (j<M-2)){
+        for(int i=0; i<mat.length && goals<6; i++){
+            for(int j=0; j<mat[i].length-1 && goals<6; j++){
+                while(checkable[i][j]==0 && (j<mat[i].length-2)){
                     j++;
                 }
                 checkable[i][j]=0; //segno come uncheckable quello su cui sono
-                if(i<N-1 && mat[i][j]==mat[i+1][j] && checkable[i+1][j]==1){
+                if(i<mat.length-1 && mat[i][j].getItemTile().getType().equals(mat[i+1][j].getItemTile().getType()) && checkable[i+1][j]==1){
                     goals++;
                     checkable[i+1][j]=0;
-                } else if (mat[i][j]==mat[i][j+1] && checkable[i][j+1]==1) {
+                } else if (mat[i][j].getItemTile().getType().equals(mat[i][j+1].getItemTile().getType()) && checkable[i][j+1]==1) {
                     goals++;
                     checkable[i][j+1]=0;
                 }

@@ -6,23 +6,15 @@ public class CommonGoalCard9 extends CommonGoalCard{
     */
 
     @Override
-    boolean checkGoal(){
-        int N=6, M=5;
+    boolean checkGoal(Bookshelf bookshelf){
         int dimType=6;
         int [] seen = new int [dimType]; // matrice di contatori per tipo
-        int [][] mat = {
-                { 1, 2, 3, 4, 5 },
-                { 1, 1, 1, 4, 5 },
-                { 1, 2, 3, 4, 5 },
-                { 1, 2, 3, 4, 5 },
-                { 1, 2, 3, 4, 5 },
-                { 1, 2, 3, 4, 5 }
-        };
+        BookshelfBox[][] mat = bookshelf.getMatrix();
         // stampo matrice
         System.out.println("Matrice: ");
-        for(int i=0; i<N; i++){
-            for(int j=0; j<M; j++){
-                System.out.print(mat[i][j] + " ");
+        for(int i=0; i<mat.length; i++){
+            for(int j=0; j<mat[i].length; j++){
+                System.out.print(mat[i][j].getItemTile().getType() + " ");
             }
             System.out.println(" ");
         }
@@ -31,16 +23,16 @@ public class CommonGoalCard9 extends CommonGoalCard{
         for(int a=0; a<dimType; a++){
             seen[a]=0;
         }
-        for(int i=0; i<N; i++){
-            for(int j=0; j<M; j++){
-                switch (mat[i][j]) {
-                    case 1 -> seen[0]++;
-                    case 2 -> seen[1]++;
-                    case 3 -> seen[2]++;
-                    case 4 -> seen[3]++;
-                    case 5 -> seen[4]++;
-                    case 6 -> seen[5]++;
-                    default -> System.out.println("type_tile non valido!");
+        for(int i=0; i<mat.length; i++){
+            for(int j=0; j<mat[i].length; j++){
+                switch (mat[i][j].getItemTile().getType()) {
+                    case CAT -> seen[0]++;
+                    case BOOK -> seen[1]++;
+                    case GAME -> seen[2]++;
+                    case FRAME -> seen[3]++;
+                    case TROPHY -> seen[4]++;
+                    case PLANT -> seen[5]++;
+                    default -> System.out.println("type_tile not valid!");
                 }
                 for(int a=0; a<dimType; a++){
                     if(seen[a]>=8){

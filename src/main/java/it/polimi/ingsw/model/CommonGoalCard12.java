@@ -8,8 +8,8 @@ public class CommonGoalCard12 extends CommonGoalCard{
     */
 
     @Override
-    boolean checkGoal() {
-        int N=6, M=5;
+    boolean checkGoal(Bookshelf bookshelf) {
+        BookshelfBox[][] mat = bookshelf.getMatrix();
         boolean verified;
         int i;
         // lavoro solo con occupied, non mi interessa che tipo di tile c'è
@@ -22,24 +22,28 @@ public class CommonGoalCard12 extends CommonGoalCard{
                 { 1, 1, 1, 1, 1 }
         };
         // stampo matrice
-        System.out.println("Matrice: ");
-        for (int x=0; x<N; x++) {
-            for (int j=0; j<M; j++) {
-                System.out.print(occupied[x][j] + " ");
+        System.out.println("Matrice occupied: ");
+        for (int x=0; x<mat.length; x++) {
+            for (int j=0; j<mat[x].length; j++) {
+                if(mat[x][j].getItemTile()!=null){
+                    System.out.println("1 ");
+                }else{
+                    System.out.println("0 ");
+                }
             }
             System.out.println(" ");
         }
         //controllo il goal
         //caso decrescente
         i=0;
-        if (occupied[0][0]==0){
+        if (mat[0][0].getItemTile()==null){
             i++;
         }
         verified=true;
-        for (int a=0; a<M && verified; a++) {
-            if (occupied[i+a][a]==0){
+        for (int a=0; a<mat[i].length && verified; a++) {
+            if (mat[i+a][a].getItemTile()==null){
                 verified=false;
-            } else if (a+1<M && occupied[i+a][a+1]!=0){
+            } else if (a+1<mat[i].length && mat[i+a][a+1].getItemTile()!=null){
                 verified=false;
             }
         }
@@ -49,18 +53,18 @@ public class CommonGoalCard12 extends CommonGoalCard{
         }
         //caso crescente
         i=0;
-        if (occupied[0][M-1]==0){
+        if (mat[0][mat[i].length-1].getItemTile()==null){
             i++;
         }
         verified=true;
-        for (int a=M-1; a>=0 && verified; a--) {
-            if (occupied[i-a+M-1][a]==0){
+        for (int a=mat[i].length-1; a>=0 && verified; a--) {
+            if (mat[i-a+mat[i].length-1][a].getItemTile()==null){
                 verified=false;
-            } else if (a-1>=0 && occupied[i-a+M-1][a-1]!=0) {
+            } else if (a-1>=0 && mat[i-a+mat[i].length-1][a-1].getItemTile()!=null) {
                 verified=false;
             }
         }
-        if(verified){
+        if (verified){
             System.out.println("Trovate colonne crescenti.");
             return true;
         }
