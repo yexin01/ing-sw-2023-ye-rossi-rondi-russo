@@ -6,7 +6,7 @@ public class CommonGoalCard6 extends CommonGoalCard{
     */
 
     @Override
-    boolean checkGoal(){
+    public boolean checkGoal(){
         int N=6, M=5;
         int dimType=6;
         int goals;

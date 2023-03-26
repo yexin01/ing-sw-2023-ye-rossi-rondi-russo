@@ -1,12 +1,15 @@
 package it.polimi.ingsw.model;
 
 public class CommonGoalCard2 extends CommonGoalCard{
+
+
+
     /*
       Due colonne formate ciascuna da 6 diversi tipi di tessere.
     */
 
     @Override
-    boolean checkGoal(){
+    public boolean checkGoal(){
         int N=6, M=5;
         int dimType=6;
         int goals;

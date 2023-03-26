@@ -3,65 +3,75 @@ package it.polimi.ingsw.model;
 
 public class BoardBox {
     private int x;
-    private int y;
-    private ItemTile tile;
-    private boolean occupiable;
-    private boolean occupied;
-    private int freeEdges;
 
-    //COSTRUTTOREEEEE
-    public BoardBox(int x,int y){
-        this.x=x;
-        this.y=y;
-
-    }
-    public void setTile(ItemTile tile){
-        this.tile=tile;
-    }
-    public int getX(){
+    public int getX() {
         return x;
     }
 
-    public int getY(){
-        return y;
-    }
-    public void setEdges(int edge){
-        freeEdges=edge;
-    }
-    public void increasefreeEdges(){
-        freeEdges++;
-    }
-    public void decreasefreeEdges(){
-        freeEdges--;
+    public void setX(int x) {
+        this.x = x;
     }
 
-    public ItemTile getItemtile(){
+    private int y;
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+
+
+    private ItemTile tile;
+
+    public ItemTile getTile() {
         return tile;
     }
 
-    public void setItemtile(ItemTile tile){
-        this.tile=tile;
+    public void setTile(ItemTile tile) {
+        this.tile = tile;
     }
 
-    public boolean getoccupiable(){
+    private boolean occupiable;
+
+    public boolean isOccupiable() {
         return occupiable;
     }
 
-    public boolean getoccupied(){
+    public void setOccupiable(boolean occupiable) {
+        this.occupiable = occupiable;
+    }
+
+    private boolean occupied;
+
+    public boolean isOccupied() {
         return occupied;
     }
 
-    public void setoccupiable(boolean valore){
-        occupiable=valore;
-    }
-    public void setoccupied(boolean valore){
-        occupied=valore;
+    public void setOccupied(boolean occupied) {
+        this.occupied = occupied;
     }
 
+    private int freeEdges;
 
-
-    public int getEdges(){
+    public int getFreeEdges() {
         return freeEdges;
+    }
+
+    public void setFreeEdges(int freeEdges) {
+        this.freeEdges = freeEdges;
+    }
+
+    public void increasefreeEdges(){
+        freeEdges++;
+    }
+
+    public BoardBox(int x,int y) {
+        this.x=x;
+        this.y=y;
+
     }
 
 

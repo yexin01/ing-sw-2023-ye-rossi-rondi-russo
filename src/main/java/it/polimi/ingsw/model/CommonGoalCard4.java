@@ -11,7 +11,7 @@ public class CommonGoalCard4 extends CommonGoalCard{
     */
 
     @Override
-    boolean checkGoal(){
+    public boolean checkGoal(){
         int N=6, M=5;
         int goals;
         int [][] mat = {

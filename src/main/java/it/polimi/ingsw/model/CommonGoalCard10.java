@@ -6,7 +6,7 @@ public class CommonGoalCard10 extends CommonGoalCard{
     */
 
     @Override
-    boolean checkGoal() {
+    public boolean checkGoal() {
         int N=6, M=5;
         int[][] mat = {
                 { 1, 2, 3, 4, 5 },

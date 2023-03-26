@@ -2,18 +2,54 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.*;
 
-public class GameController {
+import java.util.Observable;
+import java.util.Observer;
+
+public class GameController implements Observer {
     private PlayerController playerController;
     private BoardController boardController;
     private BookshelfController bookshelfController;
-    private Game game;
 
+    @Override
+    public void update(Observable o, Object arg) {
+        if(arg instanceof String nickname){
+            if(!playerController.insertNickname(nickname)){
+                boardController.fillBag(playerController.getGame().getNumPlayers());
+                playerController.firstPlayer();
+            }else playerController.getGame().setFinishopposite();
+        }
+        if(arg instanceof Integer number){
+            if(boardController.getBoard().getPlayerChoiceX()==-1){
+                boardController.getBoard().setPlayerChoiceX(number);
+                boardController.getBoard().setFinishPlayeropposite();
+            }else if (boardController.getBoard().getPlayerChoiceY()==-1) {
+                boardController.getBoard().setPlayerChoiceY(number);
+                boardController.getBoard().setFinishPlayeropposite();
+            }else {
+                boardController.getBoard().setPlayerChoicenumTile(number);
+                boardController.isSelectable(boardController.getBoard().getBoardBox(boardController.getBoard().getPlayerChoiceX(), boardController.getBoard().getPlayerChoiceY()), boardController.getBoard().getPlayerChoicenumTile());
+                if(playerController.maxTileOrFinish() == boardController.getBoard().getPlayerChoicenumTile()) {
+                    playerController.getGame().getTurnPlayer().setSelectedItems(boardController.selected());
+                    //Inserisce nella bookshelf
+                    //calcola punteggio...
+                    //Chiama il metodo bookshelf piena
+                    playerController.setNextPlayer(playerController.getGame().getTurnPlayer());
+                    if(boardController.checkRefill()){
+                        boardController.refill();
+                    }
 
-    public GameController(PlayerController playerController, BoardController boardController, BookshelfController bookshelfController, Board board, Game game){
+                }
+            }
+            boardController.getBoard().setPlayerChoiceX(-1);
+            boardController.getBoard().setPlayerChoiceY(-1);
+            boardController.getBoard().setPlayerChoicenumTile(-1);
+            boardController.getBoard().setFinishPlayeropposite();
+        }
+    }
+    public GameController(PlayerController playerController, BoardController boardController, BookshelfController bookshelfController){
         this.boardController = boardController;
         this.playerController=playerController;
         this.bookshelfController=bookshelfController;
-        this.game = game;
     }
 
 
@@ -49,6 +85,7 @@ public class GameController {
     public void endGame(){
         throw new UnsupportedOperationException("Not implemented yet");
     }
+
 
 
 }
