@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 public class BookshelfBox {
+    //add setItemTile
     private ItemTile itemTile;
     private int x;
     private int y;

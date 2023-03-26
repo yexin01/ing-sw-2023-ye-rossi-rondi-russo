@@ -45,7 +45,7 @@ public class Board {
         tiles=new ArrayList<ItemTile>();
         for(Type t:Type.values()){
             for (int i = 0; i < 22; i++) {
-                tiles.add(new ItemTile(t,j++));
+                tiles.add(new ItemTile());
             }
         }
 

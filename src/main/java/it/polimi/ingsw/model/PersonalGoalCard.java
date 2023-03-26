@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 public class PersonalGoalCard {
+    //add setter
     private int[] catPosition;
     private int[] bookPosition;
     private int[] gamePosition;

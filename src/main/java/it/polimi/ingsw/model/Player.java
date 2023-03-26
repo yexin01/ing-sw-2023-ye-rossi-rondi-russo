@@ -108,8 +108,8 @@ public class Player {
         }
     }
 
+    //metti for loop estensibile
     public void checkCommonGoals(CommonGoalCard commonGoal1, CommonGoalCard commonGoal2){
-        // this.playerPoints = scoringToken1.getpoints + scoringToken2.getpoints + personalGoalPoints+ computeAdjacent+game_end
         if (scoringToken1==null && commonGoal1.checkGoal()){
             scoringToken1 = commonGoal1.pullToken();
         }
