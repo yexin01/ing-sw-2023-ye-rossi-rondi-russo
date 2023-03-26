@@ -2,9 +2,12 @@ package it.polimi.ingsw.model;
 
 public class Player {
     public String nickname;
+    private Game game;
     private int playerPoints;
     private int personalGoalPoints;
-    private boolean[] scoringTokens;
+    private int commonGoalPoints;
+    private int adjacentPoints;
+    private boolean[] scoringTokens; //useless
     private ScoringToken scoringToken1;
     private ScoringToken scoringToken2;
     private ItemTile[] selectedItems;
@@ -40,6 +43,15 @@ public class Player {
     public void pick (){
 
     }
+
+    public void updatePlayerPoints(){
+        checkPersonalGoal();
+        setPersonalGoalPoints();
+        checkCommonGoals(game.getCommonGoalCards()[0],game.getCommonGoalCards()[1]);
+        setAdjacentPoints();
+        playerPoints = personalGoalPoints+commonGoalPoints+adjacentPoints;
+    }
+
 
     public void checkPersonalGoal(){
         if(!getPersonalGoalCard().getAlreadyScored()[0] && getBookshelf().getMatrix()[getPersonalGoalCard().getCatPosition()[0]][getPersonalGoalCard().getCatPosition()[1]].getItemTile().getType()==Type.CAT){
@@ -96,12 +108,30 @@ public class Player {
         }
     }
 
-    public void updatePlayerPoints(){
+    public void checkCommonGoals(CommonGoalCard commonGoal1, CommonGoalCard commonGoal2){
         // this.playerPoints = scoringToken1.getpoints + scoringToken2.getpoints + personalGoalPoints+ computeAdjacent+game_end
+        if (scoringToken1==null && commonGoal1.checkGoal()){
+            scoringToken1 = commonGoal1.pullToken();
+        }
+        if (scoringToken2==null && commonGoal2.checkGoal()){
+            scoringToken2 = commonGoal2.pullToken();
+        }
+        int token1Points = scoringToken1 != null ? scoringToken1.getTokenPoints() : 0;
+        int token2Points = scoringToken2 != null ? scoringToken2.getTokenPoints() : 0;
+        commonGoalPoints = token1Points + token2Points;
+    }
+
+    public void setAdjacentPoints(){
+        int sum=0;
+        for(int groupSize : bookshelf.findAdjacentTilesGroups()){
+            sum+=groupSize;
+        }
+        adjacentPoints = sum;
     }
 
 
+
     public boolean playTurn(Board board) {
-        return false;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 }

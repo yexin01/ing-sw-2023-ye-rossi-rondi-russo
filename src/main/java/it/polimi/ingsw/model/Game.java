@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class Game {
     private int numPlayers;
     private ArrayList<Player> players;
+    private CommonGoalCard[] commonGoalCards;
 
     public void addPlayer(Player player){
         players.add(player);
@@ -20,6 +21,10 @@ public class Game {
     }
     public int getnumPlayers(){
         return numPlayers;
+    }
+
+    public CommonGoalCard[] getCommonGoalCards() {
+        return commonGoalCards;
     }
 
     private void setPlayers(){
