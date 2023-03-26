@@ -29,6 +29,10 @@ public class BookshelfBox {
         return y;
     }
 
+    public void setItemTile(ItemTile itemTile) {
+        this.itemTile = itemTile;
+    }
+
     /* It's all done within Bookshelf.findAdjacentTilesGroups
     public boolean isOccupied(){
         return occupied;

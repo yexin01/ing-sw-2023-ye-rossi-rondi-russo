@@ -51,4 +51,29 @@ public class PersonalGoalCard {
     public void increaseNumOfScored() {
         this.numOfScored++;
     }
+
+    public void setCatPosition(int x, int y) {
+        this.catPosition[0] = x;
+        this.catPosition[1] = y;
+    }
+    public void setBookPosition(int x, int y) {
+        this.bookPosition[0] = x;
+        this.bookPosition[1] = y;
+    }
+    public void setGamePosition(int x, int y) {
+        this.gamePosition[0] = x;
+        this.gamePosition[1] = y;
+    }
+    public void setFramePosition(int x, int y) {
+        this.framePosition[0] = x;
+        this.framePosition[1] = y;
+    }
+    public void setTrophyPosition(int x, int y) {
+        this.trophyPosition[0] = x;
+        this.trophyPosition[1] = y;
+    }
+    public void setPlantPosition(int x, int y) {
+        this.plantPosition[0] = x;
+        this.plantPosition[1] = y;
+    }
 }

@@ -12,9 +12,16 @@ public class Bookshelf {
     public BookshelfBox[][] getMatrix() {
         return matrix;
     }
+    public void setMatrix(BookshelfBox[][] matrix) {
+        this.matrix = matrix;
+    }
 
     public int[] getFreeShelves() {
         return freeShelves;
+    }
+
+    public void setBookshelfBox(int x, int y, BookshelfBox box){
+        this.matrix[x][y]=box;
     }
 
     public void computeFreeShelves(){
