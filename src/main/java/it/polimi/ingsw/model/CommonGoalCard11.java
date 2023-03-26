@@ -6,30 +6,22 @@ public class CommonGoalCard11 extends CommonGoalCard{
     */
 
     @Override
-    boolean checkGoal() {
-        int N=6, M=5;
-        int[][] mat = {
-                { 1, 2, 3, 4, 5 },
-                { 6, 2, 3, 4, 5 },
-                { 1, 6, 3, 4, 5 },
-                { 1, 2, 6, 4, 5 },
-                { 1, 2, 3, 6, 5 },
-                { 1, 2, 3, 4, 6 }
-        };
+    boolean checkGoal(Bookshelf bookshelf) {
+        BookshelfBox[][] mat = bookshelf.getMatrix();
         boolean verified;
         // stampo matrice
         System.out.println("Matrice: ");
-        for (int i=0; i<N; i++) {
-            for (int j=0; j<M; j++) {
-                System.out.print(mat[i][j] + " ");
+        for (int i=0; i<mat.length; i++) {
+            for (int j=0; j<mat[i].length; j++) {
+                System.out.print(mat[i][j].getItemTile().getType() + " ");
             }
             System.out.println(" ");
         }
         //controllo il goal
-        for (int i=0; i<=N-M; i++) {
+        for (int i=0; i<= mat.length-mat[i].length; i++) {
             verified=true;
-            for (int a=1; a<M && verified; a++) {
-                if (mat[i][0]!=mat[i+a][a]) {
+            for (int a=1; a<mat[i].length && verified; a++) {
+                if (!mat[i][0].getItemTile().getType().equals(mat[i+a][a].getItemTile().getType())) {
                     verified=false;
                 }
             }

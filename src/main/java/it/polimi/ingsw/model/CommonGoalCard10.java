@@ -6,28 +6,24 @@ public class CommonGoalCard10 extends CommonGoalCard{
     */
 
     @Override
-    boolean checkGoal() {
-        int N=6, M=5;
-        int[][] mat = {
-                { 1, 2, 3, 4, 5 },
-                { 1, 6, 3, 6, 5 },
-                { 1, 2, 6, 4, 5 },
-                { 1, 2, 3, 6, 5 },
-                { 1, 2, 3, 4, 5 },
-                { 1, 2, 3, 4, 5 }
-        };
+    boolean checkGoal(Bookshelf bookshelf) {
+        BookshelfBox[][] mat = bookshelf.getMatrix();
         // stampo matrice
         System.out.println("Matrice: ");
-        for (int i=0; i<N; i++) {
-            for (int j=0; j<M; j++) {
-                System.out.print(mat[i][j] + " ");
+        for (int i=0; i<mat.length; i++) {
+            for (int j=0; j<mat[i].length; j++) {
+                System.out.print(mat[i][j].getItemTile().getType() + " ");
             }
             System.out.println(" ");
         }
         //controllo il goal
-        for (int i=1; i<N-1; i++) {
-            for (int j=1; j<M-1; j++) {
-                if ((mat[i][j]==mat[i-1][j-1]) && (mat[i][j]==mat[i-1][j+1]) && (mat[i][j]==mat[i+1][j-1]) && (mat[i][j]==mat[i+1][j+1])) {
+        for (int i=1; i<mat.length-1; i++) {
+            for (int j=1; j<mat[i].length-1; j++) {
+                if ((mat[i][j].getItemTile().getType().equals(mat[i-1][j-1].getItemTile().getType()))
+                        && (mat[i][j].getItemTile().getType().equals(mat[i-1][j+1].getItemTile().getType()))
+                        && (mat[i][j].getItemTile().getType().equals(mat[i+1][j-1].getItemTile().getType()))
+                        && (mat[i][j].getItemTile().getType().equals(mat[i+1][j+1].getItemTile().getType()))
+                ) {
                     System.out.println("Trovate cinque tessere dello stesso tipo che formano una X.");
                     return true;
                 }
