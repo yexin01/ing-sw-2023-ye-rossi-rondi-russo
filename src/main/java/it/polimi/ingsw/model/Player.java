@@ -1,19 +1,33 @@
 package it.polimi.ingsw.model;
 
-public class Player {
+
+
+
+import java.util.ArrayList;
+import java.util.Observable;
+
+
+public class Player extends Observable{
     public String nickname;
     private Game game;
     private int playerPoints;
     private int personalGoalPoints;
     private int commonGoalPoints;
     private int adjacentPoints;
-    private boolean[] scoringTokens; //useless
-    private ScoringToken scoringToken1;
-    private ScoringToken scoringToken2;
-    private ItemTile[] selectedItems;
+
+    private ArrayList<ItemTile> selectedItems;
     private Bookshelf bookshelf;
     private PersonalGoalCard personalGoalCard;
 
+    public Player(String nickname) {
+        this.nickname = nickname;
+
+    }
+    public void setSelectedItems(ArrayList<ItemTile> selectedItems) {
+        this.selectedItems = selectedItems;
+        setChanged();
+        notifyObservers(selectedItems);
+    }
     //getter e setter
     public int getPlayerPoints() {
         return playerPoints;
@@ -134,4 +148,6 @@ public class Player {
     public boolean playTurn(Board board) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
+
+
 }
