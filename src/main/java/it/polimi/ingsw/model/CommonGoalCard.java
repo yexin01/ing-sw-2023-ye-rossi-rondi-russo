@@ -1,11 +1,19 @@
 package it.polimi.ingsw.model;
 
+import java.util.ArrayList;
+
 public abstract class CommonGoalCard {
-    //private ScoringToken[] tokens;
 
-    abstract boolean checkGoal();
+    private ArrayList<Integer> points;
 
-    /* abstract ScoringToken pullToken();
-     una volta con gli stack deve solo chiamare pull dallo stack (la collection di oggetti scoringtokens)
-        e toglie il primo di questi */
+    public abstract boolean checkGoal();
+
+
+    public ArrayList<Integer> getPoints() {
+        return points;
+    }
+
+    public void setPoints(ArrayList<Integer> points) {
+        this.points = points;
+    }
 }

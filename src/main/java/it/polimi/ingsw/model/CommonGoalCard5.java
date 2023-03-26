@@ -7,7 +7,7 @@ public class CommonGoalCard5 extends CommonGoalCard{
     */
 
     @Override
-    boolean checkGoal(Bookshelf bookshelf){
+    public boolean checkGoal(Bookshelf bookshelf){
         int dimType=6;
         int goals;
         int [] seen = new int[dimType]; // matrice di contatori per tipo

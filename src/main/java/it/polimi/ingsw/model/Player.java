@@ -1,11 +1,7 @@
 package it.polimi.ingsw.model;
 
-
-
-
 import java.util.ArrayList;
 import java.util.Observable;
-
 
 public class Player extends Observable{
     public String nickname;
@@ -23,6 +19,10 @@ public class Player extends Observable{
         this.nickname = nickname;
 
     }
+
+    public ArrayList<ItemTile> getSelectedItems() {
+        return selectedItems;
+    }
     public void setSelectedItems(ArrayList<ItemTile> selectedItems) {
         this.selectedItems = selectedItems;
         setChanged();
@@ -32,15 +32,19 @@ public class Player extends Observable{
     public int getPlayerPoints() {
         return playerPoints;
     }
-
+/*
     public boolean[] getScoringTokens() {
         return scoringTokens;
     }
+*/
 
-    public ItemTile[] getSelectedItems() {
-        return selectedItems;
+    public String getNickname() {
+        return nickname;
     }
 
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
     public Bookshelf getBookshelf() {
         return bookshelf;
     }
@@ -49,15 +53,7 @@ public class Player extends Observable{
         return personalGoalCard;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    // functions
-    public void pick (){
-
-    }
-
+/*
     public void updatePlayerPoints(){
         checkPersonalGoal();
         setPersonalGoalPoints();
@@ -65,7 +61,7 @@ public class Player extends Observable{
         setAdjacentPoints();
         playerPoints = personalGoalPoints+commonGoalPoints+adjacentPoints;
     }
-
+*/
 
     public void checkPersonalGoal(){
         if(!getPersonalGoalCard().getAlreadyScored()[0] && getBookshelf().getMatrix()[getPersonalGoalCard().getCatPosition()[0]][getPersonalGoalCard().getCatPosition()[1]].getItemTile().getType()==Type.CAT){
@@ -121,7 +117,7 @@ public class Player extends Observable{
                 System.out.println("Something went wrong while setting personalGoalPoints!");
         }
     }
-
+/*
     public void checkCommonGoals(CommonGoalCard commonGoal1, CommonGoalCard commonGoal2){
         // this.playerPoints = scoringToken1.getpoints + scoringToken2.getpoints + personalGoalPoints+ computeAdjacent+game_end
         if (scoringToken1==null && commonGoal1.checkGoal()){
@@ -134,7 +130,7 @@ public class Player extends Observable{
         int token2Points = scoringToken2 != null ? scoringToken2.getTokenPoints() : 0;
         commonGoalPoints = token1Points + token2Points;
     }
-
+*/
     public void setAdjacentPoints(){
         int sum=0;
         for(int groupSize : bookshelf.findAdjacentTilesGroups()){
@@ -148,6 +144,7 @@ public class Player extends Observable{
     public boolean playTurn(Board board) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
+
 
 
 }

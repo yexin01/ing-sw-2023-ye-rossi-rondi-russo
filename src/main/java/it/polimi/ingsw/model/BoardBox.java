@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model;
 
 
-
 public class BoardBox {
     private int x;
 

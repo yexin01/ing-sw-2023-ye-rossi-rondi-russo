@@ -11,7 +11,7 @@ public class CommonGoalCard4 extends CommonGoalCard{
     */
 
     @Override
-    boolean checkGoal(Bookshelf bookshelf){
+    public boolean checkGoal(Bookshelf bookshelf){
         int goals;
         BookshelfBox[][] mat = bookshelf.getMatrix();
         int [][] checkable = {

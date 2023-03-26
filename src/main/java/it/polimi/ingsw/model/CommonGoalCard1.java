@@ -7,7 +7,7 @@ public class CommonGoalCard1 extends CommonGoalCard{
     */
 
     @Override
-    boolean checkGoal(Bookshelf bookshelf){
+    public boolean checkGoal(Bookshelf bookshelf){
         int goals;
         int goali, goalj;
         BookshelfBox[][] mat = bookshelf.getMatrix();
@@ -44,6 +44,8 @@ public class CommonGoalCard1 extends CommonGoalCard{
         System.out.println("quadrati trovati: "+goals+" o più");
         return goals >= 2;
     }
+
+
 
 
     /*

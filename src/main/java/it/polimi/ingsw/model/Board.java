@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
-
-
+import java.util.ArrayList;
+import java.util.Observable;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -111,5 +111,3 @@ public class Board extends Observable {
         this.playerChoicenumTile = playerChoicenumTile;
     }
 }
-
-

@@ -8,7 +8,7 @@ public class CommonGoalCard12 extends CommonGoalCard{
     */
 
     @Override
-    boolean checkGoal(Bookshelf bookshelf) {
+    public boolean checkGoal(Bookshelf bookshelf) {
         BookshelfBox[][] mat = bookshelf.getMatrix();
         boolean verified;
         int i;
