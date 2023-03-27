@@ -24,7 +24,7 @@ public class Bookshelf {
         this.matrix[x][y]=box;
     }
 
-    public void computeFreeShelves(){
+    public void setFreeShelves(){
         for (int j=0; j<matrix[0].length; j++){
             for (int i=0; i<matrix.length && matrix[i][j]==null; i++){
                 freeShelves[j]++;
@@ -88,8 +88,8 @@ public class Bookshelf {
         return groupsSizes;
     }
 
-    private static final int[][] DIRECTIONS = {{-1,0}, {0,-1}, {0,1}, {1,0}}; //possible directions towards adjacent tiles
     private int dfs(BookshelfBox currentBox, Set<BookshelfBox> visited, Type type) {
+        int[][] DIRECTIONS = {{-1,0}, {0,-1}, {0,1}, {1,0}}; //possible directions towards adjacent tiles
         visited.add(currentBox);
         int size = 1;
         for (int[] dir : DIRECTIONS) {
