@@ -10,10 +10,10 @@ public class App
         Game game=new Game();
         View2 view2=new View2();
 
-        BookshelfController bookshelfController=new BookshelfController();
+
         BoardController boardController=new BoardController(board);
         PlayerController playerController=new PlayerController(game);
-        GameController gameController = new GameController(playerController,boardController,bookshelfController);
+        GameController gameController = new GameController(playerController,boardController);
 
         game.addObserver(view1);
         board.addObserver(view2);

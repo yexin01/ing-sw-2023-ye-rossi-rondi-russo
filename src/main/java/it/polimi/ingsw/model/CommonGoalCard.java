@@ -6,9 +6,6 @@ public abstract class CommonGoalCard {
 
     private ArrayList<Integer> points;
 
-    public abstract boolean checkGoal();
-
-
     public ArrayList<Integer> getPoints() {
         return points;
     }
@@ -16,4 +13,6 @@ public abstract class CommonGoalCard {
     public void setPoints(ArrayList<Integer> points) {
         this.points = points;
     }
+
+    public abstract boolean checkGoal(Bookshelf bookshelf);
 }

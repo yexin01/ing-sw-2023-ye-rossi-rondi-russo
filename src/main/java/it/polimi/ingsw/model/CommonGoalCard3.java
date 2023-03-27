@@ -10,7 +10,7 @@ public class CommonGoalCard3 extends CommonGoalCard{
     */
 
     @Override
-    public boolean checkGoal(){
+    public boolean checkGoal(Bookshelf bookshelf){
         int N=6, M=5;
         int goals,near,oldnear;
         int newi,newj;

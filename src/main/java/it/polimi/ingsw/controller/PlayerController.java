@@ -2,17 +2,16 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.*;
 
-import java.util.Observable;
-import java.util.Observer;
+import java.util.ArrayList;
 
 public class PlayerController {
 
     private Game game;
 
-
+    private ArrayList<BookshelfController> bookshelfControllers=new ArrayList<>();
 
     public PlayerController(Game game) {
-        this.game = game;
+        this.game=game;
     }
 
     public Game getGame() {
@@ -26,17 +25,16 @@ public class PlayerController {
 
 
    public boolean insertNickname(String nickname) {
-
-        if(nickname.equals("stop")||game.getPlayers().size()==4){//inserire nella condizione il metodo che deve essere diverso dagli altri nomi
-            return false;
-        }
-        if(true){//aggiunta la condizione che il nome deve essere diverso dgli altri
+        //IMPORTA il 4 dajason sarebbe numero di giocatori possibili meno uno
+        if(true && !nickname.equals("stop")){//aggiunta la condizione che il nome deve essere diverso dgli altri
             Player player=new Player(nickname);
             game.getPlayers().add(player);
             game.setNumPlayers(game.getNumPlayers() + 1);
+            bookshelfControllers.add(new BookshelfController(new Bookshelf()));
+            if(game.getPlayers().size()==4)  return false;
             return true;
-
         }
+
         return false;
     }
     public void setNextPlayer(Player player){
