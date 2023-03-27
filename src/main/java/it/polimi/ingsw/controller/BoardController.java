@@ -82,16 +82,16 @@ public class BoardController {
         }
 
     }
-    public void firstFill(int [][] matrice){
-        //importa da jason la matrice
+    public void firstFill(int [][] matrix){
+        //importa da jason la matrix
         int dimensione = 9;   // o qualsiasi altra dimensione desiderata
         board.setMatrix(new BoardBox[dimensione][dimensione]);
         Random random=new Random();
         int randomNumber;
-        for (int i = 0; i < matrice.length; i++) {
-            for (int j = 0; j < matrice[i].length; j++) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
                 this.board.getMatrix()[i][j] = new BoardBox(i,j);
-                if(matrice[i][j]==1){
+                if(matrix[i][j]==1){
                     randomNumber = random.nextInt(board.getTiles().size());
                     board.getMatrix()[i][j].setTile(board.getTiles().get(randomNumber));
                     board.getTiles().remove(randomNumber);
@@ -165,7 +165,7 @@ public class BoardController {
         }
         return false;
     }
-    private boolean samerowOrSamecolumn(BoardBox boardbox,int numTile) {
+    private boolean sameRowOrSameColumn(BoardBox boardbox, int numTile) {
         if(
                 (board.getSelectedBoard().get(numTile-1).getX()==boardbox.getX() &&
                         board.getSelectedBoard().get(numTile-2).getX()==boardbox.getX()) ||
@@ -193,7 +193,7 @@ public class BoardController {
                 }
                 break;
             case 2:
-                if(boardbox.getFreeEdges()>0 && near(boardbox,numTile)&& samerowOrSamecolumn(boardbox,numTile)){
+                if(boardbox.getFreeEdges()>0 && near(boardbox,numTile)&& sameRowOrSameColumn(boardbox,numTile)){
                     board.getSelectedBoard().add(boardbox);
                     return true;
                 }
@@ -204,9 +204,6 @@ public class BoardController {
         }
         return false;
     }
-
-
-
     public ArrayList<ItemTile> selected(){
         ArrayList<ItemTile>  selectedItems= new ArrayList<ItemTile>();
         for(int i = 0; i< board.getSelectedBoard().size(); i++ ){

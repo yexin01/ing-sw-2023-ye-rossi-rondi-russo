@@ -31,36 +31,27 @@ public class GameController implements Observer {
             turnPlayer(number);
         }
     }
-
     public GameController(PlayerController playerController, BoardController boardController) {
         this.boardController = boardController;
         this.playerController = playerController;
     }
-
-
     public PlayerController getPlayerController() {
         return playerController;
     }
-
     public void setPlayerController(PlayerController playerController) {
         this.playerController = playerController;
     }
-
     public BoardController getBoardController() {
         return boardController;
     }
-
     public void setBoardController(BoardController boardController) {
         this.boardController = boardController;
     }
-
-
     public void inizializeGame() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         boardController.fillBag(playerController.getGame().getNumPlayers());
         playerController.firstPlayer();
         playerController.createCommonGoalCard();
     }
-
     private void turnPlayer(int number) {
         if (boardController.getBoard().getPlayerChoiceX() == -1) {
             boardController.getBoard().setPlayerChoiceX(number);
@@ -86,18 +77,15 @@ public class GameController implements Observer {
         resetPlayerChoice();
         boardController.getBoard().setFinishPlayeropposite();
     }
-
     private void resetPlayerChoice(){
         boardController.getBoard().setPlayerChoiceX(-1);
         boardController.getBoard().setPlayerChoiceY(-1);
         boardController.getBoard().setPlayerChoicenumTile(-1);
     }
-
     public void startGame() {
 
 
     }
-
     private void endGame(int number) {
         for(Player p:playerController.getGame().getPlayers()){
             if(p.getNickname().equals(playerController.getGame().getTurnPlayer())){

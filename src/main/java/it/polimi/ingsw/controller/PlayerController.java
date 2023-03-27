@@ -50,7 +50,7 @@ public class PlayerController {
 
         }
     }
-    public int maxTileOrFinish(){
+    public int maxFreeShelves(){
         return 2;
     }
     //genera numbers numeri casuali diversi in un range prefissato da start a end
@@ -96,11 +96,11 @@ public class PlayerController {
             game.getCommonGoalCards().add((CommonGoalCard) obj);
         }
 
-        setPointsCommonGoalCards();
+        setCommonGoalCardsPoints();
 
 
     }
-    private void setPointsCommonGoalCards() {
+    private void setCommonGoalCardsPoints() {
         ArrayList<Integer> points2Players = new ArrayList<>(Arrays.asList(4,8));
         ArrayList<Integer> points3Players = new ArrayList<>(Arrays.asList(4,6,8));
         ArrayList<Integer> points4Players = new ArrayList<>(Arrays.asList(2,4,6,8));
