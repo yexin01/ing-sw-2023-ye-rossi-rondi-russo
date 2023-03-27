@@ -1,5 +1,7 @@
 package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.*;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -12,7 +14,17 @@ public class GameController implements Observer {
     public void update(Observable o, Object arg) {
         if (arg instanceof String nickname) {
             if (!playerController.insertNickname(nickname)) {
-                inizializeGame();
+                try {
+                    inizializeGame();
+                } catch (InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                } catch (NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                } catch (InstantiationException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
             } else playerController.getGame().setFinishopposite();
         }
         if (arg instanceof Integer number) {
@@ -43,10 +55,10 @@ public class GameController implements Observer {
     }
 
 
-    public void inizializeGame() {
+    public void inizializeGame() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         boardController.fillBag(playerController.getGame().getNumPlayers());
         playerController.firstPlayer();
-        //create commonGoalCard...
+        playerController.createCommonGoalCard();
     }
 
     private void turnPlayer(int number) {
