@@ -62,7 +62,7 @@ public class GameController implements Observer {
         } else {
             boardController.getBoard().setPlayerChoicenumTile(number);
             boardController.isSelectable(boardController.getBoard().getBoardBox(boardController.getBoard().getPlayerChoiceX(), boardController.getBoard().getPlayerChoiceY()), boardController.getBoard().getPlayerChoicenumTile());
-            if (playerController.maxTileOrFinish() == boardController.getBoard().getPlayerChoicenumTile()) {
+            if (playerController.maxFreeShelves() == boardController.getBoard().getPlayerChoicenumTile()) {
                 playerController.getGame().getTurnPlayer().setSelectedItems(boardController.selected());
                 //Inserisce nella bookshelf
                 //calcola punteggio...
