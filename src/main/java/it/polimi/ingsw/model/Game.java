@@ -3,10 +3,7 @@ package it.polimi.ingsw.model;
 
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Observable;
-import java.util.Random;
+import java.util.*;
 
 
 public class Game extends Observable {
@@ -75,15 +72,13 @@ public class Game extends Observable {
     //genera numbers numeri casuali diversi in un range prefissato da start a end
     //nel caso del gioco start=1;end=12, numbers=2
     //numbers indica il numero di carte obiettivo da generare
-    private ArrayList<Integer> generateRandomNumber() {
+    private ArrayList<Integer> generateRandomNumber(int possibleNumbers,int numTime) {
         ArrayList<Integer> uniqueNumbers = new ArrayList<>();
         Random random = new Random();
         //importa i valori da jason
-        int possibleCommonGoals=12;
-        int numbersCommonGoal=2;
 
-        while (uniqueNumbers.size() < numbersCommonGoal) {
-            int newNumber = random.nextInt(possibleCommonGoals);
+        while (uniqueNumbers.size() < numTime) {
+            int newNumber = random.nextInt(possibleNumbers);
             if (!uniqueNumbers.contains(newNumber)) {
                 uniqueNumbers.add(newNumber);
             }
@@ -95,7 +90,7 @@ public class Game extends Observable {
     public void createCommonGoalCard() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 
         ArrayList<Integer> numbers=new ArrayList<>();
-        numbers=generateRandomNumber();
+        numbers=generateRandomNumber(7,2);
 
         //Importa da Jason
         ArrayList<Integer> points2Players = new ArrayList<>(Arrays.asList(4,8));
@@ -105,9 +100,9 @@ public class Game extends Observable {
 
 
         Class<?>[] classArray = {CommonGoalCard1.class,CommonGoalCard2.class,CommonGoalCard3.class,CommonGoalCard3.class,
-                CommonGoalCard4.class,CommonGoalCard5.class,CommonGoalCard6.class,CommonGoalCard7.class,CommonGoalCard8.class,
-                CommonGoalCard9.class,CommonGoalCard10.class,CommonGoalCard11.class,CommonGoalCard12.class};
-       this.CommonGoalCards= new ArrayList<>();;
+                CommonGoalCard4.class,CommonGoalCard5.class,CommonGoalCard6.class,CommonGoalCard7.class};
+        //ArrayList<Class<?>> classArray=new ArrayList<>(Arrays.asList(CommonGoalCard1.class,CommonGoalCard2.class,CommonGoalCard3.class));
+        this.CommonGoalCards= new ArrayList<>();;
 
         for(Integer number: numbers){
             Class<?> classObj = classArray[number];
@@ -143,6 +138,25 @@ public class Game extends Observable {
 
         for(CommonGoalCard c: CommonGoalCards){
             c.setPoints(points);
+        }
+    }
+
+    //verrà spostata all'interno del Player controller
+    public void createPersonalGoalCard(){
+        ArrayList<Integer> numbers=new ArrayList<>();
+        //Importarle da jason e inserirle tutte e 12
+        numbers=generateRandomNumber(4,numPlayers);
+
+        //cambiare i valori associandogli le dodici tessere del gioco
+        ArrayList<ArrayList<Integer>> personalGoals = new ArrayList<>(List.of(new ArrayList<>(List.of(0,3,4,1,1,2)),new ArrayList<>(List.of(1,3,4,2)),
+                new ArrayList<>(List.of(2,3,1,4,3,2)),new ArrayList<>(List.of(1,2))));
+        ArrayList<ArrayList<Type>> types=new ArrayList<>(List.of(new ArrayList<>(List.of(Type.CAT,Type.FRAME,Type.BOOK)),
+                new ArrayList<>(List.of(Type.FRAME,Type.FRAME)),new ArrayList<>(List.of(Type.TROPHY,Type.FRAME,Type.BOOK)),
+                new ArrayList<>(List.of(Type.PLANT))));
+
+        int i=0;
+        for(Player p:players){
+            p.setPersonalGoalCard(new PersonalGoalCard(personalGoals.get(numbers.get(i)),types.get(numbers.get(i++))));
         }
     }
 }

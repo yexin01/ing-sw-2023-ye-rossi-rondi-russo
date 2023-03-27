@@ -1,6 +1,21 @@
 package it.polimi.ingsw.model;
 
+import java.util.ArrayList;
+
 public class PersonalGoalCard {
+
+    private ArrayList<Integer> coordinates;
+    private ArrayList<Type> types;
+
+
+    public PersonalGoalCard(ArrayList<Integer> coordinates, ArrayList<Type> types) {
+        this.coordinates = coordinates;
+        this.types = types;
+    }
+
+    /*
+    private ArrayList<Integer> coordinates;
+    private ArrayList<Type> types;
     private int[] catPosition;
     private int[] bookPosition;
     private int[] gamePosition;
@@ -10,6 +25,11 @@ public class PersonalGoalCard {
 
     private boolean[] alreadyScored; //alreadyScored[1] = true se book è scored; ..[0]=true se cat è scored ecc..
     private int numOfScored;
+
+    public PersonalGoalCard(ArrayList<Integer> coordinates, ArrayList<Type> types) {
+        this.coordinates = coordinates;
+        this.types = types;
+    }
 
 
     public int[] getCatPosition() {
@@ -76,4 +96,6 @@ public class PersonalGoalCard {
         this.plantPosition[0] = x;
         this.plantPosition[1] = y;
     }
+
+*/
 }

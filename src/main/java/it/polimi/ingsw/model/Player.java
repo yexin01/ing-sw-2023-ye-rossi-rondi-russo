@@ -6,6 +6,8 @@ import java.util.Observable;
 public class Player extends Observable{
     public String nickname;
     private Game game;
+
+
     private int playerPoints;
     private int personalGoalPoints;
     private int commonGoalPoints;
@@ -63,6 +65,8 @@ public class Player extends Observable{
     }
 */
 
+
+    /*
     public void checkPersonalGoal(){
         if(!getPersonalGoalCard().getAlreadyScored()[0] && getBookshelf().getMatrix()[getPersonalGoalCard().getCatPosition()[0]][getPersonalGoalCard().getCatPosition()[1]].getItemTile().getType()==Type.CAT){
             getPersonalGoalCard().setAlreadyScored(true, 0);
@@ -146,5 +150,16 @@ public class Player extends Observable{
     }
 
 
+    public int getPersonalGoalPoints() {
+        return personalGoalPoints;
+    }
 
+    public void setPersonalGoalPoints(int personalGoalPoints) {
+        this.personalGoalPoints = personalGoalPoints;
+    }
+
+
+    public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
+        this.personalGoalCard = personalGoalCard;
+    }
 }
