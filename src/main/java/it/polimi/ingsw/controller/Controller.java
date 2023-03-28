@@ -8,7 +8,6 @@ import java.util.Observer;
 public class Controller implements Observer {
     private PlayerController playerController;
     private BoardController boardController;
-    private BookshelfController bookshelfController;
 
     @Override
     public void update(Observable o, Object arg) {
@@ -66,56 +65,62 @@ public class Controller implements Observer {
     private void turnPlayer(int number) {
         if (number == -1) {
             resetPlayerChoice();
-            boardController.getBoard().setFinishPlayeropposite();
+            changeFlag();
         }
         if(number==-2){
             System.out.println("Hai selezionato le tessere : freeshelves, inserisce la colonna");
-            boardController.getBoard().setPlayerChoiceColumn(-2);
-            playerController.getGame().getTurnPlayer().getBookshelf().computeFreeShelves();
-            playerController.getGame().getTurnPlayer().getBookshelf().printFreeShelves();
-            playerController.getGame().getTurnPlayer().setSelectedItems(boardController.selected());
-            boardController.getBoard().setFinishPlayeropposite();
+            gameBoard().setFinishPlayerChoice(-2);
+            turnPlayer().getBookshelf().computeFreeShelves();
+            turnBookshelf().printFreeShelves();
+            turnPlayer().setSelectedItems(boardController.selected());
+            changeFlag();
         }
-        if(boardController.getBoard().getPlayerChoiceColumn()==-2){
-            if(playerController.getGame().getTurnPlayer().getSelectedItems().size()<=playerController.getGame().getTurnPlayer().getBookshelf().getMaxTilesColumn(number)){
+        if(boardController.getBoard().getFinishPlayerChoice()==-2){
+            if(playerController.insert(number)){
                 System.out.println("le inserisce");
-                playerController.getGame().getTurnPlayer().insert(number);
-                System.out.println("Ha inserito");
                 //Inserisce nella bookshelf
                 //calcola punteggio...
                 //Chiama il metodo bookshelf piena
-                playerController.setNextPlayer(playerController.getGame().getTurnPlayer());
+                playerController.setNextPlayer(turnPlayer());
                 if (boardController.checkRefill()) {
                     boardController.refill();
                 }
+                gameBoard().setFinishPlayerChoice(-1);
                 resetPlayerChoice();
-                boardController.getBoard().setPlayerChoiceColumn(-1);
-                boardController.getBoard().setFinishPlayeropposite();
+                changeFlag();
             } else {
                 System.out.println("Hai inserito in una colonna con un minore numero di tessere libere");
-                boardController.getBoard().setFinishPlayeropposite();
+                changeFlag();
             }
         }
-        if (boardController.getBoard().getPlayerChoiceX() == -1) {
-            boardController.getBoard().setPlayerChoiceX(number);
-            boardController.getBoard().setFinishPlayeropposite();
+        if (gameBoard().getPlayerChoiceX() == -1) {
+            gameBoard().setPlayerChoiceX(number);
+            changeFlag();
 
-        } else if (boardController.getBoard().getPlayerChoiceY() == -1) {
-            boardController.getBoard().setPlayerChoiceY(number);
-            boardController.getBoard().setFinishPlayeropposite();
+        } else if (gameBoard().getPlayerChoiceY() == -1) {
+            gameBoard().setPlayerChoiceY(number);
+            changeFlag();
 
-        } else {
-            boardController.getBoard().setPlayerChoicenumTile(number);
-            boardController.isSelectable(boardController.getBoard().getBoardBox(boardController.getBoard().getPlayerChoiceX(), boardController.getBoard().getPlayerChoiceY()), boardController.getBoard().getPlayerChoicenumTile());
+        } else if (number< turnBookshelf().numSelectableTiles()) {
+            gameBoard().setPlayerChoicenumTile(number);
+            if(!boardController.isSelectable(gameBoard().getBoardBox(gameBoard().getPlayerChoiceX(), gameBoard().getPlayerChoiceY()), gameBoard().getPlayerChoicenumTile())){
+                System.out.println("non é una tessera selezionabile");
+            }
             resetPlayerChoice();
-            boardController.getBoard().setFinishPlayeropposite();
+            gameBoard().printMatrix();
+            changeFlag();
+        }else{
+            System.out.println("Hai selezionato un numero maggiore di tesser selezionabili");
+            System.out.println("Digita -1 oppure scrivi direttamente le coordinate della nuova tessera");
+            gameBoard().printMatrix();
+            resetPlayerChoice();
+            changeFlag();
         }
     }
     private void resetPlayerChoice(){
-        boardController.getBoard().setPlayerChoiceX(-1);
-        boardController.getBoard().setPlayerChoiceY(-1);
-        boardController.getBoard().setPlayerChoicenumTile(-1);
-        //boardController.getBoard().setPlayerChoiceColumn(-1);
+        gameBoard().setPlayerChoiceX(-1);
+        gameBoard().setPlayerChoiceY(-1);
+        gameBoard().setPlayerChoicenumTile(-1);
     }
     public void startGame() {
 
@@ -131,4 +136,12 @@ public class Controller implements Observer {
             }
         }
     }
+
+    public Player turnPlayer(){return playerController.getGame().getTurnPlayer();}
+
+    public Bookshelf turnBookshelf(){return playerController.getGame().getTurnPlayer().getBookshelf();}
+
+    public Board gameBoard(){return boardController.getBoard();}
+
+    public void changeFlag(){boardController.getBoard().setFinishPlayeropposite();}
 }

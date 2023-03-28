@@ -82,7 +82,7 @@ public class Board extends Observable {
         playerChoicenumTile=-1;
         playerChoiceX=-1;
         playerChoiceY=-1;
-        playerChoiceColumn=-1;
+        finishPlayerChoice =-1;
     }
 
 
@@ -111,14 +111,25 @@ public class Board extends Observable {
         this.playerChoicenumTile = playerChoicenumTile;
     }
 
-    private Integer playerChoiceColumn;
+    private Integer finishPlayerChoice;
 
-    public Integer getPlayerChoiceColumn() {
-        return playerChoiceColumn;
+    public Integer getFinishPlayerChoice() {
+        return finishPlayerChoice;
     }
 
-    public void setPlayerChoiceColumn(Integer playerChoiceColumn) {
-        this.playerChoiceColumn = playerChoiceColumn;
+    public void setFinishPlayerChoice(Integer finishPlayerChoice) {
+        this.finishPlayerChoice = finishPlayerChoice;
+    }
+    public void printMatrix(){
+        for (int i = 0; i < matrix.length; i++) {
+            System.out.println(" ");
+            for (int j = 0; j < matrix[i].length; j++) {
+                if(matrix[i][j].getTile()!=null){
+                    System.out.print("1 ");
+                }
+                else System.out.print("0 ");
+            }
+        }
     }
 }
 

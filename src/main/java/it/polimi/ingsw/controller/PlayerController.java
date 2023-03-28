@@ -11,8 +11,7 @@ public class PlayerController {
 
     private Game game;
 
-    private ArrayList<BookshelfController> bookshelfControllers=new ArrayList<BookshelfController>();
-    public ArrayList<BookshelfController> getBookshelfControllers(){return bookshelfControllers;}
+
     public PlayerController(Game game) {
         this.game=game;
     }
@@ -29,14 +28,11 @@ public class PlayerController {
         if(true && !nickname.equals("stop")){//aggiunta la condizione che il nome deve essere diverso dgli altri
             Bookshelf bookshelf=new Bookshelf();
             Player player=new Player(nickname,bookshelf);
-            player.setBookshelf(bookshelf);
             game.getPlayers().add(player);
             game.setNumPlayers(game.getNumPlayers() + 1);
-            bookshelfControllers.add(new BookshelfController(bookshelf));
             if(game.getPlayers().size()==4)  return false;
             return true;
         }
-
         return false;
     }
     public void setNextPlayer(Player player){
@@ -51,9 +47,6 @@ public class PlayerController {
             }
 
         }
-    }
-    public int maxFreeShelves(){
-        return 2;
     }
     //genera numbers numeri casuali diversi in un range prefissato da start a end
     //nel caso del gioco start=1;end=12, numbers=2
@@ -127,6 +120,20 @@ public class PlayerController {
             c.setPoints(points);
         }
     }
-
+    public boolean insert(int column){
+        if(selectedTiles().size()<=turnBookshelf().getMaxTilesColumn(column)){
+            int j=0;
+            for(int i= turnBookshelf().getMatrix().length-1;j<selectedTiles().size();i--){
+                if(turnBookshelf().getMatrix()[i][column].getType()==null){
+                    turnBookshelf().setTile(selectedTiles().get(j++),i,column);
+                    System.out.println(turnBookshelf().getTileType(i,column));
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+    public ArrayList<ItemTile> selectedTiles(){return game.getTurnPlayer().getSelectedItems();}
+    public Bookshelf turnBookshelf(){return game.getTurnPlayer().getBookshelf();}
 
 }

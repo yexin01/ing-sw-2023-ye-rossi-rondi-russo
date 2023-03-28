@@ -12,7 +12,6 @@ public class Player extends Observable {
         this.bookshelf=bookshelf;
         selectedItems=new ArrayList<>();
     }
-
     public ArrayList<ItemTile> getSelectedItems() {
         return selectedItems;
     }
@@ -21,36 +20,19 @@ public class Player extends Observable {
         setChanged();
         notifyObservers(selectedItems);
     }
-
-
     public String getNickname() {
         return nickname;
     }
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
-
     public Bookshelf getBookshelf() {
         return bookshelf;
     }
-
     public void setBookshelf(Bookshelf bookshelf) {
         this.bookshelf = bookshelf;
     }
 
-    public void insert(int column){
-        for(int i=0;i<selectedItems.size();i++){
-            System.out.println(selectedItems.get(i).getType());
-            System.out.println(selectedItems.get(i).getValue());
-        }
-        int j=0;
-        for(int i= bookshelf.getMatrix().length-1;i>-1 && j<selectedItems.size();i--){
-            if(bookshelf.getMatrix()[i][column].getType()==null){
-                bookshelf.setTile(selectedItems.get(j++),i,column);
-                System.out.println(bookshelf.getTileType(i,column));
-            }
-        }
-    }
 }
 
 
