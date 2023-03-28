@@ -121,6 +121,9 @@ public class PlayerController {
         }
     }
     public boolean insert(int column){
+        if(turnBookshelf().getMaxTilesColumn(column)<selectedTiles().size()){
+            return false;
+        }
         if(selectedTiles().size()<=turnBookshelf().getMaxTilesColumn(column)){
             int j=0;
             for(int i= turnBookshelf().getMatrix().length-1;j<selectedTiles().size();i--){
