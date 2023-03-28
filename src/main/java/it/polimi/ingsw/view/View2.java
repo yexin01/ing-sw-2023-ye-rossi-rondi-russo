@@ -15,6 +15,7 @@ public class View2 extends Observable implements Observer {
     public Integer askPlayer(){
         int input;
         Scanner scanner = new Scanner(System.in);
+        System.out.println(" ");
         System.out.print("Enter number: ");
         input = scanner.nextInt();
         setChanged();

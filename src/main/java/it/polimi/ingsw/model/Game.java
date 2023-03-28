@@ -31,7 +31,7 @@ public class Game extends Observable {
     public void setPlayers(ArrayList<Player> players) {
         this.players = players;
     }
-
+    private boolean finishGame;
 
     private boolean finish;
 
@@ -75,5 +75,18 @@ public class Game extends Observable {
 
     public void setCommonGoalCards(ArrayList<CommonGoalCard> commonGoalCards) {
         CommonGoalCards = commonGoalCards;
+    }
+
+    public boolean isFinishGame() {
+        return finishGame;
+    }
+
+    public void setFinishGame(boolean finishGame) {
+        this.finishGame = finishGame;
+    }
+    public void setFinishGameopposite() {
+        finishGame = !finishGame;
+        setChanged();
+        notifyObservers(finish);
     }
 }

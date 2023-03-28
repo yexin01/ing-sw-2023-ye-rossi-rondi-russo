@@ -15,10 +15,6 @@ public class Controller implements Observer {
             if (!playerController.insertNickname(nickname)) {
                 try {
                     inizializeGame();
-                    //   playerController.getGame().getPlayers().get(0).getBookshelf().computeFreeShelves();
-                    //   playerController.getGame().getPlayers().get(0).getBookshelf().maxFreeShelves();
-                    //  playerController.getGame().getPlayers().get(0).getBookshelf().computeFreeShelves();
-                    //  playerController.getBookshelfControllers().get(0).computeFreeShelves();
                 } catch (InvocationTargetException e) {
                     throw new RuntimeException(e);
                 } catch (NoSuchMethodException e) {
@@ -30,9 +26,23 @@ public class Controller implements Observer {
                 }
             } else playerController.getGame().setFinishopposite();
         }
-        if (arg instanceof Integer number) {
-            turnPlayer(number);
-        }
+
+       if (arg instanceof Integer number){
+           try {
+               turnPlayer(number);
+           } catch (InvocationTargetException e) {
+               throw new RuntimeException(e);
+           } catch (NoSuchMethodException e) {
+               throw new RuntimeException(e);
+           } catch (InstantiationException e) {
+               throw new RuntimeException(e);
+           } catch (IllegalAccessException e) {
+               throw new RuntimeException(e);
+           }
+       }
+
+
+
     }
 
     public Controller(PlayerController playerController, BoardController boardController) {
@@ -62,7 +72,14 @@ public class Controller implements Observer {
         playerController.createCommonGoalCard();
     }
 
-    private void turnPlayer(int number) {
+    private void turnPlayer(int number) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        if(gameBoard().isEndGame()&&firstPlayer().getNickname().equals(turnPlayer().getNickname())){
+            System.out.println("FINE PARTITA, ne inizia una nuova");
+            //resettare
+            //inizializeGame();
+
+            playerController.getGame().setFinishopposite();
+        }
         if (number == -1) {
             resetPlayerChoice();
             changeFlag();
@@ -78,12 +95,14 @@ public class Controller implements Observer {
         if(boardController.getBoard().getFinishPlayerChoice()==-2){
             if(playerController.insert(number)){
                 System.out.println("le inserisce");
-                //Inserisce nella bookshelf
-                //calcola punteggio...
-                //Chiama il metodo bookshelf piena
+               //AGGIUNGERE L'AGGIORNAMENTO DEI PUNTEGGI
+               gameBoard().setEndGame(true);
                 playerController.setNextPlayer(turnPlayer());
                 if (boardController.checkRefill()) {
                     boardController.refill();
+                }
+                if(turnBookshelf().isFull()){
+                    gameBoard().setEndGame(true);
                 }
                 gameBoard().setFinishPlayerChoice(-1);
                 resetPlayerChoice();
@@ -122,22 +141,11 @@ public class Controller implements Observer {
         gameBoard().setPlayerChoiceY(-1);
         gameBoard().setPlayerChoicenumTile(-1);
     }
-    public void startGame() {
 
-
-    }
-    private void endGame(int number) {
-        for(Player p:playerController.getGame().getPlayers()){
-            if(p.getNickname().equals(playerController.getGame().getTurnPlayer())){
-                turnPlayer(number);
-                resetPlayerChoice();
-                boardController.getBoard().setFinishPlayeropposite();
-                playerController.setNextPlayer(playerController.getGame().getTurnPlayer());
-            }
-        }
-    }
 
     public Player turnPlayer(){return playerController.getGame().getTurnPlayer();}
+
+    public Player firstPlayer(){return playerController.getGame().getFirstPlayer();}
 
     public Bookshelf turnBookshelf(){return playerController.getGame().getTurnPlayer().getBookshelf();}
 

@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 public class Bookshelf {
     //private BookshelfBox[][] matrix;
-
     private ItemTile[][] matrix;
     private int[] freeShelves; //freeShelves[i] = # celle libere nell'i-esima colonna
     public Bookshelf(){
@@ -54,6 +53,14 @@ public class Bookshelf {
     public int getTileValue(int x,int y){return matrix[x][y].getValue();}
     public void setTile(ItemTile tile,int x,int y){
         matrix[x][y]=new ItemTile(tile.getType(),tile.getValue());
+    }
+    public boolean isFull(){
+        for(int i=0;i< matrix[0].length;i++){
+            if(matrix[0][i].getValue()==-1){
+                return false;
+            }
+        }
+        return true;
     }
 
 /*

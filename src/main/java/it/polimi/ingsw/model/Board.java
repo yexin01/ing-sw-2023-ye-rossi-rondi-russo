@@ -76,8 +76,6 @@ public class Board extends Observable {
         this.playerChoiceY = playerChoiceY;
     }
 
-
-
     public Board() {
         playerChoicenumTile=-1;
         playerChoiceX=-1;
@@ -86,40 +84,20 @@ public class Board extends Observable {
     }
 
 
-    public boolean isFinishPlayer() {
-        return finishPlayer;
-    }
-
-    public void setFinishPlayer(boolean finishPlayer) {
-        this.finishPlayer = finishPlayer;
-        setChanged();
-        notifyObservers(finishPlayer);
-    }
     public void setFinishPlayeropposite() {
         finishPlayer = !finishPlayer;
         setChanged();
         notifyObservers(finishPlayer);
     }
-
-
     private Integer playerChoicenumTile;
     public Integer getPlayerChoicenumTile() {
         return playerChoicenumTile;
     }
-
     public void setPlayerChoicenumTile(Integer playerChoicenumTile) {
         this.playerChoicenumTile = playerChoicenumTile;
     }
-
     private Integer finishPlayerChoice;
 
-    public Integer getFinishPlayerChoice() {
-        return finishPlayerChoice;
-    }
-
-    public void setFinishPlayerChoice(Integer finishPlayerChoice) {
-        this.finishPlayerChoice = finishPlayerChoice;
-    }
     public void printMatrix(){
         for (int i = 0; i < matrix.length; i++) {
             System.out.println(" ");
@@ -130,6 +108,25 @@ public class Board extends Observable {
                 else System.out.print("0 ");
             }
         }
+    }
+
+
+    public Integer getFinishPlayerChoice() {
+        return finishPlayerChoice;
+    }
+
+    public void setFinishPlayerChoice(Integer finishPlayerChoice) {
+        this.finishPlayerChoice = finishPlayerChoice;
+    }
+
+    private boolean endGame;
+
+    public boolean isEndGame() {
+        return endGame;
+    }
+
+    public void setEndGame(boolean endGame) {
+        this.endGame = endGame;
     }
 }
 

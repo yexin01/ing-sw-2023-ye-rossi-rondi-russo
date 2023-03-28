@@ -12,11 +12,14 @@ public class App
 
 
         BoardController boardController=new BoardController(board);
+
         PlayerController playerController=new PlayerController(game);
+
         Controller controller = new Controller(playerController,boardController);
 
         game.addObserver(view1);
         board.addObserver(view2);
+
 
         view1.addObserver(controller);
         view2.addObserver(controller);
