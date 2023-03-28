@@ -15,7 +15,6 @@ public class BoardController {
     public BoardController(Board board) {
         this.board = board;
     }
-
     public void fillBag(int numPlayers){
         inizializedBoard();
         //IMPORTARLE DA JSON
@@ -176,8 +175,6 @@ public class BoardController {
         return false;
     }
     public boolean isSelectable(BoardBox boardbox, int numTile){
-
-
         switch(numTile) {
             case 0:
                 if(boardbox.getFreeEdges()>0){
@@ -213,9 +210,7 @@ public class BoardController {
             board.getMatrix()[board.getSelectedBoard().get(i).getX()][board.getSelectedBoard().get(i).getY()].setTile(null);
             board.getMatrix()[board.getSelectedBoard().get(i).getX()][board.getSelectedBoard().get(i).getY()].setFreeEdges(0);
         }
-        for(int i=0;i<selectedItems.size();i++){
-            System.out.println(selectedItems.get(i).getType());
-        }
+
         return selectedItems;
     }
     public boolean checkRefill(){

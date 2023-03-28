@@ -82,6 +82,7 @@ public class Board extends Observable {
         playerChoicenumTile=-1;
         playerChoiceX=-1;
         playerChoiceY=-1;
+        playerChoiceColumn=-1;
     }
 
 
@@ -108,6 +109,16 @@ public class Board extends Observable {
 
     public void setPlayerChoicenumTile(Integer playerChoicenumTile) {
         this.playerChoicenumTile = playerChoicenumTile;
+    }
+
+    private Integer playerChoiceColumn;
+
+    public Integer getPlayerChoiceColumn() {
+        return playerChoiceColumn;
+    }
+
+    public void setPlayerChoiceColumn(Integer playerChoiceColumn) {
+        this.playerChoiceColumn = playerChoiceColumn;
     }
 }
 

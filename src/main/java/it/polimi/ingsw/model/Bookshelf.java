@@ -1,22 +1,28 @@
 package it.polimi.ingsw.model;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 public class Bookshelf {
-    private BookshelfBox[][] matrix;
+    //private BookshelfBox[][] matrix;
+
+    private ItemTile[][] matrix;
+
     private int[] freeShelves; //freeShelves[i] = # celle libere nell'i-esima colonna
 
-    public BookshelfBox[][] getMatrix() {
-        return matrix;
+    public Bookshelf(){
+        int rows=6;
+        int columns=5;
+        freeShelves=new int[columns];
+        matrix=new ItemTile[rows][columns];
+        for(int i=0;i<rows;i++){
+            for(int j=0;j<columns;j++){
+                matrix[i][j]=new ItemTile(null,-1);
+            }
+        }
     }
-
     public int[] getFreeShelves() {
         return freeShelves;
     }
 
+/*
     public void computeFreeShelves(){
         for (int j=0; j<matrix[0].length; j++){
             for (int i=0; i<matrix.length && matrix[i][j]==null; i++){
@@ -24,17 +30,47 @@ public class Bookshelf {
             }
         }
     }
-
-    public int maxFreeShelves(){
+*/
+public void computeFreeShelves(){
+    for (int j=0; j<matrix[0].length; j++){
+        freeShelves[j]=0;
+        for (int i=0; i<matrix.length && matrix[i][j].getValue()==-1; i++){
+            freeShelves[j]++;
+        }
+    }
+}
+    private int maxFreeShelves(){
         int max = 0;
         for (int i=0; i<freeShelves.length; i++){
             if (freeShelves[i]>max){
                 max = freeShelves[i];
             }
         }
+        System.out.println(max);
         return max;
     }
 
+    public int getMaxTilesColumn(int i){return freeShelves[i];}
+    public int numSelectableTiles(){
+        int max=maxFreeShelves();
+        return (max > 3) ? 3 : max;
+    }
+    public void printFreeShelves(){
+        for(int i=0;i<freeShelves.length;i++){
+            System.out.print(freeShelves[i]+"  ");
+        }
+    }
+    public ItemTile[][] getMatrix(){ return matrix;}
+
+    public void setMatrix(ItemTile[][] matrix){ this.matrix=matrix;}
+
+    public Type getTileType(int x,int y){ return matrix[x][y].getType();}
+    public int getTileValue(int x,int y){return matrix[x][y].getValue();}
+    public void setTile(ItemTile tile,int x,int y){
+        matrix[x][y]=new ItemTile(tile.getType(),tile.getValue());
+    }
+
+/*
     public boolean isFull (){ //looking at the first row is sufficient
         for(int j=0; j<matrix[0].length; j++){
             if (matrix[0][j]==null) return false;
