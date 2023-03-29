@@ -1,12 +1,15 @@
 package it.polimi.ingsw.controller;
+
 import it.polimi.ingsw.model.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class GameandPlayerController {
+
     private Game game;
 
 
@@ -17,22 +20,40 @@ public class GameandPlayerController {
     public Game getGame() {
         return game;
     }
+
+    /**
+     * sets turnPlayer and firstPlayer to the first player
+     */
     public void firstPlayer() {
         game.setFirstPlayer(game.getPlayers().get(0));
         game.setTurnPlayer(game.getPlayers().get(0));
     }
+
+    /**
+     *
+     * @param nickname
+     * @return
+     */
+    //TODO insertNickname it depends on how we implement the controller in the future it could change
     public boolean insertNickname(String nickname) {
         //IMPORTA il 4 dajason sarebbe numero di giocatori possibili meno uno
-        if(true && !nickname.equals("stop")){//aggiunta la condizione che il nome deve essere diverso dgli altri
+        if(true && !nickname.equals("stop")){
+            //TODO add the method that the name is different from others
             Bookshelf bookshelf=new Bookshelf();
             Player player=new Player(nickname,bookshelf);
             game.getPlayers().add(player);
             game.setNumPlayers(game.getNumPlayers() + 1);
+            //TODO importing MAXnumPlayers from json
             if(game.getPlayers().size()==4)  return false;
             return true;
         }
         return false;
     }
+
+    /**
+     * change the player to the next one
+     * @param player
+     */
     public void setNextPlayer(Player player){
         for(int i=0;i<game.getPlayers().size();i++){
             if(game.getPlayers().get(i).getNickname().equals(player.getNickname())){
@@ -46,11 +67,15 @@ public class GameandPlayerController {
 
         }
     }
-    //genera numbers numeri casuali diversi in un range prefissato da start a end
-    //nel caso del gioco start=1;end=12, numbers=2
-    //numbers indica il numero di carte obiettivo da generare
-    private ArrayList<Integer> generateRandomNumber() {
-        ArrayList<Integer> uniqueNumbers = new ArrayList<>();
+
+    /**
+     *generates different random numbers in a fixed range and a number of times numOfgenerated
+     * @param range
+     * @param numOfGenerated
+     * @return
+     */
+    private ArrayList<Integer> generateRandomNumber(int range, int numOfGenerated) {
+        ArrayList<Integer> uniqueNumbers = new ArrayList<Integer>();
         Random random = new Random();
         //importa i valori da jason
         int possibleCommonGoals=12;
@@ -64,23 +89,25 @@ public class GameandPlayerController {
         }
         return uniqueNumbers;
     }
-    //crea il numero di common goal card prefissato
+
+    /**
+     *instantiate CommonGoals
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     public void createCommonGoalCard() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-
-        ArrayList<Integer> numbers=new ArrayList();
-        numbers=generateRandomNumber();
-
-        //Importa da Jason
-        ArrayList<Integer> points2Players = new ArrayList(Arrays.asList(4,8));
-        ArrayList<Integer> points3Players = new ArrayList(Arrays.asList(4,6,8));
-        ArrayList<Integer> points4Players = new ArrayList(Arrays.asList(2,4,6,8));
-
-
-
+        //TODO importing from json numofCommonGoals and numCommonGoals
+        int numOfCommonGoals=2;
+        int CommonGoals=12;
+        ArrayList<Integer> numbers=new ArrayList<Integer>();
+        numbers=generateRandomNumber(CommonGoals,numOfCommonGoals);
+        //TODO importing Arraylist from json
         Class<?>[] classArray = {CommonGoalCard1.class,CommonGoalCard2.class,CommonGoalCard3.class,CommonGoalCard3.class,
                 CommonGoalCard4.class,CommonGoalCard5.class,CommonGoalCard6.class,CommonGoalCard7.class,
                 CommonGoalCard8.class,CommonGoalCard9.class,CommonGoalCard10.class,CommonGoalCard11.class,CommonGoalCard12.class};
-        //ArrayList<Class<?>> classArray=new ArrayList<>(Arrays.asList(CommonGoalCard1.class,CommonGoalCard2.class,CommonGoalCard3.class));
+
         game.setCommonGoalCards(new ArrayList<CommonGoalCard>());;
 
         for(Integer number: numbers){
@@ -93,13 +120,19 @@ public class GameandPlayerController {
 
 
     }
+
+    /**
+     * Match arraylist of scores based on number of players
+     */
     private void setCommonGoalCardsPoints() {
-        ArrayList<Integer> points2Players = new ArrayList(Arrays.asList(4,8));
-        ArrayList<Integer> points3Players = new ArrayList(Arrays.asList(4,6,8));
-        ArrayList<Integer> points4Players = new ArrayList(Arrays.asList(2,4,6,8));
+        //TODO importing from json
+        ArrayList<Integer> points2Players = new ArrayList<Integer>(Arrays.asList(4,8));
+        ArrayList<Integer> points3Players = new ArrayList<Integer>(Arrays.asList(4,6,8));
+        ArrayList<Integer> points4Players = new ArrayList<Integer>(Arrays.asList(2,4,6,8));
 
-        ArrayList<Integer> points=new ArrayList();
-
+        ArrayList<Integer> points=new ArrayList<Integer>();
+        //TODO change switch importing from json,basing the choice on the number of players
+        //TODO alternatively set a default matrix for more than 4 players
         switch(game.getNumPlayers()){
             case 2:
                 points=points2Players;
@@ -118,14 +151,22 @@ public class GameandPlayerController {
             c.setPoints(points);
         }
     }
-    public boolean insert(int column){
+
+    /**
+     *
+     * inserts into the player's bookshelf if the tiles are less than the maximum
+     * number of insertable tiles and returns true
+     * @param column freeShelves[column]
+     * @return
+     */
+    public boolean insertBookshelf(int column){
         if(turnBookshelf().getMaxTilesColumn(column)<selectedTiles().size()){
             return false;
         }
         if(selectedTiles().size()<=turnBookshelf().getMaxTilesColumn(column)){
             int j=0;
             for(int i= turnBookshelf().getMatrix().length-1;j<selectedTiles().size();i--){
-                if(turnBookshelf().getMatrix()[i][column].getType()==null){
+                if(turnBookshelf().getMatrix()[i][column].getTileID()==-1){
                     turnBookshelf().setTile(selectedTiles().get(j++),i,column);
                     System.out.println(turnBookshelf().getTileType(i,column));
                 }
@@ -135,6 +176,30 @@ public class GameandPlayerController {
         return false;
     }
     public ArrayList<ItemTile> selectedTiles(){return game.getTurnPlayer().getSelectedItems();}
+
     public Bookshelf turnBookshelf(){return game.getTurnPlayer().getBookshelf();}
 
+    /**
+     *instantiates personalGoalCard based on the number of players
+     */
+    public void createPersonalGoalCard(){
+
+        ArrayList<Integer> numbers=new ArrayList<Integer>();
+        //TODO personalGoalCards importing from json and insert all
+        //TODO change numPersonalGoal range: 12 (importing from json)
+        int numPersonalGoal=4;
+        numbers=generateRandomNumber(4,game.getNumPlayers());
+
+
+        ArrayList<ArrayList<Integer>> personalGoals = new ArrayList<>(List.of(new ArrayList<>(List.of(0,3,4,1,1,2)),new ArrayList<>(List.of(1,3,4,2)),
+                new ArrayList<>(List.of(2,3,1,4,3,2)),new ArrayList<>(List.of(1,2))));
+        ArrayList<ArrayList<Type>> types=new ArrayList<>(List.of(new ArrayList<>(List.of(Type.CAT,Type.FRAME,Type.BOOK)),
+                new ArrayList<>(List.of(Type.FRAME,Type.FRAME)),new ArrayList<>(List.of(Type.TROPHY,Type.FRAME,Type.BOOK)),
+                new ArrayList<>(List.of(Type.PLANT))));
+
+        int i=0;
+        for(Player p:game.getPlayers()){
+            p.getPersonalGoalCard().add(new PersonalGoalCard(personalGoals.get(numbers.get(i)),types.get(numbers.get(i++))));
+        }
+    }
 }

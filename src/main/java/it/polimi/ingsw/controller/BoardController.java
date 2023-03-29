@@ -84,7 +84,7 @@ public class BoardController {
      *import numTilesType from a file jason
      */
     public void inizializedBoard() {
-        //TODO  import the number of tiles of each type from a file jason
+        //TODO  import the number of tiles of each type from a file json
         int numTilesType=22;
         int j=0;
         board.setTiles(new ArrayList<ItemTile>());
@@ -104,7 +104,7 @@ public class BoardController {
      * @param matrix : it varies according to the number of players
      */
     public void firstFill(int [][] matrix){
-        //TODO import the dimension of the board from a file jason
+        //TODO import the dimension of the board from a file json
         int dimensione = 9;
         board.setMatrix(new BoardBox[dimensione][dimensione]);
         Random random=new Random();
@@ -190,36 +190,19 @@ public class BoardController {
         }
     }
 
-    /**check that the BoardBox present in position numTile-1 and the BoardBox passed by parameter are adjacent
-     *
-     * @param boardbox
-     * @param numTile number of BoardBox selected starts from 0
-     * @return
-     */
-    public boolean near(BoardBox boardbox,int numTile) {
 
-            if
-        ((board.getSelectedBoard().get(numTile - 1).getX() - boardbox.getX() == 1 ||
-                board.getSelectedBoard().get(numTile - 1).getX() - boardbox.getX() == -1 ||
-                board.getSelectedBoard().get(numTile - 1).getY() - boardbox.getY() == 1 ||
-                board.getSelectedBoard().get(numTile - 1).getY() - boardbox.getY() == -1)
-                && (board.getSelectedBoard().get(numTile - 1).getX() == boardbox.getX() ||
-                board.getSelectedBoard().get(numTile - 1).getY() == boardbox.getY())) {
-            return true;
-        }
-        return false;
-    }
 
     /**
      * adjacent, in the same row or column and adjacent
      * @return
      */
-    public boolean checkSelection() {
+    public boolean checkSelectable() {
         List<BoardBox> selectedBoard = board.getSelectedBoard();
         //at least one free edge
         for (int i = 0; i < selectedBoard.size(); i++) {
-            if(selectedBoard.get(i).getFreeEdges()<=0){
+            if(selectedBoard.get(i).getFreeEdges()<=0) {
                 return false;
+            }
         }
 
         if (selectedBoard.size() <= 1) {
@@ -255,7 +238,7 @@ public class BoardController {
         }
         return true;
     }
-}
+
 
     /**adds the boardBox to the Arraylist
      *
@@ -263,8 +246,12 @@ public class BoardController {
      * @return
      */
 
-    public boolean addTile(BoardBox boardbox) {
-        board.getSelectedBoard().add(boardbox);
+    public boolean isSelectable(BoardBox boardbox) {
+        if(checkSelectable()){
+            board.getSelectedBoard().add(boardbox);
+            return true;
+        }
+        return false;
     }
 
 
@@ -304,9 +291,7 @@ public class BoardController {
 
     }
 
-    /**
-     *
-     */
+
     public void refill(){
         for (int i = 0; i < board.getMatrix().length; i++) {
             for (int j = 0; j < board.getMatrix()[i].length; j++) {

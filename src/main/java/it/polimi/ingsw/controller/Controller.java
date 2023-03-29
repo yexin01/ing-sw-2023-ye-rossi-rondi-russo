@@ -1,156 +1,155 @@
 package it.polimi.ingsw.controller;
-
 import it.polimi.ingsw.model.*;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.Observable;
+import java.util.Observer;
 
-public class Controller {
-    public int numPlayers;
+public class Controller implements Observer {
+    private GameandPlayerController gameandPlayerController;
+    private BoardController boardController;
 
-    public int getNumPlayers() {
-        return numPlayers;
-    }
+    @Override
+    public void update(Observable o, Object arg) {
+        if (arg instanceof String nickname) {
+            if (!gameandPlayerController.insertNickname(nickname)) {
+                try {
+                    inizializeGame();
+                } catch (InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                } catch (NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                } catch (InstantiationException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            } else gameandPlayerController.getGame().setFinishopposite();
+        }
 
-    public void setNumPlayers(int numPlayers) {
-        this.numPlayers = numPlayers;
-    }
-
-    public Player turnPlayer;
-
-    public Player getTurnPlayer() {
-        return turnPlayer;
-    }
-
-    public void setTurnPlayer(Player turnPlayer) {
-        this.turnPlayer = turnPlayer;
-    }
-
-    public Player firstPlayer;
-
-    public Player getFirstPlayer() {
-        return firstPlayer;
-    }
-
-    public void setFirstPlayer(Player firstPlayer) {
-        this.firstPlayer = firstPlayer;
-    }
-
-    public ArrayList<Player> players = new ArrayList<Player>();
-
-    public ArrayList<Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(ArrayList<Player> players) {
-        this.players = players;
-    }
-
-    public boolean finish;
-
-    public boolean isFinish() {
-        return finish;
-    }
-
-    public void setFinish(boolean finish) {
-        this.finish = finish;
-    }
-
-    public ArrayList<CommonGoalCard> CommonGoalCards;
-
-    public Controller() {
-    }//genera numbers numeri casuali diversi in un range prefissato da start a end
-
-    //nel caso del gioco start=1;end=12, numbers=2
-    //numbers indica il numero di carte obiettivo da generare
-    public ArrayList<Integer> generateRandomNumber(int possibleNumbers, int numTime) {
-        ArrayList<Integer> uniqueNumbers = new ArrayList<Integer>();
-        Random random = new Random();
-        //importa i valori da jason
-
-        while (uniqueNumbers.size() < numTime) {
-            int newNumber = random.nextInt(possibleNumbers);
-            if (!uniqueNumbers.contains(newNumber)) {
-                uniqueNumbers.add(newNumber);
+        if (arg instanceof Integer number){
+            try {
+                turnPlayer(number);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
             }
         }
-        System.out.println(uniqueNumbers);
-        return uniqueNumbers;
-    }//crea il numero di common goal card prefissato
 
-    public void createCommonGoalCard() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-
-        ArrayList<Integer> numbers = new ArrayList<Integer>();
-        numbers = generateRandomNumber(7, 2);
-
-        //Importa da Jason
-        ArrayList<Integer> points2Players = new ArrayList<Integer>(Arrays.asList(4, 8));
-        ArrayList<Integer> points3Players = new ArrayList<Integer>(Arrays.asList(4, 6, 8));
-        ArrayList<Integer> points4Players = new ArrayList<Integer>(Arrays.asList(2, 4, 6, 8));
-
-
-        Class<?>[] classArray = {CommonGoalCard1.class, CommonGoalCard2.class, CommonGoalCard3.class, CommonGoalCard3.class,
-                CommonGoalCard4.class, CommonGoalCard5.class, CommonGoalCard6.class, CommonGoalCard7.class};
-        //ArrayList<Class<?>> classArray=new ArrayList<>(Arrays.asList(CommonGoalCard1.class,CommonGoalCard2.class,CommonGoalCard3.class));
-        this.CommonGoalCards = new ArrayList<CommonGoalCard>();
-        ;
-
-        for (Integer number : numbers) {
-            Class<?> classObj = classArray[number];
-            Object obj = classObj.getDeclaredConstructor().newInstance();
-            CommonGoalCards.add((CommonGoalCard) obj);
-        }
-
-        setPointsCommonGoalCards();
 
 
     }
 
-    public void setPointsCommonGoalCards() {
-        ArrayList<Integer> points2Players = new ArrayList<Integer>(Arrays.asList(4, 8));
-        ArrayList<Integer> points3Players = new ArrayList<Integer>(Arrays.asList(4, 6, 8));
-        ArrayList<Integer> points4Players = new ArrayList<Integer>(Arrays.asList(2, 4, 6, 8));
+    public Controller(GameandPlayerController gameandPlayerController, BoardController boardController) {
+        this.boardController = boardController;
+        this.gameandPlayerController = gameandPlayerController;
+    }
 
-        ArrayList<Integer> points = new ArrayList<Integer>();
+    public GameandPlayerController getGameandPlayerController() {
+        return gameandPlayerController;
+    }
 
-        switch (numPlayers) {
-            case 2:
-                points = points2Players;
-                break;
-            case 3:
-                points = points3Players;
-                break;
-            case 4:
-                points = points4Players;
-                break;
-            default:
-                System.err.println("Something wrong");
-                break;
+    public void setGameandPlayerController(GameandPlayerController gameandPlayerController) {
+        this.gameandPlayerController = gameandPlayerController;
+    }
+
+    public BoardController getBoardController() {
+        return boardController;
+    }
+
+    public void setBoardController(BoardController boardController) {
+        this.boardController = boardController;
+    }
+
+    public void inizializeGame() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        boardController.fillBag(gameandPlayerController.getGame().getNumPlayers());
+        gameandPlayerController.firstPlayer();
+        gameandPlayerController.createCommonGoalCard();
+    }
+
+    private void turnPlayer(int number) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        if(gameBoard().isEndGame()&&firstPlayer().getNickname().equals(turnPlayer().getNickname())){
+            System.out.println("FINE PARTITA, ne inizia una nuova");
+            //resettare
+            //inizializeGame();
+
+            gameandPlayerController.getGame().setFinishopposite();
         }
-
-        for (CommonGoalCard c : CommonGoalCards) {
-            c.setPoints(points);
+        if (number == -1) {
+            resetPlayerChoice();
+            changeFlag();
         }
-    }//verrà spostata all'interno del Player controller
+        if(number==-2){
+            System.out.println("Hai selezionato le tessere : freeshelves, inserisce la colonna");
+            gameBoard().setFinishPlayerChoice(-2);
+            turnPlayer().getBookshelf().computeFreeShelves();
+            turnBookshelf().printFreeShelves();
+            turnPlayer().setSelectedItems(boardController.selected());
+            changeFlag();
+        }
+        if(boardController.getBoard().getFinishPlayerChoice()==-2){
+            if(gameandPlayerController.insertBookshelf(number)){
+                System.out.println("le inserisce");
+                //TODO AGGIUNGERE L'AGGIORNAMENTO DEI PUNTEGGI
+                gameandPlayerController.setNextPlayer(turnPlayer());
+                if (boardController.checkRefill()) {
+                    boardController.refill();
+                }
+                if(turnBookshelf().isFull()){
+                    gameBoard().setEndGame(true);
+                }
+                gameBoard().setFinishPlayerChoice(-1);
+                resetPlayerChoice();
+                changeFlag();
+            } else {
+                System.out.println("Hai inserito in una colonna con un minore numero di tessere libere");
+                changeFlag();
+            }
+        }
+        if (gameBoard().getPlayerChoiceX() == -1) {
+            gameBoard().setPlayerChoiceX(number);
+            changeFlag();
 
-    public void createPersonalGoalCard() {
-        ArrayList<Integer> numbers = new ArrayList<Integer>();
-        //Importarle da jason e inserirle tutte e 12
-        numbers = generateRandomNumber(4, numPlayers);
+        } else if (gameBoard().getPlayerChoiceY() == -1) {
+            gameBoard().setPlayerChoiceY(number);
+            changeFlag();
 
-        //cambiare i valori associandogli le dodici tessere del gioco
-        ArrayList<ArrayList<Integer>> personalGoals = new ArrayList<ArrayList<Integer>>(List.of(new ArrayList<Integer>(List.of(0, 3, 4, 1, 1, 2)), new ArrayList<Integer>(List.of(1, 3, 4, 2)),
-                new ArrayList<Integer>(List.of(2, 3, 1, 4, 3, 2)), new ArrayList<Integer>(List.of(1, 2))));
-        ArrayList<ArrayList<Type>> types = new ArrayList<ArrayList<Type>>(List.of(new ArrayList<Type>(List.of(Type.CAT, Type.FRAME, Type.BOOK)),
-                new ArrayList<Type>(List.of(Type.FRAME, Type.FRAME)), new ArrayList<Type>(List.of(Type.TROPHY, Type.FRAME, Type.BOOK)),
-                new ArrayList<Type>(List.of(Type.PLANT))));
+        } else if (number< turnBookshelf().numSelectableTiles()) {
+            gameBoard().setPlayerChoicenumTile(number);
 
-        int i = 0;
-        for (Player p : players) {
-            p.setPersonalGoalCard(new PersonalGoalCard(personalGoals.get(numbers.get(i)), types.get(numbers.get(i++))));
+            if(!boardController.isSelectable(gameBoard().getBoardBox(gameBoard().getPlayerChoiceX(), gameBoard().getPlayerChoiceY()))){
+                System.out.println("non é una tessera selezionabile");
+            }
+            resetPlayerChoice();
+            gameBoard().printMatrix();
+            changeFlag();
+        }else{
+            System.out.println("Hai selezionato un numero maggiore di tesser selezionabili");
+            System.out.println("Digita -1 oppure scrivi direttamente le coordinate della nuova tessera");
+            gameBoard().printMatrix();
+            resetPlayerChoice();
+            changeFlag();
         }
     }
+    private void resetPlayerChoice(){
+        gameBoard().setPlayerChoiceX(-1);
+        gameBoard().setPlayerChoiceY(-1);
+        gameBoard().setPlayerChoicenumTile(-1);
+    }
+
+
+    public Player turnPlayer(){return gameandPlayerController.getGame().getTurnPlayer();}
+
+    public Player firstPlayer(){return gameandPlayerController.getGame().getFirstPlayer();}
+
+    public Bookshelf turnBookshelf(){return gameandPlayerController.getGame().getTurnPlayer().getBookshelf();}
+
+    public Board gameBoard(){return boardController.getBoard();}
+
+    public void changeFlag(){boardController.getBoard().setFinishPlayeropposite();}
 }

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model;
 
-import java.util.ArrayList;
-import java.util.Observable;
+
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -38,7 +37,7 @@ public class Board extends Observable {
         notifyObservers(tiles);
     }
 
-    private ArrayList<BoardBox> selectedBoard;
+    private ArrayList<BoardBox> selectedBoard=new ArrayList<>();
 
     public ArrayList<BoardBox> getSelectedBoard() {
         return selectedBoard;
@@ -77,37 +76,56 @@ public class Board extends Observable {
         this.playerChoiceY = playerChoiceY;
     }
 
-
-
     public Board() {
         playerChoicenumTile=-1;
         playerChoiceX=-1;
         playerChoiceY=-1;
+        finishPlayerChoice =-1;
     }
 
 
-    public boolean isFinishPlayer() {
-        return finishPlayer;
-    }
-
-    public void setFinishPlayer(boolean finishPlayer) {
-        this.finishPlayer = finishPlayer;
-        setChanged();
-        notifyObservers(finishPlayer);
-    }
     public void setFinishPlayeropposite() {
-        finishPlayer = finishPlayer;
+        finishPlayer = !finishPlayer;
         setChanged();
         notifyObservers(finishPlayer);
     }
-
-
     private Integer playerChoicenumTile;
     public Integer getPlayerChoicenumTile() {
         return playerChoicenumTile;
     }
-
     public void setPlayerChoicenumTile(Integer playerChoicenumTile) {
         this.playerChoicenumTile = playerChoicenumTile;
+    }
+    private Integer finishPlayerChoice;
+
+    public void printMatrix(){
+        for (int i = 0; i < matrix.length; i++) {
+            System.out.println(" ");
+            for (int j = 0; j < matrix[i].length; j++) {
+                if(matrix[i][j].getTile()!=null){
+                    System.out.print("1 ");
+                }
+                else System.out.print("0 ");
+            }
+        }
+    }
+
+
+    public Integer getFinishPlayerChoice() {
+        return finishPlayerChoice;
+    }
+
+    public void setFinishPlayerChoice(Integer finishPlayerChoice) {
+        this.finishPlayerChoice = finishPlayerChoice;
+    }
+
+    private boolean endGame;
+
+    public boolean isEndGame() {
+        return endGame;
+    }
+
+    public void setEndGame(boolean endGame) {
+        this.endGame = endGame;
     }
 }
