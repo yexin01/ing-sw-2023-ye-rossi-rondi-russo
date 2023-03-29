@@ -1,45 +1,24 @@
 package it.polimi.ingsw.model;
 
 public class CommonGoalCard10 extends CommonGoalCard{
-    /*
-      Cinque tessere dello stesso tipo che formano una X.
-    */
-
+    /**
+     * Goal10: "Five tiles of the same type forming an X."
+     * @param mat matrix of ItemTile[][]
+     * @return boolean if the goal is reached or not
+     */
     @Override
-    public boolean checkGoal(Bookshelf bookshelf) {
-        BookshelfBox[][] mat = bookshelf.getMatrix();
-        // stampo matrice
-        System.out.println("Matrice: ");
-        for (int i=0; i<mat.length; i++) {
-            for (int j=0; j<mat[i].length; j++) {
-                System.out.print(mat[i][j].getItemTile().getType() + " ");
-            }
-            System.out.println(" ");
-        }
-        //controllo il goal
+    public boolean checkGoal(ItemTile[][] mat) {
+        // check the goal
         for (int i=1; i<mat.length-1; i++) {
-            for (int j=1; j<mat[i].length-1; j++) {
-                if ((mat[i][j].getItemTile().getType().equals(mat[i-1][j-1].getItemTile().getType()))
-                        && (mat[i][j].getItemTile().getType().equals(mat[i-1][j+1].getItemTile().getType()))
-                        && (mat[i][j].getItemTile().getType().equals(mat[i+1][j-1].getItemTile().getType()))
-                        && (mat[i][j].getItemTile().getType().equals(mat[i+1][j+1].getItemTile().getType()))
-                ) {
-                    System.out.println("Trovate cinque tessere dello stesso tipo che formano una X.");
+            for (int j=1; j<mat[0].length-1; j++) {
+                if ( (mat[i][j].getType().equals(mat[i-1][j-1].getType()))
+                        && (mat[i][j].getType().equals(mat[i-1][j+1].getType()))
+                        && (mat[i][j].getType().equals(mat[i+1][j-1].getType()))
+                        && (mat[i][j].getType().equals(mat[i+1][j+1].getType())) ){
                     return true;
                 }
             }
         }
-        System.out.println("Non trovate cinque tessere dello stesso tipo che formano una X.");
         return false;
     }
-
-
-    /*
-    ScoringToken pullToken(){
-
-        return ScoringToken;
-    }
-    */
-
-
 }

@@ -1,34 +1,28 @@
 package it.polimi.ingsw.model;
 
 public class CommonGoalCard2 extends CommonGoalCard{
-    /*
-      Due colonne formate ciascuna da 6 diversi tipi di tessere.
-    */
-
+    /**
+     * Goal2: "Two columns each formed by 6 different types of tiles."
+     * Notes: the implementation of this function follows the Italian rules where it says "gruppi separati" as groups separated by at least 1 box in the matrix
+     *        (as requested by professor Cugola in Slack.channel-requirements)
+     * @param mat matrix of ItemTile[][]
+     * @return boolean if the goal is reached or not
+     */
     @Override
-    public boolean checkGoal(Bookshelf bookshelf){
-        int dimType=6;
+    public boolean checkGoal(ItemTile[][] mat){
         int goals;
-        int [] seen = new int [dimType]; // matrice di contatori per tipo
-        int notseen; // contatore
-        BookshelfBox[][] mat = bookshelf.getMatrix();
-        // stampo matrice
-        System.out.println("Matrice: ");
-        for(int i=0; i<mat.length; i++){
-            for(int j=0; j<mat[i].length; j++){
-                System.out.print(mat[i][j].getItemTile().getType() + " ");
-            }
-            System.out.println(" ");
-        }
-        //controllo il goal
+        int [] seen = new int [Type.values().length]; // array of counters for each Type of tile seen
+        int notseen; // counter of types not seen
+
+        // check the goal
         goals=0;
         for(int j=0; j<mat[0].length && goals<2; j++){
-            // per ogni colonna inizializzo a zeri la matrice
-            for(int a=0; a<dimType; a++){
+            // for each column initializes the seen types as 0
+            for(int a=0; a<Type.values().length; a++){
                 seen[a]=0;
             }
-            for(int i=0; i<mat.length; i++){
-                switch (mat[i][j].getItemTile().getType()) {
+            for (ItemTile[] bookshelfBoxes : mat) {
+                switch (bookshelfBoxes[j].getType()) {
                     case CAT -> seen[0]++;
                     case BOOK -> seen[1]++;
                     case GAME -> seen[2]++;
@@ -39,7 +33,7 @@ public class CommonGoalCard2 extends CommonGoalCard{
                 }
             }
             notseen=0;
-            for(int a=0; a<dimType; a++){
+            for(int a=0; a<Type.values().length; a++){
                 if(seen[a]==0){
                     notseen++;
                 }
@@ -48,17 +42,6 @@ public class CommonGoalCard2 extends CommonGoalCard{
                 goals++;
             }
         }
-        System.out.println("colonne formate ciascuna da 6 diversi tipi di tessere: "+goals+" o più");
         return goals >= 2;
     }
-
-
-    /*
-    ScoringToken pullToken(){
-
-        return ScoringToken;
-    }
-    */
-
-
 }

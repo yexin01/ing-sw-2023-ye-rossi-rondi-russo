@@ -1,31 +1,23 @@
 package it.polimi.ingsw.model;
 
 public class CommonGoalCard12 extends CommonGoalCard{
-    /*
-        Cinque colonne di altezza crescente o decrescente: a partire dalla prima colonna
-        a sinistra o a destra, ogni colonna successiva deve essere formata da una tessera in più.
-        Le tessere possono essere di qualsiasi tipo.
-    */
-
+    /**
+     * Goal12: "Five columns of increasing or decreasing height. Starting from the first column on the left or on the right,
+     *          each next column must be made of exactly one more tile. Tiles can be of any type."
+     * @param mat matrix of ItemTile[][]
+     * @return boolean if the goal is reached or not
+     */
     @Override
-    public boolean checkGoal(Bookshelf bookshelf) {
-        BookshelfBox[][] mat = bookshelf.getMatrix();
+    public boolean checkGoal(ItemTile[][] mat) {
         boolean verified;
         int i;
-        // lavoro solo con occupied, non mi interessa che tipo di tile c'è
-        int [][] occupied = { //da adattare con getoccupied
-                { 0, 0, 0, 0, 1 },
-                { 0, 0, 0, 1, 1 },
-                { 0, 0, 1, 1, 1 },
-                { 0, 1, 1, 1, 1 },
-                { 1, 1, 1, 1, 1 },
-                { 1, 1, 1, 1, 1 }
-        };
-        // stampo matrice
+
+        // used only for debugging to see occupied matrix in bookshelf
+        /*
         System.out.println("Matrice occupied: ");
         for (int x=0; x<mat.length; x++) {
             for (int j=0; j<mat[x].length; j++) {
-                if(mat[x][j].getItemTile()!=null){
+                if(mat[x][j].getTileID()!=-1){
                     System.out.println("1 ");
                 }else{
                     System.out.println("0 ");
@@ -33,52 +25,40 @@ public class CommonGoalCard12 extends CommonGoalCard{
             }
             System.out.println(" ");
         }
-        //controllo il goal
-        //caso decrescente
+        */
+
+        // check the goal
+
+        // case1: decreasing height
         i=0;
-        if (mat[0][0].getItemTile()==null){
+        if (mat[0][0].getTileID()==-1){
             i++;
         }
         verified=true;
         for (int a=0; a<mat[i].length && verified; a++) {
-            if (mat[i+a][a].getItemTile()==null){
+            if (mat[i+a][a].getTileID()==-1){
                 verified=false;
-            } else if (a+1<mat[i].length && mat[i+a][a+1].getItemTile()!=null){
+            } else if (a+1<mat[i].length && mat[i+a][a+1].getTileID()!=-1){
                 verified=false;
             }
         }
         if(verified){
-            System.out.println("Trovate colonne decrescenti.");
             return true;
         }
-        //caso crescente
+
+        // case2: increasing height
         i=0;
-        if (mat[0][mat[i].length-1].getItemTile()==null){
+        if (mat[0][mat[i].length-1].getTileID()==-1){
             i++;
         }
         verified=true;
         for (int a=mat[i].length-1; a>=0 && verified; a--) {
-            if (mat[i-a+mat[i].length-1][a].getItemTile()==null){
+            if (mat[i-a+mat[i].length-1][a].getTileID()==-1){
                 verified=false;
-            } else if (a-1>=0 && mat[i-a+mat[i].length-1][a-1].getItemTile()!=null) {
+            } else if (a-1>=0 && mat[i-a+mat[i].length-1][a-1].getTileID()!=-1) {
                 verified=false;
             }
         }
-        if (verified){
-            System.out.println("Trovate colonne crescenti.");
-            return true;
-        }
-        System.out.println("Non trovate colonne crescenti o decrescenti.");
-        return false;
+        return verified;
     }
-
-
-    /*
-    ScoringToken pullToken(){
-
-        return ScoringToken;
-    }
-    */
-
-
 }
