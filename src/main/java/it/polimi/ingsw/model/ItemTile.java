@@ -9,23 +9,23 @@ public class ItemTile extends Observable {
         return type;
     }
 
-    public ItemTile(Type type,int value) {
+    public ItemTile(Type type,int tileID) {
         this.type = type;
-        this.value=value;
+        this.tileID = tileID;
         setChanged();
         notifyObservers(type);
     }
 
-    private int value;
+    private int tileID;
 
-    public int getValue() {
-        return value;
+    public int getTileID() {
+        return tileID;
     }
 
-    public void setValue(int value) {
-        this.value = value;
+    public void setTileID(int tileID) {
+        this.tileID = tileID;
         setChanged();
-        notifyObservers(value);
+        notifyObservers(tileID);
     }
 
 

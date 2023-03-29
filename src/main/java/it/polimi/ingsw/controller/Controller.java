@@ -95,7 +95,7 @@ public class Controller implements Observer {
         if(boardController.getBoard().getFinishPlayerChoice()==-2){
             if(playerController.insert(number)){
                 System.out.println("le inserisce");
-               //AGGIUNGERE L'AGGIORNAMENTO DEI PUNTEGGI
+               //TODO AGGIUNGERE L'AGGIORNAMENTO DEI PUNTEGGI
                 playerController.setNextPlayer(turnPlayer());
                 if (boardController.checkRefill()) {
                     boardController.refill();

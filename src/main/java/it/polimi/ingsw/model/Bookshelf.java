@@ -21,7 +21,7 @@ public class Bookshelf {
     public void computeFreeShelves(){
         for (int j=0; j<matrix[0].length; j++){
             freeShelves[j]=0;
-            for (int i=0; i<matrix.length && matrix[i][j].getValue()==-1; i++){
+            for (int i = 0; i<matrix.length && matrix[i][j].getTileID()==-1; i++){
                 freeShelves[j]++;
             }
         }
@@ -50,13 +50,13 @@ public class Bookshelf {
     public ItemTile[][] getMatrix(){ return matrix;}
     public void setMatrix(ItemTile[][] matrix){ this.matrix=matrix;}
     public Type getTileType(int x,int y){ return matrix[x][y].getType();}
-    public int getTileValue(int x,int y){return matrix[x][y].getValue();}
+    public int getTileValue(int x,int y){return matrix[x][y].getTileID();}
     public void setTile(ItemTile tile,int x,int y){
-        matrix[x][y]=new ItemTile(tile.getType(),tile.getValue());
+        matrix[x][y]=new ItemTile(tile.getType(),tile.getTileID());
     }
     public boolean isFull(){
         for(int i=0;i< matrix[0].length;i++){
-            if(matrix[0][i].getValue()==-1){
+            if(matrix[0][i].getTileID()==-1){
                 return false;
             }
         }

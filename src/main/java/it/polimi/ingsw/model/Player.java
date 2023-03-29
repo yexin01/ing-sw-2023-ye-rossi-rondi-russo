@@ -170,7 +170,8 @@ public class Player {
         commonGoalPoints = token1Points + token2Points;
     }
 
-    public void setAdjacentPoints(){
+    //TODO map group size to points according to the rules
+    public void computeAdjacentPoints(){
         int sum=0;
         for(int groupSize : bookshelf.findAdjacentTilesGroups()){
             sum+=groupSize;

@@ -42,7 +42,7 @@ public class View2 extends Observable implements Observer {
             return;
         }
         for(ItemTile s: selectedTiles){
-            System.out.println(s.getType()+" "+s.getValue());
+            System.out.println(s.getType()+" "+s.getTileID());
         }
     }
 
