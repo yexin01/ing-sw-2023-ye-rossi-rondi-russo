@@ -1,19 +1,15 @@
 package it.polimi.ingsw.model;
 
 public class CommonGoalCard4 extends CommonGoalCard{
-    /*
-      Sei gruppi separati formati ciascuno da due tessere adiacenti dello stesso tipo
-      (non necessariamente come mostrato in figura).
-      Le tessere di un gruppo possono essere diverse da quelle di un altro gruppo.
-      Ho libreria come matrice 6x5
-      ho un flag checkable sulla bookshelfBox
-      -----> setto tutti i checkable a 1 PRIMA di chiamare il checkgoal!!
-    */
-
+    /**
+     * Goal4: "Six groups each containing at least 2 tiles of the same type (not necessarily in the depicted shape).
+     *         The tiles of one group can be different from those of another group."
+     * @param mat matrix of ItemTile[][]
+     * @return boolean if the goal is reached or not
+     */
     @Override
-    public boolean checkGoal(Bookshelf bookshelf){
+    public boolean checkGoal(ItemTile[][] mat){
         int goals;
-        BookshelfBox[][] mat = bookshelf.getMatrix();
         int [][] checkable = {
                 { 1, 1, 1, 1, 1 },
                 { 1, 1, 1, 1, 1 },
@@ -22,45 +18,24 @@ public class CommonGoalCard4 extends CommonGoalCard{
                 { 1, 1, 1, 1, 1 },
                 { 1, 1, 1, 1, 1 }
         };
-        // stampo matrice
-        System.out.println("Matrice: ");
-        for(int i=0; i<mat.length; i++){
-            for(int j=0; j<mat[i].length; j++){
-                System.out.print(mat[i][j].getItemTile().getType() + " ");
-            }
-            System.out.println(" ");
-        }
-        //controllo il goal
+
+        // check the goal
         goals=0;
         for(int i=0; i<mat.length && goals<6; i++){
-            for(int j=0; j<mat[i].length-1 && goals<6; j++){
-                while(checkable[i][j]==0 && (j<mat[i].length-2)){
+            for(int j=0; j<mat[0].length-1 && goals<6; j++){
+                while(checkable[i][j]==0 && (j<mat[0].length-2)){
                     j++;
                 }
-                checkable[i][j]=0; //segno come uncheckable quello su cui sono
-                if(i<mat.length-1 && mat[i][j].getItemTile().getType().equals(mat[i+1][j].getItemTile().getType()) && checkable[i+1][j]==1){
+                checkable[i][j]=0;
+                if(i<mat.length-1 && mat[i][j].getType().equals(mat[i+1][j].getType()) && checkable[i+1][j]==1){
                     goals++;
                     checkable[i+1][j]=0;
-                } else if (mat[i][j].getItemTile().getType().equals(mat[i][j+1].getItemTile().getType()) && checkable[i][j+1]==1) {
+                } else if (mat[i][j].getType().equals(mat[i][j+1].getType()) && checkable[i][j+1]==1) {
                     goals++;
                     checkable[i][j+1]=0;
                 }
             }
         }
-        System.out.println("gruppi separati formati ciascuno da due tessere adiacenti dello stesso tipo: "+goals+" o più");
         return goals >= 6;
     }
-
-
-
-
-
-    /*
-    ScoringToken pullToken(){
-
-        return ScoringToken;
-    }
-    */
-
-
 }

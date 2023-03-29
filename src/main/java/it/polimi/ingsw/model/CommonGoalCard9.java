@@ -1,31 +1,23 @@
 package it.polimi.ingsw.model;
 
 public class CommonGoalCard9 extends CommonGoalCard{
-    /*
-      Otto tessere dello stesso tipo. Non ci sono restrizioni sulla posizione di queste tessere.
-    */
-
+    /**
+     * Goal9: "Eight tiles of the same type. There’s no restriction about the position of these tiles."
+     * @param mat matrix of ItemTile[][]
+     * @return boolean if the goal is reached or not
+     */
     @Override
-    public boolean checkGoal(Bookshelf bookshelf){
-        int dimType=6;
-        int [] seen = new int [dimType]; // matrice di contatori per tipo
-        BookshelfBox[][] mat = bookshelf.getMatrix();
-        // stampo matrice
-        System.out.println("Matrice: ");
-        for(int i=0; i<mat.length; i++){
-            for(int j=0; j<mat[i].length; j++){
-                System.out.print(mat[i][j].getItemTile().getType() + " ");
-            }
-            System.out.println(" ");
-        }
-        //controllo il goal
-        //inizializzo a zeri la matrice dei contatori
-        for(int a=0; a<dimType; a++){
+    public boolean checkGoal(ItemTile[][] mat){
+        int [] seen = new int [Type.values().length]; // array of counters for each Type of tile seen
+
+        // check the goal
+        // initializes the seen types as 0
+        for(int a=0; a<Type.values().length; a++){
             seen[a]=0;
         }
-        for(int i=0; i<mat.length; i++){
-            for(int j=0; j<mat[i].length; j++){
-                switch (mat[i][j].getItemTile().getType()) {
+        for (ItemTile[] itemTiles : mat) {
+            for (int j = 0; j < mat[0].length; j++) {
+                switch (itemTiles[j].getType()) {
                     case CAT -> seen[0]++;
                     case BOOK -> seen[1]++;
                     case GAME -> seen[2]++;
@@ -34,25 +26,13 @@ public class CommonGoalCard9 extends CommonGoalCard{
                     case PLANT -> seen[5]++;
                     default -> System.out.println("type_tile not valid!");
                 }
-                for(int a=0; a<dimType; a++){
-                    if(seen[a]>=8){
-                        System.out.println("trovate almeno otto tessere dello stesso tipo.");
+                for (int a = 0; a < Type.values().length; a++) {
+                    if (seen[a] >= 8) {
                         return true;
                     }
                 }
             }
         }
-        System.out.println("non sono state trovate almeno otto tessere dello stesso tipo.");
         return false;
     }
-
-
-    /*
-    ScoringToken pullToken(){
-
-        return ScoringToken;
-    }
-    */
-
-
 }
