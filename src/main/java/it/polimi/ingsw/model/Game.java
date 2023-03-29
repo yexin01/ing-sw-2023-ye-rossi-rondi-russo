@@ -1,43 +1,50 @@
 package it.polimi.ingsw.model;
 
 
+import it.polimi.ingsw.model.Board;
+import it.polimi.ingsw.model.Player;
 
-import it.polimi.ingsw.controller.Controller;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Observable;
 
 public class Game extends Observable {
-    private final Controller controller = new Controller();
+    private int numPlayers;
+    private Player turnPlayer;
+    private ArrayList<CommonGoalCard> CommonGoalCards;
+    private Player firstPlayer;
 
 
     public int getNumPlayers() {
-        return controller.getNumPlayers();
+        return numPlayers;
     }
 
     public void setNumPlayers(int numPlayers) {
-        this.controller.setNumPlayers(numPlayers);
+        this.numPlayers = numPlayers;
     }
 
+    private ArrayList<Player> players=new ArrayList<Player>();
+
     public ArrayList<Player> getPlayers() {
-        return controller.getPlayers();
+        return players;
     }
 
     public void setPlayers(ArrayList<Player> players) {
-        this.controller.setPlayers(players);
+        this.players = players;
     }
+    private boolean finishGame;
+
+    private boolean finish;
 
     public boolean isFinish() {
-        return controller.isFinish();
+        return finish;
     }
     public void setFinishopposite() {
-        this.controller.setFinish(!this.controller.isFinish());
+        finish = !finish;
         setChanged();
-        notifyObservers(controller.isFinish());
+        notifyObservers(finish);
     }
     public void setFinish(boolean finish) {
-        this.controller.setFinish(finish);
+        this.finish = finish;
         setChanged();
         notifyObservers(finish);
     }
@@ -47,52 +54,39 @@ public class Game extends Observable {
     }
 
     public Player getTurnPlayer() {
-        return controller.getTurnPlayer();
+        return turnPlayer;
     }
 
     public void setTurnPlayer(Player turnPlayer) {
-        this.controller.setTurnPlayer(turnPlayer);
+        this.turnPlayer = turnPlayer;
     }
 
     public Player getFirstPlayer() {
-        return controller.getFirstPlayer();
+        return firstPlayer;
     }
 
     public void setFirstPlayer(Player firstPlayer) {
-        this.controller.setFirstPlayer(firstPlayer);
+        this.firstPlayer = firstPlayer;
     }
 
-    //genera numbers numeri casuali diversi in un range prefissato da start a end
-    //nel caso del gioco start=1;end=12, numbers=2
-    //numbers indica il numero di carte obiettivo da generare
-    private ArrayList<Integer> generateRandomNumber(int possibleNumbers,int numTime) {
-        //importa i valori da jason
-
-        return controller.generateRandomNumber(possibleNumbers, numTime);
-    }
-    //crea il numero di common goal card prefissato
-    public void createCommonGoalCard() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-
-        //Importa da Jason
-
-
-        //ArrayList<Class<?>> classArray=new ArrayList<>(Arrays.asList(CommonGoalCard1.class,CommonGoalCard2.class,CommonGoalCard3.class));
-
-
-        controller.createCommonGoalCard();
+    public ArrayList<CommonGoalCard> getCommonGoalCards() {
+        return CommonGoalCards;
     }
 
-    private void setPointsCommonGoalCards() {
-
-        controller.setPointsCommonGoalCards();
+    public void setCommonGoalCards(ArrayList<CommonGoalCard> commonGoalCards) {
+        CommonGoalCards = commonGoalCards;
     }
 
-    //verrà spostata all'interno del Player controller
-    public void createPersonalGoalCard(){
-        //Importarle da jason e inserirle tutte e 12
+    public boolean isFinishGame() {
+        return finishGame;
+    }
 
-        //cambiare i valori associandogli le dodici tessere del gioco
-
-        controller.createPersonalGoalCard();
+    public void setFinishGame(boolean finishGame) {
+        this.finishGame = finishGame;
+    }
+    public void setFinishGameopposite() {
+        finishGame = !finishGame;
+        setChanged();
+        notifyObservers(finish);
     }
 }
