@@ -8,7 +8,7 @@ public class CommonGoalCard12 extends CommonGoalCard{
      * @return boolean if the goal is reached or not
      */
     @Override
-    public boolean checkGoal(ItemTile[][] mat) {
+    public boolean checkGoal(int numCommonGoalCard, ItemTile[][] mat) {
         boolean verified;
         int i;
 

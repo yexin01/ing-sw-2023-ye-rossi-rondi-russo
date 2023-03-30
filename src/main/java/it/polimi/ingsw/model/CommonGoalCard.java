@@ -12,7 +12,7 @@ public abstract class CommonGoalCard {
      * @param mat matrix of ItemTile[][]
      * @return boolean if the goal is reached or not
      */
-    public abstract boolean checkGoal(ItemTile[][] mat);
+    public abstract boolean checkGoal(int numCommonGoalCard, ItemTile[][] mat);
 
     public ArrayList<Integer> getPoints() {
         return points;

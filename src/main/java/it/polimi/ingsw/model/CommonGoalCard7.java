@@ -3,13 +3,13 @@ package it.polimi.ingsw.model;
 public class CommonGoalCard7 extends CommonGoalCard{
     /**
      * Goal7: "Four lines each formed by 5 tiles of maximum three different types. One line can show the same or a different combination of another line."
-     * Notes: the implementation of this function follows the Italian rules where it says "gruppi separati" as groups separated by at least 1 box in the matrix
-     *        (as requested by professor Cugola in Slack.channel-requirements)
      * @param mat matrix of ItemTile[][]
      * @return boolean if the goal is reached or not
      */
+
+    // TODO delete
     @Override
-    public boolean checkGoal(ItemTile[][] mat){
+    public boolean checkGoal(int numCommonGoalCard, ItemTile[][] mat){
         int goals;
         int [] seen = new int [Type.values().length]; // array of counters for each Type of tile seen
         int notseen; // counter of types not seen

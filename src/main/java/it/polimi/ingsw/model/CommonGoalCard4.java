@@ -4,11 +4,13 @@ public class CommonGoalCard4 extends CommonGoalCard{
     /**
      * Goal4: "Six groups each containing at least 2 tiles of the same type (not necessarily in the depicted shape).
      *         The tiles of one group can be different from those of another group."
+     * Notes: the implementation of this function follows the Italian rules where it says "gruppi separati" as groups separated by at least 1 box in the matrix
+     *        (as requested by professor Cugola in Slack.channel-requirements)
      * @param mat matrix of ItemTile[][]
      * @return boolean if the goal is reached or not
      */
     @Override
-    public boolean checkGoal(ItemTile[][] mat){
+    public boolean checkGoal(int numCommonGoalCard, ItemTile[][] mat){
         int goals;
         int [][] checkable = {
                 { 1, 1, 1, 1, 1 },

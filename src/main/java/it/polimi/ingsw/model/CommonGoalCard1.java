@@ -8,8 +8,10 @@ public class CommonGoalCard1 extends CommonGoalCard{
      * @param mat matrix of ItemTile[][]
      * @return boolean if the goal is reached or not
      */
+
+    //TODO adapt the algorithm to the "exactly a square of 2x2", it should not be contained in larger squares 3x3 etc, as requested on slack-channels
     @Override
-    public boolean checkGoal(ItemTile[][] mat){
+    public boolean checkGoal(int numCommonGoalCard, ItemTile[][] mat){
         int goals;
         int goali, goalj;
 
