@@ -59,7 +59,15 @@ public class Board extends Observable {
     }
 
     public void setPlayerChoiceX(Integer playerChoiceX) {
-        this.playerChoiceX = playerChoiceX;
+        try {
+            if (playerChoiceX < -1 || playerChoiceX >= matrix.length) {
+                throw new IllegalArgumentException(" value must be between 0 and " + (matrix.length - 1));
+            }
+            this.playerChoiceX = playerChoiceX;
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid row:Rewrite the row" + e.getMessage());
+            setFinishPlayeropposite();
+        }
     }
 
 
@@ -73,14 +81,21 @@ public class Board extends Observable {
     }
 
     public void setPlayerChoiceY(Integer playerChoiceY) {
-        this.playerChoiceY = playerChoiceY;
-    }
+        try {
+            if (playerChoiceY < -1 || playerChoiceY >= matrix.length) {
+                throw new IllegalArgumentException(" value must be between 0 and " + (matrix[0].length - 1));
 
+            }
+            this.playerChoiceY = playerChoiceY;
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid column:Rewrite the column" + e.getMessage());
+            setFinishPlayeropposite();
+        }
+    }
     public Board() {
-        playerChoicenumTile=-1;
         playerChoiceX=-1;
         playerChoiceY=-1;
-        finishPlayerChoice =-1;
+        finishPlayerChoice=-1;
     }
 
 
@@ -89,13 +104,7 @@ public class Board extends Observable {
         setChanged();
         notifyObservers(finishPlayer);
     }
-    private Integer playerChoicenumTile;
-    public Integer getPlayerChoicenumTile() {
-        return playerChoicenumTile;
-    }
-    public void setPlayerChoicenumTile(Integer playerChoicenumTile) {
-        this.playerChoicenumTile = playerChoicenumTile;
-    }
+
     private Integer finishPlayerChoice;
 
     public void printMatrix(){
@@ -111,13 +120,6 @@ public class Board extends Observable {
     }
 
 
-    public Integer getFinishPlayerChoice() {
-        return finishPlayerChoice;
-    }
-
-    public void setFinishPlayerChoice(Integer finishPlayerChoice) {
-        this.finishPlayerChoice = finishPlayerChoice;
-    }
 
     private boolean endGame;
 
@@ -127,5 +129,14 @@ public class Board extends Observable {
 
     public void setEndGame(boolean endGame) {
         this.endGame = endGame;
+    }
+
+
+    public Integer getFinishPlayerChoice() {
+        return finishPlayerChoice;
+    }
+
+    public void setFinishPlayerChoice(Integer finishPlayerChoice) {
+        this.finishPlayerChoice = finishPlayerChoice;
     }
 }

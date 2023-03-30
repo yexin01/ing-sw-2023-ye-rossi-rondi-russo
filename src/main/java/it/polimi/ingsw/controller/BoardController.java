@@ -190,68 +190,60 @@ public class BoardController {
         }
     }
 
-
-
-    /**
-     * adjacent, in the same row or column and adjacent
-     * @return
-     */
-    public boolean checkSelectable() {
+    public boolean allAdjacent(){
         List<BoardBox> selectedBoard = board.getSelectedBoard();
-        //at least one free edge
-        for (int i = 0; i < selectedBoard.size(); i++) {
-            if(selectedBoard.get(i).getFreeEdges()<=0) {
-                return false;
-            }
-        }
-
-        if (selectedBoard.size() <= 1) {
-            return true;
-        }
-        //on the same row or column
-        boolean allTilesInSameRow = true;
-        boolean allTilesInSameColumn = true;
-        int firstX = selectedBoard.get(0).getX();
-        int firstY = selectedBoard.get(0).getY();
-        for (int i = 1; i < selectedBoard.size(); i++) {
-            if (selectedBoard.get(i).getX() != firstX) {
-                allTilesInSameColumn = false;
-            }
-            if (selectedBoard.get(i).getY() != firstY) {
-                allTilesInSameRow = false;
-            }
-        }
-        if (allTilesInSameRow && allTilesInSameColumn) {
-            return false;
-        }
-        //adjacent
         for (int i = 1; i < selectedBoard.size(); i++) {
             BoardBox currentTile = selectedBoard.get(i);
             BoardBox previousTile = selectedBoard.get(i - 1);
-            if (currentTile.getX() == previousTile.getX() && Math.abs(currentTile.getY() - previousTile.getY()) != 1) {
-                return false;
-            } else if (currentTile.getY() == previousTile.getY() && Math.abs(currentTile.getX() - previousTile.getX()) != 1) {
-                return false;
-            } else if (currentTile.getX() != previousTile.getX() && currentTile.getY() != previousTile.getY()) {
+            if (Math.abs(currentTile.getX() - previousTile.getX()) != 1 && Math.abs(currentTile.getY() - previousTile.getY()) != 1) {
                 return false;
             }
         }
         return true;
     }
-
-
-    /**adds the boardBox to the Arraylist
-     *
-     * @param boardbox
-     * @return
-     */
-
-    public boolean isSelectable(BoardBox boardbox) {
-        if(checkSelectable()){
-            board.getSelectedBoard().add(boardbox);
+    public boolean allSameRowOrSameColumn(){
+        List<BoardBox> selectedBoard = board.getSelectedBoard();
+        int firstX = selectedBoard.get(0).getX();
+        int firstY = selectedBoard.get(0).getY();
+        boolean allSameRow = true;
+        boolean allSameColumn = true;
+        for (int i = 1; i < selectedBoard.size(); i++) {
+            if (selectedBoard.get(i).getX() != firstX) {
+                allSameRow = false;
+            }
+            if (selectedBoard.get(i).getY() != firstY) {
+                allSameColumn = false;
+            }
+        }
+        if (allSameRow ^ allSameColumn) {
             return true;
         }
         return false;
+    }
+
+    /**
+     * adjacent, in the same row or column and adjacent
+     * @return
+     */
+    //TODO depends on how we implement the controller: this method checks the tile after each selection,
+    // if we change the controller by checking the cards when the user has selected them all this method
+    // must be changed by adding an arraylist to the board, checking at the end
+    public boolean checkSelectable(BoardBox boardBox) {
+        //TODO importing number of selectable tiles from json
+        int numeSelectableTiles=3;
+        if((boardBox.getFreeEdges()<=0)){
+            return false;
+        }
+        List<BoardBox> selectedBoard = board.getSelectedBoard();
+        board.getSelectedBoard().add(boardBox);
+        if(selectedBoard.size()==1){
+            return true;
+        }
+        if (!allAdjacent() || !allSameRowOrSameColumn()) {
+            selectedBoard.remove(selectedBoard.size()-1);
+            return false;
+        }
+        return true;
     }
 
 

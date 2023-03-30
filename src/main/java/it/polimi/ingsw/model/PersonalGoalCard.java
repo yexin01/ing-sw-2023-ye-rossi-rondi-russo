@@ -13,6 +13,22 @@ public class PersonalGoalCard {
         this.types = types;
     }
 
+    public ArrayList<Integer> getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(ArrayList<Integer> coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public ArrayList<Type> getTypes() {
+        return types;
+    }
+
+    public void setTypes(ArrayList<Type> types) {
+        this.types = types;
+    }
+
     /*
     private ArrayList<Integer> coordinates;
     private ArrayList<Type> types;

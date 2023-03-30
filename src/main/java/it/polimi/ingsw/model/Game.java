@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 public class Game extends Observable {
+
+    private Board board;
     private int numPlayers;
     private Player turnPlayer;
     private ArrayList<CommonGoalCard> CommonGoalCards;
@@ -50,7 +52,8 @@ public class Game extends Observable {
     }
 
 
-    public Game() {
+    public Game(Board board) {
+        this.board=board;
     }
 
     public Player getTurnPlayer() {
@@ -88,5 +91,13 @@ public class Game extends Observable {
         finishGame = !finishGame;
         setChanged();
         notifyObservers(finish);
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
     }
 }

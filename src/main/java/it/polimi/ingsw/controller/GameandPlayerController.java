@@ -36,7 +36,6 @@ public class GameandPlayerController {
      */
     //TODO insertNickname it depends on how we implement the controller in the future it could change
     public boolean insertNickname(String nickname) {
-        //IMPORTA il 4 dajason sarebbe numero di giocatori possibili meno uno
         if(true && !nickname.equals("stop")){
             //TODO add the method that the name is different from others
             Bookshelf bookshelf=new Bookshelf();
@@ -44,7 +43,9 @@ public class GameandPlayerController {
             game.getPlayers().add(player);
             game.setNumPlayers(game.getNumPlayers() + 1);
             //TODO importing MAXnumPlayers from json
-            if(game.getPlayers().size()==4)  return false;
+            if(game.getPlayers().size()==4){
+                return false;
+            }
             return true;
         }
         return false;
@@ -159,23 +160,48 @@ public class GameandPlayerController {
      * @param column freeShelves[column]
      * @return
      */
-    public boolean insertBookshelf(int column){
-        if(turnBookshelf().getMaxTilesColumn(column)<selectedTiles().size()){
-            return false;
-        }
-        if(selectedTiles().size()<=turnBookshelf().getMaxTilesColumn(column)){
-            int j=0;
-            for(int i= turnBookshelf().getMatrix().length-1;j<selectedTiles().size();i--){
-                if(turnBookshelf().getMatrix()[i][column].getTileID()==-1){
-                    turnBookshelf().setTile(selectedTiles().get(j++),i,column);
-                    System.out.println(turnBookshelf().getTileType(i,column));
-                }
+/*
+    public boolean insertBookshelf(int column) {
+        try {
+            if (column < 0 || column >= turnBookshelf().getMatrix().length-1) {
+                throw new IllegalArgumentException("Column value must be between 0 and " + (turnBookshelf().getMatrix()[0].length - 1));
             }
-            return true;
+            if (turnBookshelf().getMaxTilesColumn(column) < selectedTiles().size()) {
+                return false;
+            }
+            if (selectedTiles().size() <= turnBookshelf().getMaxTilesColumn(column)) {
+                int j = 0;
+                for (int i = turnBookshelf().getMatrix().length - 1; j < selectedTiles().size(); i--) {
+                    if (turnBookshelf().getMatrix()[i][column].getTileID() == -1) {
+                        turnBookshelf().setTile(selectedTiles().get(j++), i, column);
+                        System.out.println("Inserted tile of type " + turnBookshelf().getTileType(i, column) + " in column " + column + ", row " + i);
+                    }
+                }
+                return true;
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid column value: " + e.getMessage());
         }
         return false;
     }
+ */
+
+    public boolean insertBookshelf(int column) {
+        if (selectedTiles().size() <= turnBookshelf().getMaxTilesColumn(column)) {
+                int j = 0;
+                for (int i = turnBookshelf().getMatrix().length - 1; j < selectedTiles().size(); i--) {
+                    if (turnBookshelf().getMatrix()[i][column].getTileID() == -1) {
+                        turnBookshelf().setTile(selectedTiles().get(j++), i, column);
+                        System.out.println("Inserted tile of type " + turnBookshelf().getTileType(i, column) + " in column " + column + ", row " + i);
+                    }
+                }
+                return true;
+            }
+
+        return false;
+    }
     public ArrayList<ItemTile> selectedTiles(){return game.getTurnPlayer().getSelectedItems();}
+
 
     public Bookshelf turnBookshelf(){return game.getTurnPlayer().getBookshelf();}
 
