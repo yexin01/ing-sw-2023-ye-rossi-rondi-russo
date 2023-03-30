@@ -8,8 +8,8 @@ public class View1 extends Observable implements  Observer {
 
 
     public void setPlayers() {
-        System.out.println("INIZIO partita inserimento giocatori");
-        //IMPORTA DA JSON max giocatori
+        System.out.println("Start game write the name of the first player");
+        //TODO import from json numMaxPlayers
         int max = 4;
         int i = 0;
         String nickname;
@@ -24,7 +24,7 @@ public class View1 extends Observable implements  Observer {
 
     public String askPlayerNickname() {
         Scanner scanner=new Scanner(System.in);
-        System.out.println("Inserisci il nome scrivi stop per uscire");
+        System.out.println("Enter the name write stop when you have finished entering the players \nIf there are 4 players the game will start automatically");
         String input=scanner.next();
         setChanged();
         notifyObservers(input);

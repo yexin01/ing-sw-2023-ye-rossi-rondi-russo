@@ -20,7 +20,8 @@ public class App
         view2.addObserver(controller);
 
         view1.askPlayerNickname();
-        view2.askPlayer();
+
+    view2.askPlayer();
 
     }
 

@@ -3,10 +3,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.*;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class GameandPlayerController {
 
@@ -35,22 +32,43 @@ public class GameandPlayerController {
      * @return
      */
     //TODO insertNickname it depends on how we implement the controller in the future it could change
-    public boolean insertNickname(String nickname) {
-        if(true && !nickname.equals("stop")){
-            //TODO add the method that the name is different from others
-            Bookshelf bookshelf=new Bookshelf();
-            Player player=new Player(nickname,bookshelf);
-            game.getPlayers().add(player);
-            game.setNumPlayers(game.getNumPlayers() + 1);
-            //TODO importing MAXnumPlayers from json
-            if(game.getPlayers().size()==4){
-                return false;
+    public boolean insertNickname(String nickname) throws IllegalArgumentException {
+        //TODO importing MAXnumPlayers from json
+        int numMaxPlayer=4;
+        if(!nickname.equals("stop") && game.getPlayers().size()<4){
+            if(differentNickname(nickname)){
+                Bookshelf bookshelf=new Bookshelf();
+                Player player=new Player(nickname,bookshelf);
+                game.getPlayers().add(player);
+                game.setNumPlayers(game.getNumPlayers() + 1);
+                if(game.getPlayers().size()==4){
+                    System.out.println("START THE GAME with "+game.getPlayers().size()+" players");
+                    return false;
+                }
+            }else{
+                throw new IllegalArgumentException("Invalid name already used");
             }
-            return true;
+        }else {
+            System.out.println("START THE GAME with "+game.getPlayers().size()+" players");
+            return false;
         }
-        return false;
+        return true;
     }
-
+    public boolean differentNickname(String nickname) {
+        if (game.getPlayers().isEmpty()) {
+            return true;
+        } else {
+            Set<String> usedNames = new HashSet<>();
+            for (Player p : game.getPlayers()) {
+                usedNames.add(p.getNickname());
+            }
+            if (usedNames.contains(nickname)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
     /**
      * change the player to the next one
      * @param player
@@ -157,7 +175,7 @@ public class GameandPlayerController {
      *
      * inserts into the player's bookshelf if the tiles are less than the maximum
      * number of insertable tiles and returns true
-     * @param column freeShelves[column]
+     * @param
      * @return
      */
 /*

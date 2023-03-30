@@ -16,7 +16,7 @@ public class View2 extends Observable implements Observer {
         int input;
         Scanner scanner = new Scanner(System.in);
         System.out.println(" ");
-        System.out.println("Enter number (coordinates or -1 -2)");
+        System.out.println("Enter coordinates (first row second column) after the tiles are selected -2 and then the column of the bookshelf");
 
         input = scanner.nextInt();
         setChanged();

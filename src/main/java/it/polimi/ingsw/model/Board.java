@@ -106,7 +106,7 @@ public class Board extends Observable {
     }
 
     private Integer finishPlayerChoice;
-
+/*
     public void printMatrix(){
         for (int i = 0; i < matrix.length; i++) {
             System.out.println(" ");
@@ -116,6 +116,21 @@ public class Board extends Observable {
                 }
                 else System.out.print("0 ");
             }
+        }
+    }
+    */
+
+    public void printMatrix(){
+        for (int i = 0; i < matrix.length; i++) {
+            System.out.printf("row"+i+" ");
+            for (int j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j].getTile()!=null) {
+                    System.out.printf("%-10s",+j+""+matrix[i][j].getTile().getType());
+                } else {
+                    System.out.printf("%-10s",+j+" vuota");
+                }
+            }
+            System.out.println("");
         }
     }
 
