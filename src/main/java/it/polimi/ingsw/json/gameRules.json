@@ -1,0 +1,84 @@
+{
+  "max_players": 4,
+  "num_tiles_per_type": [22, 22, 22, 22, 22, 22],
+  "max_selectable_tiles": 3,
+  "matrices": [
+    {
+      "num_players": 2,
+      "matrix": [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 1, 0, 0, 0],
+        [0, 0, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 0, 0],
+        [0, 0, 0, 1, 1, 1, 0, 0, 0],
+        [0, 0, 0, 1, 1, 1, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+      ]
+    },
+    {
+      "num_players": 3,
+      "matrix": [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 1, 0, 0, 0],
+        [0, 0, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 0, 0],
+        [0, 0, 0, 1, 1, 1, 0, 0, 0],
+        [0, 0, 0, 1, 1, 1, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+      ]
+    },
+    {
+      "num_players": 4,
+      "matrix": [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 1, 0, 0, 0],
+        [0, 0, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 0, 0],
+        [0, 1, 0, 1, 1, 1, 0, 0, 0],
+        [0, 1, 0, 1, 1, 1, 1, 1, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0, 0]
+      ]
+    }
+  ],
+
+  "numOfCommonGoals": 2,
+
+  "commonGoalCards": [
+    "it.polimi.ingsw.model.CommonGoalCard1",
+    "it.polimi.ingsw.model.CommonGoalCard2",
+    "it.polimi.ingsw.model.CommonGoalCard3",
+    "it.polimi.ingsw.model.CommonGoalCard4",
+    "it.polimi.ingsw.model.CommonGoalCard5",
+    "it.polimi.ingsw.model.CommonGoalCard6",
+    "it.polimi.ingsw.model.CommonGoalCard7",
+    "it.polimi.ingsw.model.CommonGoalCard8",
+    "it.polimi.ingsw.model.CommonGoalCard9",
+    "it.polimi.ingsw.model.CommonGoalCard10",
+    "it.polimi.ingsw.model.CommonGoalCard11",
+    "it.polimi.ingsw.model.CommonGoalCard12"
+  ],
+
+  "personalGoalsCoordinates":
+  [
+    [0, 3, 4, 1, 1, 2],
+    [1, 3, 4, 2],
+    [2, 3, 1, 4, 3, 2],
+    [1, 2]
+  ],
+  "personalGoalsTypes":
+  [
+    ["CAT", "FRAME", "BOOK"],
+    ["FRAME", "FRAME"],
+    ["TROPHY", "FRAME", "BOOK"],
+    ["PLANT"]
+  ],
+
+  "maxRowsBookshelf": 6,
+  "maxColumnsBookshelf": 5
+}

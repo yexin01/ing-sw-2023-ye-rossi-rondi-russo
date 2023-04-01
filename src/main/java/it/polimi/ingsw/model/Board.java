@@ -2,6 +2,8 @@ package it.polimi.ingsw.model;
 
 
 
+import it.polimi.ingsw.json.GameRules;
+
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -96,6 +98,7 @@ public class Board extends Observable {
         playerChoiceX=-1;
         playerChoiceY=-1;
         finishPlayerChoice=-1;
+        columnSelected=-1;
     }
 
 
@@ -133,7 +136,51 @@ public class Board extends Observable {
             System.out.println("");
         }
     }
+    private int columnSelected;
+    public int getColumnSelected() {
+        return columnSelected;
+    }
 
+    public void setColumnSelected(Integer columnSelected) {
+        //TODO import num column bookshelf
+        //TODO OR THIS WILL BE IN THE BOOKSHELF
+        int maxColumBookshelf=4;
+        try {
+            if (columnSelected < -1 || columnSelected > 4) {
+                throw new IllegalArgumentException(" value must be between 0 and  "+maxColumBookshelf);
+            }
+            this.columnSelected = columnSelected;
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid bookshelf column:Rewrite the column" + e.getMessage());
+            setFinishPlayeropposite();
+        }
+    }
+    private int numOfTile;
+    public int getnumOfTile() {
+        return numOfTile;
+    }
+
+    public void setNumOfTile(Integer numOfTile) {
+        GameRules boardAndGame;
+        try {
+            boardAndGame = new GameRules();
+        } catch (Exception e) {
+            System.err.println("Error initializing ReadBoardAndGame: " + e.getMessage());
+            return;
+        }
+
+        int maxNumOfTile = boardAndGame.getMaxSelectableTiles();
+
+        try {
+            if (numOfTile < -1 ||  numOfTile > maxNumOfTile) {
+                throw new IllegalArgumentException("value must be between 0 and " + maxNumOfTile);
+            }
+            this.numOfTile = numOfTile;
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid numOf tile: " + e.getMessage());
+            setFinishPlayeropposite();
+        }
+    }
 
 
     private boolean endGame;

@@ -2,6 +2,46 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
+
+public class PersonalGoalCard {
+
+    private final ArrayList<Integer> coordinates;
+    private final ArrayList<Type> types;
+
+
+    public PersonalGoalCard(ArrayList<Integer> coordinates, ArrayList<Type> types) {
+        this.coordinates = coordinates;
+        this.types = types;
+    }
+
+    public ArrayList<Integer> getCoordinates() {
+        return coordinates;
+    }
+
+    public ArrayList<Type> getTypes() {
+        return types;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 public class PersonalGoalCard {
 
     private ArrayList<Integer> coordinates;
@@ -28,6 +68,92 @@ public class PersonalGoalCard {
     public void setTypes(ArrayList<Type> types) {
         this.types = types;
     }
+}
+
+ */
+
+
+
+/*//TODO another possible implementation JSON
+
+"personalGoalCards": [
+        {
+        "id": 1,
+        "types": [
+        {"type": "CAT", "x": 10, "y": 20},
+        {"type": "BOOK", "x": 30, "y": 40},
+        {"type": "GAME", "x": 50, "y": 60}
+        ]
+        },
+        {
+        "id": 2,
+        "types": [
+        {"type": "FRAME", "x": 70, "y": 80},
+        {"type": "TROPHY", "x": 90, "y": 100},
+        {"type": "PLANT", "x": 110, "y": 120},
+        ]
+        }
+
+        ],
+
+*/
+
+
+
+//TODO another possible implementation
+
+/*
+public class PersonalGoalCard {
+    private ArrayList<Type> types;
+    private int id;
+
+    public PersonalGoalCard(ArrayList<Type> types, int id) {
+        this.types = types;
+        this.id = id;
+    }
+
+    public ArrayList<Type> getTypes() {
+        return types;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setTypes(ArrayList<Type> types) {
+        this.types = types;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Type getType(int index) {
+        return types.get(index);
+    }
+
+    public int getX(int index) {
+        return types.get(index).getX();
+    }
+
+    public int getY(int index) {
+        return types.get(index).getY();
+    }
+}
+
+ */
+
+
+
+
+
+
+
+
+
+
+
+
 
     /*
     private ArrayList<Integer> coordinates;
@@ -114,4 +240,4 @@ public class PersonalGoalCard {
     }
 
 */
-}
+

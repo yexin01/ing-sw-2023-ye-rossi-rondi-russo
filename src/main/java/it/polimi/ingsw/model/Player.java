@@ -6,12 +6,11 @@ import java.util.Observable;
 public class Player extends Observable {
     private ArrayList<ItemTile> selectedItems;
 
-    private ArrayList<PersonalGoalCard> personalGoalCard;
+    private PersonalGoalCard personalGoalCard;
     private Bookshelf bookshelf;
     private String nickname;
-    public Player(String nickname,Bookshelf bookshelf) {
+    public Player(String nickname) {
         this.nickname = nickname;
-        this.bookshelf=bookshelf;
         selectedItems=new ArrayList<>();
     }
     public ArrayList<ItemTile> getSelectedItems() {
@@ -35,12 +34,11 @@ public class Player extends Observable {
         this.bookshelf = bookshelf;
     }
 
-    public ArrayList<PersonalGoalCard> getPersonalGoalCard() {
-        return personalGoalCard;
+    public PersonalGoalCard getPersonalGoalCard() {return personalGoalCard;
     }
 
-    public void setPersonalGoalCard(ArrayList<PersonalGoalCard> personalGoalCard) {
-        this.personalGoalCard = personalGoalCard;
+    public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
+        this.personalGoalCard=personalGoalCard;
     }
 }
 /*

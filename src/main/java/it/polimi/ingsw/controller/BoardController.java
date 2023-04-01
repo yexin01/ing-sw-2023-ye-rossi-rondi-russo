@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.json.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,91 +23,11 @@ public class BoardController {
      *
      * @param numPlayers numbers of players in the game
      */
-
-    public void fillBag(int numPlayers){
-        inizializedBoard();
-        //TODO import these matrices from a file jason
-
-        int matrice2gioc[][] = {
-                {0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 1, 1, 0, 0, 0, 0},
-                {0, 0, 0, 1, 1, 1, 0, 0, 0},
-                {0, 0, 1, 1, 1, 1, 1, 1, 0},
-                {0, 1, 1, 1, 1, 1, 1, 1, 0},
-                {0, 1, 1, 1, 1, 1, 1, 0, 0},
-                {0, 0, 0, 1, 1, 1, 0, 0, 0},
-                {0, 0, 0, 1, 1, 1, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0}
-        };
-        int matrice3gioc[][] ={
-                {0, 0, 0, 1, 0, 0, 0, 0, 0},
-                {0, 0, 0, 1, 1, 0, 0, 0, 0},
-                {0, 0, 1, 1, 1, 1, 0, 0, 0},
-                {0, 0, 1, 1, 1, 1, 1, 1, 1},
-                {0, 1, 1, 1, 1, 1, 1, 1, 0},
-                {1, 1, 1, 1, 1, 1, 1, 0, 0},
-                {0, 0, 1, 1, 1, 1, 1, 0, 0},
-                {0, 0, 0, 1, 1, 1, 0, 0, 0},
-                {0, 0, 0, 0, 0, 1, 0, 0, 0}
-        };
-        int matrice4gioc[][] = {
-                {0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {1, 0, 0, 1, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 1, 0, 0, 0, 1},
-                {0, 0, 0, 0, 0, 0, 0, 1, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 1, 1, 1, 1, 0, 0, 0},
-                {0, 0, 1, 1, 1, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 1},
-        };
-
-        switch (numPlayers) {
-            case 2:
-                firstFill(matrice2gioc);
-                break;
-            case 3:
-                firstFill(matrice3gioc);
-                break;
-            case 4:
-                firstFill(matrice4gioc);
-                break;
-            default:
-                firstFill(matrice2gioc);
-                break;
-        }
-
-
-    }
-
-    /**
-     * instantiate numTilesType for each tye of tile
-     *import numTilesType from a file jason
-     */
-    public void inizializedBoard() {
-        //TODO  import the number of tiles of each type from a file json
-        int numTilesType=22;
-        int j=0;
-        board.setTiles(new ArrayList<ItemTile>());
-        for(Type t: Type.values()){
-            for (int i = 0; i < numTilesType; i++) {
-                board.getTiles().add(new ItemTile(t,j++));
-            }
-        }
-
-    }
-
-    /**The matrix is scrolled twice:
-     * the first timein correspondence with a 1 of the matrix passed as a parameter the two flags are set true
-     *      and an Item tile is associated, randomly extracted from the arraylist containing the missing tiles of the game .
-     * the second time it calculates the number of free edges of each BoardBox by inserting 0 int the unoccupiable cells
-     *
-     * @param matrix : it varies according to the number of players
-     */
-    public void firstFill(int [][] matrix){
-        //TODO import the dimension of the board from a file json
-        int dimensione = 9;
-        board.setMatrix(new BoardBox[dimensione][dimensione]);
+    public void firstFill(int numPlayers, GameRules gameRules) throws Exception {
+        initializedBoard(gameRules);
+        int[][] matrix = gameRules.getMatrix(numPlayers);
+        //TODO FIRTSFILL
+        board.setMatrix(new BoardBox[matrix.length][matrix[0].length]);
         Random random=new Random();
         int randomNumber;
         for (int i = 0; i < matrix.length; i++) {
@@ -130,6 +51,42 @@ public class BoardController {
             }
         }
     }
+    /**
+     * instantiate numTilesType for each tye of tile
+     *import numTilesType from a file jason
+     */
+ /*   public void initializedBoard() {
+        //TODO  import the number of tiles of each type from a file json
+        int numTilesType=22;
+        int j=0;
+        board.setTiles(new ArrayList<ItemTile>());
+        for(Type t: Type.values()){
+            for (int i = 0; i < numTilesType; i++) {
+                board.getTiles().add(new ItemTile(t,j++));
+            }
+        }
+
+    }
+
+  */
+    public void initializedBoard(GameRules gameRules) throws Exception {
+        int[] numTilesOfType = gameRules.getNumTilesPerType();
+        int j = 0;
+        board.setTiles(new ArrayList<ItemTile>());
+        for (Type t : Type.values()) {
+            for (int i = 0; i < numTilesOfType[t.ordinal()]; i++) {
+                board.getTiles().add(new ItemTile(t, j++));
+            }
+        }
+    }
+    /**The matrix is scrolled twice:
+     * the first timein correspondence with a 1 of the matrix passed as a parameter the two flags are set true
+     *      and an Item tile is associated, randomly extracted from the arraylist containing the missing tiles of the game .
+     * the second time it calculates the number of free edges of each BoardBox by inserting 0 int the unoccupiable cells
+     *
+     * @param matrix : it varies according to the number of players
+     */
+
 
     /**
      * calculates the number of free edges of the cell having x and y coordinates of the Board
@@ -228,19 +185,21 @@ public class BoardController {
     //TODO depends on how we implement the controller: this method checks the tile after each selection,
     // if we change the controller by checking the cards when the user has selected them all this method
     // must be changed by adding an arraylist to the board, checking at the end
-    public boolean checkSelectable(BoardBox boardBox) {
-        //TODO importing number of selectable tiles from json
-        int numeSelectableTiles=3;
-        if((boardBox.getFreeEdges()<=0)){
+    public boolean checkSelectable(BoardBox boardBox) throws Exception {
+        GameRules gameRules = new GameRules();
+        int numSelectableTiles = gameRules.getMaxSelectableTiles();
+        List<BoardBox> selectedBoard = board.getSelectedBoard();
+        if ((boardBox.getFreeEdges() <= 0) || (selectedBoard.size() > (numSelectableTiles+1))) {
+            System.err.println("You chose more than "+numSelectableTiles+" tiles write -1 to reset the choice");
             return false;
         }
-        List<BoardBox> selectedBoard = board.getSelectedBoard();
+
         board.getSelectedBoard().add(boardBox);
-        if(selectedBoard.size()==1){
+        if (selectedBoard.size() == 1) {
             return true;
         }
         if (!allAdjacent() || !allSameRowOrSameColumn()) {
-            selectedBoard.remove(selectedBoard.size()-1);
+            selectedBoard.remove(selectedBoard.size() - 1);
             return false;
         }
         return true;
