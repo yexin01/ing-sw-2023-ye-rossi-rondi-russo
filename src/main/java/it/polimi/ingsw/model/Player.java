@@ -1,10 +1,15 @@
 package it.polimi.ingsw.model;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Observable;
 
 public class Player extends Observable {
     private ArrayList<ItemTile> selectedItems;
+    private int playerPoints;
+    private int personalGoalPoints;
+    private int adjacentPoints;
+    private ArrayList<Integer> commonGoalsPoints; //one node for each commonGoalCards, initially set to 0
 
     private PersonalGoalCard personalGoalCard;
     private Bookshelf bookshelf;
@@ -12,6 +17,7 @@ public class Player extends Observable {
     public Player(String nickname) {
         this.nickname = nickname;
         selectedItems=new ArrayList<>();
+        commonGoalsPoints = new ArrayList<>();
     }
     public ArrayList<ItemTile> getSelectedItems() {
         return selectedItems;
@@ -39,6 +45,65 @@ public class Player extends Observable {
 
     public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
         this.personalGoalCard=personalGoalCard;
+    }
+
+    public ArrayList<Integer> getCommonGoalsPoints() {
+        return commonGoalsPoints;
+    }
+
+    public void setCommonGoalsPoints(ArrayList<Integer> commonGoalsPoints) {
+        this.commonGoalsPoints = commonGoalsPoints;
+    }
+
+    public int getPlayerPoints() {
+        return playerPoints;
+    }
+
+    public void setPlayerPoints(int playerPoints) {
+        this.playerPoints = playerPoints;
+    }
+
+    public int getPersonalGoalPoints() {
+        return personalGoalPoints;
+    }
+
+    public void setPersonalGoalPoints(int personalGoalPoints) {
+        this.personalGoalPoints = personalGoalPoints;
+    }
+
+    public int getAdjacentPoints() {
+        return adjacentPoints;
+    }
+
+    public void setAdjacentPoints(int adjacentPoints) {
+        this.adjacentPoints = adjacentPoints;
+    }
+
+    //TODO: import from json or use a map to increase flexibility
+    public void setAdjacentPoints(){
+        int sum=0;
+        for(int groupSize : bookshelf.findAdjacentTilesGroups()){
+            if (groupSize < 3) continue;
+            sum += (
+                    switch (groupSize){
+                        case 3 -> 2;
+                        case 4 -> 3;
+                        case 5 -> 5;
+                        default -> 8;
+                    }
+                    );
+        }
+        adjacentPoints = sum;
+    }
+
+    //TODO: remove parameter numCommonGoal from method checkGoal
+    public void checkCommonGoals(ArrayList<CommonGoalCard> commonGoalCards){
+        // this.playerPoints = scoringToken1.getpoints + scoringToken2.getpoints + personalGoalPoints+ computeAdjacent+game_end
+        for (CommonGoalCard card: commonGoalCards){
+            if (commonGoalsPoints.get(commonGoalCards.indexOf(card))==0 && card.checkGoal()){
+                //...
+            }
+        }
     }
 }
 /*

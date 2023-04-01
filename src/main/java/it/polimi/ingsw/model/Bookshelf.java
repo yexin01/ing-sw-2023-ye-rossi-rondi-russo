@@ -9,6 +9,8 @@ public class Bookshelf {
     //private ItemTile[][] matrix;
     private ItemTile[][] matrix;
     private int[] freeShelves; //freeShelves[i] = # celle libere nell'i-esima colonna
+
+    //TODO: rows e columns come parametri del costruttore, presi da Json
     public Bookshelf(){
         int rows=6;
         int columns=5;
@@ -16,7 +18,7 @@ public class Bookshelf {
         matrix=new ItemTile[rows][columns];
         for(int i=0;i<rows;i++){
             for(int j=0;j<columns;j++){
-                matrix[i][j]=new ItemTile(null,-1);
+                matrix[i][j]=new ItemTile(null, -1);
             }
         }
     }
@@ -31,7 +33,7 @@ public class Bookshelf {
             }
         }
     }
-    private int maxFreeShelves(){
+    public int maxFreeShelves(){
         int max = 0;
         for (int i=0; i<freeShelves.length; i++){
             if (freeShelves[i]>max){
@@ -41,6 +43,7 @@ public class Bookshelf {
         System.out.println(max);
         return max;
     }
+    //TODO: rename --> freeShelvesAtColumn, actually you could just use getFreeShelves[i]
     public int getMaxTilesColumn(int i){return freeShelves[i];}
     public int numSelectableTiles(){
         computeFreeShelves();
@@ -75,35 +78,39 @@ public class Bookshelf {
      * @return a list with the cardinalities of the groups of adjacent tiles found by the algorithm
      */
     public List<Integer> findAdjacentTilesGroups() {
-        ItemTile startingBox = null;
+        ItemTile startingTile = null;
         List<Integer> groupsSizes = new ArrayList<>();
         Set<ItemTile> visited = new HashSet<>();
-
-        //find startingBox in last row:
         int lastRow = matrix.length - 1;
+        int lastColumn = matrix[0].length-1;
+        int startingRow = lastRow;
+        int startingColumn = 0;
+
+        //find startingTile in the last row:
         for (int j=0; j<matrix[0].length; j++){
-            ItemTile currentBox = matrix[lastRow][j];
-            if(currentBox != null){
-                startingBox = currentBox;
+            ItemTile currentTile = matrix[lastRow][j];
+            if(currentTile != null){
+                startingTile = currentTile;
+                startingColumn = j;
                 break;
             }
             //algorithm can stop if last row is empty
-            if (j== matrix[0].length-1){ //every element in the last row is null
+            if (j==lastColumn){ //every element in the last row is null
                 return groupsSizes;
             }
         }
 
-        assert startingBox != null : "startingBox is null!";
-        Type startingType = startingBox.getItemTile().getType();
-        int groupSize = dfs(startingBox, visited, startingType);
+        assert startingTile != null : "startingTile is null!";
+        Type startingType = startingTile.getType();
+        int groupSize = dfs(startingTile, visited, startingType, startingRow, startingColumn);
         groupsSizes.add(groupSize);
 
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
-                ItemTile currentBox = matrix[i][j];
-                if (!visited.contains(currentBox) && currentBox.getItemTile().getType() != null) {
-                    Type currentType = currentBox.getItemTile().getType();
-                    groupSize = dfs(currentBox, visited, currentType);
+                ItemTile currentTile = matrix[i][j];
+                if (!visited.contains(currentTile) && currentTile.getType() != null) {
+                    Type currentType = currentTile.getType();
+                    groupSize = dfs(currentTile, visited, currentType, i, j);
                     groupsSizes.add(groupSize);
                 }
             }
@@ -113,29 +120,21 @@ public class Bookshelf {
     }
 
     private static final int[][] DIRECTIONS = {{-1,0}, {0,-1}, {0,1}, {1,0}}; //possible directions towards adjacent tiles
-    private int dfs(ItemTile currentBox, Set<ItemTile> visited, Type type) {
-        visited.add(currentBox);
+    private int dfs(ItemTile currentTile, Set<ItemTile> visited, Type type, int row, int column) {
+        visited.add(currentTile);
         int size = 1;
         for (int[] dir : DIRECTIONS) {
-            int x = currentBox.getX() + dir[0];
-            int y = currentBox.getY() + dir[1];
+            int x = row + dir[0];
+            int y = column + dir[1];
             if (x < 0 || x >= matrix.length || y < 0 || y >= matrix[0].length) {
                 continue; //proceeding in other adjacent directions
             }
             ItemTile nextBox = matrix[x][y];
-            if (!visited.contains(nextBox) && nextBox.getItemTile().getType() == type) {
-                size += dfs(nextBox, visited, type);
+            if (!visited.contains(nextBox) && nextBox.getType() == type) {
+                size += dfs(nextBox, visited, type, x, y);
             }
         }
         return size;
     }
-
-    /* attribute checkable is no longer useful
-
-    public void resetCheckable(){
-    }
-
-
-
 
 }
