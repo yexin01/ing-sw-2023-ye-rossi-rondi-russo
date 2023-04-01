@@ -5,6 +5,22 @@ import java.util.ArrayList;
 
 public class PersonalGoalCard {
 
+    private ArrayList<PersonalGoalBox> cells;
+
+    public PersonalGoalCard(ArrayList<PersonalGoalBox> cells) {
+        this.cells = cells;
+    }
+
+    public ArrayList<PersonalGoalBox> getCells() {
+        return cells;
+    }
+}
+
+
+
+/*
+public class PersonalGoalCard {
+
     private final ArrayList<Integer> coordinates;
     private final ArrayList<Type> types;
 
@@ -22,6 +38,8 @@ public class PersonalGoalCard {
         return types;
     }
 }
+
+ */
 
 
 

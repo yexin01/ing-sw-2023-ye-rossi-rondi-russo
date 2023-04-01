@@ -119,7 +119,7 @@ public class GameandPlayerController {
             game.getCommonGoalCards().add((CommonGoalCard) obj);
         }
 
-        setCommonGoalCardsPoints();
+        setCommonGoalCardsPoints(gameRules);
     }
 
        /*
@@ -152,29 +152,9 @@ public class GameandPlayerController {
     /**
      * Match arraylist of scores based on number of players
      */
-    private void setCommonGoalCardsPoints() {
+    private void setCommonGoalCardsPoints(GameRules gameRules) throws Exception {
         //TODO importing from json
-        ArrayList<Integer> points2Players = new ArrayList<Integer>(Arrays.asList(4,8));
-        ArrayList<Integer> points3Players = new ArrayList<Integer>(Arrays.asList(4,6,8));
-        ArrayList<Integer> points4Players = new ArrayList<Integer>(Arrays.asList(2,4,6,8));
-
-        ArrayList<Integer> points=new ArrayList<Integer>();
-        //TODO change switch importing from json,basing the choice on the number of players
-        //TODO alternatively set a default matrix for more than 4 players
-        switch(game.getNumPlayers()){
-            case 2:
-                points=points2Players;
-                break;
-            case 3:
-                points=points3Players;
-                break;
-            case 4:
-                points=points4Players;
-                break;
-            default:System.err.println("Something wrong");
-                break;
-        }
-
+        ArrayList<Integer> points=gameRules.getCommonGoalPoints(game.getNumPlayers());
         for(CommonGoalCard c: game.getCommonGoalCards()){
             c.setPoints(points);
         }
@@ -272,6 +252,8 @@ public class GameandPlayerController {
     /**
      *instantiates personalGoalCard based on the number of players
      */
+
+    /*
     public void createPersonalGoalCard(GameRules gameRules) {
         ArrayList<Integer> numbers = generateRandomNumber(gameRules.getPossiblePersonalGoalsSize(), game.getNumPlayers());
         int rows= gameRules.getRowsBookshelf();
@@ -284,4 +266,20 @@ public class GameandPlayerController {
             i++;
         }
     }
+
+     */
+    public void createPersonalGoalCard(GameRules gameRules) {
+        ArrayList<Integer> numbers = generateRandomNumber(gameRules.getPossiblePersonalGoalsSize(), game.getNumPlayers());
+        int rows= gameRules.getRowsBookshelf();
+        int columns= gameRules.getColumnsBookshelf();
+        int maxSelectableTiles=gameRules.getMaxSelectableTiles();
+        int i = 0;
+        for (Player p : game.getPlayers()) {
+            p.setPersonalGoalCard(gameRules.getPersonalGoalCard(numbers.get(i)));
+            p.setBookshelf(new Bookshelf(rows,columns, maxSelectableTiles));
+            i++;
+        }
+    }
+
+
 }
