@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.json.GameRules;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -10,14 +12,14 @@ public class Player extends Observable {
     private int personalGoalPoints;
     private int adjacentPoints;
     private ArrayList<Integer> commonGoalsPoints; //one node for each commonGoalCards, initially set to 0
-
+    private int[] CommonGoalPoints;
     private PersonalGoalCard personalGoalCard;
     private Bookshelf bookshelf;
     private String nickname;
     public Player(String nickname) {
         this.nickname = nickname;
         selectedItems=new ArrayList<>();
-        commonGoalsPoints = new ArrayList<>();
+       // this.CommonGoalPoints=new int[gameRules.getNumOfCommonGoals()];
     }
     public ArrayList<ItemTile> getSelectedItems() {
         return selectedItems;
@@ -47,12 +49,10 @@ public class Player extends Observable {
         this.personalGoalCard=personalGoalCard;
     }
 
-    public ArrayList<Integer> getCommonGoalsPoints() {
-        return commonGoalsPoints;
-    }
 
-    public void setCommonGoalsPoints(ArrayList<Integer> commonGoalsPoints) {
-        this.commonGoalsPoints = commonGoalsPoints;
+
+    public void setToken(int index,int points) {
+        this.commonGoalsPoints.set(index,points);
     }
 
     public int getPlayerPoints() {
@@ -79,23 +79,28 @@ public class Player extends Observable {
         this.adjacentPoints = adjacentPoints;
     }
 
-    //TODO: import from json or use a map to increase flexibility
-    public void setAdjacentPoints(){
-        int sum=0;
-        for(int groupSize : bookshelf.findAdjacentTilesGroups()){
-            if (groupSize < 3) continue;
-            sum += (
-                    switch (groupSize){
-                        case 3 -> 2;
-                        case 4 -> 3;
-                        case 5 -> 5;
-                        default -> 8;
-                    }
-                    );
-        }
-        adjacentPoints = sum;
+    public int[] getCommonGoalPoints() {
+        return CommonGoalPoints;
+    }
+    public int getCommonGoalPoints(int index) {
+        return CommonGoalPoints[index];
     }
 
+    public void setCommonGoalPoints(int index,int num) throws IndexOutOfBoundsException {
+        CommonGoalPoints[index] = num;
+    }
+
+    public void setCommonGoalPoints(int[] commonGoalPoints) {
+        CommonGoalPoints = commonGoalPoints;
+    }
+
+
+
+
+
+
+
+  /*
     //TODO: remove parameter numCommonGoal from method checkGoal
     public void checkCommonGoals(ArrayList<CommonGoalCard> commonGoalCards){
         // this.playerPoints = scoringToken1.getpoints + scoringToken2.getpoints + personalGoalPoints+ computeAdjacent+game_end
@@ -105,6 +110,7 @@ public class Player extends Observable {
             }
         }
     }
+    */
 }
 /*
     public void updatePlayerPoints(){

@@ -107,7 +107,7 @@ public class GameRules {
  */
 
     public int getPossiblePersonalGoalsSize() {
-        JSONArray jsonArray = (JSONArray) json.get("personalGoalsTypes");
+        JSONArray jsonArray = (JSONArray) json.get("personalGoalCard");
         int count = jsonArray.size();
         return count;
     }
@@ -258,7 +258,7 @@ public class GameRules {
 
             //Type type= Parse(Type, s);
             //Type type = (Type) jsonType.get("type");
-            cells.add(new PersonalGoalBox((Type) type, x, y));
+            cells.add(new PersonalGoalBox( type, x, y));
         }
         PersonalGoalCard card = new PersonalGoalCard(cells);
         return card;

@@ -122,7 +122,8 @@ public class Controller implements Observer {
             }
             if(gameandPlayerController.insertAsSelected(number)){
                 System.out.println("The tiles have been inserted");
-                //TODO AGGIUNGERE L'AGGIORNAMENTO DEI PUNTEGGI
+                //TODO AGGIUNGERE L'AGGIORNAMENTO DEI PUNTEGGI QUANDO I CHECK GOAL SARANNO TERMINATI
+                //gameandPlayerController.updateAllPoints();
                 gameandPlayerController.setNextPlayer(turnPlayer());
                 if (boardController.checkRefill()) {
                     boardController.refill();
@@ -137,6 +138,8 @@ public class Controller implements Observer {
 
         }catch (IllegalArgumentException e) {
             System.err.println("Invalid column value: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         changeFlag();
 
@@ -201,6 +204,10 @@ public class Controller implements Observer {
     public Board gameBoard(){return boardController.getBoard();}
 
     public void changeFlag(){boardController.getBoard().setFinishPlayeropposite();}
+
+
+
+
 }
 
 

@@ -120,6 +120,13 @@ public class GameandPlayerController {
         }
 
         setCommonGoalCardsPoints(gameRules);
+        createCommonGoalPlayer(gameRules);
+    }
+
+    public void createCommonGoalPlayer(GameRules gameRules){
+        for(Player p:getGame().getPlayers()){
+            p.setCommonGoalPoints(new int[gameRules.getNumOfCommonGoals()]);
+        }
     }
 
        /*
@@ -280,6 +287,32 @@ public class GameandPlayerController {
             i++;
         }
     }
+
+    public int setAdjacentPoints() throws Exception {
+        GameRules gameRules=new GameRules();
+        int sum=0;
+        for(int groupSize : turnBookshelf().findAdjacentTilesGroups()){
+            if (groupSize < 2) continue;
+            sum += gameRules.getAdjacentPoints(groupSize);
+        }
+        getGame().getTurnPlayer().setAdjacentPoints(sum);
+        return sum;
+    }
+    public int updatePointsCommonGoals(){
+        int points=0;
+        for (int i=0;i<getGame().getTurnPlayer().getCommonGoalPoints().length;i++){
+            if (turnPlayer().getCommonGoalPoints()[i]==0 && getGame().getCommonGoalCards().get(i).checkGoal(turnBookshelf().getMatrix())){
+                turnPlayer().setToken(i,getGame().getCommonGoalCards().get(i).removeToken());
+            }
+            points=points+turnPlayer().getCommonGoalPoints(i);
+            i++;
+        }
+        return points;
+    }
+    public void updateAllPoints() throws Exception {
+        turnPlayer().setPlayerPoints(setAdjacentPoints()+updatePointsCommonGoals());
+    }
+    public Player turnPlayer(){return getGame().getTurnPlayer();}
 
 
 }

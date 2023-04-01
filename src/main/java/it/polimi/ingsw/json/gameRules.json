@@ -1,6 +1,7 @@
 {
   "max_players": 4,
   "num_tiles_per_type": [22, 22, 22, 22, 22, 22],
+  "adjacentPoints": [0, 2, 3, 5, 8],
   "max_selectable_tiles": 3,
   "matrices": [
     {
@@ -48,6 +49,20 @@
   ],
 
   "numOfCommonGoals": 2,
+  "pointsCommonGoal": [
+    {
+      "num_players": 2,
+      "points": [4,8]
+    },
+    {
+      "num_players": 3,
+      "points": [4,6,8]
+    },
+    {
+      "num_players": 4,
+      "points": [2,4,6,8]
+    }
+  ],
 
   "commonGoalCards": [
     "it.polimi.ingsw.model.CommonGoalCard1",
@@ -64,20 +79,41 @@
     "it.polimi.ingsw.model.CommonGoalCard12"
   ],
 
-  "personalGoalsCoordinates":
-  [
-    [0, 3, 4, 1, 1, 2],
-    [1, 3, 4, 2],
-    [2, 3, 1, 4, 3, 2],
-    [1, 2]
+  "personalGoalCard": [
+    {
+      "id": 1,
+      "types": [
+        {"type": "CAT", "x": 3, "y": 4},
+        {"type": "BOOK", "x": 1, "y": 2},
+        {"type": "GAME", "x": 5, "y": 0}
+      ]
+    },
+    {
+      "id": 2,
+      "types": [
+        {"type": "FRAME", "x": 1, "y": 3},
+        {"type": "PLANT", "x": 4, "y": 2},
+        {"type": "CAT", "x": 1, "y": 1}
+      ]
+    },
+    {
+      "id": 3,
+      "types": [
+        {"type": "FRAME", "x": 1, "y": 3},
+        {"type": "PLANT", "x": 4, "y": 2},
+        {"type": "PLANT", "x": 1, "y": 1}
+      ]
+    },
+    {
+      "id": 4,
+      "types": [
+        {"type": "FRAME", "x": 1, "y": 3},
+        {"type": "FRAME", "x": 4, "y": 2},
+        {"type": "PLANT", "x": 1, "y": 1}
+      ]
+    }
   ],
-  "personalGoalsTypes":
-  [
-    ["CAT", "FRAME", "BOOK"],
-    ["FRAME", "FRAME"],
-    ["TROPHY", "FRAME", "BOOK"],
-    ["PLANT"]
-  ],
+
 
   "maxRowsBookshelf": 6,
   "maxColumnsBookshelf": 5
