@@ -31,6 +31,16 @@ public class GameRules {
         return numTiles;
     }
 
+    public int[] getPersonalGoalPoints() {
+        JSONArray numTilesArr = (JSONArray) json.get("personalGoalPoints");
+        int[] numTiles = new int[numTilesArr.size()];
+        for (int i = 0; i < numTilesArr.size(); i++) {
+            numTiles[i] = ((Long) numTilesArr.get(i)).intValue();
+        }
+        return numTiles;
+    }
+
+/*
     public int getAdjacentPoints(int index) {
         index=index-2;
         JSONArray pointsArr = (JSONArray) json.get("adjacentPoints");
@@ -41,6 +51,15 @@ public class GameRules {
         return result;
     }
 
+ */
+    public int[] getAdjacentArray() {
+        JSONArray pointsArr = (JSONArray) json.get("adjacentPoints");
+        int[] points = new int[pointsArr.size()];
+        for (int i = 0; i < pointsArr.size(); i++) {
+            points[i] = ((Long) pointsArr.get(i)).intValue();
+        }
+        return points;
+    }
 
     public int getMaxPlayers() {
         return ((Long) json.get("max_players")).intValue();

@@ -101,7 +101,7 @@ public class Board extends Observable {
         columnSelected=-1;
     }
 
-
+//TODO it will be removed when the non-deprecated version is implemented
     public void setFinishPlayeropposite() {
         finishPlayer = !finishPlayer;
         setChanged();
@@ -144,6 +144,8 @@ public class Board extends Observable {
     public void setColumnSelected(Integer columnSelected) {
         //TODO import num column bookshelf
         //TODO OR THIS WILL BE IN THE BOOKSHELF
+        //TODO it depends on how the controller is implemented
+
         int maxColumBookshelf=4;
         try {
             if (columnSelected < -1 || columnSelected > 4) {
@@ -193,7 +195,7 @@ public class Board extends Observable {
         this.endGame = endGame;
     }
 
-
+    //TODO it will be removed when the non-deprecated version is implemented
     public Integer getFinishPlayerChoice() {
         return finishPlayerChoice;
     }

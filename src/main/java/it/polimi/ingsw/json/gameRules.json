@@ -2,6 +2,7 @@
   "max_players": 4,
   "num_tiles_per_type": [22, 22, 22, 22, 22, 22],
   "adjacentPoints": [0, 2, 3, 5, 8],
+  "personalGoalPoints": [1, 2, 4, 6, 9, 12],
   "max_selectable_tiles": 3,
   "matrices": [
     {
@@ -66,12 +67,12 @@
 
   "commonGoalCards": [
     "it.polimi.ingsw.model.CommonGoalCard1",
-    "it.polimi.ingsw.model.CommonGoalCard2",
+    "it.polimi.ingsw.model.CommonGoalCard2567$local2",
     "it.polimi.ingsw.model.CommonGoalCard3",
     "it.polimi.ingsw.model.CommonGoalCard4",
-    "it.polimi.ingsw.model.CommonGoalCard5",
-    "it.polimi.ingsw.model.CommonGoalCard6",
-    "it.polimi.ingsw.model.CommonGoalCard7",
+    "it.polimi.ingsw.model.CommonGoalCard2567$local5",
+    "it.polimi.ingsw.model.CommonGoalCard2567$local6",
+    "it.polimi.ingsw.model.CommonGoalCard2567$local7",
     "it.polimi.ingsw.model.CommonGoalCard8",
     "it.polimi.ingsw.model.CommonGoalCard9",
     "it.polimi.ingsw.model.CommonGoalCard10",

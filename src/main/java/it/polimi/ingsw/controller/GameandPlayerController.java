@@ -109,8 +109,12 @@ public class GameandPlayerController {
 
         int numOfCommonGoals = gameRules.getNumOfCommonGoals();
         int numOfPossibleCommonGoalsCards = gameRules.getCommonGoalCardsSize();
-        ArrayList<Integer> numbers = generateRandomNumber(numOfPossibleCommonGoalsCards, numOfCommonGoals);
+        //ArrayList<Integer> numbers = generateRandomNumber(numOfPossibleCommonGoalsCards, numOfCommonGoals);
+        //TODO CAMBIATO PER TESTARE IL UNZIONAMENTO CLASSI INTERNE
+        ArrayList<Integer> numbers=new ArrayList<>();
 
+        numbers.add(4);
+        numbers.add(0);
         game.setCommonGoalCards(new ArrayList<CommonGoalCard>());
         for (Integer number : numbers) {
             String className = gameRules.getCommonGoalCard(number);
@@ -124,8 +128,9 @@ public class GameandPlayerController {
     }
 
     public void createCommonGoalPlayer(GameRules gameRules){
+        int numCommonGoalCards=gameRules.getNumOfCommonGoals();
         for(Player p:getGame().getPlayers()){
-            p.setCommonGoalPoints(new int[gameRules.getNumOfCommonGoals()]);
+            p.setCommonGoalPoints(new int[numCommonGoalCards]);
         }
     }
 
@@ -287,13 +292,15 @@ public class GameandPlayerController {
             i++;
         }
     }
-
-    public int setAdjacentPoints() throws Exception {
-        GameRules gameRules=new GameRules();
+    public int updateAdjacentPoints(GameRules gameRules) throws Exception ,IndexOutOfBoundsException{
+        int[] points= gameRules.getAdjacentArray();
         int sum=0;
         for(int groupSize : turnBookshelf().findAdjacentTilesGroups()){
             if (groupSize < 2) continue;
-            sum += gameRules.getAdjacentPoints(groupSize);
+            if(groupSize>points.length-1){
+                groupSize=points.length-1;
+            }
+            sum += points[groupSize];
         }
         getGame().getTurnPlayer().setAdjacentPoints(sum);
         return sum;
@@ -309,10 +316,23 @@ public class GameandPlayerController {
         }
         return points;
     }
+    public int updatePersonalGoalPoints(GameRules gameRules) throws Exception {
+        int[] points= gameRules.getPersonalGoalPoints();
+        int numScored = 0;
+        for (PersonalGoalBox box : turnPersonalGoal().getCells()){
+            if (turnBookshelf().getMatrix()[box.getX()][box.getY()].getType().equals(box.getType())){
+                numScored++;
+            }
+        }
+        turnPlayer().setPersonalGoalPoints(points[numScored-1]);
+        return turnPlayer().getPersonalGoalPoints();
+    }
+
     public void updateAllPoints() throws Exception {
-        turnPlayer().setPlayerPoints(setAdjacentPoints()+updatePointsCommonGoals());
+        GameRules gameRules=new GameRules();
+        turnPlayer().setPlayerPoints(updateAdjacentPoints(gameRules)+updatePointsCommonGoals()+ updatePersonalGoalPoints(gameRules));
     }
     public Player turnPlayer(){return getGame().getTurnPlayer();}
 
-
+    public PersonalGoalCard turnPersonalGoal(){return getGame().getTurnPlayer().getPersonalGoalCard();}
 }
