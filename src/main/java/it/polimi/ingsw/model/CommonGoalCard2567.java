@@ -8,25 +8,22 @@ public class CommonGoalCard2567 extends CommonGoalCard{
      *              The tiles of one group can be different from those of another group."
      *      Goal6: "Two lines each formed by 5 different types of tiles. One line can show the same or a different combination of the other line."
      *      Goal7: "Four lines each formed by 5 tiles of maximum three different types. One line can show the same or a different combination of another line."
-     * @param numCommonGoalCard
+     *
      * @param mat matrix of ItemTile[][]
      * @return boolean if the goal is reached or not
      */
 
-    // TODO how to handle numCommonGoalCard
     @Override
-    public boolean checkGoal (int numCommonGoalCard, ItemTile[][] mat){
+    public boolean checkGoal (ItemTile[][] mat){
+
+        //TODO to adapt with id
+        int numCommonGoalCard = 7;
+
         int goals;
         int [] seen = new int[Type.values().length]; // array of counters for each Type of tile seen
         int notseen; // counter of types not seen
         int [] settings = new int[3]; // 0: goalsToReach, 1: dim of lines, 2: dim of columns
 
-        // TODO create exception ?
-        /*
-        if(numCommonGoalCard!=2 && numCommonGoalCard!=5 && numCommonGoalCard!=6 && numCommonGoalCard!=7){
-            System.out.println("cannot use this function for commonGoalCards that are not 2,5,6,7!");
-            return false;
-        }*/
 
         // initializes goalsToReach, lines, columns according to numCommonGoalCard selected
         settings[1]=mat.length;
@@ -43,27 +40,19 @@ public class CommonGoalCard2567 extends CommonGoalCard{
             switch (numCommonGoalCard) {
                 case 2, 5:
                     for(int i=0; i<settings[1]; i++){
-                        switch (mat[i][j].getType()) {
-                            case CAT -> seen[0]++;
-                            case BOOK -> seen[1]++;
-                            case GAME -> seen[2]++;
-                            case FRAME -> seen[3]++;
-                            case TROPHY -> seen[4]++;
-                            case PLANT -> seen[5]++;
-                            default -> System.out.println("type_tile not valid!");
+                        for(Type types : Type.values()){
+                            if(mat[i][j].getType()==Type.values()[types.ordinal()]){
+                                seen[types.ordinal()]++;
+                            }
                         }
                     }
                     break;
                 case 6, 7:
                     for(int i=0; i<settings[1]; i++){
-                        switch (mat[j][i].getType()) {
-                            case CAT -> seen[0]++;
-                            case BOOK -> seen[1]++;
-                            case GAME -> seen[2]++;
-                            case FRAME -> seen[3]++;
-                            case TROPHY -> seen[4]++;
-                            case PLANT -> seen[5]++;
-                            default -> System.out.println("type_tile not valid!");
+                        for(Type types : Type.values()){
+                            if(mat[j][i].getType()==Type.values()[types.ordinal()]){
+                                seen[types.ordinal()]++;
+                            }
                         }
                     }
                     break;
