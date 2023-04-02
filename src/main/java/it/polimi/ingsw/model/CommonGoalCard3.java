@@ -11,9 +11,8 @@ public class CommonGoalCard3 extends CommonGoalCard{
      * @return boolean if the goal is reached or not
      */
 
-    //TODO try to create a CommonGoalCard34
     @Override
-    public boolean checkGoal(int numCommonGoalCard, ItemTile[][] mat){
+    public boolean checkGoal(ItemTile[][] mat){
         int goals,near,oldnear;
         int newi,newj;
         int [][] checkable = {
@@ -32,7 +31,7 @@ public class CommonGoalCard3 extends CommonGoalCard{
         for(int i=0; i<mat.length-1 && goals<4; i++){
             for(int j=0; j<mat[0].length-1 && goals<4; j++){
 
-                while(checkable[i][j]==0 && (j<mat[0].length-1)){
+                while( (checkable[i][j]==0 || mat[i][j].getTileID()==-1) && (j<mat[0].length-1)){
                     j++;
                 }
                 checkable[i][j]=0;
@@ -81,15 +80,15 @@ public class CommonGoalCard3 extends CommonGoalCard{
      * @return ArrayList posgoal updated with new positions if any matches found
      */
     public ArrayList checkNear (ArrayList posgoal, ItemTile [][] mat, int a, int b){
-        if(a+1< mat.length && mat[a][b].getType().equals(mat[a+1][b].getType())){
+        if(a+1<mat.length && mat[a+1][b].getTileID()!=-1 && mat[a][b].getType().equals(mat[a+1][b].getType())){
             posgoal.add(a+1);
             posgoal.add(b);
         }
-        if(b-1>=0 && mat[a][b].getType().equals(mat[a][b-1].getType())){
+        if(b-1>=0 && mat[a][b-1].getTileID()!=-1 && mat[a][b].getType().equals(mat[a][b-1].getType())){
             posgoal.add(a);
             posgoal.add(b-1);
         }
-        if(b+1<mat[0].length && mat[a][b].getType().equals(mat[a][b+1].getType())){
+        if(b+1<mat[0].length && mat[a][b+1].getTileID()!=-1 && mat[a][b].getType().equals(mat[a][b+1].getType())){
             posgoal.add(a);
             posgoal.add(b+1);
         }
@@ -98,9 +97,9 @@ public class CommonGoalCard3 extends CommonGoalCard{
 
     /**
      * allNearUncheckable will put at '0' the positions of the matching tiles found
-     * @param checkable
-     * @param x
-     * @param y
+     * @param checkable matrix used to skips those near, that cannot be part of other groups to count for the goal
+     * @param x as the 'i' of the position to check
+     * @param y as the 'j' of the position to check
      * @return the matrix of checkable updated
      */
     public int [][] allNearUncheckable (int [][] checkable, int x, int y){

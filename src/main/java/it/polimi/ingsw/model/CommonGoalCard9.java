@@ -7,7 +7,7 @@ public class CommonGoalCard9 extends CommonGoalCard{
      * @return boolean if the goal is reached or not
      */
     @Override
-    public boolean checkGoal(int numCommonGoalCard, ItemTile[][] mat){
+    public boolean checkGoal(ItemTile[][] mat){
         int [] seen = new int [Type.values().length]; // array of counters for each Type of tile seen
 
         // check the goal
@@ -15,18 +15,14 @@ public class CommonGoalCard9 extends CommonGoalCard{
         for(int a=0; a<Type.values().length; a++){
             seen[a]=0;
         }
-        for (ItemTile[] itemTiles : mat) {
-            for (int j = 0; j < mat[0].length; j++) {
-                switch (itemTiles[j].getType()) {
-                    case CAT -> seen[0]++;
-                    case BOOK -> seen[1]++;
-                    case GAME -> seen[2]++;
-                    case FRAME -> seen[3]++;
-                    case TROPHY -> seen[4]++;
-                    case PLANT -> seen[5]++;
-                    default -> System.out.println("type_tile not valid!");
+        for (int i=0; i<mat.length; i++) {
+            for (int j=0; j <mat[0].length; j++) {
+                for(Type types : Type.values()){
+                    if(mat[i][j].getTileID()!=-1 && mat[i][j].getType()==Type.values()[types.ordinal()]){
+                        seen[types.ordinal()]++;
+                    }
                 }
-                for (int a = 0; a < Type.values().length; a++) {
+                for (int a=0; a<Type.values().length; a++) {
                     if (seen[a] >= 8) {
                         return true;
                     }

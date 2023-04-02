@@ -14,17 +14,11 @@ public abstract class CommonGoalCard {
         return 0;
     }
 
-  /*
     /**
      * when checkGoal() function is called, you give in input bookshelf.getmatrix()
      * this function is abstract and will be implemented in different versions according to the CommonGoalCard
-     * @param mat matrix of ItemTile[][]
+     * @param matrix matrix of ItemTile[][]
      * @return boolean if the goal is reached or not
-     */
-    /**
-     *
-     * @param bookshelf
-     * @return
      */
 
     public abstract boolean checkGoal(ItemTile[][] matrix);

@@ -1,6 +1,10 @@
 package it.polimi.ingsw.model;
 
 public class CommonGoalCard2567 extends CommonGoalCard{
+
+    //TODO change the constructor to set this ID
+    private final int CommonGoalCardID=7;
+
     /**
      * This checkGoal implements the algorithms for CommonGoalCards 2,5,6,7
      *      Goal2: "Two columns each formed by 6 different types of tiles."
@@ -8,27 +12,21 @@ public class CommonGoalCard2567 extends CommonGoalCard{
      *              The tiles of one group can be different from those of another group."
      *      Goal6: "Two lines each formed by 5 different types of tiles. One line can show the same or a different combination of the other line."
      *      Goal7: "Four lines each formed by 5 tiles of maximum three different types. One line can show the same or a different combination of another line."
-     *
      * @param mat matrix of ItemTile[][]
      * @return boolean if the goal is reached or not
      */
 
     @Override
     public boolean checkGoal (ItemTile[][] mat){
-
-        //TODO to adapt with id
-        int numCommonGoalCard = 7;
-
         int goals;
         int [] seen = new int[Type.values().length]; // array of counters for each Type of tile seen
         int notseen; // counter of types not seen
         int [] settings = new int[3]; // 0: goalsToReach, 1: dim of lines, 2: dim of columns
 
-
         // initializes goalsToReach, lines, columns according to numCommonGoalCard selected
         settings[1]=mat.length;
         settings[2]=mat[0].length;
-        settingsCase(numCommonGoalCard, settings);
+        settingsCase(settings);
 
         // check the goal
         goals=0;
@@ -37,11 +35,11 @@ public class CommonGoalCard2567 extends CommonGoalCard{
             for(int a=0; a<Type.values().length; a++){
                 seen[a]=0;
             }
-            switch (numCommonGoalCard) {
+            switch (CommonGoalCardID) {
                 case 2, 5:
                     for(int i=0; i<settings[1]; i++){
                         for(Type types : Type.values()){
-                            if(mat[i][j].getType()==Type.values()[types.ordinal()]){
+                            if(mat[i][j].getTileID()!=-1 && mat[i][j].getType()==Type.values()[types.ordinal()]){
                                 seen[types.ordinal()]++;
                             }
                         }
@@ -50,7 +48,7 @@ public class CommonGoalCard2567 extends CommonGoalCard{
                 case 6, 7:
                     for(int i=0; i<settings[1]; i++){
                         for(Type types : Type.values()){
-                            if(mat[j][i].getType()==Type.values()[types.ordinal()]){
+                            if(mat[i][j].getTileID()!=-1 && mat[j][i].getType()==Type.values()[types.ordinal()]){
                                 seen[types.ordinal()]++;
                             }
                         }
@@ -65,14 +63,14 @@ public class CommonGoalCard2567 extends CommonGoalCard{
                     notseen++;
                 }
             }
-            goals=updateGoalsGroupsFound(numCommonGoalCard,notseen,goals);
+            goals=updateGoalsGroupsFound(notseen,goals);
         }
         return goals>=settings[0];
     }
 
-    private void settingsCase (int numCommonGoalCard, int[] settings){
+    public void settingsCase (int[] settings){
         int temp;
-        switch (numCommonGoalCard) {
+        switch (CommonGoalCardID) {
             case 2 -> settings[0] = 2;
             case 5 -> settings[0] = 3;
             // in cases:6,7 it switches dim of lines with dim of columns because the algorithm checks per lines and not per columns
@@ -95,8 +93,8 @@ public class CommonGoalCard2567 extends CommonGoalCard{
         }
     }
 
-    private int updateGoalsGroupsFound (int numCommonGoalCard, int notseen, int goals){
-        switch (numCommonGoalCard) {
+    private int updateGoalsGroupsFound (int notseen, int goals){
+        switch (CommonGoalCardID) {
             case 2:
                 if(notseen==0){
                     goals++;

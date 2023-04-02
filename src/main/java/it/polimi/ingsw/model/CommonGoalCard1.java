@@ -3,7 +3,8 @@ package it.polimi.ingsw.model;
 public class CommonGoalCard1 extends CommonGoalCard{
     /**
      * Goal1: "Two groups each containing 4 tiles of the same type in a 2x2 square. The tiles of one square can be different from those of the other square."
-     * Notes: the implementation of this function follows the Italian rules where it says "gruppi separati" as groups separated by at least 1 box in the matrix
+     * Notes: - the implementation of this function follows the Italian rules where it says "gruppi separati" as groups separated by at least 1 box in the matrix
+     *        - also the square cannot be contained into larger squares but it has to be exactly 2x2.
      *        (as requested by professor Cugola in Slack.channel-requirements)
      * @param mat matrix of ItemTile[][]
      * @return boolean if the goal is reached or not
@@ -11,7 +12,7 @@ public class CommonGoalCard1 extends CommonGoalCard{
 
     //TODO adapt the algorithm to the "exactly a square of 2x2", it should not be contained in larger squares 3x3 etc, as requested on slack-channels
     @Override
-    public boolean checkGoal(int numCommonGoalCard, ItemTile[][] mat){
+    public boolean checkGoal(ItemTile[][] mat){
         int goals;
         int goali, goalj;
 
@@ -25,7 +26,7 @@ public class CommonGoalCard1 extends CommonGoalCard{
                 if( goals==1 && ( (i==goali+1 && ((j==goalj-2)||(j==goalj-1)||(j==goalj)) ) || (i==goali+2 && ((j==goalj-2)||(j==goalj-1)||(j==goalj)) )) ){
                     j=goalj+2;
                 }
-                if(mat[i][j].getTileID()!=-1
+                if( mat[i][j].getTileID()!=-1
                         && mat[i][j].getType().equals(mat[i+1][j+1].getType())
                         && mat[i][j].getType().equals(mat[i+1][j].getType())
                         && mat[i][j].getType().equals(mat[i][j+1].getType()) ){

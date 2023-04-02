@@ -10,7 +10,7 @@ public class CommonGoalCard4 extends CommonGoalCard{
      * @return boolean if the goal is reached or not
      */
     @Override
-    public boolean checkGoal(int numCommonGoalCard, ItemTile[][] mat){
+    public boolean checkGoal(ItemTile[][] mat){
         int goals;
         int [][] checkable = {
                 { 1, 1, 1, 1, 1 },
@@ -25,14 +25,14 @@ public class CommonGoalCard4 extends CommonGoalCard{
         goals=0;
         for(int i=0; i<mat.length && goals<6; i++){
             for(int j=0; j<mat[0].length-1 && goals<6; j++){
-                while(checkable[i][j]==0 && (j<mat[0].length-2)){
+                while((checkable[i][j]==0 || mat[i][j].getTileID()==-1) && j<mat[0].length-2){
                     j++;
                 }
                 checkable[i][j]=0;
-                if(i<mat.length-1 && mat[i][j].getType().equals(mat[i+1][j].getType()) && checkable[i+1][j]==1){
+                if(mat[i][j].getType().equals(mat[i+1][j].getType()) && mat[i+1][j].getTileID()!=-1 && checkable[i+1][j]==1 && i<mat.length-1){
                     goals++;
                     checkable[i+1][j]=0;
-                } else if (mat[i][j].getType().equals(mat[i][j+1].getType()) && checkable[i][j+1]==1) {
+                } else if (mat[i][j].getType().equals(mat[i][j+1].getType()) && mat[i][j+1].getTileID()!=-1 && checkable[i][j+1]==1) {
                     goals++;
                     checkable[i][j+1]=0;
                 }
