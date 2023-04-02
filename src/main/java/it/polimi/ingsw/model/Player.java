@@ -4,6 +4,7 @@ import it.polimi.ingsw.json.GameRules;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Observable;
 
 public class Player extends Observable {
@@ -92,6 +93,18 @@ public class Player extends Observable {
 
     public void setCommonGoalPoints(int[] commonGoalPoints) {
         CommonGoalPoints = commonGoalPoints;
+    }
+
+    public void setPersonalGoalPoints(){
+        ArrayList<Integer> points = new ArrayList<>(Arrays.asList(1,2,4,6,9,12)); //points
+        int numScored = 0;
+        for (PersonalGoalBox box : personalGoalCard.getCells()){
+            if (bookshelf.getMatrix()[box.getX()][box.getY()].getType().equals(box.getType())){
+                numScored++;
+            }
+        }
+        personalGoalPoints = points.get(numScored-1);
+
     }
 
 
