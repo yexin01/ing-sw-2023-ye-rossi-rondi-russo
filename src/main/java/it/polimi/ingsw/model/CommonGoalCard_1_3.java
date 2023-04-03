@@ -142,6 +142,14 @@ public class CommonGoalCard_1_3 extends CommonGoalCard{
                 ( x+1<mat.length && y-1>=0 && mat[x+1][y-1].getTileID()!=-1 && !mat[x][y].getType().equals(mat[x+1][y-1].getType()) ) ) {
             return true;
         }
+        // if all those (in the dimensions) are null then it does not have larger squares
+        if( ( y+1<mat[0].length && mat[x][y+1].getTileID()==-1 ) ||
+                ( x+1<mat.length && mat[x+1][y].getTileID()==-1 ) ||
+                ( x+1<mat.length && y+1<mat[0].length && mat[x+1][y+1].getTileID()==-1 ) ||
+                ( x-1>=0 && y+1<mat[0].length && mat[x-1][y+1].getTileID()==-1 ) ||
+                ( x+1<mat.length && y-1>=0 && mat[x+1][y-1].getTileID()==-1 ) ){
+            return true;
+        }
         return y + 1 == mat[0].length && x + 1 == mat.length; // corner case
     }
 
@@ -154,7 +162,7 @@ public class CommonGoalCard_1_3 extends CommonGoalCard{
      * @param b as the 'j' of the position to check
      * @return ArrayList posgoal updated with new positions if any matches found
      */
-    public ArrayList checkNear (ArrayList posgoal, ItemTile [][] mat, int a, int b){
+    private ArrayList checkNear (ArrayList posgoal, ItemTile [][] mat, int a, int b){
         if(a+1<mat.length && mat[a+1][b].getTileID()!=-1 && mat[a][b].getType().equals(mat[a+1][b].getType())){
             posgoal.add(a+1);
             posgoal.add(b);
@@ -178,7 +186,7 @@ public class CommonGoalCard_1_3 extends CommonGoalCard{
      * @param y as the 'j' of the position to check
      * @return the matrix of checkable updated
      */
-    public int [][] allNearUncheckable (int [][] checkable, int x, int y){
+    private int [][] allNearUncheckable (int [][] checkable, int x, int y){
         checkable[x][y]=0;
         if(x-1>=0){
             checkable[x-1][y]=0;

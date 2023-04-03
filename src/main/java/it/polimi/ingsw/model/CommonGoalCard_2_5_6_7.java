@@ -3,13 +3,12 @@ package it.polimi.ingsw.model;
 public class CommonGoalCard_2_5_6_7 extends CommonGoalCard{
 
     //TODO change the constructor to set this ID
-    private final int CommonGoalCardID=6;
+    private final int CommonGoalCardID=7;
 
     /**
      * This checkGoal implements the algorithms for CommonGoalCards 2,5,6,7
      *      Goal2: "Two columns each formed by 6 different types of tiles."
-     *      Goal5: "Four groups each containing at least 4 tiles of the same type (not necessarily in the depicted shape).
-     *              The tiles of one group can be different from those of another group."
+     *      Goal5: "Three columns each formed by 6 tiles of maximum three different types. One column can show the same or a different combination of another column."
      *      Goal6: "Two lines each formed by 5 different types of tiles. One line can show the same or a different combination of the other line."
      *      Goal7: "Four lines each formed by 5 tiles of maximum three different types. One line can show the same or a different combination of another line."
      * @param mat matrix of ItemTile[][]
@@ -22,6 +21,7 @@ public class CommonGoalCard_2_5_6_7 extends CommonGoalCard{
         int [] seen = new int[Type.values().length]; // array of counters for each Type of tile seen
         int notseen; // counter of types not seen
         int [] settings = new int[3]; // 0: goalsToReach, 1: dim of lines, 2: dim of columns
+        boolean notnull=true; // the column/line should be full to be counted as a goal
 
         // initializes goalsToReach, lines, columns according to numCommonGoalCard selected
         settings[1]=mat.length;
@@ -32,6 +32,7 @@ public class CommonGoalCard_2_5_6_7 extends CommonGoalCard{
         goals=0;
         for(int j = 0; j<settings[2] && goals<settings[0]; j++){
             // for each column (cases:2,5) or line (cases:6,7), it resets the array seen[]
+            notnull=true;
             for(int a=0; a<Type.values().length; a++){
                 seen[a]=0;
             }
@@ -39,8 +40,10 @@ public class CommonGoalCard_2_5_6_7 extends CommonGoalCard{
                 case 2, 5:
                     for(int i=0; i<settings[1]; i++){
                         for(Type types : Type.values()){
-                            if(mat[i][j].getTileID()!=-1 && mat[i][j].getType()==Type.values()[types.ordinal()]){
+                            if( mat[i][j].getTileID()!=-1 && mat[i][j].getType().equals(Type.values()[types.ordinal()]) ){
                                 seen[types.ordinal()]++;
+                            } else if (mat[i][j].getTileID()==-1) {
+                                notnull=false;
                             }
                         }
                     }
@@ -48,8 +51,10 @@ public class CommonGoalCard_2_5_6_7 extends CommonGoalCard{
                 case 6, 7:
                     for(int i=0; i<settings[1]; i++){
                         for(Type types : Type.values()){
-                            if(mat[j][i].getTileID()!=-1 && mat[j][i].getType()==Type.values()[types.ordinal()]){
+                            if( mat[j][i].getTileID()!=-1 && mat[j][i].getType().equals(Type.values()[types.ordinal()]) ){
                                 seen[types.ordinal()]++;
+                            } else if (mat[j][i].getTileID()==-1) {
+                                notnull=false;
                             }
                         }
                     }
@@ -63,7 +68,9 @@ public class CommonGoalCard_2_5_6_7 extends CommonGoalCard{
                     notseen++;
                 }
             }
-            goals=updateGoalsGroupsFound(notseen,goals);
+            if(notnull){
+                goals=updateGoalsGroupsFound(notseen,goals);
+            }
         }
         return goals>=settings[0];
     }
