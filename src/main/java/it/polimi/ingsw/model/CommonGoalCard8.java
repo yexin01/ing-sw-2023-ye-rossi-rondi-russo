@@ -9,8 +9,10 @@ public class CommonGoalCard8 extends CommonGoalCard{
     @Override
     public boolean checkGoal(ItemTile[][] mat){
         // check the goal
-        return (mat[0][0].getTileID() != -1 && mat[mat.length - 1][0].getTileID() != -1 && mat[0][0].getType().equals(mat[mat.length - 1][0].getType())) &&
-                (mat[mat.length - 1][mat[0].length - 1].getTileID() != -1 && mat[0][0].getType().equals(mat[mat.length - 1][mat[0].length - 1].getType())) &&
-                (mat[0][mat[0].length - 1].getTileID() != -1 && mat[0][0].getType().equals(mat[0][mat[0].length - 1].getType()));
+        return ( mat[0][0].getTileID()!=-1 && mat[mat.length-1][0].getTileID()!=-1 && mat[mat.length-1][mat[0].length-1].getTileID()!=-1 && mat[0][mat[0].length-1].getTileID()!=-1
+                && mat[0][0].getType().equals(mat[mat.length-1][0].getType())
+                && mat[0][0].getType().equals(mat[mat.length-1][mat[0].length-1].getType())
+                && mat[0][0].getType().equals(mat[0][mat[0].length-1].getType())
+        );
     }
 }

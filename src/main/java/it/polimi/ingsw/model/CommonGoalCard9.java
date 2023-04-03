@@ -15,10 +15,10 @@ public class CommonGoalCard9 extends CommonGoalCard{
         for(int a=0; a<Type.values().length; a++){
             seen[a]=0;
         }
-        for (int i=0; i<mat.length; i++) {
-            for (int j=0; j <mat[0].length; j++) {
-                for(Type types : Type.values()){
-                    if(mat[i][j].getTileID()!=-1 && mat[i][j].getType()==Type.values()[types.ordinal()]){
+        for (ItemTile[] itemTiles : mat) {
+            for (int j=0; j<mat[0].length; j++) {
+                for (Type types : Type.values()) {
+                    if ( itemTiles[j].getTileID()!=-1 && itemTiles[j].getType().equals(Type.values()[types.ordinal()]) ) {
                         seen[types.ordinal()]++;
                     }
                 }

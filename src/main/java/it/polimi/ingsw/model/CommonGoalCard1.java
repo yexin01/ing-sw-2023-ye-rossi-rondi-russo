@@ -72,6 +72,14 @@ public class CommonGoalCard1 extends CommonGoalCard{
                 ( x+1<mat.length && y-1>=0 && mat[x+1][y-1].getTileID()!=-1 && !mat[x][y].getType().equals(mat[x+1][y-1].getType()) ) ) {
             return true;
         }
+        // if all those (in the dimensions) are null then it does not have larger squares
+        if( ( y+1<mat[0].length && mat[x][y+1].getTileID()==-1 ) ||
+                ( x+1<mat.length && mat[x+1][y].getTileID()==-1 ) ||
+                ( x+1<mat.length && y+1<mat[0].length && mat[x+1][y+1].getTileID()==-1 ) ||
+                ( x-1>=0 && y+1<mat[0].length && mat[x-1][y+1].getTileID()==-1 ) ||
+                ( x+1<mat.length && y-1>=0 && mat[x+1][y-1].getTileID()==-1 ) ){
+            return true;
+        }
         return y + 1 == mat[0].length && x + 1 == mat.length; // corner case
     }
 
