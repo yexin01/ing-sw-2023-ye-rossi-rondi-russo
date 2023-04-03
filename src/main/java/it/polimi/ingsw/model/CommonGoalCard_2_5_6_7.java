@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-public class CommonGoalCard2567 extends CommonGoalCard{
+public class CommonGoalCard_2_5_6_7 extends CommonGoalCard{
 
     //TODO change the constructor to set this ID
     private final int CommonGoalCardID=7;
