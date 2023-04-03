@@ -312,7 +312,6 @@ public class GameandPlayerController {
                 turnPlayer().setToken(i,getGame().getCommonGoalCards().get(i).removeToken());
             }
             points=points+turnPlayer().getCommonGoalPoints(i);
-            i++;
         }
         return points;
     }
