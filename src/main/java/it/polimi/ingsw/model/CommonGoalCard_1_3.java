@@ -69,7 +69,7 @@ public class CommonGoalCard_1_3 extends CommonGoalCard{
      */
 
     @Override
-    public boolean checkGoal2(ItemTile[][] mat){
+    public boolean checkGoal3(ItemTile[][] mat){
         int goals,near,oldnear;
         int newi,newj;
         int [][] checkable = {
@@ -87,26 +87,26 @@ public class CommonGoalCard_1_3 extends CommonGoalCard{
         goals=0;
         for(int i=0; i<mat.length-1 && goals<4; i++){
             for(int j=0; j<mat[0].length-1 && goals<4; j++){
-
                 while( (checkable[i][j]==0 || mat[i][j].getTileID()==-1) && (j<mat[0].length-1)){
                     j++;
                 }
                 checkable[i][j]=0;
                 posgoal.add(i);
                 posgoal.add(j);
-                x=0;
                 newi=i;
                 newj=j;
+                x=2;
                 near=2;
                 do{
                     oldnear=near;
                     posgoal= checkNear(posgoal,mat,newi,newj);
                     near=posgoal.size();
-                    newi=posgoal.get(near-2);
-                    newj=posgoal.get(near-1);
-                    x++;
-                }while( (near<8 && (i< mat.length-1)&&(j<mat[0].length-1) ) && near>oldnear );
-
+                    if(near>oldnear){
+                        newi=posgoal.get(x);
+                        newj=posgoal.get(x+1);
+                        x=x+2;
+                    }
+                }while( (near<8 && (i<mat.length-1)&&(j<mat[0].length-1) ) && (near>oldnear || x<posgoal.size()) );
                 if(near>=8){
                     goals++;
                     //make uncheckable those of the group found and those near
@@ -119,7 +119,6 @@ public class CommonGoalCard_1_3 extends CommonGoalCard{
                     x=x+2;
                     checkable = allNearUncheckable (checkable, posgoal.get(x), posgoal.get(x+1));
                 }
-
                 if (near > 0) {
                     posgoal.subList(0, near).clear();
                 }
@@ -129,6 +128,7 @@ public class CommonGoalCard_1_3 extends CommonGoalCard{
     }
 
     /**
+     * Notes: checkNoLargerSquares is only used by checkGoal1()
      * @param mat matrix of ItemTile[][]
      * @param x as the 'i' of the position to check (of the tile in the right down corner)
      * @param y as the 'j' of the position to check (of the tile in the right down corner)
@@ -146,6 +146,7 @@ public class CommonGoalCard_1_3 extends CommonGoalCard{
     }
 
     /**
+     * Notes: checkNear is only used by checkGoal3()
      * checkNear() will check the position on right, left and bottom to see if there are any other tiles with the same type, if it finds any, its positions will be added to the ArrayList posgoal
      * @param posgoal that will be return with the new finds
      * @param mat matrix of ItemTile[][] to check
@@ -171,6 +172,7 @@ public class CommonGoalCard_1_3 extends CommonGoalCard{
 
     /**
      * allNearUncheckable will put at '0' the positions of the matching tiles found
+     * Notes: allNearUncheckable is used by checkGoal1() and checkGoal3()
      * @param checkable matrix used to skips those near, that cannot be part of other groups to count for the goal
      * @param x as the 'i' of the position to check
      * @param y as the 'j' of the position to check

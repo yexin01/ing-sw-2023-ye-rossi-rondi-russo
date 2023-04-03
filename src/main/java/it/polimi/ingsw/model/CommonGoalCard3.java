@@ -30,26 +30,26 @@ public class CommonGoalCard3 extends CommonGoalCard{
         goals=0;
         for(int i=0; i<mat.length-1 && goals<4; i++){
             for(int j=0; j<mat[0].length-1 && goals<4; j++){
-
                 while( (checkable[i][j]==0 || mat[i][j].getTileID()==-1) && (j<mat[0].length-1)){
                     j++;
                 }
                 checkable[i][j]=0;
                 posgoal.add(i);
                 posgoal.add(j);
-                x=0;
                 newi=i;
                 newj=j;
+                x=2;
                 near=2;
                 do{
                     oldnear=near;
                     posgoal= checkNear(posgoal,mat,newi,newj);
                     near=posgoal.size();
-                    newi=posgoal.get(near-2);
-                    newj=posgoal.get(near-1);
-                    x++;
-                }while( (near<8 && (i< mat.length-1)&&(j<mat[0].length-1) ) && near>oldnear );
-
+                    if(near>oldnear){
+                        newi=posgoal.get(x);
+                        newj=posgoal.get(x+1);
+                        x=x+2;
+                    }
+                }while( (near<8 && (i<mat.length-1)&&(j<mat[0].length-1) ) && (near>oldnear || x<posgoal.size()) );
                 if(near>=8){
                     goals++;
                     //make uncheckable those of the group found and those near
@@ -62,7 +62,6 @@ public class CommonGoalCard3 extends CommonGoalCard{
                     x=x+2;
                     checkable = allNearUncheckable (checkable, posgoal.get(x), posgoal.get(x+1));
                 }
-
                 if (near > 0) {
                     posgoal.subList(0, near).clear();
                 }
