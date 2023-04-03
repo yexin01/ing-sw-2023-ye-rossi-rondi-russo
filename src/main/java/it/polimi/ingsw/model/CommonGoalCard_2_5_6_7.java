@@ -3,7 +3,7 @@ package it.polimi.ingsw.model;
 public class CommonGoalCard_2_5_6_7 extends CommonGoalCard{
 
     //TODO change the constructor to set this ID
-    private final int CommonGoalCardID=7;
+    private final int CommonGoalCardID=6;
 
     /**
      * This checkGoal implements the algorithms for CommonGoalCards 2,5,6,7
@@ -48,7 +48,7 @@ public class CommonGoalCard_2_5_6_7 extends CommonGoalCard{
                 case 6, 7:
                     for(int i=0; i<settings[1]; i++){
                         for(Type types : Type.values()){
-                            if(mat[i][j].getTileID()!=-1 && mat[j][i].getType()==Type.values()[types.ordinal()]){
+                            if(mat[j][i].getTileID()!=-1 && mat[j][i].getType()==Type.values()[types.ordinal()]){
                                 seen[types.ordinal()]++;
                             }
                         }
