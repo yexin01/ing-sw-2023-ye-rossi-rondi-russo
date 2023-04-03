@@ -11,30 +11,38 @@ class CommonGoalCard12Test {
     @DisplayName("Check for CommonGoal12")
     void checkGoal() {
         CommonGoalCard12 commonGoalCard12 = new CommonGoalCard12();
-        ItemTile[][] mat = new ItemTile[6][5];
+        Bookshelf bookshelf = new Bookshelf(6, 5, 3);
         int tileID = 0;
         //Set right to '0' if you want to start from left, to '1' if you want to start right
         //(Always set on increasing height, since increasing from left is decreasing from right and vice versa)
-        int right = 0;
-        if (right==0) {
-            for (int i=0; i<5; i++) {
-                for (int j=0; j<5; j++) {
-                    if (j<=i) {
-                        mat[j][i] = new ItemTile(Type.CAT, tileID++);
+        int right = 1;
+        if (right == 0) {
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    if (j <= i) {
+                        bookshelf.getMatrix()[4-j][4-i] = new ItemTile(Type.CAT, tileID++);
                         tileID++;
                     }
                 }
             }
         } else {
-            for (int i=0; i<5; i++) {
-                for (int j=4; j>=0; j--) {
-                    if (j>=4-i) {
-                        mat[j][i] = new ItemTile(Type.CAT, tileID++);
+            for (int i = 0; i < 5; i++) {
+                for (int j = 4; j >= 0; j--) {
+                    if (j >= 4 - i) {
+                        bookshelf.getMatrix()[i][j] = new ItemTile(Type.CAT, tileID++);
                         tileID++;
                     }
                 }
             }
         }
-        assertEquals(true, commonGoalCard12.checkGoal(mat));
+        /*ItemTile[][] matrix1={
+                {new ItemTile(null,-1),new ItemTile(null,-1),new ItemTile(null,-1),new ItemTile(null,-1),new ItemTile(null,-1)},
+                {new ItemTile(Type.CAT,44),new ItemTile(null,-1),new ItemTile(null,-1),new ItemTile(null,-1),new ItemTile(null,-1)},
+                {new ItemTile(Type.CAT,44),new ItemTile(Type.CAT,44),new ItemTile(null,-1),new ItemTile(null,-1),new ItemTile(null,-1)},
+                {new ItemTile(Type.CAT,44),new ItemTile(Type.CAT,44),new ItemTile(Type.CAT,44),new ItemTile(null,-1),new ItemTile(null,-1)},
+                {new ItemTile(Type.CAT,44),new ItemTile(Type.CAT,44),new ItemTile(Type.CAT,44),new ItemTile(Type.CAT,44),new ItemTile(null,-1)},
+                {new ItemTile(Type.CAT,44),new ItemTile(Type.CAT,44),new ItemTile(Type.CAT,44),new ItemTile(Type.CAT,44),new ItemTile(Type.CAT,44)}};*/
+        bookshelf.printBookshelf();
+        assertEquals(true, commonGoalCard12.checkGoal(bookshelf.getMatrix()));
     }
 }
