@@ -106,8 +106,6 @@ public class Bookshelf {
         return true;
     }
 
-    //TODO rename without BookshelfBox
-
     /**
      * @return a list with the cardinalities of the groups of adjacent tiles found by the algorithm
      */
