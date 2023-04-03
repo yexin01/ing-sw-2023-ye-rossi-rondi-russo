@@ -19,6 +19,6 @@ class CommonGoalCard10Test {
         mat[x-1][y+1] = new ItemTile(Type.CAT, tileID); tileID++;
         mat[x+1][y-1] = new ItemTile(Type.CAT, tileID); tileID++;
         mat[x+1][y+1] = new ItemTile(Type.CAT, tileID);
-        assertEquals(true, commonGoalCard10.checkGoal(10, mat));
+        assertEquals(true, commonGoalCard10.checkGoal(mat));
     }
 }

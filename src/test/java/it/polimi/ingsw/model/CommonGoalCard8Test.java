@@ -17,6 +17,6 @@ class CommonGoalCard8Test {
         mat[0][4] = new ItemTile(Type.CAT, tileID); tileID++;
         mat[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         mat[5][4] = new ItemTile(Type.CAT, tileID);
-        assertEquals(true, commonGoalCard8.checkGoal(8, mat));
+        assertEquals(true, commonGoalCard8.checkGoal(mat));
     }
 }

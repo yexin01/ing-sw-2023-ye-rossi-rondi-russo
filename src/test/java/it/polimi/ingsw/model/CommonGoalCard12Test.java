@@ -35,6 +35,6 @@ class CommonGoalCard12Test {
                 }
             }
         }
-        assertEquals(true, commonGoalCard12.checkGoal(12, mat));
+        assertEquals(true, commonGoalCard12.checkGoal(mat));
     }
 }

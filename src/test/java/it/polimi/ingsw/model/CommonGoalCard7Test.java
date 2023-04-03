@@ -10,7 +10,7 @@ class CommonGoalCard7Test {
     @Test
     @DisplayName("Check for CommonGoal7")
     void checkGoal() {
-        CommonGoalCard2567 commonGoalCard2567 = new CommonGoalCard2567();
+        CommonGoalCard_2_5_6_7 commonGoalCard2567 = new CommonGoalCard_2_5_6_7();
         ItemTile[][] mat = new ItemTile[6][5];
         //Set the rows where you want to add the tiles, and the number of different types
         int x = 0;

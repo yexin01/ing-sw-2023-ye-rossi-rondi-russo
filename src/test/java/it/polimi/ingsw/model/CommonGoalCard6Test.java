@@ -11,7 +11,7 @@ class CommonGoalCard6Test {
     @Test
     @DisplayName("Check for CommonGoal6")
     void checkGoal() {
-        CommonGoalCard2567 commonGoalCard2567 = new CommonGoalCard2567();
+        CommonGoalCard_2_5_6_7 commonGoalCard2567 = new CommonGoalCard_2_5_6_7();
         ItemTile[][] mat = new ItemTile[6][5];
         //Set the rows in which you want the check to be verified
         int x = 0; int y = 2; int tileId = 0;

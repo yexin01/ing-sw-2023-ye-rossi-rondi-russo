@@ -10,7 +10,7 @@ class CommonGoalCard3Test {
     @Test
     @DisplayName("Check for CommonGoal3")
     void checkGoal() {
-        CommonGoalCard3 commonGoalCard3 = new CommonGoalCard3();
+        CommonGoalCard_1_3 commonGoalCard3 = new CommonGoalCard_1_3();
         ItemTile[][] mat = new ItemTile[6][5];
         //Insert the tiles you want inside the matrix
         int tileID = 0;
@@ -22,6 +22,6 @@ class CommonGoalCard3Test {
         mat [2][1] = new ItemTile(Type.CAT, tileID); tileID++;
         mat [2][2] = new ItemTile(Type.CAT, tileID); tileID++;
         mat [2][3] = new ItemTile(Type.CAT, tileID); tileID++;
-        assertEquals(true, commonGoalCard3.checkGoal(3, mat));
+        assertEquals(true, commonGoalCard3.checkGoal2(mat));
     }
 }

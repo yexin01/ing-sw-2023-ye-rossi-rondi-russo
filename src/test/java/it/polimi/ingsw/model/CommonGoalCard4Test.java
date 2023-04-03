@@ -26,6 +26,6 @@ class CommonGoalCard4Test {
         mat [4][1] = new ItemTile(Type.CAT, tileID); tileID++;
         mat [4][2] = new ItemTile(Type.CAT, tileID); tileID++;
         mat [4][3] = new ItemTile(Type.CAT, tileID); tileID++;
-        assertEquals(true, commonGoalCard4.checkGoal(4, mat));
+        assertEquals(true, commonGoalCard4.checkGoal(mat));
     }
 }

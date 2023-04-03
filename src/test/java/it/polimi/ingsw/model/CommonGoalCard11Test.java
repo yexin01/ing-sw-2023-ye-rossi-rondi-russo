@@ -18,6 +18,6 @@ class CommonGoalCard11Test {
             mat[x+i][y+i] = new ItemTile(Type.CAT, tileID);
             tileID++;
         }
-        assertEquals(true, commonGoalCard11.checkGoal(11, mat));
+        assertEquals(true, commonGoalCard11.checkGoal(mat));
     }
 }
