@@ -1,6 +1,8 @@
 package it.polimi.ingsw.controller;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.view.View1;
+import it.polimi.ingsw.view.View2;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -92,7 +94,7 @@ public class Controller implements Observer {
 
     }
 
-    private void turnPlayer(int number) throws Exception {
+    public void turnPlayer(int number) throws Exception {
 
         if(gameBoard().isEndGame()&&firstPlayer().getNickname().equals(turnPlayer().getNickname())){
             System.out.println("END GAME");
@@ -114,7 +116,7 @@ public class Controller implements Observer {
         playerIsSelecting(number);
     }
 
-    private void insertInBookshelfAndPoints(int number) {
+    public void insertInBookshelfAndPoints(int number) {
         try{
             //TODO ricontrollare l'eccezione cambiando il valore base di x e y senno inserendo -1 il programma va avanti
             if (number < 0 || number >= turnBookshelf().getMatrix().length-1) {
@@ -122,7 +124,7 @@ public class Controller implements Observer {
             }
             if(gameandPlayerController.insertAsSelected(number)){
                 System.out.println("The tiles have been inserted");
-                //TODO AGGIUNGERE L'AGGIORNAMENTO DEI PUNTEGGI QUANDO I CHECK GOAL SARANNO TERMINATI
+                //TODO AGGIUNGERE L'AGGIORNAMENTO DEI PUNTEGGI
                 //gameandPlayerController.updateAllPoints();
                 gameandPlayerController.setNextPlayer(turnPlayer());
                 if (boardController.checkRefill()) {
@@ -145,7 +147,7 @@ public class Controller implements Observer {
 
     }
 
-    private void finishChoicePlayer() {
+    public void finishChoicePlayer() {
         if(gameBoard().getSelectedBoard().size()!=0){
             System.out.println("You selected "+gameBoard().getSelectedBoard().size()+" tiles");
             System.out.println("These are the free cells for each column of your bookshelf enter a number from 0 to 4 to insert them into");
@@ -171,7 +173,7 @@ public class Controller implements Observer {
                 System.out.println("You have selected a greater number of tiles that you can select, if you want to reset the choice enter -1");
                 System.out.println("If you want to confirm your choice except for the last tile, enter -2");
                 resetPlayerChoice();
-            }else if (!boardController.checkSelectable(gameBoard().getBoardBox(gameBoard().getPlayerChoiceX(), gameBoard().getPlayerChoiceY()))) {
+            }else if (!boardController.checkSelectable(gameBoard().getBoardBox(gameBoard().getPlayerChoiceX(), gameBoard().getPlayerChoiceY()), turnBookshelf().numSelectableTiles())) {
                 System.out.println("The tile you selected is not a selectable tile select another one \nIf you want to reset the choice enter -1");
                 System.out.println("If you want to continue without this tile write the row of the next card");
                 System.out.println("If you want to confirm your choice except for the last tile, enter -2");
@@ -185,7 +187,7 @@ public class Controller implements Observer {
         }
     }
 
-    private void resetPlayerChoice(){
+    public void resetPlayerChoice(){
         gameBoard().setPlayerChoiceX(-1);
         gameBoard().setPlayerChoiceX(-1);
         gameBoard().setFinishPlayerChoice(-1);
@@ -204,8 +206,6 @@ public class Controller implements Observer {
     public Board gameBoard(){return boardController.getBoard();}
 
     public void changeFlag(){boardController.getBoard().setFinishPlayeropposite();}
-
-
 
 
 }

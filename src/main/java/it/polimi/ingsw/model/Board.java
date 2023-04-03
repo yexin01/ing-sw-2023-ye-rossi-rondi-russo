@@ -8,25 +8,61 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 public class Board extends Observable {
+
+    public Board() {
+        playerChoiceX=-1;
+        playerChoiceY=-1;
+        finishPlayerChoice=-1;
+        columnSelected=-1;
+    }
     private BoardBox[][] matrix;
 
-    private boolean finishPlayer;
-
-
-    public BoardBox getBoardBox(int x,int y) {
-        return matrix[x][y];
-    }
-
-    public BoardBox[][] getMatrix() {
-        return matrix;
-    }
-
+    public BoardBox[][] getMatrix() {return matrix;}
     public void setMatrix(BoardBox[][] matrix) {
         this.matrix = matrix;
         setChanged();
         notifyObservers(matrix);
     }
 
+    public BoardBox getBoardBox(int x,int y) {
+        return matrix[x][y];
+    }
+
+//PLAYER CHOICE
+    private Integer playerChoiceX;
+
+    public Integer getPlayerChoiceX() {
+        return playerChoiceX;
+    }
+
+    public void setPlayerChoiceX(Integer playerChoiceX) {
+        try {
+            if (playerChoiceX < -1 || playerChoiceX >= matrix.length) {
+                throw new IllegalArgumentException(" value must be between 0 and " + (matrix.length - 1));
+            }
+            this.playerChoiceX = playerChoiceX;
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid row:Rewrite the row" + e.getMessage());
+            setFinishPlayeropposite();
+        }
+    }
+    private Integer playerChoiceY;
+    public Integer getPlayerChoiceY() {
+        return playerChoiceY;
+    }
+
+    public void setPlayerChoiceY(Integer playerChoiceY) {
+        try {
+            if (playerChoiceY < -1 || playerChoiceY >= matrix[0].length) {
+                throw new IllegalArgumentException(" value must be between 0 and " + (matrix[0].length - 1));
+
+            }
+            this.playerChoiceY = playerChoiceY;
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid column:Rewrite the column" + e.getMessage());
+            setFinishPlayeropposite();
+        }
+    }
     private ArrayList<ItemTile> tiles;
 
     public ArrayList<ItemTile> getTiles() {
@@ -46,83 +82,18 @@ public class Board extends Observable {
     }
 
     public void setSelectedBoard(ArrayList<BoardBox> selectedBoard) {
-
         this.selectedBoard = selectedBoard;
         setChanged();
         notifyObservers(selectedBoard);
     }
 
-    private BoardBox[][] selectable;
-
-    private Integer playerChoiceX;
-
-    public Integer getPlayerChoiceX() {
-        return playerChoiceX;
-    }
-
-    public void setPlayerChoiceX(Integer playerChoiceX) {
-        try {
-            if (playerChoiceX < -1 || playerChoiceX >= matrix.length) {
-                throw new IllegalArgumentException(" value must be between 0 and " + (matrix.length - 1));
-            }
-            this.playerChoiceX = playerChoiceX;
-        } catch (IllegalArgumentException e) {
-            System.err.println("Invalid row:Rewrite the row" + e.getMessage());
-            setFinishPlayeropposite();
-        }
-    }
-
-
-    private Integer playerChoiceY;
-
-
-
-
-    public Integer getPlayerChoiceY() {
-        return playerChoiceY;
-    }
-
-    public void setPlayerChoiceY(Integer playerChoiceY) {
-        try {
-            if (playerChoiceY < -1 || playerChoiceY >= matrix.length) {
-                throw new IllegalArgumentException(" value must be between 0 and " + (matrix[0].length - 1));
-
-            }
-            this.playerChoiceY = playerChoiceY;
-        } catch (IllegalArgumentException e) {
-            System.err.println("Invalid column:Rewrite the column" + e.getMessage());
-            setFinishPlayeropposite();
-        }
-    }
-    public Board() {
-        playerChoiceX=-1;
-        playerChoiceY=-1;
-        finishPlayerChoice=-1;
-        columnSelected=-1;
-    }
-
+    private boolean finishPlayer;
 //TODO it will be removed when the non-deprecated version is implemented
     public void setFinishPlayeropposite() {
         finishPlayer = !finishPlayer;
         setChanged();
         notifyObservers(finishPlayer);
     }
-
-    private Integer finishPlayerChoice;
-/*
-    public void printMatrix(){
-        for (int i = 0; i < matrix.length; i++) {
-            System.out.println(" ");
-            for (int j = 0; j < matrix[i].length; j++) {
-                if(matrix[i][j].getTile()!=null){
-                    System.out.print("1 ");
-                }
-                else System.out.print("0 ");
-            }
-        }
-    }
-    */
-
     public void printMatrix(){
         for (int i = 0; i < matrix.length; i++) {
             System.out.printf("row"+i+" ");
@@ -130,17 +101,17 @@ public class Board extends Observable {
                 if (matrix[i][j].getTile()!=null) {
                     System.out.printf("%-10s",+j+""+matrix[i][j].getTile().getType());
                 } else {
-                    System.out.printf("%-10s",+j+" vuota");
+                    System.out.printf("%-10s",+j+"EMPTY");
                 }
             }
             System.out.println("");
         }
     }
+    //BOOKSHELF
     private int columnSelected;
     public int getColumnSelected() {
         return columnSelected;
     }
-
     public void setColumnSelected(Integer columnSelected) {
         //TODO import num column bookshelf
         //TODO OR THIS WILL BE IN THE BOOKSHELF
@@ -157,6 +128,29 @@ public class Board extends Observable {
             setFinishPlayeropposite();
         }
     }
+    private boolean endGame;//true when a player has completely filled the bookshelf
+                            //the game ends when the first player has to start the turn
+
+    public boolean isEndGame() {
+        return endGame;
+    }
+
+    public void setEndGame(boolean endGame) {
+        this.endGame = endGame;
+    }
+
+    private Integer finishPlayerChoice;
+    //TODO it will be removed when the non-deprecated version is implemented
+    public Integer getFinishPlayerChoice() {
+        return finishPlayerChoice;
+    }
+
+    public void setFinishPlayerChoice(Integer finishPlayerChoice) {
+        this.finishPlayerChoice = finishPlayerChoice;
+    }
+}
+
+/*
     private int numOfTile;
     public int getnumOfTile() {
         return numOfTile;
@@ -184,23 +178,4 @@ public class Board extends Observable {
         }
     }
 
-
-    private boolean endGame;
-
-    public boolean isEndGame() {
-        return endGame;
-    }
-
-    public void setEndGame(boolean endGame) {
-        this.endGame = endGame;
-    }
-
-    //TODO it will be removed when the non-deprecated version is implemented
-    public Integer getFinishPlayerChoice() {
-        return finishPlayerChoice;
-    }
-
-    public void setFinishPlayerChoice(Integer finishPlayerChoice) {
-        this.finishPlayerChoice = finishPlayerChoice;
-    }
-}
+ */

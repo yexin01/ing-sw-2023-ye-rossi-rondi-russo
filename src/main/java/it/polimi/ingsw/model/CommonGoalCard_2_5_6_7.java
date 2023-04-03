@@ -2,8 +2,92 @@ package it.polimi.ingsw.model;
 
 public class CommonGoalCard_2_5_6_7 extends CommonGoalCard{
 
-    //TODO change the constructor to set this ID
-    private final int CommonGoalCardID=7;
+    public int[] settingCase(int[] settings) {throw new IllegalArgumentException("Something wrong");}
+    public boolean internalCondition1(int i,int j,ItemTile[][] mat,Type type) {throw new IllegalArgumentException("Something wrong");}
+    public boolean internalCondition2(int i,int j,ItemTile[][] mat) {throw new IllegalArgumentException("Something wrong");}
+    public boolean updateGoalsGroupsFound (int notseen){throw new IllegalArgumentException("Something wrong");};
+
+    public static class local_2_5 extends CommonGoalCard_2_5_6_7 {
+        @Override
+        public boolean internalCondition1(int i,int j,ItemTile[][] mat,Type type){
+            return mat[i][j].getTileID()!=-1 && mat[i][j].getType().equals(Type.values()[type.ordinal()]);
+        }
+        @Override
+        public boolean internalCondition2(int i,int j,ItemTile[][] mat){
+            return mat[i][j].getTileID()==-1;
+        }
+
+        public static class local2 extends local_2_5{
+            @Override
+            public int[] settingCase(int[] settings){
+                settings[0] = 2;
+                return settings;
+            }
+
+            @Override
+            public boolean updateGoalsGroupsFound (int notseen){
+                return notseen==0;
+            }
+
+        }
+        public static class local5 extends local_2_5{
+            @Override
+            public int[] settingCase(int[] settings){
+                settings[0] = 3;
+                return settings;
+            }
+            @Override
+            public boolean updateGoalsGroupsFound (int notseen){
+                return notseen>=3;
+            }
+
+        }
+
+    }
+    public static class local_6_7 extends CommonGoalCard_2_5_6_7 {
+        @Override
+        public boolean internalCondition1(int i,int j,ItemTile[][] mat,Type type){
+            return mat[j][i].getTileID()!=-1 && mat[j][i].getType().equals(Type.values()[type.ordinal()]);
+        }
+        @Override
+        public boolean internalCondition2(int i,int j,ItemTile[][] mat){
+            return mat[j][i].getTileID()==-1;
+        }
+        public int[] swap(int[] settings){
+            int temp;
+            temp = settings[1];
+            settings[1] = settings[2];
+            settings[2] = temp;
+            return settings;
+        }
+
+        public static class local6 extends local_6_7{
+            @Override
+            public int[] settingCase(int[] settings){
+                settings[0] = 2;
+                return swap(settings);
+            }
+            @Override
+            public boolean updateGoalsGroupsFound (int notseen){
+                return notseen<=1;
+            }
+
+        }
+        public static class local7 extends local_6_7{
+            @Override
+            public int[] settingCase(int[] settings){
+                int temp;
+                settings[0]  = 4;
+                return swap(settings);
+            }
+            @Override
+            public boolean updateGoalsGroupsFound (int notseen){
+                return notseen>=3;
+            }
+
+        }
+
+    }
 
     /**
      * This checkGoal implements the algorithms for CommonGoalCards 2,5,6,7
@@ -17,6 +101,7 @@ public class CommonGoalCard_2_5_6_7 extends CommonGoalCard{
 
     @Override
     public boolean checkGoal (ItemTile[][] mat){
+        System.out.println("uncheck tutte");
         int goals;
         int [] seen = new int[Type.values().length]; // array of counters for each Type of tile seen
         int notseen; // counter of types not seen
@@ -26,7 +111,7 @@ public class CommonGoalCard_2_5_6_7 extends CommonGoalCard{
         // initializes goalsToReach, lines, columns according to numCommonGoalCard selected
         settings[1]=mat.length;
         settings[2]=mat[0].length;
-        settingsCase(settings);
+        settings=settingCase(settings);
 
         // check the goal
         goals=0;
@@ -36,31 +121,14 @@ public class CommonGoalCard_2_5_6_7 extends CommonGoalCard{
             for(int a=0; a<Type.values().length; a++){
                 seen[a]=0;
             }
-            switch (CommonGoalCardID) {
-                case 2, 5:
-                    for(int i=0; i<settings[1]; i++){
-                        for(Type types : Type.values()){
-                            if( mat[i][j].getTileID()!=-1 && mat[i][j].getType().equals(Type.values()[types.ordinal()]) ){
-                                seen[types.ordinal()]++;
-                            } else if (mat[i][j].getTileID()==-1) {
-                                notnull=false;
-                            }
-                        }
+            for(int i=0; i<settings[1]; i++){
+                for(Type type : Type.values()){
+                    if( internalCondition1(i,j,mat,type)){
+                        seen[type.ordinal()]++;
+                    } else if (internalCondition2(i,j,mat)) {
+                        notnull=false;
                     }
-                    break;
-                case 6, 7:
-                    for(int i=0; i<settings[1]; i++){
-                        for(Type types : Type.values()){
-                            if( mat[j][i].getTileID()!=-1 && mat[j][i].getType().equals(Type.values()[types.ordinal()]) ){
-                                seen[types.ordinal()]++;
-                            } else if (mat[j][i].getTileID()==-1) {
-                                notnull=false;
-                            }
-                        }
-                    }
-                    break;
-                default:
-                    System.out.println("cannot use this function for commonGoalCards that are not 2,5,6,7!");
+                }
             }
             notseen=0;
             for(int a=0; a<Type.values().length; a++){
@@ -68,59 +136,11 @@ public class CommonGoalCard_2_5_6_7 extends CommonGoalCard{
                     notseen++;
                 }
             }
-            if(notnull){
-                goals=updateGoalsGroupsFound(notseen,goals);
+            if(notnull && updateGoalsGroupsFound(notseen)){
+                goals++;
             }
         }
         return goals>=settings[0];
-    }
-
-    public void settingsCase (int[] settings){
-        int temp;
-        switch (CommonGoalCardID) {
-            case 2 -> settings[0] = 2;
-            case 5 -> settings[0] = 3;
-            // in cases:6,7 it switches dim of lines with dim of columns because the algorithm checks per lines and not per columns
-            case 6 -> {
-                settings[0] = 2;
-                temp = settings[1];
-                settings[1] = settings[2];
-                settings[2] = temp;
-            }
-            case 7 -> {
-                settings[0]  = 4;
-                temp = settings[1];
-                settings[1] = settings[2];
-                settings[2] = temp;
-            }
-            default -> {
-                settings[0]  = -1;
-                System.out.println("cannot use this function for commonGoalCards that are not 2,5,6,7!");
-            }
-        }
-    }
-
-    private int updateGoalsGroupsFound (int notseen, int goals){
-        switch (CommonGoalCardID) {
-            case 2:
-                if(notseen==0){
-                    goals++;
-                }
-                break;
-            case 5, 7:
-                if(notseen>=3){
-                    goals++;
-                }
-                break;
-            case 6:
-                if(notseen<=1){
-                    goals++;
-                }
-                break;
-            default:
-                System.out.println("cannot use this function for commonGoalCards that are not 2,5,6,7!");
-        }
-        return goals;
     }
 }
 

@@ -18,10 +18,14 @@ public class BoardController {
         this.board = board;
     }
 
-    /** this method associates the matrix to be used
-     * based on the number of players in the game
+    /**The matrix is scrolled twice:
+     * The first time, in correspondence with a 1 of the matrix, passed as a parameter, the flag occupiable is set true
+     *      and an Item tile (randomly extracted from the arraylist containing the missing tiles of the game) is associated.
+     * The second time, calculate the number of free edges of each BoardBox occupied
      *
-     * @param numPlayers numbers of players in the game
+     * @param numPlayers numPlayers numbers of players in the game
+     * @param gameRules reads from the json file the matrix to use based on the number of players
+     * @throws Exception
      */
     public void firstFill(int numPlayers, GameRules gameRules) throws Exception {
         initializedBoard(gameRules);
@@ -38,13 +42,12 @@ public class BoardController {
                     board.getMatrix()[i][j].setTile(board.getTiles().get(randomNumber));
                     board.getTiles().remove(randomNumber);
                     board.getMatrix()[i][j].setOccupiable(true);
-                    board.getMatrix()[i][j].setOccupied(true);
                 }
             }
         }
         for (int i = 0; i < board.getMatrix().length; i++) {
             for (int j = 0; j < board.getMatrix()[i].length; j++) {
-                if(board.getMatrix()[i][j].isOccupied()){
+                if(board.getMatrix()[i][j].getTile()!=null){
                     setFreeEdges(i,j);
                     // System.out.println(matrix[i][j].getEdges());
                 }
@@ -52,23 +55,10 @@ public class BoardController {
         }
     }
     /**
-     * instantiate numTilesType for each tye of tile
-     *import numTilesType from a file jason
+     * instantiate numTilesType for each type of tile
+     *
      */
- /*   public void initializedBoard() {
-        //TODO  import the number of tiles of each type from a file json
-        int numTilesType=22;
-        int j=0;
-        board.setTiles(new ArrayList<ItemTile>());
-        for(Type t: Type.values()){
-            for (int i = 0; i < numTilesType; i++) {
-                board.getTiles().add(new ItemTile(t,j++));
-            }
-        }
 
-    }
-
-  */
     public void initializedBoard(GameRules gameRules) throws Exception {
         int[] numTilesOfType = gameRules.getNumTilesPerType();
         int j = 0;
@@ -79,13 +69,7 @@ public class BoardController {
             }
         }
     }
-    /**The matrix is scrolled twice:
-     * the first timein correspondence with a 1 of the matrix passed as a parameter the two flags are set true
-     *      and an Item tile is associated, randomly extracted from the arraylist containing the missing tiles of the game .
-     * the second time it calculates the number of free edges of each BoardBox by inserting 0 int the unoccupiable cells
-     *
-     * @param matrix : it varies according to the number of players
-     */
+
 
 
     /**
@@ -96,23 +80,23 @@ public class BoardController {
      */
     public void setFreeEdges(int x, int y){
         if(x>0) {
-            //sopra
-            if (!board.getMatrix()[x - 1][y].isOccupied() || !board.getMatrix()[x - 1][y].isOccupiable())
+            //up
+            if (board.getMatrix()[x - 1][y].getTile()==null || !board.getMatrix()[x - 1][y].isOccupiable())
                 board.getMatrix()[x][y].increasefreeEdges();
         }else board.getMatrix()[x][y].increasefreeEdges();
         if(x< board.getMatrix().length-1) {
-            //sotto
-            if (!board.getMatrix()[x + 1][y].isOccupied()|| !board.getMatrix()[x + 1][y].isOccupiable())
+            //down
+            if (board.getMatrix()[x+1][y].getTile()==null|| !board.getMatrix()[x + 1][y].isOccupiable())
                 board.getMatrix()[x][y].increasefreeEdges();
         }else board.getMatrix()[x][y].increasefreeEdges();
         if(y>0) {
-            //sinistra
-            if (!board.getMatrix()[x][y - 1].isOccupied()|| !board.getMatrix()[x][y-1].isOccupiable())
+            //left
+            if (board.getMatrix()[x][y-1].getTile()==null|| !board.getMatrix()[x][y-1].isOccupiable())
                 board.getMatrix()[x][y].increasefreeEdges();
         }else board.getMatrix()[x][y].increasefreeEdges();
         if(y< board.getMatrix().length-1) {
-            //destra
-            if (!board.getMatrix()[x][y + 1].isOccupied()|| !board.getMatrix()[x][y+1].isOccupiable())
+            //right
+            if (board.getMatrix()[x][y+1].getTile()==null|| !board.getMatrix()[x][y+1].isOccupiable())
                 board.getMatrix()[x][y].increasefreeEdges();
         }else board.getMatrix()[x][y].increasefreeEdges();
     }
@@ -126,27 +110,31 @@ public class BoardController {
 
     public void increaseNear(int x, int y){
         if(x>0) {
-            //sopra
-            if (board.getMatrix()[x-1][y].isOccupied())
+            //up
+            if (board.getMatrix()[x-1][y].getTile()!=null)
                 board.getMatrix()[x-1][y].increasefreeEdges();
         }
         if(x< board.getMatrix().length-1) {
-            //sotto
-            if (board.getMatrix()[x+1][y].isOccupied())
+            //down
+            if (board.getMatrix()[x+1][y].getTile()!=null)
                 board.getMatrix()[x+1][y].increasefreeEdges();
         }
         if(y>0) {
-            //sinistra
-            if (board.getMatrix()[x][y-1].isOccupied())
+            //left
+            if (board.getMatrix()[x][y-1].getTile()!=null)
                 board.getMatrix()[x][y-1].increasefreeEdges();
         }
         if(y< board.getMatrix().length-1) {
-            //destra
-            if (board.getMatrix()[x][y+1].isOccupied())
+            //right
+            if (board.getMatrix()[x][y+1].getTile()!=null)
                 board.getMatrix()[x][y+1].increasefreeEdges();
         }
     }
 
+    /**
+     *
+     * @return check that each ItemTile of selectedBoard is adjacent to the previous one
+     */
     public boolean allAdjacent(){
         List<BoardBox> selectedBoard = board.getSelectedBoard();
         for (int i = 1; i < selectedBoard.size(); i++) {
@@ -158,6 +146,11 @@ public class BoardController {
         }
         return true;
     }
+
+    /**
+     *
+     * @return check that all the ItemTiles in the selectedBoard array are on the same row or column
+     */
     public boolean allSameRowOrSameColumn(){
         List<BoardBox> selectedBoard = board.getSelectedBoard();
         int firstX = selectedBoard.get(0).getX();
@@ -185,15 +178,14 @@ public class BoardController {
     //TODO depends on how we implement the controller: this method checks the tile after each selection,
     // if we change the controller by checking the cards when the user has selected them all this method
     // must be changed by adding an arraylist to the board, checking at the end
-    public boolean checkSelectable(BoardBox boardBox) throws Exception {
-        GameRules gameRules = new GameRules();
-        int numSelectableTiles = gameRules.getMaxSelectableTiles();
+    //TODO pass it the maximum of the player's selectable tile cells as a parameter
+    //TODO avoid reading the json file and having to reduce the controller by one check
+    public boolean checkSelectable(BoardBox boardBox, int numSelectableTiles){
         List<BoardBox> selectedBoard = board.getSelectedBoard();
         if ((boardBox.getFreeEdges() <= 0) || (selectedBoard.size() > (numSelectableTiles+1))) {
             System.err.println("You chose more than "+numSelectableTiles+" tiles write -1 to reset the choice");
             return false;
         }
-
         board.getSelectedBoard().add(boardBox);
         if (selectedBoard.size() == 1) {
             return true;
@@ -214,7 +206,6 @@ public class BoardController {
         ArrayList<ItemTile>  selectedItems= new ArrayList<ItemTile>();
         for(int i = 0; i< board.getSelectedBoard().size(); i++ ){
             selectedItems.add(board.getSelectedBoard().get(i).getTile());
-            board.getMatrix()[board.getSelectedBoard().get(i).getX()][board.getSelectedBoard().get(i).getY()].setOccupied(false);
             increaseNear(board.getSelectedBoard().get(i).getX(), board.getSelectedBoard().get(i).getY());
             board.getMatrix()[board.getSelectedBoard().get(i).getX()][board.getSelectedBoard().get(i).getY()].setTile(null);
             board.getMatrix()[board.getSelectedBoard().get(i).getX()][board.getSelectedBoard().get(i).getY()].setFreeEdges(0);
@@ -223,36 +214,39 @@ public class BoardController {
         return selectedItems;
     }
 
-    /**check that there are not at least two adjacent cells
+    /**
      *
-     * @return
+     * @return check that there are all isolated cells
      */
 
     public boolean checkRefill(){
         for (int i = 0; i < board.getMatrix().length; i++) {
             for (int j = 0; j < board.getMatrix()[i].length; j++) {
-                if(board.getMatrix()[i][j].isOccupied()){
+                if(board.getMatrix()[i][j].getTile()!=null){
                     if(board.getMatrix()[i][j].getFreeEdges()!=4)
                         return false;
                 }
-
             }
         }
         return true;
-
     }
 
-
+    /**
+     * add all the isolated tiles to the arraylist,
+     * randomly extract tiles from the same arraylist,
+     * insert on the board in correspondence with the occupiable cells
+     */
     public void refill(){
+        //add the board tiles to the arraylist Tiles
         for (int i = 0; i < board.getMatrix().length; i++) {
             for (int j = 0; j < board.getMatrix()[i].length; j++) {
-                if(board.getMatrix()[i][j].isOccupied()){
+                if(board.getMatrix()[i][j].getTile()!=null){
                     board.getTiles().add(board.getMatrix()[i][j].getTile());
                     board.getMatrix()[i][j].setTile(null);
-                    board.getMatrix()[i][j].setOccupied(false);
                 }
             }
         }
+        //randomly extract ItemTile from arraylist Tiles and place them on the board
         Random random=new Random();
         int randomNumber;
         for (int i = 0; i < board.getMatrix().length; i++) {
@@ -261,19 +255,20 @@ public class BoardController {
                     randomNumber = random.nextInt(board.getTiles().size());
                     board.getMatrix()[i][j].setTile(board.getTiles().get(randomNumber));
                     board.getTiles().remove(randomNumber);
-                    board.getMatrix()[i][j].setOccupied(true);
                 }
             }
         }
+        //calculate and set the number of free edges for each tile
         for (int i = 0; i < board.getMatrix().length; i++) {
             for (int j = 0; j < board.getMatrix()[i].length; j++) {
-                if(board.getMatrix()[i][j].isOccupied()){
+                if(board.getMatrix()[i][j].getTile()!=null){
                     board.getMatrix()[i][j].setFreeEdges(0);
                     setFreeEdges(i,j);
                 }
             }
         }
     }
+
 
 
 }

@@ -44,15 +44,6 @@ public class BoardBox {
         this.occupiable = occupiable;
     }
 
-    private boolean occupied;
-
-    public boolean isOccupied() {
-        return occupied;
-    }
-
-    public void setOccupied(boolean occupied) {
-        this.occupied = occupied;
-    }
 
     private int freeEdges;
 

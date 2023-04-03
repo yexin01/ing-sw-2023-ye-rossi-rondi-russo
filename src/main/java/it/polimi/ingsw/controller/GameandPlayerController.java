@@ -53,6 +53,12 @@ public class GameandPlayerController {
         }
         return true;
     }
+
+    /**
+     * check that the string passed as a parameter is not already present in the usedNames set
+     * @param nickname if it is different from the present nicknames: add it and return true, otherwise return false
+     * @return
+     */
     public boolean differentNickname(String nickname) {
         if (game.getPlayers().isEmpty()) {
             return true;
@@ -69,9 +75,10 @@ public class GameandPlayerController {
         }
     }
     /**
-     * change the player to the next one
+     * set the player to the next one
      * @param player
      */
+    //TODO
     public void setNextPlayer(Player player){
         for(int i=0;i<game.getPlayers().size();i++){
             if(game.getPlayers().get(i).getNickname().equals(player.getNickname())){
@@ -105,16 +112,20 @@ public class GameandPlayerController {
         }
         return uniqueNumbers;
     }
+
+    /**
+     * Read from the json file how many objects to instantiate (numOfCommonGoals) and how many possible entities to instantiate
+     * (numOfPossibleCommonGoalsCards). Using an array of classes, instantiate only the subclasses of CommonGoalCard
+     * in the  positions number of the Integer  arrayList numbers.
+     * @param gameRules
+     * @throws Exception
+     */
     public void createCommonGoalCard(GameRules gameRules) throws Exception {
 
         int numOfCommonGoals = gameRules.getNumOfCommonGoals();
         int numOfPossibleCommonGoalsCards = gameRules.getCommonGoalCardsSize();
-        //ArrayList<Integer> numbers = generateRandomNumber(numOfPossibleCommonGoalsCards, numOfCommonGoals);
-        //TODO CAMBIATO PER TESTARE IL UNZIONAMENTO CLASSI INTERNE
-        ArrayList<Integer> numbers=new ArrayList<>();
+        ArrayList<Integer> numbers = generateRandomNumber(numOfPossibleCommonGoalsCards, numOfCommonGoals);
 
-        numbers.add(4);
-        numbers.add(0);
         game.setCommonGoalCards(new ArrayList<CommonGoalCard>());
         for (Integer number : numbers) {
             String className = gameRules.getCommonGoalCard(number);
@@ -127,6 +138,7 @@ public class GameandPlayerController {
         createCommonGoalPlayer(gameRules);
     }
 
+    
     public void createCommonGoalPlayer(GameRules gameRules){
         int numCommonGoalCards=gameRules.getNumOfCommonGoals();
         for(Player p:getGame().getPlayers()){
@@ -134,38 +146,11 @@ public class GameandPlayerController {
         }
     }
 
-       /*
-
-        Class<?> clazz = Class.forName(className);
-        for (int i = 0; i < commonGoals; i++) {
-            classArray[i] = Class.forName(classNames.get(i));
-        }
-
-
-
-        Class<?>[] classArray = new Class<?>[commonGoals];
-        for (int i = 0; i < commonGoals; i++) {
-            classArray[i] = Class.forName(classNames.get(i));
-        }
-
-        game.setCommonGoalCards(new ArrayList<CommonGoalCard>());
-
-        for (Integer number : numbers) {
-            Class<?> classObj = classArray[number];
-            Object obj = classObj.getDeclaredConstructor().newInstance();
-            game.getCommonGoalCards().add((CommonGoalCard) obj);
-        }
-
-        */
-
-
-
 
     /**
      * Match arraylist of scores based on number of players
      */
     private void setCommonGoalCardsPoints(GameRules gameRules) throws Exception {
-        //TODO importing from json
         ArrayList<Integer> points=gameRules.getCommonGoalPoints(game.getNumPlayers());
         for(CommonGoalCard c: game.getCommonGoalCards()){
             c.setPoints(points);
@@ -179,31 +164,7 @@ public class GameandPlayerController {
      * @param
      * @return
      */
-/*
-    public boolean insertBookshelf(int column) {
-        try {
-            if (column < 0 || column >= turnBookshelf().getMatrix().length-1) {
-                throw new IllegalArgumentException("Column value must be between 0 and " + (turnBookshelf().getMatrix()[0].length - 1));
-            }
-            if (turnBookshelf().getMaxTilesColumn(column) < selectedTiles().size()) {
-                return false;
-            }
-            if (selectedTiles().size() <= turnBookshelf().getMaxTilesColumn(column)) {
-                int j = 0;
-                for (int i = turnBookshelf().getMatrix().length - 1; j < selectedTiles().size(); i--) {
-                    if (turnBookshelf().getMatrix()[i][column].getTileID() == -1) {
-                        turnBookshelf().setTile(selectedTiles().get(j++), i, column);
-                        System.out.println("Inserted tile of type " + turnBookshelf().getTileType(i, column) + " in column " + column + ", row " + i);
-                    }
-                }
-                return true;
-            }
-        } catch (IllegalArgumentException e) {
-            System.err.println("Invalid column value: " + e.getMessage());
-        }
-        return false;
-    }
- */
+
 
     public boolean insertAsSelected(int column) {
         if (checkBookshelf(column)) {
@@ -244,42 +205,14 @@ public class GameandPlayerController {
 
         }
 
-
-
     public ArrayList<ItemTile> selectedTiles(){return game.getTurnPlayer().getSelectedItems();}
 
-
-    //TODO common goal Card function
-  /*  public void pointsCommonGoal(){
-        for(CommonGoalCard c:game.getCommonGoalCards()){
-            c.checkGoal(turnBookshelf());
-        }
-
-
-    }
-
-   */
     public Bookshelf turnBookshelf(){return game.getTurnPlayer().getBookshelf();}
 
     /**
      *instantiates personalGoalCard based on the number of players
      */
 
-    /*
-    public void createPersonalGoalCard(GameRules gameRules) {
-        ArrayList<Integer> numbers = generateRandomNumber(gameRules.getPossiblePersonalGoalsSize(), game.getNumPlayers());
-        int rows= gameRules.getRowsBookshelf();
-        int columns= gameRules.getColumnsBookshelf();
-        int maxSelectableTiles=gameRules.getMaxSelectableTiles();
-        int i = 0;
-        for (Player p : game.getPlayers()) {
-            p.setPersonalGoalCard(new PersonalGoalCard(gameRules.getPersonalGoalCardCoordinates(numbers.get(i)), gameRules.getPersonalGoalCardTypes(numbers.get(i))));
-            p.setBookshelf(new Bookshelf(rows,columns, maxSelectableTiles));
-            i++;
-        }
-    }
-
-     */
     public void createPersonalGoalCard(GameRules gameRules) {
         ArrayList<Integer> numbers = generateRandomNumber(gameRules.getPossiblePersonalGoalsSize(), game.getNumPlayers());
         int rows= gameRules.getRowsBookshelf();
