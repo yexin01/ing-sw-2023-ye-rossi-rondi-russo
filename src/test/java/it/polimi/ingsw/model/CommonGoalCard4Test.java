@@ -11,21 +11,21 @@ class CommonGoalCard4Test {
     @DisplayName("Check for CommonGoal4")
     void checkGoal() {
         CommonGoalCard4 commonGoalCard4 = new CommonGoalCard4();
-        ItemTile[][] mat = new ItemTile[6][5];
+        Bookshelf bookshelf = new Bookshelf(6,5,3);
         //Insert the tiles you want inside the matrix
         int tileID = 0;
-        mat [0][0] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat [0][1] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat [0][2] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat [0][3] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat [2][0] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat [2][1] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat [2][2] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat [2][3] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat [4][0] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat [4][1] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat [4][2] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat [4][3] = new ItemTile(Type.CAT, tileID); tileID++;
-        assertEquals(true, commonGoalCard4.checkGoal(mat));
+        bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[5][1] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[5][2] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[5][3] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[3][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[3][1] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[3][2] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[3][3] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[1][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[1][1] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[1][2] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[1][3] = new ItemTile(Type.CAT, tileID);
+        assertEquals(true, commonGoalCard4.checkGoal(bookshelf.getMatrix()));
     }
 }

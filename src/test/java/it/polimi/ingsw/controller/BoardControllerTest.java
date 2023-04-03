@@ -42,7 +42,7 @@ class BoardControllerTest {
         int numPlayers = 2;
         boardController.firstFill(numPlayers, gameRules);
         //Set the coordinates of the tile you want to check the free edges
-        int x = 1; int y = 3;
+        int x = 7; int y = 3;
         boardController.setFreeEdges(x,y);
         //Set inside "expected" the expected number of free edges
         Assertions.assertEquals(2, boardController.getBoard().getBoardBox(x,y).getFreeEdges());
@@ -58,17 +58,17 @@ class BoardControllerTest {
         int numPlayers = 2;
         boardController.firstFill(numPlayers, gameRules);
         //Set the coordinates of the tile you want to remove
-        int x = 1; int y = 3;
+        int x = 7; int y = 3;
         boardController.setFreeEdges(x+1,y);
         boardController.setFreeEdges(x-1,y);
         boardController.setFreeEdges(x,y-1);
         boardController.setFreeEdges(x,y+1);
         boardController.increaseNear(x,y);
         //Set inside "expected" the new number of free edges
-        Assertions.assertEquals(2, boardController.getBoard().getBoardBox(x+1,y).getFreeEdges());
+        Assertions.assertEquals(3, boardController.getBoard().getBoardBox(x+1,y).getFreeEdges());
         Assertions.assertEquals(2, boardController.getBoard().getBoardBox(x,y+1).getFreeEdges());
-        Assertions.assertEquals(0, boardController.getBoard().getBoardBox(x-1,y).getFreeEdges());
-        Assertions.assertEquals(0, boardController.getBoard().getBoardBox(x,y-1).getFreeEdges());
+        Assertions.assertEquals(2, boardController.getBoard().getBoardBox(x-1,y).getFreeEdges());
+        Assertions.assertEquals(4, boardController.getBoard().getBoardBox(x,y-1).getFreeEdges());
     }
 
     @Test
@@ -111,9 +111,11 @@ class BoardControllerTest {
 
     @Test
     @DisplayName("Checks if the method returns the correct array list of ItemTile")
-    void selected() {
+    void selected() throws Exception {
         Board board = new Board();
         BoardController boardController = new BoardController(board);
+        GameRules gameRules = new GameRules();
+        boardController.firstFill(2, gameRules);
         ArrayList<BoardBox> selectedBoard = new ArrayList<>();
         int a=1; int b=3;  int c=1; int d=4;  int e=1; int f=5; int tileID=0;
         //Set in ItemTile the type of the boxes

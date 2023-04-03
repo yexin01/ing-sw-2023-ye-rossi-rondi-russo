@@ -11,19 +11,19 @@ class CommonGoalCard2Test {
     @DisplayName("Check for CommonGoal2")
     void checkGoal() {
         CommonGoalCard_2_5_6_7 commonGoalCard2567 = new CommonGoalCard_2_5_6_7();
-        ItemTile[][] mat = new ItemTile[6][5];
+        Bookshelf bookshelf = new Bookshelf(6,5,3);
         //Set the two columns with six different types of tiles
         int x = 0; int y = 2; int tileID = 0;
         for (int i = 0; i < 6; i++) {
-            mat[i][x] = new ItemTile(Type.values()[i], tileID);
+            bookshelf.getMatrix()[i][x] = new ItemTile(Type.values()[i], tileID);
             tileID++;
         }
         for (int i = 0; i < 6; i++) {
-            mat[i][y] = new ItemTile(Type.values()[i], tileID);
+            bookshelf.getMatrix()[i][y] = new ItemTile(Type.values()[i], tileID);
             tileID++;
         }
         int [] settings = new int[3];
         commonGoalCard2567.settingsCase(settings);
-        assertEquals(true, commonGoalCard2567.checkGoal(mat));
+        assertEquals(true, commonGoalCard2567.checkGoal(bookshelf.getMatrix()));
     }
 }

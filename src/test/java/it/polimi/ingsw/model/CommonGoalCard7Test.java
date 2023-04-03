@@ -11,48 +11,48 @@ class CommonGoalCard7Test {
     @DisplayName("Check for CommonGoal7")
     void checkGoal() {
         CommonGoalCard_2_5_6_7 commonGoalCard2567 = new CommonGoalCard_2_5_6_7();
-        ItemTile[][] mat = new ItemTile[6][5];
+        Bookshelf bookshelf = new Bookshelf(6,5,3);
         //Set the rows where you want to add the tiles, and the number of different types
-        int x = 0;
-        int y = 1;
-        int z = 2;
-        int w = 3;
+        int x = 5;
+        int y = 4;
+        int z = 3;
+        int w = 2;
         int nTypes = 3;
         int tileID = 0;
         for (int i = 0; i < 5; i++) {
             if (i > nTypes - 1) {
-                mat[x][i] = new ItemTile(Type.values()[nTypes - 1], tileID);
+                bookshelf.getMatrix()[x][i] = new ItemTile(Type.values()[nTypes - 1], tileID);
             } else {
-                mat[x][i] = new ItemTile(Type.values()[i], tileID);
+                bookshelf.getMatrix()[x][i] = new ItemTile(Type.values()[i], tileID);
             }
             tileID++;
         }
         for (int i = 0; i < 5; i++) {
             if (i > nTypes - 1) {
-                mat[y][i] = new ItemTile(Type.values()[nTypes - 1], tileID);
+                bookshelf.getMatrix()[y][i] = new ItemTile(Type.values()[nTypes - 1], tileID);
             } else {
-                mat[y][i] = new ItemTile(Type.values()[i], tileID);
+                bookshelf.getMatrix()[y][i] = new ItemTile(Type.values()[i], tileID);
             }
             tileID++;
         }
         for (int i = 0; i < 5; i++) {
             if (i > nTypes - 1) {
-                mat[z][i] = new ItemTile(Type.values()[nTypes - 1], tileID);
+                bookshelf.getMatrix()[z][i] = new ItemTile(Type.values()[nTypes - 1], tileID);
             } else {
-                mat[z][i] = new ItemTile(Type.values()[i], tileID);
+                bookshelf.getMatrix()[z][i] = new ItemTile(Type.values()[i], tileID);
             }
             tileID++;
         }
         for (int i = 0; i < 5; i++) {
             if (i > nTypes - 1) {
-                mat[w][i] = new ItemTile(Type.values()[nTypes - 1], tileID);
+                bookshelf.getMatrix()[w][i] = new ItemTile(Type.values()[nTypes - 1], tileID);
             } else {
-                mat[w][i] = new ItemTile(Type.values()[i], tileID);
+                bookshelf.getMatrix()[w][i] = new ItemTile(Type.values()[i], tileID);
             }
             tileID++;
         }
         int [] settings = new int[3];
         commonGoalCard2567.settingsCase(settings);
-        assertEquals(true, commonGoalCard2567.checkGoal(mat));
+        assertEquals(true, commonGoalCard2567.checkGoal(bookshelf.getMatrix()));
     }
 }

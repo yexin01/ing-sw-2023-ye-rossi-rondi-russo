@@ -42,6 +42,7 @@ class GameandPlayerControllerTest {
             gameandPlayerController.selectedTiles().add(new ItemTile(Type.CAT, 0));
             tileID++;
         }
+        bookshelf.computeFreeShelves();
         //Set the column you want to check
         int column = 0;
         assertTrue(gameandPlayerController.checkBookshelf(column));
@@ -63,12 +64,13 @@ class GameandPlayerControllerTest {
         player.setBookshelf(bookshelf);
         //Set the tiles you want inside the bookshelf
         int tileID = 0;
-        bookshelf.getMatrix()[0][0] = new ItemTile(Type.CAT, tileID); tileID++;
-        bookshelf.getMatrix()[1][0] = new ItemTile(Type.CAT, tileID); tileID++;
-        bookshelf.getMatrix()[2][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[3][0] = new ItemTile(Type.CAT, tileID); tileID++;
-        bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID);
-        assertEquals(5, gameandPlayerController.updateAdjacentPoints(gameRules));
+        bookshelf.getMatrix()[2][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[1][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[0][0] = new ItemTile(Type.CAT, tileID);
+        assertEquals(8, gameandPlayerController.updateAdjacentPoints(gameRules));
     }
 
     @Test
@@ -94,10 +96,10 @@ class GameandPlayerControllerTest {
         game.setCommonGoalCards(commonGoalCards);
         //Set the tiles inside the bookshelf as you want
         int tileID = 0;
-        bookshelf.getMatrix()[0][0] = new ItemTile(Type.CAT, tileID); tileID++;
-        bookshelf.getMatrix()[0][4] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
-        bookshelf.getMatrix()[5][4] = new ItemTile(Type.CAT, tileID);
+        bookshelf.getMatrix()[5][4] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[0][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[0][4] = new ItemTile(Type.CAT, tileID);
         assertEquals(8, gameandPlayerController.updatePointsCommonGoals());
     }
 
@@ -113,21 +115,22 @@ class GameandPlayerControllerTest {
         player.setBookshelf(bookshelf);
         ArrayList<PersonalGoalBox> personalGoalBoxes = new ArrayList<>();
         //Set the PersonalGoal coordinates as you want
-        personalGoalBoxes.add(new PersonalGoalBox(Type.CAT, 0, 0));
-        personalGoalBoxes.add(new PersonalGoalBox(Type.BOOK, 0, 1));
-        personalGoalBoxes.add(new PersonalGoalBox(Type.GAME, 0, 2));
-        personalGoalBoxes.add(new PersonalGoalBox(Type.FRAME, 0, 3));
-        personalGoalBoxes.add(new PersonalGoalBox(Type.TROPHY, 0, 4));
-        personalGoalBoxes.add(new PersonalGoalBox(Type.PLANT, 1, 0));
+        personalGoalBoxes.add(new PersonalGoalBox(Type.CAT, 5, 0));
+        personalGoalBoxes.add(new PersonalGoalBox(Type.BOOK, 5, 1));
+        personalGoalBoxes.add(new PersonalGoalBox(Type.GAME, 5, 2));
+        personalGoalBoxes.add(new PersonalGoalBox(Type.FRAME, 5, 3));
+        personalGoalBoxes.add(new PersonalGoalBox(Type.TROPHY, 5, 4));
+        personalGoalBoxes.add(new PersonalGoalBox(Type.PLANT, 4, 0));
         PersonalGoalCard personalGoalCard = new PersonalGoalCard(personalGoalBoxes);
         //Set the tiles inside the bookshelf as you want
         int tileID = 0;
-        bookshelf.getMatrix()[0][0] = new ItemTile(Type.CAT, tileID); tileID++;
-        bookshelf.getMatrix()[0][1] = new ItemTile(Type.BOOK, tileID); tileID++;
-        bookshelf.getMatrix()[0][2] = new ItemTile(Type.GAME, tileID); tileID++;
-        bookshelf.getMatrix()[0][3] = new ItemTile(Type.FRAME, tileID); tileID++;
-        bookshelf.getMatrix()[0][4] = new ItemTile(Type.TROPHY, tileID); tileID++;
-        bookshelf.getMatrix()[1][0] = new ItemTile(Type.PLANT, tileID);
+        bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[5][1] = new ItemTile(Type.BOOK, tileID); tileID++;
+        bookshelf.getMatrix()[5][2] = new ItemTile(Type.GAME, tileID); tileID++;
+        bookshelf.getMatrix()[5][3] = new ItemTile(Type.FRAME, tileID); tileID++;
+        bookshelf.getMatrix()[5][4] = new ItemTile(Type.TROPHY, tileID); tileID++;
+        bookshelf.getMatrix()[4][0] = new ItemTile(Type.PLANT, tileID);
+        player.setPersonalGoalCard(personalGoalCard);
         assertEquals(12, gameandPlayerController.updatePersonalGoalPoints(gameRules));
     }
 }

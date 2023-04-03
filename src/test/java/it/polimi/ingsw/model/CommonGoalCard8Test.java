@@ -11,12 +11,12 @@ class CommonGoalCard8Test {
     @DisplayName("Check for CommonGoal8")
     void checkGoal() {
         CommonGoalCard8 commonGoalCard8 = new CommonGoalCard8();
-        ItemTile[][] mat = new ItemTile[6][5];
+        Bookshelf bookshelf = new Bookshelf(6,5,3);
         int tileID = 0;
-        mat[0][0] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat[0][4] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat[5][4] = new ItemTile(Type.CAT, tileID);
-        assertEquals(true, commonGoalCard8.checkGoal(mat));
+        bookshelf.getMatrix()[0][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[0][4] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[5][4] = new ItemTile(Type.CAT, tileID);
+        assertEquals(true, commonGoalCard8.checkGoal(bookshelf.getMatrix()));
     }
 }

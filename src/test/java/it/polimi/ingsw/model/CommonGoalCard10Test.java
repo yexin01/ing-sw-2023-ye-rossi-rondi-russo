@@ -11,14 +11,14 @@ class CommonGoalCard10Test {
     @DisplayName("Check for CommonGoal10")
     void checkGoal() {
         CommonGoalCard10 commonGoalCard10 = new CommonGoalCard10();
-        ItemTile[][] mat = new ItemTile[6][5];
+        Bookshelf bookshelf = new Bookshelf(6,5,3);
         //Set the center tile coordinate of the 'X'
         int x = 2; int y = 2; int tileID = 0;
-        mat[x][y] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat[x-1][y-1] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat[x-1][y+1] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat[x+1][y-1] = new ItemTile(Type.CAT, tileID); tileID++;
-        mat[x+1][y+1] = new ItemTile(Type.CAT, tileID);
-        assertEquals(true, commonGoalCard10.checkGoal(mat));
+        bookshelf.getMatrix()[x][y] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[x-1][y-1] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[x-1][y+1] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[x+1][y-1] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[x+1][y+1] = new ItemTile(Type.CAT, tileID);
+        assertEquals(true, commonGoalCard10.checkGoal(bookshelf.getMatrix()));
     }
 }
