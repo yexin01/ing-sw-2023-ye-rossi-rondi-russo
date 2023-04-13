@@ -91,6 +91,7 @@ public class PlayerController {
         illegalTurn(TurnPhase.SELECT_COLUMN);
         int column= (int) message.getMessagePayload().getAttributeMessage("NumColumn").getAsInt();
         if(!(gameController.getModel().getTurnPlayer().getBookshelf().checkBookshelf(column,gameController.getModel().getTurnPlayer().getSelectedItems().size()))){
+            //TODO decide how to handle the exception
             fireError(ErrorMessageType.INVALID_COLUMN, "Invalid column");
             throw new NotEnoughFreeCellsColumn();
         }
@@ -101,8 +102,8 @@ public class PlayerController {
 
     public void insertBookshelf(MessageFromClient message) throws WrongTurnActionRequestedException {
         illegalTurn(TurnPhase.INSERT_BOOKSHELF_AND_POINTS);
-        gameController.getModel().getTurnPlayer().getBookshelf().insertAsSelected(gameController.getModel().getTurnPlayer().getBookshelf().getColumnSelected(),gameController.getModel().getTurnPlayer().getSelectedItems());
-        //
+        gameController.getModel().getTurnPlayer().insertBookshelf(gameController.getModel().getTurnPlayer().getBookshelf().getColumnSelected());
+         //
         //TODO points update
         //TODO if the bookshelf is full set endGame to true
         turnController.changePhase();

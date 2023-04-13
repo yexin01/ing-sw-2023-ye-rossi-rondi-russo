@@ -3,6 +3,7 @@ package it.polimi.ingsw.listeners;
 import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.messages.ServerMessageType;
+import it.polimi.ingsw.server.GameLobby;
 import it.polimi.ingsw.server.ServerView;
 
 import java.beans.PropertyChangeEvent;
@@ -15,12 +16,12 @@ public class AcknowledgementDispatcher implements PropertyChangeListener {
     private static final String SETUP = "Setup";
     private final List<ServerView> views;
     //TODO gameLobby
-    //private final GameLobby gameLobby;
+    private final GameLobby gameLobby;
 
 
-    public AcknowledgementDispatcher(List<ServerView> views/*, GameLobby gameLobby*/) {
+    public AcknowledgementDispatcher(List<ServerView> views, GameLobby gameLobby) {
         this.views = views;
-        //this.gameLobby = gameLobby;
+        this.gameLobby = gameLobby;
     }
 
     private void dispatchAck(ServerView view, MessagePayload payload, String messageName) {

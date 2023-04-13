@@ -2,6 +2,9 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.json.GameRules;
+import it.polimi.ingsw.listeners.EndGameListener;
+import it.polimi.ingsw.listeners.PlayerListener;
+import it.polimi.ingsw.server.GameLobby;
 import it.polimi.ingsw.server.InitialSetup;
 import it.polimi.ingsw.server.ServerView;
 
@@ -92,7 +95,7 @@ public class Game implements  PropertyChangeListener {
         this.commonGoalCards = commonGoalCards;
     }
 
-    public void addPlayer(String nickname) {
+    public void addPlayer(String nickname) throws Exception {
         if (players.size() < numPlayers) {
             players.add(new Player(nickname));
         }
@@ -257,7 +260,14 @@ public class Game implements  PropertyChangeListener {
         }
     }
 
-   /*
+    public Player getPlayerByNickname(String nickname) {
+        for (Player p: players) {
+            if (p.getNickname().equals(nickname)) return p;
+        }
+        return null;
+    }
+
+
     public int updateAdjacentPoints(GameRules gameRules) throws Exception ,IndexOutOfBoundsException{
         int[] points= gameRules.getAdjacentArray();
         int sum=0;
@@ -268,16 +278,16 @@ public class Game implements  PropertyChangeListener {
             }
             sum += points[groupSize];
         }
-        getGame().getTurnPlayer().setAdjacentPoints(sum);
+        getTurnPlayer().setAdjacentPoints(sum);
         return sum;
     }
     public int updatePointsCommonGoals(){
         int points=0;
-        for (int i=0;i<getGame().getTurnPlayer().getCommonGoalPoints().length;i++){
-            if (turnPlayer.getCommonGoalPoints()[i]==0 && getGame().getCommonGoalCards().get(i).checkGoal(turnBookshelf().getMatrix())){
-                turnPlayer.setToken(i,commonGoals.get(i).removeToken());
+        for (int i=0;i<getTurnPlayer().getCommonGoalPoints().length;i++){
+            if (getTurnPlayer().getCommonGoalPoints()[i]==0 && commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())){
+                getTurnPlayer().setToken(i,commonGoalCards.get(i).removeToken());
             }
-            points=points+turnPlayer.getCommonGoalPoints(i);
+            points=points+getTurnPlayer().getCommonGoalPoints(i);
         }
         return points;
     }
@@ -289,31 +299,40 @@ public class Game implements  PropertyChangeListener {
                 numScored++;
             }
         }
-        turnPlayer.setPersonalGoalPoints(points[numScored-1]);
-        return turnPlayer.getPersonalGoalPoints();
+        getTurnPlayer().setPersonalGoalPoints(points[numScored-1]);
+        return getTurnPlayer().getPersonalGoalPoints();
     }
 
     public void updateAllPoints() throws Exception {
         GameRules gameRules=new GameRules();
-        turnPlayer.setPlayerPoints(updateAdjacentPoints(gameRules)+updatePointsCommonGoals()+ updatePersonalGoalPoints(gameRules));
+        getTurnPlayer().setPlayerPoints(updateAdjacentPoints(gameRules)+updatePointsCommonGoals()+ updatePersonalGoalPoints(gameRules));
     }
 
-    */
+
 
     public PersonalGoalCard turnPersonalGoal(){return getTurnPlayer().getPersonalGoalCard();}
 
     public Bookshelf turnBookshelf(){return getTurnPlayer().getBookshelf();}
 
-    public Player checkWinner() {
+    public ArrayList<Player> checkWinner() {
         //TODO winner method
         throw new RuntimeException();
     }
 
+    public void endGame() {
+        ArrayList<Player> ranking=checkWinner();
+        listeners.firePropertyChange(new PropertyChangeEvent(this, "EndGame", null, ranking));
+    }
 
+    public void createListeners(List<ServerView> views, GameLobby lobby) {
+        listeners.addPropertyChangeListener("EndGame", new EndGameListener(lobby));
+        for (ServerView r: views) {
+            getPlayerByNickname(r.getPlayerNickname()).addListener(new PlayerListener(r));
+        }
+    }
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        //TODO
-        throw new RuntimeException();
+        listeners.firePropertyChange(evt.getPropertyName(),evt.getOldValue(),evt.getNewValue());
     }
 
     public boolean isEndGame() {

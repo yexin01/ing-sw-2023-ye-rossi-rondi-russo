@@ -1,15 +1,20 @@
 package it.polimi.ingsw.model;
 
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Bookshelf {
-    //private ItemTile[][] matrix;
+public class Bookshelf{
+
+
+
     private ItemTile[][] matrix;
     private int[] freeShelves; //freeShelves[i] = # celle libere nell'i-esima colonna
     private final int maxSelectableTiles;
+    private int columnSelected;
+
 
     public Bookshelf(int rows, int columns, int maxSelectableTiles) {
         freeShelves = new int[columns];
@@ -106,6 +111,37 @@ public class Bookshelf {
         return true;
     }
 
+    public boolean insertAsSelected(int column,ArrayList<ItemTile> selectedItemTiles) {
+
+
+        if (checkBookshelf(column,selectedItemTiles.size())) {
+            int j = 0;
+            for (int i = getMatrix().length - 1; j < selectedItemTiles.size(); i--) {
+                if (getMatrix()[i][column].getTileID() == -1) {
+                    setTile(selectedItemTiles.get(j++), i, column);
+                    System.out.println("Inserted tile of type " + getTileType(i, column) + " in column " + column + ", row " + i);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkBookshelf(int column,int numSelectedTiles){
+
+        try {
+            if (column < -1 || column > getMatrix()[0].length-1) {
+                throw new IllegalArgumentException(" value must be between 0 and  "+(getMatrix()[0].length-1));
+            }
+            if (numSelectedTiles <= getMaxTilesColumn(column)) return true;
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid bookshelf column:Rewrite the column" + e.getMessage());
+            return false;
+        }
+
+        return false;
+    }
+
     /**
      * @return a list with the cardinalities of the groups of adjacent tiles found by the algorithm
      */
@@ -168,6 +204,14 @@ public class Bookshelf {
             }
         }
         return size;
+    }
+
+    public int getColumnSelected() {
+        return columnSelected;
+    }
+
+    public void setColumnSelected(int columnSelected) {
+        this.columnSelected = columnSelected;
     }
 
 

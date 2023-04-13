@@ -30,14 +30,6 @@ public class Player implements PropertyChangeListener {
         listeners.addPropertyChangeListener(listener);
     }
 
-
-
-
-
-
-
-
-
     public String getNickname() {
         return nickname;
     }
@@ -50,7 +42,9 @@ public class Player implements PropertyChangeListener {
         return selectedItems;
     }
     public void setSelectedItems(ArrayList<ItemTile> selectedItems) {
+        ArrayList<ItemTile> oldItems=this.selectedItems;
         this.selectedItems = selectedItems;
+        listeners.firePropertyChange(new PropertyChangeEvent(nickname, "BoardSelection", oldItems, this.selectedItems));
     }
     //SUM OF ALL POINTS
     private int playerPoints;
@@ -58,8 +52,9 @@ public class Player implements PropertyChangeListener {
         return playerPoints;
     }
     public void setPlayerPoints(int playerPoints) {
+        int oldPoints=this.playerPoints;
         this.playerPoints = playerPoints;
-
+        listeners.firePropertyChange(new PropertyChangeEvent(nickname, "Points", oldPoints, playerPoints));
     }
     //PERSONALGOAL
     private int personalGoalPoints;
@@ -83,6 +78,12 @@ public class Player implements PropertyChangeListener {
     }
     public void setBookshelf(Bookshelf bookshelf) {
         this.bookshelf = bookshelf;
+    }
+
+    public void insertBookshelf(int column) {
+        Bookshelf oldBookshelf=bookshelf;
+        bookshelf.insertAsSelected(column,selectedItems);
+        listeners.firePropertyChange(new PropertyChangeEvent(nickname, "BookshelfInsertion", oldBookshelf, bookshelf));
     }
     private int adjacentPoints;
     public int getAdjacentPoints() {
@@ -112,9 +113,6 @@ public class Player implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         listeners.firePropertyChange(evt.getPropertyName(),evt.getOldValue(),evt.getNewValue());
-        //TODO
-        throw new RuntimeException();
-
     }
 
     @Override

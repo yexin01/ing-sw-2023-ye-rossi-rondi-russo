@@ -1,12 +1,12 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.listeners.SetupPlayerView;
+import it.polimi.ingsw.listeners.AcknowledgementDispatcher;
 import it.polimi.ingsw.listeners.TurnListener;
 import it.polimi.ingsw.messages.ErrorMessageType;
 import it.polimi.ingsw.messages.MessageFromClient;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.server.InitialSetup;
+import it.polimi.ingsw.server.GameLobby;
 import it.polimi.ingsw.server.ServerView;
 
 
@@ -61,9 +61,7 @@ public class GameController implements PropertyChangeListener {
                 return;
             }
             if(turnController.endgame()&& game.getTurnPlayer().equals(game.getLastPlayer())){
-                //TODO change: notify only the player who won
-                listeners.firePropertyChange(new PropertyChangeEvent(game.checkWinner(), "EndGame",
-                        false, true));
+                game.endGame();
                 return;
             }
             turnController.changePhase();
@@ -79,10 +77,18 @@ public class GameController implements PropertyChangeListener {
         }
 
     }
-
-    public void createListeners() {
-        //TODO createListener gameController
-        throw new IllegalArgumentException();
+    //TODO add listeners SetupController
+    public void createListeners(List<ServerView> views, GameLobby lobby) {
+        Error error = new Error((Throwable) views);
+        AcknowledgementDispatcher ackDispatcher = new AcknowledgementDispatcher(views, lobby);
+        listeners.addPropertyChangeListener("Error", (PropertyChangeListener) error);
+        listeners.addPropertyChangeListener("TurnPhase", ackDispatcher);
+        game.createListeners(views, lobby);
+        for(ServerView view: views) {
+            TurnListener turnListener = new TurnListener(view);
+            listeners.addPropertyChangeListener("EndTurn", turnListener);
+            listeners.addPropertyChangeListener("EndPhase", turnListener);
+        }
     }
 
     public SetupController getSetupController() {
