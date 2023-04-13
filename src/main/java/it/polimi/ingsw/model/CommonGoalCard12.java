@@ -12,23 +12,7 @@ public class CommonGoalCard12 extends CommonGoalCard{
         boolean verified;
         int i;
 
-        // used only for debugging to see occupied matrix in bookshelf
-        /*
-        System.out.println("Matrice occupied: ");
-        for (int x=0; x<mat.length; x++) {
-            for (int j=0; j<mat[x].length; j++) {
-                if(mat[x][j].getTileID()!=-1){
-                    System.out.println("1 ");
-                }else{
-                    System.out.println("0 ");
-                }
-            }
-            System.out.println(" ");
-        }
-        */
-
         // check the goal
-
         // case1: decreasing height
         i=0;
         if (mat[0][0].getTileID()==-1){
