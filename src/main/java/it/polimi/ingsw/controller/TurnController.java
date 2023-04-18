@@ -9,14 +9,18 @@ import java.util.ArrayList;
 
 public class TurnController {
     private TurnPhase currentPhase;
-    private Game game;
+    private final Game game;
+
+    public TurnController(Game game) {
+        this.game = game;
+    }
 
     //passa alla fase successiva
     public void changePhase() {
-        currentPhase = TurnPhase.values()[(currentPhase.ordinal() + 1) % TurnPhase.values().length];
+        currentPhase = TurnPhase.values()[(currentPhase.ordinal() + 1)];
     }
 
- //inserito nel gameController
+    //inserito nel gameController
 /*
 
     //se il turno é finito restituisce true
@@ -32,9 +36,7 @@ public class TurnController {
     }
 
  */
-    public boolean checkIfTurnIsEnded() {
-        return currentPhase == TurnPhase.END_TURN;
-    }
+
     public TurnPhase getCurrentPhase() {
         return currentPhase;
     }

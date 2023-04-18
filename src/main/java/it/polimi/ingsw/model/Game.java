@@ -2,11 +2,8 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.listeners.EndGameListener;
 import it.polimi.ingsw.listeners.PlayerListener;
-import it.polimi.ingsw.server.GameLobby;
-import it.polimi.ingsw.server.InitialSetup;
-import it.polimi.ingsw.server.ServerView;
+
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -30,7 +27,7 @@ public class Game implements  PropertyChangeListener {
         commonGoalCards=new ArrayList<>();
 
     }
-     public void start() {
+    public void start() {
         started = true;
     }
 
@@ -97,7 +94,9 @@ public class Game implements  PropertyChangeListener {
 
     public void addPlayer(String nickname) throws Exception {
         if (players.size() < numPlayers) {
-            players.add(new Player(nickname));
+            Player p=new Player(nickname);
+            p.addListener(new PlayerListener());
+            players.add(p);
         }
     }
 
@@ -324,11 +323,11 @@ public class Game implements  PropertyChangeListener {
         listeners.firePropertyChange(new PropertyChangeEvent(this, "EndGame", null, ranking));
     }
 
-    public void createListeners(List<ServerView> views, GameLobby lobby) {
-        listeners.addPropertyChangeListener("EndGame", new EndGameListener(lobby));
-        for (ServerView r: views) {
-            getPlayerByNickname(r.getPlayerNickname()).addListener(new PlayerListener(r));
-        }
+    public void createListeners() {
+
+
+        listeners.addPropertyChangeListener(new PlayerListener());
+
     }
     @Override
     public void propertyChange(PropertyChangeEvent evt) {

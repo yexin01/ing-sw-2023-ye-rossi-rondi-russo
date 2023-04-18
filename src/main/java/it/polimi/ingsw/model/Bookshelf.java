@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
 
+import it.polimi.ingsw.exceptions.*;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -75,7 +77,7 @@ public class Bookshelf{
                 if (matrix[i][j].getTileID() != -1) {
                     System.out.printf("%-10s", +j + "" + matrix[i][j].getType());
                 } else {
-                    System.out.printf("%-10s", +j + " vuota");
+                    System.out.printf("%-10s", +j + " EMPTY");
                 }
             }
             System.out.println("");
@@ -111,15 +113,13 @@ public class Bookshelf{
         return true;
     }
 
-    public boolean insertAsSelected(int column,ArrayList<ItemTile> selectedItemTiles) {
+    public boolean insertAsSelected(ArrayList<ItemTile> selectedItemTiles) throws InvalidColumn, NotEnoughFreeCellsColumn {
 
-
-        if (checkBookshelf(column,selectedItemTiles.size())) {
+        if (checkBookshelf(columnSelected,selectedItemTiles.size())) {
             int j = 0;
             for (int i = getMatrix().length - 1; j < selectedItemTiles.size(); i--) {
-                if (getMatrix()[i][column].getTileID() == -1) {
-                    setTile(selectedItemTiles.get(j++), i, column);
-                    System.out.println("Inserted tile of type " + getTileType(i, column) + " in column " + column + ", row " + i);
+                if (getMatrix()[i][columnSelected].getTileID() == -1) {
+                    setTile(selectedItemTiles.get(j++), i,columnSelected);
                 }
             }
             return true;
@@ -127,19 +127,14 @@ public class Bookshelf{
         return false;
     }
 
-    public boolean checkBookshelf(int column,int numSelectedTiles){
-
-        try {
-            if (column < -1 || column > getMatrix()[0].length-1) {
-                throw new IllegalArgumentException(" value must be between 0 and  "+(getMatrix()[0].length-1));
-            }
-            if (numSelectedTiles <= getMaxTilesColumn(column)) return true;
-        } catch (IllegalArgumentException e) {
-            System.err.println("Invalid bookshelf column:Rewrite the column" + e.getMessage());
-            return false;
+    public boolean checkBookshelf(int column,int numSelectedTiles) throws InvalidColumn, NotEnoughFreeCellsColumn {
+        if (column < 0 || column > getMatrix()[0].length-1 ) {
+            throw new InvalidColumn();
         }
-
-        return false;
+        if(!(numSelectedTiles <= getMaxTilesColumn(column))){
+            throw new NotEnoughFreeCellsColumn();
+        }
+        return true;
     }
 
     /**
@@ -210,8 +205,16 @@ public class Bookshelf{
         return columnSelected;
     }
 
-    public void setColumnSelected(int columnSelected) {
-        this.columnSelected = columnSelected;
+    public void setColumnSelected(int column) {
+        try {
+            //TODO CHANGE COLUMN EXCEPTION
+            if (column < 0|| column >= matrix.length) {
+                throw new IllegalArgumentException(" value must be between 0 and " + (matrix.length - 1));
+            }
+            columnSelected = column;
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid Column" + e.getMessage());
+        }
     }
 
 

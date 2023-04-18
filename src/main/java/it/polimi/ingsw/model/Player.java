@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.exceptions.InvalidColumn;
+import it.polimi.ingsw.exceptions.NotEnoughFreeCellsColumn;
 import it.polimi.ingsw.json.GameRules;
 
 import java.beans.PropertyChangeEvent;
@@ -27,7 +29,10 @@ public class Player implements PropertyChangeListener {
         listeners=new PropertyChangeSupport(this);
     }
     public void addListener(PropertyChangeListener listener) {
-        listeners.addPropertyChangeListener(listener);
+        listeners.addPropertyChangeListener("BoardSelection",listener);
+        listeners.addPropertyChangeListener("BookshelfInsertion",listener);
+        listeners.addPropertyChangeListener("Points",listener);
+        //listeners.addPropertyChangeListener(listener);
     }
 
     public String getNickname() {
@@ -41,10 +46,18 @@ public class Player implements PropertyChangeListener {
     public ArrayList<ItemTile> getSelectedItems() {
         return selectedItems;
     }
+    /*
     public void setSelectedItems(ArrayList<ItemTile> selectedItems) {
         ArrayList<ItemTile> oldItems=this.selectedItems;
         this.selectedItems = selectedItems;
         listeners.firePropertyChange(new PropertyChangeEvent(nickname, "BoardSelection", oldItems, this.selectedItems));
+    }
+
+     */
+
+    public void selection(Board board) {
+        selectedItems=board.selected();
+        listeners.firePropertyChange(new PropertyChangeEvent(nickname, "BoardSelection", null, board));
     }
     //SUM OF ALL POINTS
     private int playerPoints;
@@ -52,9 +65,8 @@ public class Player implements PropertyChangeListener {
         return playerPoints;
     }
     public void setPlayerPoints(int playerPoints) {
-        int oldPoints=this.playerPoints;
         this.playerPoints = playerPoints;
-        listeners.firePropertyChange(new PropertyChangeEvent(nickname, "Points", oldPoints, playerPoints));
+        listeners.firePropertyChange(new PropertyChangeEvent(nickname, "Points", null, playerPoints));
     }
     //PERSONALGOAL
     private int personalGoalPoints;
@@ -80,10 +92,9 @@ public class Player implements PropertyChangeListener {
         this.bookshelf = bookshelf;
     }
 
-    public void insertBookshelf(int column) {
-        Bookshelf oldBookshelf=bookshelf;
-        bookshelf.insertAsSelected(column,selectedItems);
-        listeners.firePropertyChange(new PropertyChangeEvent(nickname, "BookshelfInsertion", oldBookshelf, bookshelf));
+    public void insertBookshelf() throws InvalidColumn, NotEnoughFreeCellsColumn {
+        bookshelf.insertAsSelected(selectedItems);
+        listeners.firePropertyChange(new PropertyChangeEvent(nickname, "BookshelfInsertion", null, bookshelf));
     }
     private int adjacentPoints;
     public int getAdjacentPoints() {
