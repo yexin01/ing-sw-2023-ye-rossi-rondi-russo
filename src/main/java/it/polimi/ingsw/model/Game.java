@@ -210,7 +210,9 @@ public class Game implements  PropertyChangeListener {
     public void setCommonGoalCardsPoints(GameRules gameRules) throws Exception {
         ArrayList<Integer> points=gameRules.getCommonGoalPoints(numPlayers);
         for(CommonGoalCard c: commonGoalCards){
-            c.setPoints(points);
+            for(int i=0;i<points.size();i++){
+                c.getPoints().add(points.get(i));
+            }
         }
     }
 
@@ -271,8 +273,9 @@ public class Game implements  PropertyChangeListener {
         int[] points= gameRules.getAdjacentArray();
         int sum=0;
         for(int groupSize : turnBookshelf().findAdjacentTilesGroups()){
-            if((groupSize-2)>points.length-1){
-                groupSize=points.length-1;
+            if (groupSize<2) continue;
+            if((groupSize)>points.length){
+                groupSize=points.length+1;
             }
             sum += points[groupSize-2];
         }
@@ -283,7 +286,8 @@ public class Game implements  PropertyChangeListener {
         int points=0;
         for (int i=0;i<getTurnPlayer().getCommonGoalPoints().length;i++){
             if (getTurnPlayer().getCommonGoalPoints()[i]==0 && commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())){
-                getTurnPlayer().setToken(i,commonGoalCards.get(i).removeToken());
+                int num=commonGoalCards.get(i).removeToken();
+                getTurnPlayer().setToken(i,num);
             }
             points=points+getTurnPlayer().getCommonGoalPoints(i);
         }
@@ -297,7 +301,7 @@ public class Game implements  PropertyChangeListener {
                 numScored++;
             }
         }
-        getTurnPlayer().setPersonalGoalPoints(points[numScored-1]);
+        getTurnPlayer().setPersonalGoalPoints(points[numScored]);
         return getTurnPlayer().getPersonalGoalPoints();
     }
 

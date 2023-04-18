@@ -4,66 +4,33 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.json.GameRules;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Random;
 
-public class Board extends Observable {
+public class Board implements PropertyChangeListener {
+
+    private transient PropertyChangeSupport listeners;
 
     public Board() {
-        playerChoiceX=-1;
-        playerChoiceY=-1;
-        finishPlayerChoice=-1;
-        columnSelected=-1;
+
     }
     private BoardBox[][] matrix;
 
     public BoardBox[][] getMatrix() {return matrix;}
     public void setMatrix(BoardBox[][] matrix) {
         this.matrix = matrix;
-        setChanged();
-        notifyObservers(matrix);
+
     }
 
     public BoardBox getBoardBox(int x,int y) {
         return matrix[x][y];
     }
 
-//PLAYER CHOICE
-    private Integer playerChoiceX;
 
-    public Integer getPlayerChoiceX() {
-        return playerChoiceX;
-    }
-
-    public void setPlayerChoiceX(Integer playerChoiceX) {
-        try {
-            if (playerChoiceX < -1 || playerChoiceX >= matrix.length) {
-                throw new IllegalArgumentException(" value must be between 0 and " + (matrix.length - 1));
-            }
-            this.playerChoiceX = playerChoiceX;
-        } catch (IllegalArgumentException e) {
-            System.err.println("Invalid row:Rewrite the row" + e.getMessage());
-            setFinishPlayeropposite();
-        }
-    }
-    private Integer playerChoiceY;
-    public Integer getPlayerChoiceY() {
-        return playerChoiceY;
-    }
-
-    public void setPlayerChoiceY(Integer playerChoiceY) {
-        try {
-            if (playerChoiceY < -1 || playerChoiceY >= matrix[0].length) {
-                throw new IllegalArgumentException(" value must be between 0 and " + (matrix[0].length - 1));
-
-            }
-            this.playerChoiceY = playerChoiceY;
-        } catch (IllegalArgumentException e) {
-            System.err.println("Invalid column:Rewrite the column" + e.getMessage());
-            setFinishPlayeropposite();
-        }
-    }
     private ArrayList<ItemTile> tiles;
 
     public ArrayList<ItemTile> getTiles() {
@@ -72,11 +39,10 @@ public class Board extends Observable {
 
     public void tiles(ArrayList<ItemTile> tiles) {
         this.tiles = tiles;
-        setChanged();
-        notifyObservers(tiles);
+
     }
 
-    private ArrayList<BoardBox> selectedBoard=new ArrayList<>();
+    private ArrayList<BoardBox> selectedBoard=new ArrayList<BoardBox>();
 
     public ArrayList<BoardBox> getSelectedBoard() {
         return selectedBoard;
@@ -84,17 +50,12 @@ public class Board extends Observable {
 
     public void setSelectedBoard(ArrayList<BoardBox> selectedBoard) {
         this.selectedBoard = selectedBoard;
-        setChanged();
-        notifyObservers(selectedBoard);
+
     }
 
     private boolean finishPlayer;
-//TODO it will be removed when the non-deprecated version is implemented
-    public void setFinishPlayeropposite() {
-        finishPlayer = !finishPlayer;
-        setChanged();
-        notifyObservers(finishPlayer);
-    }
+    //TODO it will be removed when the non-deprecated version is implemented
+
     public void printMatrix(){
         for (int i = 0; i < matrix.length; i++) {
             System.out.printf("row"+i+" ");
@@ -109,28 +70,9 @@ public class Board extends Observable {
         }
     }
     //BOOKSHELF
-    private int columnSelected;
-    public int getColumnSelected() {
-        return columnSelected;
-    }
-    public void setColumnSelected(Integer columnSelected) {
-        //TODO import num column bookshelf
-        //TODO OR THIS WILL BE IN THE BOOKSHELF
-        //TODO it depends on how the controller is implemented
 
-        int maxColumBookshelf=4;
-        try {
-            if (columnSelected < -1 || columnSelected > 4) {
-                throw new IllegalArgumentException(" value must be between 0 and  "+maxColumBookshelf);
-            }
-            this.columnSelected = columnSelected;
-        } catch (IllegalArgumentException e) {
-            System.err.println("Invalid bookshelf column:Rewrite the column" + e.getMessage());
-            setFinishPlayeropposite();
-        }
-    }
     private boolean endGame;//true when a player has completely filled the bookshelf
-                            //the game ends when the first player has to start the turn
+    //the game ends when the first player has to start the turn
 
     public boolean isEndGame() {
         return endGame;
@@ -138,16 +80,6 @@ public class Board extends Observable {
 
     public void setEndGame(boolean endGame) {
         this.endGame = endGame;
-    }
-
-    private Integer finishPlayerChoice;
-    //TODO it will be removed when the non-deprecated version is implemented
-    public Integer getFinishPlayerChoice() {
-        return finishPlayerChoice;
-    }
-
-    public void setFinishPlayerChoice(Integer finishPlayerChoice) {
-        this.finishPlayerChoice = finishPlayerChoice;
     }
 
     public void firstFillBoard(int numPlayers, GameRules gameRules) throws Exception {
@@ -302,8 +234,13 @@ public class Board extends Observable {
     //TODO pass it the maximum of the player's selectable tile cells as a parameter
     //TODO avoid reading the json file and having to reduce the controller by one check
     public boolean checkSelectable(BoardBox boardBox, int numSelectableTiles){
-        if ((boardBox.getFreeEdges() <= 0) || (selectedBoard.size() > (numSelectableTiles+1))) {
-            System.err.println("You chose more than "+numSelectableTiles+" tiles write -1 to reset the choice");
+        if(selectedBoard.size() > (numSelectableTiles+1)){
+            System.err.println("You chose more than "+numSelectableTiles+" tiles");
+            return false;
+        }
+
+        if ((boardBox.getFreeEdges() <= 0)) {
+            System.err.println("This tile isn't selectable");
             return false;
         }
         selectedBoard.add(boardBox);
@@ -329,9 +266,9 @@ public class Board extends Observable {
             increaseNear(selectedBoard.get(i).getX(), selectedBoard.get(i).getY());
             matrix[selectedBoard.get(i).getX()][selectedBoard.get(i).getY()].setTile(null);
             matrix[selectedBoard.get(i).getX()][selectedBoard.get(i).getY()].setFreeEdges(0);
-            selectedBoard=new ArrayList<>();
-        }
 
+        }
+        selectedBoard=new ArrayList<>();
         return selectedItems;
     }
 
@@ -389,10 +326,15 @@ public class Board extends Observable {
             }
         }
     }
+    public void addListener(PropertyChangeListener listener) {
+        listeners.addPropertyChangeListener(listener);
+    }
 
-
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        listeners.firePropertyChange(evt.getPropertyName(),evt.getOldValue(),evt.getNewValue());
+    }
 }
-
 /*
     private int numOfTile;
     public int getnumOfTile() {

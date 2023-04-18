@@ -5,6 +5,9 @@ import java.util.ArrayList;
 public abstract class CommonGoalCard {
 
     private ArrayList<Integer> points;
+    public CommonGoalCard(){
+        points=new ArrayList<>();
+    }
     public int removeToken(){
         if(points.size()>0){
             int point=points.get(points.size()-1);
