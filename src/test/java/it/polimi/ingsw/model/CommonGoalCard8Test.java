@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CommonGoalCard8Test {
 
     @Test
-    @DisplayName("Check for CommonGoal8")
+    @DisplayName("Generic true check for CommonGoal8")
     void checkGoal() {
         CommonGoalCard8 commonGoalCard8 = new CommonGoalCard8();
         Bookshelf bookshelf = new Bookshelf(6,5,3);
@@ -17,6 +17,19 @@ class CommonGoalCard8Test {
         bookshelf.getMatrix()[0][4] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][4] = new ItemTile(Type.CAT, tileID);
-        assertEquals(true, commonGoalCard8.checkGoal(bookshelf.getMatrix()));
+        assertTrue(commonGoalCard8.checkGoal(bookshelf.getMatrix()));
+    }
+
+    @Test
+    @DisplayName("Corner case: one different tile type")
+    void checkGoalCC1() {
+        CommonGoalCard8 commonGoalCard8 = new CommonGoalCard8();
+        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        int tileID = 0;
+        bookshelf.getMatrix()[0][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[0][4] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[5][4] = new ItemTile(Type.TROPHY, tileID);
+        assertFalse(commonGoalCard8.checkGoal(bookshelf.getMatrix()));
     }
 }
