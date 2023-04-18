@@ -9,6 +9,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Game implements  PropertyChangeListener {
     private boolean started;
@@ -313,13 +314,16 @@ public class Game implements  PropertyChangeListener {
 
     public Bookshelf turnBookshelf(){return getTurnPlayer().getBookshelf();}
 
-    public ArrayList<Player> checkWinner() {
-        //TODO winner method
-        throw new RuntimeException();
+    public List<Player> checkWinner() {
+        //controlla i punteggi dei giocatori e li ordina dal primo all'ultimo
+        List<Player> scoreBoard = players.stream().sorted(Comparator.comparingInt(Player::getPlayerPoints).reversed()).toList();
+        return scoreBoard;
+        //TODO: check exception error when using List instead of ArrayList
+        //throw new RuntimeException();
     }
 
     public void endGame() {
-        ArrayList<Player> ranking=checkWinner();
+        List<Player> ranking=checkWinner();
         listeners.firePropertyChange(new PropertyChangeEvent(this, "EndGame", null, ranking));
     }
 
