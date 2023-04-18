@@ -272,11 +272,10 @@ public class Game implements  PropertyChangeListener {
         int[] points= gameRules.getAdjacentArray();
         int sum=0;
         for(int groupSize : turnBookshelf().findAdjacentTilesGroups()){
-            if (groupSize < 2) continue;
-            if(groupSize>points.length-1){
+            if((groupSize-2)>points.length-1){
                 groupSize=points.length-1;
             }
-            sum += points[groupSize];
+            sum += points[groupSize-2];
         }
         getTurnPlayer().setAdjacentPoints(sum);
         return sum;
