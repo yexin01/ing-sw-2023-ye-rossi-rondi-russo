@@ -7,6 +7,7 @@ import it.polimi.ingsw.json.GameRules;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -54,6 +55,14 @@ public class Player implements PropertyChangeListener {
     }
 
      */
+ // 2,1,0 : 10 11 12 --> 12 10 11
+    public void permuteSelection(int[] order){
+        ArrayList<ItemTile> temp = new ArrayList<>();
+        for(int i : order){
+            temp.add(selectedItems.get(i));
+        }
+        selectedItems = temp;
+    }
 
     public void selection(Board board) {
         selectedItems=board.selected();
