@@ -2,19 +2,16 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.json.GameRules;
+import it.polimi.ingsw.listeners.BoardListener;
 import it.polimi.ingsw.listeners.PlayerListener;
 
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Game implements  PropertyChangeListener {
+public class Game {
     private boolean started;
 
-    private transient final PropertyChangeSupport listeners = new PropertyChangeSupport(this);
+    //private transient final PropertyChangeSupport listeners = new PropertyChangeSupport(this);
     private ArrayList<Player> players;
     private Board board;
     private int numPlayers;
@@ -96,7 +93,10 @@ public class Game implements  PropertyChangeListener {
     public void addPlayer(String nickname) throws Exception {
         if (players.size() < numPlayers) {
             Player p=new Player(nickname);
-            p.addListener(new PlayerListener());
+            PlayerListener listener=new PlayerListener();
+            p.addListener("BoardSelection",listener);
+            p.addListener("BookshelfInsertion",listener);
+            p.addListener("Points",listener);
             players.add(p);
         }
     }
@@ -327,19 +327,10 @@ public class Game implements  PropertyChangeListener {
 
     public void endGame() {
         List<Player> ranking=checkWinner();
-        listeners.firePropertyChange(new PropertyChangeEvent(this, "EndGame", null, ranking));
+        //TODO END LISTENER
+        //listeners.firePropertyChange(new PropertyChangeEvent(this, "EndGame", null, ranking));
     }
 
-    public void createListeners() {
-
-
-        listeners.addPropertyChangeListener(new PlayerListener());
-
-    }
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        listeners.firePropertyChange(evt.getPropertyName(),evt.getOldValue(),evt.getNewValue());
-    }
 
     public boolean isEndGame() {
         return endGame;

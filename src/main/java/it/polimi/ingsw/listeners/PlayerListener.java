@@ -4,8 +4,10 @@ import it.polimi.ingsw.model.*;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Date;
 
-public class PlayerListener implements PropertyChangeListener {
+
+public class PlayerListener implements EventListener {
 
     private static final String BOARD_SELECTION = "BoardSelection";
     private static final String BOOKSHELF_INSERTION = "BookshelfInsertion";
@@ -15,6 +17,15 @@ public class PlayerListener implements PropertyChangeListener {
     //public PlayerListener(ServerView view) {
      //   this.view = view;
     //}
+
+    public void onEvent(String eventName, Object newValue, String nickname) {
+
+        switch(eventName) {
+            case BOARD_SELECTION -> updateBoard((Board) newValue, (String) nickname);
+            case BOOKSHELF_INSERTION -> updateBookshelf((Bookshelf) newValue, (String) nickname);
+            case POINTS -> updatePointsPlayer((int) newValue, (String) nickname);
+        }
+    }
 
     private void updateBoard(Board board, String nickname) {
         System.out.println(nickname +" changed Board");
@@ -51,6 +62,7 @@ public class PlayerListener implements PropertyChangeListener {
          */
     }
 
+    /*
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         switch (evt.getPropertyName()) {
@@ -60,5 +72,7 @@ public class PlayerListener implements PropertyChangeListener {
         }
 
     }
+
+     */
 
 }
