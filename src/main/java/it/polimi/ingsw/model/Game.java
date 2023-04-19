@@ -2,11 +2,9 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.listeners.BoardListener;
-import it.polimi.ingsw.listeners.PlayerListener;
+import it.polimi.ingsw.listeners.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Game {
     private boolean started;
@@ -92,14 +90,32 @@ public class Game {
 
     public void addPlayer(String nickname) throws Exception {
         if (players.size() < numPlayers) {
-            Player p=new Player(nickname);
-            PlayerListener listener=new PlayerListener();
-            p.addListener("BoardSelection",listener);
-            p.addListener("BookshelfInsertion",listener);
-            p.addListener("Points",listener);
+            Player p = new Player(nickname);
+            BoardListener boardListener = new BoardListener();
+            BookshelfListener bookshelfListener = new BookshelfListener();
+            PointsListener pointsListener = new PointsListener();
+            p.addListener(EventType.BOARD_SELECTION, boardListener);
+            p.addListener(EventType.BOOKSHELF_INSERTION, bookshelfListener);
+            p.addListener(EventType.POINTS, pointsListener);
             players.add(p);
         }
     }
+
+
+    /*
+
+    public void addPlayer(String nickname) throws Exception {
+        if (players.size() < numPlayers) {
+            Player p=new Player(nickname);
+            PlayerListener listener=new PlayerListener();
+            p.addListener("BoardSelection",new BoardListener());
+            p.addListener("BookshelfInsertion",new BookshelfListener());
+            p.addListener("Points",new PointsListener());
+            players.add(p);
+        }
+    }
+
+     */
 
     /**
      *
@@ -270,10 +286,14 @@ public class Game {
     }
 
 
-    public int updateAdjacentPoints(GameRules gameRules) throws Exception ,IndexOutOfBoundsException{
+    public int updateAdjacentPoints(GameRules gameRules) throws Exception{
         int[] points= gameRules.getAdjacentArray();
+        List<Integer> adjacent= turnBookshelf().findAdjacentTilesGroups();
+        if(adjacent.isEmpty()){
+            return 0;
+        }
         int sum=0;
-        for(int groupSize : turnBookshelf().findAdjacentTilesGroups()){
+        for(int groupSize : adjacent){
             if (groupSize<2) continue;
             if((groupSize)>points.length){
                 groupSize=points.length+1;

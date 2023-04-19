@@ -1,11 +1,15 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exceptions.Error;
+import it.polimi.ingsw.exceptions.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.EventListener;
+import it.polimi.ingsw.listeners.EventType;
+import it.polimi.ingsw.listeners.EventValue;
 import it.polimi.ingsw.listeners.ListenerManager;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Player {
@@ -25,14 +29,25 @@ public class Player {
         this.nickname = nickname;
         this.listenerManager = new ListenerManager();
     }
-
-    public void addListener(String eventName, EventListener listener) {
-        this.listenerManager.addListener(eventName, listener);
+  /*
+    public <T> void addListener(EventType eventType, EventListener<T> listener) { // Aggiungi il parametro generico T
+        listenerManager.addListener(eventType, listener);
     }
 
-    public void removeListener(String eventName, EventListener listener) {
-        this.listenerManager.removeListener(eventName, listener);
+    public <T> void removeListener(EventType eventType, EventListener<T> listener) { // Aggiungi il parametro generico T
+        listenerManager.removeListener(eventType, listener);
     }
+
+  */
+    public void addListener(EventType eventType, EventListener listener) {
+        this.listenerManager.addListener(eventType, listener);
+    }
+
+    public void removeListener(EventType eventType, EventListener listener) {
+        this.listenerManager.removeListener(eventType, listener);
+    }
+
+
 
     public String getNickname() {
         return nickname;
@@ -53,7 +68,36 @@ public class Player {
     }
 
      */
- // 2,1,0 : 10 11 12 --> 12 10 11
+
+    public void selection(Board board) {
+        selectedItems=board.selected();
+        EventValue<Board> eventValue = new EventValue<>(board);
+        eventValue.getValue().printMatrix();
+        listenerManager.fireEvent(EventType.BOARD_SELECTION, board, nickname);
+    }
+    /*
+    public void selection(Board board) {
+        selectedItems=board.selected();
+        listenerManager.fireEvent("BoardSelection",board,nickname);
+    }
+
+     */
+
+
+    public void checkPermuteSelection(int[] order) throws Error {
+        int maxIndex = selectedItems.size() - 1;
+        for (int i = 0; i < order.length; i++) {
+            int curIndex = order[i];
+            if (curIndex > maxIndex || curIndex < 0) {
+                throw new Error(ErrorType.INVALID_ORDER_TILE);
+            }
+            for (int j = i + 1; j < order.length; j++) {
+                if (order[j] == curIndex) {
+                    throw new Error(ErrorType.INVALID_ORDER_TILE);
+                }
+            }
+        }
+    }
     public void permuteSelection(int[] order){
         ArrayList<ItemTile> temp = new ArrayList<>();
         for(int i : order){
@@ -62,18 +106,17 @@ public class Player {
         selectedItems = temp;
     }
 
-    public void selection(Board board) {
-        selectedItems=board.selected();
-        listenerManager.fireEvent("BoardSelection",board,nickname);
-    }
+
     //SUM OF ALL POINTS
     private int playerPoints;
     public int getPlayerPoints() {
         return playerPoints;
     }
+
     public void setPlayerPoints(int playerPoints) {
         this.playerPoints = playerPoints;
-        listenerManager.fireEvent("Points",playerPoints,nickname);
+        EventValue<Integer> eventValue = new EventValue<>(playerPoints);
+        listenerManager.fireEvent(EventType.POINTS, playerPoints, nickname);
     }
     //PERSONALGOAL
     private int personalGoalPoints;
@@ -101,7 +144,8 @@ public class Player {
 
     public void insertBookshelf() throws Error {
         bookshelf.insertAsSelected(selectedItems);
-        listenerManager.fireEvent("BookshelfInsertion",bookshelf,nickname);
+        EventValue<Bookshelf> eventValue = new EventValue<>(bookshelf);
+        listenerManager.fireEvent(EventType.BOOKSHELF_INSERTION, bookshelf, nickname);
     }
     private int adjacentPoints;
     public int getAdjacentPoints() {

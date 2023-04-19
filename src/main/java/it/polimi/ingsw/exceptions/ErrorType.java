@@ -10,6 +10,7 @@ public enum ErrorType {
     NOT_SELECTABLE_TILE("Not selectable tile"),
     TOO_MANY_TILES("Invalid Tile"),
     INVALID_ORDER_TILE("Invalid order tile "),
+
     INVALID_COORDINATES("COORDINATES of the tile are invalid");
 
     private final String errorMessage;

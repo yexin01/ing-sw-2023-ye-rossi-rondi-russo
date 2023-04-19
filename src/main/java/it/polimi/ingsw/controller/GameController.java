@@ -4,10 +4,15 @@ import it.polimi.ingsw.exceptions.Error;
 import it.polimi.ingsw.exceptions.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 
+import it.polimi.ingsw.listeners.EndGameListener;
 import it.polimi.ingsw.messages.MessageFromClient;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class GameController implements Controller{
@@ -67,8 +72,6 @@ public class GameController implements Controller{
     public void turnPhase(MessageFromClient message) throws Exception {
         String messageName = message.getClientMessageHeader().getMessageName();
         MessagePayload payload = message.getMessagePayload();
-        if (!TurnPhase.contains(messageName)) throw new IllegalArgumentException();
-        //try {
         switch (messageName) {
             case "SelectionBoard" -> checkAndInsertBoardBox(message);
             case "FinishSelectionBoard" -> associatePlayerTiles();
@@ -78,8 +81,7 @@ public class GameController implements Controller{
             case "InsertBookshelfAndPoint" -> insertBookshelf();
             default -> throw new IllegalArgumentException();
         }
-        //} catch (Error e) {
-        //}
+
     }
 
 
@@ -102,17 +104,11 @@ public class GameController implements Controller{
         illegalPhase(TurnPhase.SELECT_FROM_BOARD);
         game.getTurnPlayer().selection(game.getBoard());
         turnController.changePhase();
-        turnController.changePhase();
-        //TODO poi andrà tolta
-        // gameController.getTurnController().changePhase();
     }
     public void permutePlayerTiles(MessageFromClient message) throws Error {
         illegalPhase(TurnPhase.SELECT_ORDER_TILES);
         int[] orderTiles=message.getMessagePayload().getOrderTiles();
-        //TODO check Order
-        if (!true){
-            throw new Error(ErrorType.INVALID_ORDER_TILE);
-        }
+        game.getTurnPlayer().checkPermuteSelection(orderTiles);
         game.getTurnPlayer().permuteSelection(orderTiles);
         turnController.changePhase();
     }
@@ -148,16 +144,22 @@ public class GameController implements Controller{
 
     }
     public void finishTurn() {
+        //TODO da finire
+        if(game.isEndGame() && game.getTurnPlayer().equals(game.getLastPlayer())){
+            endGame();
+            return;
+        }
         if(game.getBoard().checkRefill()){
             game.getBoard().refill();
         }
-        //TODO da finire
-        if(game.isEndGame() && game.getTurnPlayer().equals(game.getLastPlayer())){
-            //listeners.firePropertyChange(new PropertyChangeEvent(gameController.getModel().getTurnPlayer(), "EndGame",
-            //       null,null));
-        }
         game.setNextPlayer();
         turnController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
+    }
+
+    public void endGame() {
+        List<Player> ranking=  game.checkWinner();
+        EndGameListener endGameListener=new EndGameListener();
+        endGameListener.endGame(ranking);
     }
 
     public void illegalPhase(TurnPhase phase) throws Error {

@@ -9,9 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Bookshelf{
-
-
+public class Bookshelf {
 
     private ItemTile[][] matrix;
     private int[] freeShelves; //freeShelves[i] = # celle libere nell'i-esima colonna
