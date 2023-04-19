@@ -2,19 +2,14 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.listeners.PlayerListener;
+import it.polimi.ingsw.listeners.*;
 
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class Game implements  PropertyChangeListener {
+public class Game {
     private boolean started;
 
-    private transient final PropertyChangeSupport listeners = new PropertyChangeSupport(this);
+    //private transient final PropertyChangeSupport listeners = new PropertyChangeSupport(this);
     private ArrayList<Player> players;
     private Board board;
     private int numPlayers;
@@ -95,11 +90,32 @@ public class Game implements  PropertyChangeListener {
 
     public void addPlayer(String nickname) throws Exception {
         if (players.size() < numPlayers) {
-            Player p=new Player(nickname);
-            p.addListener(new PlayerListener());
+            Player p = new Player(nickname);
+            BoardListener boardListener = new BoardListener();
+            BookshelfListener bookshelfListener = new BookshelfListener();
+            PointsListener pointsListener = new PointsListener();
+            p.addListener(EventType.BOARD_SELECTION, boardListener);
+            p.addListener(EventType.BOOKSHELF_INSERTION, bookshelfListener);
+            p.addListener(EventType.POINTS, pointsListener);
             players.add(p);
         }
     }
+
+
+    /*
+
+    public void addPlayer(String nickname) throws Exception {
+        if (players.size() < numPlayers) {
+            Player p=new Player(nickname);
+            PlayerListener listener=new PlayerListener();
+            p.addListener("BoardSelection",new BoardListener());
+            p.addListener("BookshelfInsertion",new BookshelfListener());
+            p.addListener("Points",new PointsListener());
+            players.add(p);
+        }
+    }
+
+     */
 
     /**
      *
@@ -270,10 +286,14 @@ public class Game implements  PropertyChangeListener {
     }
 
 
-    public int updateAdjacentPoints(GameRules gameRules) throws Exception ,IndexOutOfBoundsException{
+    public int updateAdjacentPoints(GameRules gameRules) throws Exception{
         int[] points= gameRules.getAdjacentArray();
+        List<Integer> adjacent= turnBookshelf().findAdjacentTilesGroups();
+        if(adjacent.isEmpty()){
+            return 0;
+        }
         int sum=0;
-        for(int groupSize : turnBookshelf().findAdjacentTilesGroups()){
+        for(int groupSize : adjacent){
             if (groupSize<2) continue;
             if((groupSize)>points.length){
                 groupSize=points.length+1;
@@ -287,7 +307,7 @@ public class Game implements  PropertyChangeListener {
         int points=0;
         for (int i=0;i<getTurnPlayer().getCommonGoalPoints().length;i++){
             if (getTurnPlayer().getCommonGoalPoints()[i]==0 && commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())){
-                int num=commonGoalCards.get(i).removeToken();
+                int num=commonGoalCards.get(i).removeToken(getTurnPlayer().getNickname());
                 getTurnPlayer().setToken(i,num);
             }
             points=points+getTurnPlayer().getCommonGoalPoints(i);
@@ -327,19 +347,10 @@ public class Game implements  PropertyChangeListener {
 
     public void endGame() {
         List<Player> ranking=checkWinner();
-        listeners.firePropertyChange(new PropertyChangeEvent(this, "EndGame", null, ranking));
+        //TODO END LISTENER
+        //listeners.firePropertyChange(new PropertyChangeEvent(this, "EndGame", null, ranking));
     }
 
-    public void createListeners() {
-
-
-        listeners.addPropertyChangeListener(new PlayerListener());
-
-    }
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        listeners.firePropertyChange(evt.getPropertyName(),evt.getOldValue(),evt.getNewValue());
-    }
 
     public boolean isEndGame() {
         return endGame;

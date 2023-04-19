@@ -1,21 +1,20 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.InvalidColumn;
-import it.polimi.ingsw.exceptions.NotEnoughFreeCellsColumn;
+import it.polimi.ingsw.exceptions.Error;
+import it.polimi.ingsw.exceptions.ErrorType;
 import it.polimi.ingsw.json.GameRules;
+import it.polimi.ingsw.listeners.EventListener;
+import it.polimi.ingsw.listeners.EventType;
+import it.polimi.ingsw.listeners.ListenerManager;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-
-public class Player implements PropertyChangeListener {
+public class Player {
     private String nickname;
     //TODO final
-    private transient PropertyChangeSupport listeners;
+    private ListenerManager listenerManager;
 
     public Player () throws Exception {
         selectedItems=new ArrayList<>();
@@ -27,14 +26,27 @@ public class Player implements PropertyChangeListener {
     public Player(String nickname) throws Exception {
         this();
         this.nickname = nickname;
-        listeners=new PropertyChangeSupport(this);
+        this.listenerManager = new ListenerManager();
     }
-    public void addListener(PropertyChangeListener listener) {
-        listeners.addPropertyChangeListener("BoardSelection",listener);
-        listeners.addPropertyChangeListener("BookshelfInsertion",listener);
-        listeners.addPropertyChangeListener("Points",listener);
-        //listeners.addPropertyChangeListener(listener);
+  /*
+    public <T> void addListener(EventType eventType, EventListener<T> listener) { // Aggiungi il parametro generico T
+        listenerManager.addListener(eventType, listener);
     }
+
+    public <T> void removeListener(EventType eventType, EventListener<T> listener) { // Aggiungi il parametro generico T
+        listenerManager.removeListener(eventType, listener);
+    }
+
+  */
+    public void addListener(EventType eventType, EventListener listener) {
+        this.listenerManager.addListener(eventType, listener);
+    }
+
+    public void removeListener(EventType eventType, EventListener listener) {
+        this.listenerManager.removeListener(eventType, listener);
+    }
+
+
 
     public String getNickname() {
         return nickname;
@@ -55,6 +67,34 @@ public class Player implements PropertyChangeListener {
     }
 
      */
+
+    public void selection(Board board) {
+        selectedItems=board.selected();
+        listenerManager.fireEvent(EventType.BOARD_SELECTION, board, nickname);
+    }
+    /*
+    public void selection(Board board) {
+        selectedItems=board.selected();
+        listenerManager.fireEvent("BoardSelection",board,nickname);
+    }
+
+     */
+
+
+    public void checkPermuteSelection(int[] order) throws Error {
+        int maxIndex = selectedItems.size() - 1;
+        for (int i = 0; i < order.length; i++) {
+            int curIndex = order[i];
+            if (curIndex > maxIndex || curIndex < 0) {
+                throw new Error(ErrorType.INVALID_ORDER_TILE);
+            }
+            for (int j = i + 1; j < order.length; j++) {
+                if (order[j] == curIndex) {
+                    throw new Error(ErrorType.INVALID_ORDER_TILE);
+                }
+            }
+        }
+    }
     public void permuteSelection(int[] order){
         ArrayList<ItemTile> temp = new ArrayList<>();
         for(int i : order){
@@ -63,18 +103,16 @@ public class Player implements PropertyChangeListener {
         selectedItems = temp;
     }
 
-    public void selection(Board board) {
-        selectedItems=board.selected();
-        listeners.firePropertyChange(new PropertyChangeEvent(nickname, "BoardSelection", null, board));
-    }
+
     //SUM OF ALL POINTS
     private int playerPoints;
     public int getPlayerPoints() {
         return playerPoints;
     }
+
     public void setPlayerPoints(int playerPoints) {
         this.playerPoints = playerPoints;
-        listeners.firePropertyChange(new PropertyChangeEvent(nickname, "Points", null, playerPoints));
+        listenerManager.fireEvent(EventType.POINTS, playerPoints, nickname);
     }
     //PERSONALGOAL
     private int personalGoalPoints;
@@ -100,9 +138,9 @@ public class Player implements PropertyChangeListener {
         this.bookshelf = bookshelf;
     }
 
-    public void insertBookshelf() throws InvalidColumn, NotEnoughFreeCellsColumn {
+    public void insertBookshelf() throws Error {
         bookshelf.insertAsSelected(selectedItems);
-        listeners.firePropertyChange(new PropertyChangeEvent(nickname, "BookshelfInsertion", null, bookshelf));
+        listenerManager.fireEvent(EventType.BOOKSHELF_INSERTION, bookshelf, nickname);
     }
     private int adjacentPoints;
     public int getAdjacentPoints() {
@@ -129,10 +167,7 @@ public class Player implements PropertyChangeListener {
         this.commonGoalPoints[index] = points;
     }
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        listeners.firePropertyChange(evt.getPropertyName(),evt.getOldValue(),evt.getNewValue());
-    }
+
 
     @Override
     public boolean equals(Object o) {

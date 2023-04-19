@@ -2,6 +2,8 @@ package it.polimi.ingsw.model;
 
 
 
+import it.polimi.ingsw.exceptions.Error;
+import it.polimi.ingsw.exceptions.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 
 import java.beans.PropertyChangeEvent;
@@ -52,7 +54,11 @@ public class Board implements PropertyChangeListener {
         this.selectedBoard = selectedBoard;
 
     }
-
+    public void checkCoordinates(int x,int y) throws Error {
+        if (x < 0 || y<0 || x> matrix.length-1 || y> matrix[0].length-1 || !getBoardBox(x,y).isOccupiable() ) {
+            throw new Error(ErrorType.INVALID_COORDINATES);
+        }
+    }
     private boolean finishPlayer;
     //TODO it will be removed when the non-deprecated version is implemented
 
@@ -233,25 +239,25 @@ public class Board implements PropertyChangeListener {
     // must be changed by adding an arraylist to the board, checking at the end
     //TODO pass it the maximum of the player's selectable tile cells as a parameter
     //TODO avoid reading the json file and having to reduce the controller by one check
-    public boolean checkSelectable(BoardBox boardBox, int numSelectableTiles){
+    public void checkSelectable(BoardBox boardBox, int numSelectableTiles) throws Error {
         if(selectedBoard.size() > (numSelectableTiles+1)){
             System.err.println("You chose more than "+numSelectableTiles+" tiles");
-            return false;
+            throw new Error(ErrorType.TOO_MANY_TILES);
         }
 
         if ((boardBox.getFreeEdges() <= 0)) {
             System.err.println("This tile isn't selectable");
-            return false;
+            throw new Error(ErrorType.NOT_SELECTABLE_TILE);
         }
         selectedBoard.add(boardBox);
         if (selectedBoard.size() == 1) {
-            return true;
+            return;
         }
         if (!allAdjacent() || !allSameRowOrSameColumn()) {
             selectedBoard.remove(selectedBoard.size() - 1);
-            return false;
+            throw new Error(ErrorType.NOT_SELECTABLE_TILE);
         }
-        return true;
+        return;
     }
 
 

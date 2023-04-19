@@ -2,12 +2,11 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.exceptions.*;
+import it.polimi.ingsw.exceptions.Error;
 
 import java.util.*;
 
-public class Bookshelf{
-
-
+public class Bookshelf {
 
     private ItemTile[][] matrix;
     private int[] freeShelves; //freeShelves[i] = # celle libere nell'i-esima colonna
@@ -110,28 +109,24 @@ public class Bookshelf{
         return true;
     }
 
-    public boolean insertAsSelected(ArrayList<ItemTile> selectedItemTiles) throws InvalidColumn, NotEnoughFreeCellsColumn {
+    public void insertAsSelected(ArrayList<ItemTile> selectedItemTiles) throws Error {
 
-        if (checkBookshelf(columnSelected,selectedItemTiles.size())) {
-            int j = 0;
-            for (int i = getMatrix().length - 1; j < selectedItemTiles.size(); i--) {
-                if (getMatrix()[i][columnSelected].getTileID() == -1) {
-                    setTile(selectedItemTiles.get(j++), i,columnSelected);
-                }
+        int j = 0;
+        for (int i = getMatrix().length - 1; j < selectedItemTiles.size(); i--) {
+            if (getMatrix()[i][columnSelected].getTileID() == -1) {
+                setTile(selectedItemTiles.get(j++), i,columnSelected);
             }
-            return true;
         }
-        return false;
+
     }
 
-    public boolean checkBookshelf(int column,int numSelectedTiles) throws InvalidColumn, NotEnoughFreeCellsColumn {
+    public void checkBookshelf(int column,int numSelectedTiles) throws Error {
         if (column < 0 || column > getMatrix()[0].length-1 ) {
-            throw new InvalidColumn();
+            throw new Error(ErrorType.INVALID_COLUMN);
         }
         if(!(numSelectedTiles <= getMaxTilesColumn(column))){
-            throw new NotEnoughFreeCellsColumn();
+            throw new Error(ErrorType.NOT_ENOUGH_FREE_CELLS_COLUMN);
         }
-        return true;
     }
 
     /**
