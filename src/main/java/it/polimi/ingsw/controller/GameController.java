@@ -4,14 +4,13 @@ import it.polimi.ingsw.exceptions.Error;
 import it.polimi.ingsw.exceptions.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 
-import it.polimi.ingsw.listeners.EndGameListener;
+import it.polimi.ingsw.listeners.TurnListener;
 import it.polimi.ingsw.messages.MessageFromClient;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -63,6 +62,7 @@ public class GameController implements Controller{
             }
             turnPhase(message);
 
+
         }catch(Exception e){
 
         }
@@ -103,14 +103,18 @@ public class GameController implements Controller{
     public void associatePlayerTiles() throws Error {
         illegalPhase(TurnPhase.SELECT_FROM_BOARD);
         game.getTurnPlayer().selection(game.getBoard());
+        finishPhase();
         turnController.changePhase();
+
     }
     public void permutePlayerTiles(MessageFromClient message) throws Error {
         illegalPhase(TurnPhase.SELECT_ORDER_TILES);
         int[] orderTiles=message.getMessagePayload().getOrderTiles();
         game.getTurnPlayer().checkPermuteSelection(orderTiles);
         game.getTurnPlayer().permuteSelection(orderTiles);
+        finishPhase();
         turnController.changePhase();
+
     }
 
 
@@ -129,6 +133,7 @@ public class GameController implements Controller{
 
          */
         game.getTurnPlayer().getBookshelf().setColumnSelected(column);
+        finishPhase();
         turnController.changePhase();
     }
 
@@ -153,12 +158,13 @@ public class GameController implements Controller{
             game.getBoard().refill();
         }
         game.setNextPlayer();
+        endTurn();
         turnController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
     }
 
     public void endGame() {
         List<Player> ranking=  game.checkWinner();
-        EndGameListener endGameListener=new EndGameListener();
+        TurnListener endGameListener=new TurnListener();
         endGameListener.endGame(ranking);
     }
 
@@ -167,6 +173,15 @@ public class GameController implements Controller{
             throw new Error(ErrorType.ILLEGAL_PHASE);
         }
         return;
+    }
+    public void finishPhase(){
+        TurnListener turnListener=new TurnListener();
+        turnListener.endPhase(game.getTurnPlayer().getNickname(),turnController.getCurrentPhase());
+    }
+
+    public void endTurn(){
+        TurnListener turnListener=new TurnListener();
+        turnListener.endTurnMessage(game.getTurnPlayer().getNickname());
     }
 
 }

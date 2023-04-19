@@ -82,3 +82,43 @@ public class PlayerListener implements EventListener {
 
 
 }*/
+
+/*
+public class EventValue<T> {
+    private T value;
+
+    public EventValue(T value) {
+        this.value = value;
+    }
+
+    public T getValue() {
+        return value;
+    }
+}
+
+ */
+ /*
+    @Override
+    public void onEvent(EventType eventType, EventValue eventValue, String nickname) {
+        int points= (int) eventValue.getValue();
+        System.out.println(nickname +" changed  POINTS: "+points);
+    }
+*/
+/*
+    @Override
+    public void onEvent(EventType eventType, EventValue<Board> eventValue, String nickname) {
+        //Board newBoard = eventValue.getValue();
+        System.out.println(nickname + " changed Board");
+        System.out.println(eventValue.getValue().getMatrix());
+
+    }
+ */
+ /*
+   @Override
+   public void onEvent(EventType eventType, EventValue eventValue, String nickname) {
+        Bookshelf newBookshelf=(Bookshelf) eventValue.getValue();
+        System.out.println(nickname +" changed Bookshelf");
+        newBookshelf.printBookshelf();
+    }
+
+    */

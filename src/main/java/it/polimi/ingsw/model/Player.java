@@ -5,7 +5,6 @@ import it.polimi.ingsw.exceptions.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.EventListener;
 import it.polimi.ingsw.listeners.EventType;
-import it.polimi.ingsw.listeners.EventValue;
 import it.polimi.ingsw.listeners.ListenerManager;
 
 import java.util.ArrayList;
@@ -71,8 +70,6 @@ public class Player {
 
     public void selection(Board board) {
         selectedItems=board.selected();
-        EventValue<Board> eventValue = new EventValue<>(board);
-        eventValue.getValue().printMatrix();
         listenerManager.fireEvent(EventType.BOARD_SELECTION, board, nickname);
     }
     /*
@@ -115,7 +112,6 @@ public class Player {
 
     public void setPlayerPoints(int playerPoints) {
         this.playerPoints = playerPoints;
-        EventValue<Integer> eventValue = new EventValue<>(playerPoints);
         listenerManager.fireEvent(EventType.POINTS, playerPoints, nickname);
     }
     //PERSONALGOAL
@@ -144,7 +140,6 @@ public class Player {
 
     public void insertBookshelf() throws Error {
         bookshelf.insertAsSelected(selectedItems);
-        EventValue<Bookshelf> eventValue = new EventValue<>(bookshelf);
         listenerManager.fireEvent(EventType.BOOKSHELF_INSERTION, bookshelf, nickname);
     }
     private int adjacentPoints;
