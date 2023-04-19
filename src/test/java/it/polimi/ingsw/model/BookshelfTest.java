@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.exceptions.InvalidColumn;
+import it.polimi.ingsw.exceptions.NotEnoughFreeCellsColumn;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -350,6 +352,136 @@ class BookshelfTest {
             tileID++;
         }
         assertFalse(bookshelf.isFull());
+    }
+
+    @Test
+    @DisplayName("insertAsSelected: Generic check for blank bookshelf")
+    void insertAsSelected() throws InvalidColumn, NotEnoughFreeCellsColumn {
+        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        //Blank bookshelf set, create and insert tiles as you want
+        bookshelf.computeFreeShelves();
+        //Set the size of selectedTiles
+        int size = 3; int tileID = 0;
+        //Set the column you want to insert the tiles
+        bookshelf.setColumnSelected(0);
+        ArrayList<ItemTile> selectedTiles = new ArrayList<>();
+        for (int i = 0; i<size; i++) {
+            selectedTiles.add(new ItemTile(Type.CAT, tileID));
+            tileID++;
+        }
+        assertTrue(bookshelf.insertAsSelected(selectedTiles));
+    }
+
+    @Test
+    @DisplayName("insertAsSelected: Checking insert of 1 tile in a blank bookshelf")
+    void insertAsSelectedCC1() throws InvalidColumn, NotEnoughFreeCellsColumn {
+        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        bookshelf.computeFreeShelves();
+        bookshelf.setColumnSelected(0);
+        ArrayList<ItemTile> selectedTiles = new ArrayList<>();
+        int size = 1; int tileID = 0;
+        for (int i = 0; i<size; i++) {
+            selectedTiles.add(new ItemTile(Type.CAT, tileID));
+            tileID++;
+        }
+        assertTrue(bookshelf.insertAsSelected(selectedTiles));
+    }
+
+    @Test
+    @DisplayName("insertAsSelected: Checking insert of 3 tiles in a bookshelf column with 3 free shelves")
+    void insertAsSelectedCC2() throws InvalidColumn, NotEnoughFreeCellsColumn {
+        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, 0);
+        bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, 1);
+        bookshelf.getMatrix()[3][0] = new ItemTile(Type.CAT, 2);
+        bookshelf.computeFreeShelves();
+        bookshelf.setColumnSelected(0);
+        ArrayList<ItemTile> selectedTiles = new ArrayList<>();
+        int size = 3; int tileID = 3;
+        for (int i = 0; i<size; i++) {
+            selectedTiles.add(new ItemTile(Type.CAT, tileID));
+            tileID++;
+        }
+        assertTrue(bookshelf.insertAsSelected(selectedTiles));
+    }
+
+    @Test
+    @DisplayName("insertAsSelected: Checking insert of 1 tile in a bookshelf column with 1 free shelve")
+    void insertAsSelectedCC3() throws InvalidColumn, NotEnoughFreeCellsColumn {
+        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, 0);
+        bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, 1);
+        bookshelf.getMatrix()[3][0] = new ItemTile(Type.CAT, 2);
+        bookshelf.getMatrix()[2][0] = new ItemTile(Type.CAT, 3);
+        bookshelf.getMatrix()[1][0] = new ItemTile(Type.CAT, 4);
+        bookshelf.computeFreeShelves();
+        bookshelf.setColumnSelected(0);
+        ArrayList<ItemTile> selectedTiles = new ArrayList<>();
+        int size = 1; int tileID = 5;
+        for (int i = 0; i<size; i++) {
+            selectedTiles.add(new ItemTile(Type.CAT, tileID));
+            tileID++;
+        }
+        assertTrue(bookshelf.insertAsSelected(selectedTiles));
+    }
+
+    @Test
+    @DisplayName("checkBookshelf: Generic check for blank bookshelf")
+    void checkBookshelf() throws InvalidColumn, NotEnoughFreeCellsColumn {
+        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        //Blank bookshelf set, create and insert tiles as you want
+        bookshelf.computeFreeShelves();
+        //Set the size of selectedTiles
+        int size = 1;
+        //Set the column you want to check
+        int column = 0;
+        assertTrue(bookshelf.checkBookshelf(column, size));
+    }
+
+    @Test
+    @DisplayName("checkBookshelf: 3 tiles, 3 free shelves")
+    void checkBookshelfCC1() throws InvalidColumn, NotEnoughFreeCellsColumn {
+        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        int tileID = 0;
+        bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[3][0] = new ItemTile(Type.CAT, tileID);
+        bookshelf.computeFreeShelves();
+        int size = 3;
+        int column = 0;
+        assertTrue(bookshelf.checkBookshelf(column, size));
+    }
+
+    @Test
+    @DisplayName("checkBookshelf: 1 tile, 1 free shelve")
+    void checkBookshelfCC2() throws InvalidColumn, NotEnoughFreeCellsColumn {
+        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        int tileID = 0;
+        bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[3][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[2][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[1][0] = new ItemTile(Type.CAT, tileID);
+        bookshelf.computeFreeShelves();
+        int size = 1;
+        int column = 0;
+        assertTrue(bookshelf.checkBookshelf(column, size));
+    }
+
+    @Test
+    @DisplayName("checkBookshelf: 3 tile, 1 free shelve")
+    void checkBookshelfCC3() throws InvalidColumn, NotEnoughFreeCellsColumn {
+        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        int tileID = 0;
+        bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[3][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[2][0] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[1][0] = new ItemTile(Type.CAT, tileID);
+        bookshelf.computeFreeShelves();
+        int size = 3;
+        int column = 0;
+        assertFalse(bookshelf.checkBookshelf(column, size));
     }
 
     @Test
