@@ -55,7 +55,6 @@ public class Player implements PropertyChangeListener {
     }
 
      */
- // 2,1,0 : 10 11 12 --> 12 10 11
     public void permuteSelection(int[] order){
         ArrayList<ItemTile> temp = new ArrayList<>();
         for(int i : order){

@@ -3,10 +3,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exceptions.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Bookshelf{
 
@@ -152,18 +149,19 @@ public class Bookshelf{
         //find startingTile in the last row:
         for (int j = 0; j < matrix[0].length; j++) {
             ItemTile currentTile = matrix[lastRow][j];
-            if (currentTile != null) {
+            if (currentTile != null && (!Objects.equals(currentTile.getTileID(), -1))) {
                 startingTile = currentTile;
                 startingColumn = j;
                 break;
             }
             //algorithm can stop if last row is empty
             if (j == lastColumn) { //every element in the last row is null
+                System.out.println("Bookshelf's empty... No group of adjacent tiles found!");
                 return groupsSizes;
             }
         }
 
-        assert startingTile != null : "startingTile is null!";
+        assert (startingTile != null && (!Objects.equals(startingTile.getTileID(), -1))): "startingTile is null!";
         Type startingType = startingTile.getType();
         int groupSize = dfs(startingTile, visited, startingType, startingRow, startingColumn);
         groupsSizes.add(groupSize);
@@ -171,14 +169,14 @@ public class Bookshelf{
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
                 ItemTile currentTile = matrix[i][j];
-                if (!visited.contains(currentTile) && currentTile.getType() != null) {
+                if (!visited.contains(currentTile) && currentTile.getType() != null && (!Objects.equals(currentTile.getTileID(), -1))) {
                     Type currentType = currentTile.getType();
                     groupSize = dfs(currentTile, visited, currentType, i, j);
                     groupsSizes.add(groupSize);
                 }
             }
         }
-
+        if(groupsSizes.isEmpty()) System.out.println("No group of adjacent tiles was found!");
         return groupsSizes;
     }
 
@@ -194,7 +192,7 @@ public class Bookshelf{
                 continue; //proceeding in other adjacent directions
             }
             ItemTile nextBox = matrix[x][y];
-            if (!visited.contains(nextBox) && nextBox.getType() == type) {
+            if (!visited.contains(nextBox) && (!Objects.equals(currentTile.getTileID(), -1)) && nextBox.getType() == type) {
                 size += dfs(nextBox, visited, type, x, y);
             }
         }
