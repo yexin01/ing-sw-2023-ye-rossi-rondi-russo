@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.InvalidColumn;
-import it.polimi.ingsw.exceptions.NotEnoughFreeCellsColumn;
+import it.polimi.ingsw.exceptions.Error;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.EventListener;
 import it.polimi.ingsw.listeners.ListenerManager;
@@ -100,7 +99,7 @@ public class Player {
         this.bookshelf = bookshelf;
     }
 
-    public void insertBookshelf() throws InvalidColumn, NotEnoughFreeCellsColumn {
+    public void insertBookshelf() throws Error {
         bookshelf.insertAsSelected(selectedItems);
         listenerManager.fireEvent("BookshelfInsertion",bookshelf,nickname);
     }
