@@ -2,7 +2,7 @@
   "max_players": 4,
   "num_tiles_per_type": [22, 22, 22, 22, 22, 22],
   "adjacentPoints": [0, 2, 3, 5, 8],
-  "personalGoalPoints": [1, 2, 4, 6, 9, 12],
+  "personalGoalPoints": [0, 1, 2, 4, 6, 9, 12],
   "max_selectable_tiles": 3,
   "matrices": [
     {
