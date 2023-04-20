@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
 public class ClientSocket extends Client implements Runnable{
 
     @Serial
-    private static final long serialVersionUID = -2444710280613670212L;
+    private static final long serialVersionUID = -6118099010326718532L;
 
     private transient Socket socket;
 
@@ -38,12 +38,12 @@ public class ClientSocket extends Client implements Runnable{
     }
 
     @Override
-    public void disconnect() throws RemoteException {
+    public void disconnectMe() throws RemoteException {
         try {
             closeConnection();
         } catch (Exception e) {
             e.printStackTrace();
-            //Logger.getLogger("adrenaline_client").severe(e.getMessage());
+            //Logger.getLogger("client").severe(e.getMessage());
         }
     }
 

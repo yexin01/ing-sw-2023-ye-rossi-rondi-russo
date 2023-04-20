@@ -14,7 +14,7 @@ import java.rmi.registry.Registry;
 public class ClientRMI extends Client implements RMIClientConnection {
 
     @Serial
-    private static final long serialVersionUID = 8860650382225140804L;
+    private static final long serialVersionUID = 1259827311643177219L;
 
     private transient RMIHandler server;
 
@@ -43,14 +43,22 @@ public class ClientRMI extends Client implements RMIClientConnection {
 
     @Override
     public void closeConnection() throws RemoteException {
-        server.disconnect();
+        server.disconnectMe();
         server = null;
     }
 
     @Override
     public void sendMessage(Message message) throws RemoteException {
-        synchronized (messageQueue) {
-            messageQueue.add(message);
+        if (server == null) {
+            throw new RemoteException();
+        }
+        server.onMessage(message);
+    }
+
+    @Override
+    public void messageToClient(Message message) throws RemoteException {
+        synchronized (getMessageQueue()) {
+            getMessageQueue().add(message);
         }
     }
 
@@ -60,7 +68,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
     }
 
     @Override
-    public void disconnect() throws RemoteException {
+    public void disconnectMe() throws RemoteException {
         server = null;
     }
 

@@ -11,7 +11,7 @@ import java.util.List;
 public abstract class Client extends UnicastRemoteObject {
 
     @Serial
-    private static final long serialVersionUID = 8357650588840665298L;
+    private static final long serialVersionUID = 2056368610379158146L;
     // per avere random serialversionUID clicca Option+Enter sul mac dopo =
 
     private final String username;
@@ -58,7 +58,7 @@ public abstract class Client extends UnicastRemoteObject {
 
     public abstract void closeConnection() throws Exception;
 
-    public abstract void disconnect() throws RemoteException;
+    public abstract void disconnectMe() throws RemoteException;
 
     public abstract void sendMessage(Message message) throws Exception;
 

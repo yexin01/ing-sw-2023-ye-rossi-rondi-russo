@@ -5,13 +5,16 @@ import it.polimi.ingsw.network.messages.Message;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+/**
+ * This interface is the one sent to the server to send messages to the client
+ */
 public interface RMIClientConnection extends Remote {
 
-    void sendMessage(Message message) throws RemoteException;
+    void messageToClient(Message message) throws RemoteException;
 
     void ping() throws RemoteException;
 
-    void disconnect() throws RemoteException;
+    void disconnectMe() throws RemoteException;
 
     //TODO suggerimenti sotto
     /*
