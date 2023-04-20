@@ -46,6 +46,11 @@ public class Player {
     }
 
 
+    public ListenerManager getListenerManager(){
+        return listenerManager;
+    }
+
+
 
     public String getNickname() {
         return nickname;

@@ -1,6 +1,15 @@
 package it.polimi.ingsw.listeners;
 
-public class PointsListener implements EventListener{
+import it.polimi.ingsw.Client;
+import it.polimi.ingsw.messages.MessageFromServerType;
+
+import java.util.HashMap;
+
+public class PointsListener extends EventListener{
+    public PointsListener(HashMap<String, Client> playerMap) {
+        super(playerMap);
+    }
+
    /*
     @Override
     public void onEvent(EventType eventType, EventValue eventValue, String nickname) {
@@ -13,7 +22,8 @@ public class PointsListener implements EventListener{
     @Override
     public void onEvent(EventType eventType, Object newValue, String nickname) {
         int points=(Integer)newValue;
-        System.out.println(nickname +" changed  POINTS: "+points);
+        System.out.println(getClient(nickname).getNickname() +" changed points "+points);
+        sendMessage(nickname,newValue, MessageFromServerType.POINTS);
     }
 
 

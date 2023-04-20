@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class MessagePayload implements Serializable {
+    public abstract Object getObject();
 
-    public abstract int getX();
-    public abstract int getY();
-    public abstract int getColumn();
 }

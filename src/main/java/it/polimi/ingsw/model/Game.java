@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 
+import it.polimi.ingsw.Client;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.*;
 
@@ -19,6 +20,7 @@ public class Game {
     public Game(){
         players=new ArrayList<>();
         commonGoalCards=new ArrayList<>();
+        board=new Board();
 
     }
       //PLAYERS
@@ -81,18 +83,28 @@ public class Game {
         this.commonGoalCards = commonGoalCards;
     }
 
+/*
     public void addPlayer(String nickname) throws Exception {
         if (players.size() < numPlayers) {
             Player p = new Player(nickname);
-            BoardListener boardListener = new BoardListener();
-            BookshelfListener bookshelfListener = new BookshelfListener();
-            PointsListener pointsListener = new PointsListener();
-            p.addListener(EventType.BOARD_SELECTION, boardListener);
-            p.addListener(EventType.BOOKSHELF_INSERTION, bookshelfListener);
-            p.addListener(EventType.POINTS, pointsListener);
+            p.addListener(EventType.BOARD_SELECTION, new BoardListener());
+            p.addListener(EventType.BOOKSHELF_INSERTION, new BookshelfListener());
+            p.addListener(EventType.POINTS, new PointsListener());
             players.add(p);
         }
     }
+
+ */
+    public void addPlayers(String nickname,HashMap<String,Client> playerMap) throws Exception {
+        if (players.size() < 3) {
+            Player p = new Player(nickname);
+            p.addListener(EventType.BOARD_SELECTION,new BoardListener(playerMap) );
+            p.addListener(EventType.BOOKSHELF_INSERTION, new BookshelfListener(playerMap));
+            p.addListener(EventType.POINTS, new PointsListener(playerMap));
+            players.add(p);
+        }
+    }
+
 
 
     /*
@@ -299,7 +311,7 @@ public class Game {
     public int updatePointsCommonGoals(){
         int points=0;
         for (int i=0;i<getTurnPlayer().getCommonGoalPoints().length;i++){
-            if (getTurnPlayer().getCommonGoalPoints()[i]==0 && commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())){
+            if (getTurnPlayer().getCommonGoalPoints()[i]==0 && true/* commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())*/){
                 int num=commonGoalCards.get(i).removeToken(getTurnPlayer().getNickname());
                 getTurnPlayer().setToken(i,num);
             }

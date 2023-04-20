@@ -1,15 +1,24 @@
 package it.polimi.ingsw.listeners;
 
-import it.polimi.ingsw.model.Board;
+import it.polimi.ingsw.Client;
+import it.polimi.ingsw.messages.MessageFromServerType;
 import it.polimi.ingsw.model.Bookshelf;
 
-public class BookshelfListener implements EventListener{
+import java.util.HashMap;
+
+public class BookshelfListener extends EventListener{
+
+
+    public BookshelfListener(HashMap<String, Client> playerMap) {
+        super(playerMap);
+    }
 
     @Override
     public void onEvent(EventType eventType, Object newValue, String nickname) {
+        System.out.println(getClient(nickname).getNickname() +" changed Bookshelf");
         Bookshelf newBookshelf=(Bookshelf) newValue;
-        System.out.println(nickname +" changed Bookshelf");
         newBookshelf.printBookshelf();
+        sendMessage(nickname,newValue, MessageFromServerType.NEW_BOOKSHELF);
     }
 
 
