@@ -120,14 +120,18 @@ public class Bookshelf {
 
     }
 
-    public void checkBookshelf(int column,int numSelectedTiles) throws Error {
+    public ErrorType checkBookshelf(int column,int numSelectedTiles) throws Error {
         if (column < 0 || column > getMatrix()[0].length-1 ) {
-            throw new Error(ErrorType.INVALID_COLUMN);
+            return ErrorType.INVALID_COLUMN;
+           // throw new Error();
         }
         if(!(numSelectedTiles <= getMaxTilesColumn(column))){
-            throw new Error(ErrorType.NOT_ENOUGH_FREE_CELLS_COLUMN);
+            return ErrorType.NOT_ENOUGH_FREE_CELLS_COLUMN;
+            //throw new Error();
         }
+        return null;
     }
+
 
     /**
      * @return a list with the cardinalities of the groups of adjacent tiles found by the algorithm

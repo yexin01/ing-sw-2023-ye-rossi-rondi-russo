@@ -95,6 +95,10 @@ public class Game {
     }
 
  */
+
+
+
+
     public void addPlayers(String nickname,HashMap<String,Client> playerMap) throws Exception {
         if (players.size() < 3) {
             Player p = new Player(nickname);
@@ -104,6 +108,8 @@ public class Game {
             players.add(p);
         }
     }
+
+
 
 
 
@@ -311,7 +317,7 @@ public class Game {
     public int updatePointsCommonGoals(){
         int points=0;
         for (int i=0;i<getTurnPlayer().getCommonGoalPoints().length;i++){
-            if (getTurnPlayer().getCommonGoalPoints()[i]==0 && true/* commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())*/){
+            if (getTurnPlayer().getCommonGoalPoints()[i]==0 && commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())){
                 int num=commonGoalCards.get(i).removeToken(getTurnPlayer().getNickname());
                 getTurnPlayer().setToken(i,num);
             }
@@ -319,19 +325,13 @@ public class Game {
         }
         return points;
     }
-
     public int updatePersonalGoalPoints(GameRules gameRules) throws Exception {
         int[] points= gameRules.getPersonalGoalPoints();
-        int numScored=0;
-        ItemTile[][] turnMatrix=turnBookshelf().getMatrix();
-        ArrayList<PersonalGoalBox> turnPersonalGoalCells=turnPersonalGoal().getCells();
-        for (PersonalGoalBox box : turnPersonalGoalCells){
-            if (turnMatrix[box.getX()][box.getY()].getType() != null && turnMatrix[box.getX()][box.getY()].getType().equals(box.getType())){
+        int numScored = 0;
+        for (PersonalGoalBox box : turnPersonalGoal().getCells()){
+            if (turnBookshelf().getMatrix()[box.getX()][box.getY()].getType() != null && turnBookshelf().getMatrix()[box.getX()][box.getY()].getType().equals(box.getType())){
                 numScored++;
             }
-        }
-        if(numScored>points.length-1){
-            numScored=points.length-1;
         }
         getTurnPlayer().setPersonalGoalPoints(points[numScored]);
         return getTurnPlayer().getPersonalGoalPoints();

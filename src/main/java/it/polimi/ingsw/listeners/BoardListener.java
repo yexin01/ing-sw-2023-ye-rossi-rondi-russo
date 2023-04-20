@@ -9,10 +9,16 @@ import java.util.HashMap;
 
 
 public class BoardListener extends EventListener{
-
     public BoardListener(HashMap<String, Client> playerMap) {
         super(playerMap);
     }
+
+/*
+    public BoardListener(HashMap<String, Client> playerMap) {
+        super(playerMap);
+    }
+
+ */
 
     @Override
     public void onEvent(EventType eventType, Object newValue, String nickname) {

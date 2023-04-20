@@ -85,19 +85,22 @@ public class Player {
      */
 
 
-    public void checkPermuteSelection(int[] order) throws Error {
+    public ErrorType checkPermuteSelection(int[] order) throws Error {
         int maxIndex = selectedItems.size() - 1;
         for (int i = 0; i < order.length; i++) {
             int curIndex = order[i];
             if (curIndex > maxIndex || curIndex < 0) {
-                throw new Error(ErrorType.INVALID_ORDER_TILE);
+                return ErrorType.INVALID_ORDER_TILE;
+                //throw new Error(ErrorType.INVALID_ORDER_TILE);
             }
             for (int j = i + 1; j < order.length; j++) {
                 if (order[j] == curIndex) {
-                    throw new Error(ErrorType.INVALID_ORDER_TILE);
+                    return ErrorType.INVALID_ORDER_TILE;
+                   // throw new Error(ErrorType.INVALID_ORDER_TILE);
                 }
             }
         }
+        return null;
     }
     public void permuteSelection(int[] order){
         ArrayList<ItemTile> temp = new ArrayList<>();

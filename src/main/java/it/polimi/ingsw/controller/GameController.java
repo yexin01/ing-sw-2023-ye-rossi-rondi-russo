@@ -1,20 +1,24 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.Client;
 import it.polimi.ingsw.exceptions.Error;
 import it.polimi.ingsw.exceptions.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 
-import it.polimi.ingsw.listeners.TurnListener;
-import it.polimi.ingsw.messages.MessageFromClient;
-import it.polimi.ingsw.messages.MessageFromClientType;
+import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 
+import java.util.HashMap;
 import java.util.List;
 
 
 public class GameController {
+
+    private SendMessages sendMessages;
+
+    //private HashMap<String, Client> playerMap;
 
 
     /*
@@ -70,120 +74,110 @@ public class GameController {
                 default -> throw new IllegalArgumentException();
             }
         }catch(Exception e){
-
         }
 
 
     }
-/*
-    public void turnPhase(MessageFromClient message) throws Exception {
-        MessageFromClientType messageName = message.getClientMessageHeader().getMessageName();
-        MessagePayload payload = message.getMessagePayload();
-        switch (messageName) {
-            case SELECTION_BOARD -> checkAndInsertBoardBox(message);
-            case RESET_BOARD_CHOICE -> resetBoardChoice();
-            case FINISH_SELECTION -> associatePlayerTiles();
-            case SELECT_ORDER_TILES -> permutePlayerTiles(message);
-            case SELECT_COLUMN -> selectingColumn(message);
-            case INSERT_BOOKSHELF -> insertBookshelf();
-            default -> throw new IllegalArgumentException();
-        }
 
-    }
-
- */
-
-
-    public void checkAndInsertBoardBox( MessageFromClient message) throws Error {
+    public void checkAndInsertBoardBox( MessageFromClient message) throws Exception {
         illegalPhase(TurnPhase.SELECT_FROM_BOARD);
         int[] coordinates=((int[])message.getMessagePayload().getObject());
         int x=coordinates[0];
         int y=coordinates[1];
-        game.getBoard().checkCoordinates(x,y);
+        checkError(game.getBoard().checkCoordinates(x,y));
         System.out.println("You selected "+x+","+y);
         BoardBox boardBox=game.getBoard().getBoardBox(x,y);
         int maxPlayerSelectableTiles=game.getTurnPlayer().getBookshelf().numSelectableTiles();
-        game.getBoard().checkSelectable(boardBox,maxPlayerSelectableTiles);
-
+        checkError(game.getBoard().checkSelectable(boardBox,maxPlayerSelectableTiles));
+        sendMessage(game.getTurnPlayer().getNickname(),MessageFromServerType.END_PHASE);
     }
-    public void resetBoardChoice() throws Error {
+    public void resetBoardChoice() throws Exception {
         illegalPhase(TurnPhase.SELECT_FROM_BOARD);
         game.getBoard().resetBoardChoice();
-
+        sendMessage(game.getTurnPlayer().getNickname(),MessageFromServerType.END_PHASE);
     }
 
-    public void associatePlayerTiles() throws Error {
+    public void checkError(ErrorType possibleInvalidArgoment) throws Exception {
+        if(possibleInvalidArgoment!=null){
+            sendError(possibleInvalidArgoment);
+            throw new Exception();
+        };
+    }
+
+    public void associatePlayerTiles() throws Exception {
         illegalPhase(TurnPhase.SELECT_FROM_BOARD);
+        turnController.changePhase();
         game.getTurnPlayer().selection(game.getBoard());
-        finishPhase();
-        turnController.changePhase();
+
+       // sendMessage(game.getTurnPlayer().getNickname(),MessageFromServerType.END_PHASE);
     }
-    public void permutePlayerTiles(MessageFromClient message) throws Error {
+    public void permutePlayerTiles(MessageFromClient message) throws Exception {
         illegalPhase(TurnPhase.SELECT_ORDER_TILES);
-        int[] orderTiles=((int[])message.getMessagePayload().getObject());
-        game.getTurnPlayer().checkPermuteSelection(orderTiles);
-        game.getTurnPlayer().permuteSelection(orderTiles);
-        finishPhase();
         turnController.changePhase();
-
+        int[] orderTiles=((int[])message.getMessagePayload().getObject());
+        checkError(game.getTurnPlayer().checkPermuteSelection(orderTiles));
+        game.getTurnPlayer().permuteSelection(orderTiles);
+        sendMessage(game.getTurnPlayer().getNickname(),MessageFromServerType.END_PHASE);
     }
 
-
-    public void selectingColumn(MessageFromClient message) throws Error {
+    public void selectingColumn(MessageFromClient message) throws Exception {
         illegalPhase(TurnPhase.SELECT_COLUMN);
+        turnController.changePhase();
         int column=(int)message.getMessagePayload().getObject();
         System.out.println("You selected "+column);
-        game.getTurnPlayer().getBookshelf().checkBookshelf(column,game.getTurnPlayer().getSelectedItems().size());
+        checkError(game.getTurnPlayer().getBookshelf().checkBookshelf(column,game.getTurnPlayer().getSelectedItems().size()));
         game.getTurnPlayer().getBookshelf().setColumnSelected(column);
-        finishPhase();
-        turnController.changePhase();
+        sendMessage(game.getTurnPlayer().getNickname(),MessageFromServerType.END_PHASE);
     }
 
     public void insertBookshelf() throws Exception {
         illegalPhase(TurnPhase.INSERT_BOOKSHELF_AND_POINTS);
+        turnController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
         game.getTurnPlayer().insertBookshelf();
         if(game.getTurnPlayer().getBookshelf().isFull()){
             game.setEndGame(true);
         }
         game.updateAllPoints();
         finishTurn();
-
     }
-    public void finishTurn() {
+    public boolean finishTurn() {
         //TODO da finire
         if(game.isEndGame() && game.getTurnPlayer().equals(game.getLastPlayer())){
-            endGame();
-            return;
+            //endGame();
+            return false;
         }
         if(game.getBoard().checkRefill()){
             game.getBoard().refill();
         }
+        //sendMessage(game.getTurnPlayer().getNickname(),MessageFromServerType.END_TURN);
         game.setNextPlayer();
-        endTurn();
-        turnController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
+        sendMessage(game.getTurnPlayer().getNickname(),MessageFromServerType.START_TURN);
+        return true;
     }
 
     public void endGame() {
-        //TODO change
+        //TODO change END GAME
         List<Player> ranking=  game.checkWinner();
-        TurnListener endGameListener=new TurnListener();
-        endGameListener.endGame(ranking);
+        //endGameListener.endGame(ranking);
     }
 
-    public void illegalPhase(TurnPhase phase) throws Error {
+    public void illegalPhase(TurnPhase phase) throws Exception {
         if(!turnController.getCurrentPhase().equals(phase)){
-            throw new Error(ErrorType.ILLEGAL_PHASE);
+            sendError(ErrorType.ILLEGAL_PHASE);
+            throw new Exception();
+            //throw new Error(ErrorType.ILLEGAL_PHASE);
         }
         return;
     }
-    public void finishPhase(){
-        TurnListener turnListener=new TurnListener();
-        turnListener.endPhase(game.getTurnPlayer().getNickname(),turnController.getCurrentPhase());
+    public void sendMessage(String nickname,MessageFromServerType messageFromServerType){
+        sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null, messageFromServerType);
+    }
+    public void sendError(ErrorType errorType){
+        sendMessages.sendMessage(game.getTurnPlayer().getNickname(),errorType.getErrorMessage(),MessageFromServerType.ERROR);
     }
 
-    public void endTurn(){
-        TurnListener turnListener=new TurnListener();
-        turnListener.endTurnMessage(game.getTurnPlayer().getNickname());
+    public void setSendMessages(SendMessages sendMessages) {
+        this.sendMessages = sendMessages;
     }
 
     /*
@@ -200,6 +194,15 @@ public class GameController {
 
     protected void removeClient(String nickname) {
         this.playerMap.remove(nickname);
+    }
+
+
+    public SendMessages getSendMessages() {
+        return sendMessages;
+    }
+
+    public void setSendMessages(SendMessages sendMessages) {
+        this.sendMessages = sendMessages;
     }
 
      */

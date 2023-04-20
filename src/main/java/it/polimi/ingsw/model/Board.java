@@ -49,10 +49,12 @@ public class Board{
         this.selectedBoard = selectedBoard;
 
     }
-    public void checkCoordinates(int x,int y) throws Error {
+    public ErrorType checkCoordinates(int x,int y) throws Error {
         if (x < 0 || y<0 || x> matrix.length-1 || y> matrix[0].length-1 || !getBoardBox(x,y).isOccupiable() ) {
-            throw new Error(ErrorType.INVALID_COORDINATES);
+            return ErrorType.INVALID_COORDINATES;
+            //throw new Error(ErrorType.INVALID_COORDINATES);
         }
+        return null;
     }
     private boolean finishPlayer;
     //TODO it will be removed when the non-deprecated version is implemented
@@ -217,23 +219,26 @@ public class Board{
     // must be changed by adding an arraylist to the board, checking at the end
     //TODO pass it the maximum of the player's selectable tile cells as a parameter
     //TODO avoid reading the json file and having to reduce the controller by one check
-    public void checkSelectable(BoardBox boardBox, int numSelectableTiles) throws Error {
+    public ErrorType checkSelectable(BoardBox boardBox, int numSelectableTiles) throws Error {
         if(selectedBoard.size() > (numSelectableTiles+1)){
-            throw new Error(ErrorType.TOO_MANY_TILES);
+            return ErrorType.TOO_MANY_TILES;
+            //throw new Error(ErrorType.TOO_MANY_TILES);
         }
 
         if ((boardBox.getFreeEdges() <= 0)) {
-            throw new Error(ErrorType.NOT_SELECTABLE_TILE);
+            return ErrorType.NOT_SELECTABLE_TILE;
+            //throw new Error(ErrorType.NOT_SELECTABLE_TILE);
         }
         selectedBoard.add(boardBox);
         if (selectedBoard.size() == 1) {
-            return;
+            return null;
         }
         if (!allAdjacent() || !allSameRowOrSameColumn()) {
             selectedBoard.remove(selectedBoard.size() - 1);
-            throw new Error(ErrorType.NOT_SELECTABLE_TILE);
+            return ErrorType.NOT_SELECTABLE_TILE;
+            //throw new Error(ErrorType.NOT_SELECTABLE_TILE);
         }
-        return;
+        return null;
     }
 
     /**

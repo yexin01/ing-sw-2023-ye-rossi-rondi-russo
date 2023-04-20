@@ -4,15 +4,20 @@ package it.polimi.ingsw.listeners;
 import it.polimi.ingsw.Client;
 import it.polimi.ingsw.messages.MessageFromServerType;
 
-import java.util.Collection;
 import java.util.HashMap;
 
 public class TokenListener extends EventListener{
-
-
     public TokenListener(HashMap<String, Client> playerMap) {
         super(playerMap);
     }
+
+
+
+    /*public TokenListener(HashMap<String, Client> playerMap) {
+        super(playerMap);
+    }
+
+     */
 
     @Override
     public void onEvent(EventType eventType, Object newValue, String nickname) {
