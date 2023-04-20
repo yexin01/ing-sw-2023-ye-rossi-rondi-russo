@@ -13,13 +13,8 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Random;
 
-public class Board implements PropertyChangeListener {
+public class Board{
 
-    private transient PropertyChangeSupport listeners;
-
-    public Board() {
-
-    }
     private BoardBox[][] matrix;
 
     public BoardBox[][] getMatrix() {return matrix;}
@@ -75,23 +70,9 @@ public class Board implements PropertyChangeListener {
             System.out.println("");
         }
     }
-    //BOOKSHELF
-
-    private boolean endGame;//true when a player has completely filled the bookshelf
-    //the game ends when the first player has to start the turn
-
-    public boolean isEndGame() {
-        return endGame;
-    }
-
-    public void setEndGame(boolean endGame) {
-        this.endGame = endGame;
-    }
 
     public void firstFillBoard(int numPlayers, GameRules gameRules) throws Exception {
-        //fillBag(gameRules);
         int[][] matrix = gameRules.getMatrix(numPlayers);
-        //TODO FIRTSFILL
         this.matrix=new BoardBox[matrix.length][matrix[0].length];
         Random random=new Random();
         int randomNumber;
@@ -110,7 +91,6 @@ public class Board implements PropertyChangeListener {
             for (int j = 0; j < this.matrix[i].length; j++) {
                 if(this.matrix[i][j].getTile()!=null){
                     setFreeEdges(i,j);
-                    // System.out.println(matrix[i][j].getEdges());
                 }
             }
         }
@@ -130,8 +110,6 @@ public class Board implements PropertyChangeListener {
             }
         }
     }
-
-
 
     /**
      * calculates the number of free edges of the cell having x and y coordinates of the Board
@@ -241,12 +219,10 @@ public class Board implements PropertyChangeListener {
     //TODO avoid reading the json file and having to reduce the controller by one check
     public void checkSelectable(BoardBox boardBox, int numSelectableTiles) throws Error {
         if(selectedBoard.size() > (numSelectableTiles+1)){
-            System.err.println("You chose more than "+numSelectableTiles+" tiles");
             throw new Error(ErrorType.TOO_MANY_TILES);
         }
 
         if ((boardBox.getFreeEdges() <= 0)) {
-            System.err.println("This tile isn't selectable");
             throw new Error(ErrorType.NOT_SELECTABLE_TILE);
         }
         selectedBoard.add(boardBox);
@@ -259,7 +235,6 @@ public class Board implements PropertyChangeListener {
         }
         return;
     }
-
 
     /**
      *
@@ -274,8 +249,13 @@ public class Board implements PropertyChangeListener {
             matrix[selectedBoard.get(i).getX()][selectedBoard.get(i).getY()].setFreeEdges(0);
 
         }
-        selectedBoard=new ArrayList<>();
+        resetBoardChoice();
         return selectedItems;
+    }
+
+    public void resetBoardChoice(){
+        selectedBoard=new ArrayList<>();
+        return;
     }
 
     /**
@@ -331,14 +311,6 @@ public class Board implements PropertyChangeListener {
                 }
             }
         }
-    }
-    public void addListener(PropertyChangeListener listener) {
-        listeners.addPropertyChangeListener(listener);
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        listeners.firePropertyChange(evt.getPropertyName(),evt.getOldValue(),evt.getNewValue());
     }
 }
 /*

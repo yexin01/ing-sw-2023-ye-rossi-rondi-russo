@@ -4,10 +4,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.exceptions.Error;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Bookshelf {
 
@@ -112,7 +109,7 @@ public class Bookshelf {
         return true;
     }
 
-    public void insertAsSelected(ArrayList<ItemTile> selectedItemTiles) throws Error {
+    public void insertTiles(ArrayList<ItemTile> selectedItemTiles) throws Error {
 
         int j = 0;
         for (int i = getMatrix().length - 1; j < selectedItemTiles.size(); i--) {
@@ -147,7 +144,7 @@ public class Bookshelf {
         //find startingTile in the last row:
         for (int j = 0; j < matrix[0].length; j++) {
             ItemTile currentTile = matrix[lastRow][j];
-            if (currentTile != null) {
+            if (currentTile != null && (!Objects.equals(currentTile.getTileID(), -1))) {
                 startingTile = currentTile;
                 startingColumn = j;
                 break;
@@ -158,7 +155,7 @@ public class Bookshelf {
             }
         }
 
-        assert startingTile != null : "startingTile is null!";
+        assert (startingTile != null && (!Objects.equals(startingTile.getTileID(), -1))): "startingTile is null!";
         Type startingType = startingTile.getType();
         int groupSize = dfs(startingTile, visited, startingType, startingRow, startingColumn);
         groupsSizes.add(groupSize);
@@ -166,16 +163,16 @@ public class Bookshelf {
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
                 ItemTile currentTile = matrix[i][j];
-                if (!visited.contains(currentTile) && currentTile.getType() != null) {
+                if (!visited.contains(currentTile) && currentTile.getType() != null && (!Objects.equals(currentTile.getTileID(), -1))) {
                     Type currentType = currentTile.getType();
                     groupSize = dfs(currentTile, visited, currentType, i, j);
                     groupsSizes.add(groupSize);
                 }
             }
         }
-
         return groupsSizes;
     }
+
 
     private static final int[][] DIRECTIONS = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}}; //possible directions towards adjacent tiles
 

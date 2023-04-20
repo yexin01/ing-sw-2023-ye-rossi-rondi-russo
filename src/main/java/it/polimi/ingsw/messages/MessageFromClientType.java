@@ -1,0 +1,5 @@
+package it.polimi.ingsw.messages;
+
+public enum MessageFromClientType {
+    SELECTION_BOARD,RESET_BOARD_CHOICE,FINISH_SELECTION,SELECT_ORDER_TILES,SELECT_COLUMN,INSERT_BOOKSHELF;
+}

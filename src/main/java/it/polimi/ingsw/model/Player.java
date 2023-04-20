@@ -8,7 +8,6 @@ import it.polimi.ingsw.listeners.EventType;
 import it.polimi.ingsw.listeners.ListenerManager;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Player {
@@ -139,7 +138,7 @@ public class Player {
     }
 
     public void insertBookshelf() throws Error {
-        bookshelf.insertAsSelected(selectedItems);
+        bookshelf.insertTiles(selectedItems);
         listenerManager.fireEvent(EventType.BOOKSHELF_INSERTION, bookshelf, nickname);
     }
     private int adjacentPoints;

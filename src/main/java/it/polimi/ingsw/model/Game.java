@@ -7,9 +7,7 @@ import it.polimi.ingsw.listeners.*;
 import java.util.*;
 
 public class Game {
-    private boolean started;
 
-    //private transient final PropertyChangeSupport listeners = new PropertyChangeSupport(this);
     private ArrayList<Player> players;
     private Board board;
     private int numPlayers;
@@ -23,11 +21,7 @@ public class Game {
         commonGoalCards=new ArrayList<>();
 
     }
-    public void start() {
-        started = true;
-    }
-
-    //PLAYERS
+      //PLAYERS
 
 
     public int getNumPlayers() {
@@ -67,7 +61,6 @@ public class Game {
             turnPlayer=0;
         else turnPlayer++;
     }
-
 
     //CURRENT BOARD
 
@@ -314,13 +307,19 @@ public class Game {
         }
         return points;
     }
+
     public int updatePersonalGoalPoints(GameRules gameRules) throws Exception {
         int[] points= gameRules.getPersonalGoalPoints();
-        int numScored = 0;
-        for (PersonalGoalBox box : turnPersonalGoal().getCells()){
-            if (turnBookshelf().getMatrix()[box.getX()][box.getY()].getType() != null && turnBookshelf().getMatrix()[box.getX()][box.getY()].getType().equals(box.getType())){
+        int numScored=0;
+        ItemTile[][] turnMatrix=turnBookshelf().getMatrix();
+        ArrayList<PersonalGoalBox> turnPersonalGoalCells=turnPersonalGoal().getCells();
+        for (PersonalGoalBox box : turnPersonalGoalCells){
+            if (turnMatrix[box.getX()][box.getY()].getType() != null && turnMatrix[box.getX()][box.getY()].getType().equals(box.getType())){
                 numScored++;
             }
+        }
+        if(numScored>points.length-1){
+            numScored=points.length-1;
         }
         getTurnPlayer().setPersonalGoalPoints(points[numScored]);
         return getTurnPlayer().getPersonalGoalPoints();

@@ -6,6 +6,7 @@ import it.polimi.ingsw.json.GameRules;
 
 import it.polimi.ingsw.listeners.TurnListener;
 import it.polimi.ingsw.messages.MessageFromClient;
+import it.polimi.ingsw.messages.MessageFromClientType;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Game;
@@ -55,7 +56,7 @@ public class GameController implements Controller{
     @Override
     public void receiveMessageFromClient(MessageFromClient message) throws Exception {
         String nicknamePlayer = message.getClientMessageHeader().getNicknameSender();
-        String messageName = message.getClientMessageHeader().getMessageName();
+        MessageFromClientType messageName = message.getClientMessageHeader().getMessageName();
         try{
             if (!nicknamePlayer.equals(turnController.getTurnPlayer().getNickname())) {
                 throw new Error(ErrorType.ILLEGAL_TURN);
@@ -69,16 +70,17 @@ public class GameController implements Controller{
 
 
     }
+
     public void turnPhase(MessageFromClient message) throws Exception {
-        String messageName = message.getClientMessageHeader().getMessageName();
+        MessageFromClientType messageName = message.getClientMessageHeader().getMessageName();
         MessagePayload payload = message.getMessagePayload();
         switch (messageName) {
-            case "SelectionBoard" -> checkAndInsertBoardBox(message);
-            case "FinishSelectionBoard" -> associatePlayerTiles();
-            //  case "RESET_PLAYER_CHOICE_TILES" -> ;
-            case "SelectOrder" -> permutePlayerTiles(message);
-            case "SelectColumn" -> selectingColumn(message);
-            case "InsertBookshelfAndPoint" -> insertBookshelf();
+            case SELECTION_BOARD -> checkAndInsertBoardBox(message);
+            case RESET_BOARD_CHOICE -> resetBoardChoice();
+            case FINISH_SELECTION -> associatePlayerTiles();
+            case SELECT_ORDER_TILES -> permutePlayerTiles(message);
+            case SELECT_COLUMN -> selectingColumn(message);
+            case INSERT_BOOKSHELF -> insertBookshelf();
             default -> throw new IllegalArgumentException();
         }
 
@@ -91,14 +93,17 @@ public class GameController implements Controller{
         int x=message.getMessagePayload().getX();
         int y=message.getMessagePayload().getY();
         game.getBoard().checkCoordinates(x,y);
-
-        System.out.println("You selected "+message.getMessagePayload().getX()+","+message.getMessagePayload().getY());
-        BoardBox boardBox=game.getBoard().getBoardBox(message.getMessagePayload().getX(),message.getMessagePayload().getY());
+        System.out.println("You selected "+x+","+y);
+        BoardBox boardBox=game.getBoard().getBoardBox(x,y);
         int maxPlayerSelectableTiles=game.getTurnPlayer().getBookshelf().numSelectableTiles();
         game.getBoard().checkSelectable(boardBox,maxPlayerSelectableTiles);
 
     }
+    public void resetBoardChoice() throws Error {
+        illegalPhase(TurnPhase.SELECT_FROM_BOARD);
+        game.getBoard().resetBoardChoice();
 
+    }
 
     public void associatePlayerTiles() throws Error {
         illegalPhase(TurnPhase.SELECT_FROM_BOARD);
