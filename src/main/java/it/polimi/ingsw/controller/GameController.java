@@ -1,6 +1,5 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.Client;
 import it.polimi.ingsw.exceptions.Error;
 import it.polimi.ingsw.exceptions.ErrorType;
 import it.polimi.ingsw.json.GameRules;
@@ -12,11 +11,10 @@ import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 
-import java.util.HashMap;
 import java.util.List;
 
 
-public class GameController implements Controller{
+public class GameController {
 
 
     /*
@@ -55,7 +53,6 @@ public class GameController implements Controller{
     }
 
 
-    @Override
     public void receiveMessageFromClient(MessageFromClient message){
         String nicknamePlayer = message.getClientMessageHeader().getNicknameSender();
         MessageFromClientType messageName = message.getClientMessageHeader().getClientMessage();

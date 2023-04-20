@@ -8,7 +8,6 @@ import it.polimi.ingsw.messages.*;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.NoSuchElementException;
 
 public abstract class EventListener {
 
@@ -47,7 +46,7 @@ public abstract class EventListener {
 
     public void sendMessage(String nickname, Object newValue, MessageFromServerType messageType){
         ServerMessageHeader header=new ServerMessageHeader(messageType,nickname);
-        PayloadClient object=new PayloadClient(newValue);
+        MessagePayload object=new MessagePayload(newValue);
         MessageFromServer message=new MessageFromServer(header,object);
         getClient(nickname).receiveMessageFromClient(nickname,newValue,messageType);
     }

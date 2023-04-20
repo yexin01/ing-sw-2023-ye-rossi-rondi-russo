@@ -1,10 +1,14 @@
 package it.polimi.ingsw.messages;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+//TODO change PAYLOAD
+public class MessagePayload {
+    private final Object object;
 
-public abstract class MessagePayload implements Serializable {
-    public abstract Object getObject();
+    public MessagePayload(Object object) {
+        this.object = object;
+    }
 
+    public Object getObject() {
+        return object;
+    }
 }
