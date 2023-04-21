@@ -1,12 +1,13 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.Client;
+import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.messages.*;
 
 import java.util.Collection;
 import java.util.HashMap;
 
 public class SendMessages {
+    //TODO Client entity will change once the network part is finished
     private final HashMap<String, Client> playerMap;
     public SendMessages(HashMap<String, Client> playerMap) {
         this.playerMap = playerMap;
@@ -30,8 +31,6 @@ public class SendMessages {
     public void sendAll(MessagePayload payload, MessageFromServerType messageType){
         Collection<Client> clients = playerMap.values();
         for(Client client : clients) {
-            //System.out.println("YOU ARE "+client.getNickname()+" token WIN by "+payload.get(PayloadKeyServer.WHO_CHANGE)+""+payload.get(PayloadKeyServer.POINTS));
-            System.out.println("YOU ARE "+client.getNickname());
             sendMessage(client.getNickname(),payload,messageType);
         }
     }
@@ -48,6 +47,7 @@ public class SendMessages {
         ServerMessageHeader header=new ServerMessageHeader(messageType,nickname);
         MessageFromServer message=new MessageFromServer(header,payload);
         getClient(nickname).receiveMessageFromClient(nickname,message);
+        //TODO serialize message
     }
 
     public void sendError(String nickname, ErrorType error){
@@ -56,6 +56,7 @@ public class SendMessages {
         payload.put(PayloadKeyServer.ERRORMESSAGE,error);
         MessageFromServer message=new MessageFromServer(header,payload);
         getClient(nickname).receiveMessageFromClient(nickname,message);
+        //TODO serialize message
     }
 
 }

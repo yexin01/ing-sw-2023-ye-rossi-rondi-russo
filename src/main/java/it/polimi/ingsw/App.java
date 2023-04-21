@@ -1,5 +1,6 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.server.SendMessages;

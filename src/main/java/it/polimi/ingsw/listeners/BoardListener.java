@@ -1,7 +1,7 @@
 package it.polimi.ingsw.listeners;
 
 
-import it.polimi.ingsw.Client;
+import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.messages.MessageFromServerType;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.messages.PayloadKeyServer;
