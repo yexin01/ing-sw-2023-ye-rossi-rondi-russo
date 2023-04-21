@@ -2,7 +2,7 @@ package it.polimi.ingsw.messages;
 
 import java.io.Serializable;
 
-public class ServerMessageHeader implements Serializable{
+public class ServerMessageHeader implements Serializable {
     private final MessageFromServerType messageFromServer;
     private final String nicknameAddressee;
 
@@ -19,4 +19,3 @@ public class ServerMessageHeader implements Serializable{
         return nicknameAddressee;
     }
 }
-

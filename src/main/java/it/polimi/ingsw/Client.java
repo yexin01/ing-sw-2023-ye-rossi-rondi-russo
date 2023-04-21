@@ -39,7 +39,7 @@ public class Client {
                 System.out.println(mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE));
                 ((Board) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD)).printMatrix();
                 break;
-            case BOOKSHELF_INSERTION_AND_POINTS:
+            case END_TURN:
                 //System.out.println(mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE));
                 ((Bookshelf) mes.getMessagePayload().get(PayloadKeyServer.NEWBOOKSHELF)).printBookshelf();
                 System.out.println((Integer) mes.getMessagePayload().get(PayloadKeyServer.POINTS)+" This are new points of "+mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE)+" YOU ARE"+this.nickname);

@@ -2,7 +2,6 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.listeners.EventListener;
 import it.polimi.ingsw.messages.SendMessages;
 import it.polimi.ingsw.model.Game;
 
@@ -31,7 +30,8 @@ public class App{
             game.getBoard().fillBag(gameRules);
             game.getBoard().firstFillBoard(3,gameRules);
             game.createPersonalGoalCard(gameRules);
-            game.createCommonGoalCard(gameRules);
+            game.createCommonGoalCard(gameRules,playerMap);
+
             game.updateAllPoints();
             Client player = playerMap.get("TIZIO");
             player.ask();

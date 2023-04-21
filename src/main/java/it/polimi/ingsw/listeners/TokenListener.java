@@ -5,10 +5,11 @@ import it.polimi.ingsw.Client;
 import it.polimi.ingsw.messages.MessageFromServerType;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.messages.PayloadKeyServer;
+import it.polimi.ingsw.messages.SendMessages;
 
 import java.util.HashMap;
 
-public class TokenListener extends EventListener{
+public class TokenListener  extends SendMessages implements EventListener{
     public TokenListener(HashMap<String, Client> playerMap) {
         super(playerMap);
     }

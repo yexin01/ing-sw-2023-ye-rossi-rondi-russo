@@ -4,13 +4,14 @@ import it.polimi.ingsw.Client;
 import it.polimi.ingsw.messages.MessageFromServerType;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.messages.PayloadKeyServer;
+import it.polimi.ingsw.messages.SendMessages;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.Player;
 
 import java.util.HashMap;
 
-public class PointsListener extends EventListener{
-    public PointsListener(HashMap<String, Client> playerMap) {
+public class EndTurnListener extends SendMessages implements EventListener{
+    public EndTurnListener(HashMap<String, Client> playerMap) {
         super(playerMap);
     }
 

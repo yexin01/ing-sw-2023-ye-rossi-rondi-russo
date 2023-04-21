@@ -5,12 +5,13 @@ import it.polimi.ingsw.Client;
 import it.polimi.ingsw.messages.MessageFromServerType;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.messages.PayloadKeyServer;
+import it.polimi.ingsw.messages.SendMessages;
 import it.polimi.ingsw.model.Board;
 
 import java.util.HashMap;
 
 
-public class BoardListener extends EventListener{
+public class BoardListener extends SendMessages implements EventListener{
     public BoardListener(HashMap<String, Client> playerMap) {
         super(playerMap);
     }
@@ -19,7 +20,6 @@ public class BoardListener extends EventListener{
     public BoardListener(HashMap<String, Client> playerMap) {
         super(playerMap);
     }
-
  */
 
     @Override
@@ -34,4 +34,3 @@ public class BoardListener extends EventListener{
         sendAll(payload,MessageFromServerType.DATA);
     }
 }
-

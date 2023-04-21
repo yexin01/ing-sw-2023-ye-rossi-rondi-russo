@@ -7,10 +7,10 @@ import java.util.Map;
 
 
 public class ListenerManager {
-    private HashMap<Object, List<Object>> listenersMap;
+    private HashMap<EventType, List<Object>> listenersMap;
 
     public ListenerManager() {
-        listenersMap = new HashMap<Object, List<Object>>();
+        listenersMap = new HashMap<EventType, List<Object>>();
     }
 
     public void addListener(EventType eventName, Object listener) {

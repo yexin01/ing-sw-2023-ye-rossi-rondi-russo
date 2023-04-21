@@ -3,8 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.exceptions.Error;
 import it.polimi.ingsw.exceptions.ErrorType;
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.listeners.EventListener;
-import it.polimi.ingsw.listeners.EventType;
+import it.polimi.ingsw.listeners.*;
 import it.polimi.ingsw.listeners.ListenerManager;
 
 import java.util.ArrayList;
@@ -120,7 +119,7 @@ public class Player {
 
     public void setPlayerPoints(int playerPoints) {
         this.playerPoints = playerPoints;
-        listenerManager.fireEvent(EventType.BOOKSHELF_INSERTION_AND_POINTS, this,nickname);
+        listenerManager.fireEvent(EventType.END_TURN, this,nickname);
     }
     //PERSONALGOAL
     private int personalGoalPoints;

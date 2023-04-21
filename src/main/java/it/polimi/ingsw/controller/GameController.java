@@ -108,19 +108,19 @@ public class GameController {
     }
     public void permutePlayerTiles(MessageFromClient message) throws Exception {
         illegalPhase(TurnPhase.SELECT_ORDER_TILES);
-        turnController.changePhase();
         int[] orderTiles=message.getValue();
         checkError(game.getTurnPlayer().checkPermuteSelection(orderTiles));
+        turnController.changePhase();
         game.getTurnPlayer().permuteSelection(orderTiles);
         sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.RECEIVE);
     }
 
     public void selectingColumn(MessageFromClient message) throws Exception {
         illegalPhase(TurnPhase.SELECT_COLUMN);
-        turnController.changePhase();
         int column=message.getValue()[0];
         System.out.println("You selected "+column);
         checkError(game.getTurnPlayer().getBookshelf().checkBookshelf(column,game.getTurnPlayer().getSelectedItems().size()));
+        turnController.changePhase();
         game.getTurnPlayer().getBookshelf().setColumnSelected(column);
         sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.RECEIVE);
     }

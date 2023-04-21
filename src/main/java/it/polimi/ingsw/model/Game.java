@@ -4,6 +4,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.Client;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.*;
+import it.polimi.ingsw.listeners.EventType;
 
 import java.util.*;
 
@@ -99,15 +100,18 @@ public class Game {
 
 
 
+
+
     public void addPlayers(String nickname,HashMap<String,Client> playerMap) throws Exception {
         if (players.size() < 3) {
             Player p = new Player(nickname);
-            p.addListener(EventType.BOARD_SELECTION,new BoardListener(playerMap) );
+            p.addListener(EventType.BOARD_SELECTION,new BoardListener(playerMap));
             //p.addListener(EventType.BOOKSHELF_INSERTION_AND_POINTS, new BookshelfListener(playerMap));
-            p.addListener(EventType.BOOKSHELF_INSERTION_AND_POINTS, new PointsListener(playerMap));
+            p.addListener(EventType.END_TURN, new EndTurnListener(playerMap));
             players.add(p);
         }
     }
+
 
 
 
@@ -205,7 +209,7 @@ public class Game {
      * @param gameRules
      * @throws Exception
      */
-    public void createCommonGoalCard(GameRules gameRules) throws Exception {
+    public void createCommonGoalCard(GameRules gameRules,HashMap<String,Client> playerMap) throws Exception {
 
         int numOfCommonGoals = gameRules.getNumOfCommonGoals();
         int numOfPossibleCommonGoalsCards = gameRules.getCommonGoalCardsSize();
@@ -216,6 +220,7 @@ public class Game {
             String className = gameRules.getCommonGoalCard(number);
             Class<?> clazz = Class.forName(className);
             Object obj = clazz.getDeclaredConstructor().newInstance();
+            ((CommonGoalCard) obj).addListener(EventType.REMOVE_TOKEN,new TokenListener(playerMap));
             commonGoalCards.add((CommonGoalCard) obj);
         }
 
