@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 
 
-import it.polimi.ingsw.exceptions.Error;
 import it.polimi.ingsw.exceptions.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 

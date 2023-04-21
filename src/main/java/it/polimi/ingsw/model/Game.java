@@ -4,7 +4,6 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.Client;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.*;
-import it.polimi.ingsw.listeners.EventType;
 
 import java.util.*;
 
@@ -216,11 +215,12 @@ public class Game {
         ArrayList<Integer> numbers = generateRandomNumber(numOfPossibleCommonGoalsCards, numOfCommonGoals);
 
         setCommonGoalCards(new ArrayList<CommonGoalCard>());
+        TokenListener tokenListener=new TokenListener(playerMap);
         for (Integer number : numbers) {
             String className = gameRules.getCommonGoalCard(number);
             Class<?> clazz = Class.forName(className);
             Object obj = clazz.getDeclaredConstructor().newInstance();
-            ((CommonGoalCard) obj).addListener(EventType.REMOVE_TOKEN,new TokenListener(playerMap));
+            ((CommonGoalCard) obj).addListener(EventType.REMOVE_TOKEN,tokenListener);
             commonGoalCards.add((CommonGoalCard) obj);
         }
 
@@ -322,7 +322,7 @@ public class Game {
     public int updatePointsCommonGoals(){
         int points=0;
         for (int i=0;i<getTurnPlayer().getCommonGoalPoints().length;i++){
-            if (getTurnPlayer().getCommonGoalPoints()[i]==0 && commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())){
+            if (getTurnPlayer().getCommonGoalPoints()[i]==0 && true/*commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())*/){
                 int num=commonGoalCards.get(i).removeToken(getTurnPlayer().getNickname());
                 getTurnPlayer().setToken(i,num);
             }

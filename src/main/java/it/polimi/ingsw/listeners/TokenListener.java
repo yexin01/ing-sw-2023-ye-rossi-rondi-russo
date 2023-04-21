@@ -29,7 +29,8 @@ public class TokenListener  extends SendMessages implements EventListener{
         MessagePayload payload=new MessagePayload(EventType.REMOVE_TOKEN);
         payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
         payload.put(PayloadKeyServer.POINTS,point);
-        sendMessage(nickname,payload,MessageFromServerType.DATA);
+        //sendMessage(nickname,payload,MessageFromServerType.DATA);
+        sendAll(payload,MessageFromServerType.DATA);
         //sendAllExcept(nickname,newValue,MessageFromServerType.REMOVE_TOKEN);
         //sendMessage(nickname,newValue,MessageFromServerType.WIN_TOKEN);
     }

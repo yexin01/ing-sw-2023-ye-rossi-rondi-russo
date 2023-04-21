@@ -1,6 +1,5 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.exceptions.Error;
 import it.polimi.ingsw.exceptions.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 
@@ -59,7 +58,8 @@ public class GameController {
         String nicknamePlayer= message.getNicknameSender();
         try{
             if (!nicknamePlayer.equals(turnController.getTurnPlayer().getNickname())) {
-                throw new Error(ErrorType.ILLEGAL_TURN);
+                sendMessages.sendError(game.getTurnPlayer().getNickname(),ErrorType.ILLEGAL_TURN);
+                //throw new Error(ErrorType.ILLEGAL_TURN);
             }
             switch (message.getClientMessage()) {
                 case COORDINATES ->  checkAndInsertBoardBox(message);
@@ -153,6 +153,10 @@ public class GameController {
     public void endGame() {
         //TODO change END GAME
         List<Player> ranking=  game.checkWinner();
+        MessagePayload payload=new MessagePayload(null);
+        payload.put(PayloadKeyServer.RANKING,ranking);
+        sendMessages.sendAll(payload,MessageFromServerType.END_GAME);
+        //sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.END_GAME);
         //endGameListener.endGame(ranking);
     }
 

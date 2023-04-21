@@ -1,7 +1,6 @@
 package it.polimi.ingsw.messages;
 
 import it.polimi.ingsw.Client;
-import it.polimi.ingsw.exceptions.Error;
 import it.polimi.ingsw.exceptions.ErrorType;
 import it.polimi.ingsw.listeners.EventType;
 
@@ -13,20 +12,27 @@ public class SendMessages {
     public SendMessages(HashMap<String, Client> playerMap) {
         this.playerMap = playerMap;
     }
-    public Client getClient(String nickname){
-        Client player = playerMap.get(nickname);
-        if (player != null) {
-            return player;
-        }
+
+    public Client getClient(String nickname) {
         try{
-            throw new Error(ErrorType.NOT_PLAYER_FOUND);
+            if (nickname == null) {
+                throw new NullPointerException("Nickname cannot be null");
+            }
+            Client player = playerMap.get(nickname);
+            if (player == null) {
+                throw new IllegalArgumentException("No client found for nickname: " + nickname);
+            }
+            return player;
         }catch(Exception e){
+
         }
         return null;
     }
     public void sendAll(MessagePayload payload, MessageFromServerType messageType){
         Collection<Client> clients = playerMap.values();
         for(Client client : clients) {
+            //System.out.println("YOU ARE "+client.getNickname()+" token WIN by "+payload.get(PayloadKeyServer.WHO_CHANGE)+""+payload.get(PayloadKeyServer.POINTS));
+            System.out.println("YOU ARE "+client.getNickname());
             sendMessage(client.getNickname(),payload,messageType);
         }
     }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.exceptions;
 
+/*
 public class Error extends Exception{
 
     public Error(ErrorType e){
@@ -11,3 +12,5 @@ public class Error extends Exception{
     }
 
 }
+
+ */

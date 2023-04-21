@@ -6,7 +6,9 @@ import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.Board;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.Player;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Client {
@@ -23,16 +25,27 @@ public class Client {
     }
 
     public void receiveMessageFromClient(String nickname,MessageFromServer messageServer) {
-        System.out.println(nickname + " RECEIVE MESSAGE");
-        switch (messageServer.getServerMessageHeader().getMessageFromServer()) {
-            case ERROR ->System.out.println("ERROR "+((ErrorType)messageServer.getMessagePayload().get(PayloadKeyServer.ERRORMESSAGE)).getErrorMessage()) ;
-            case START_TURN ->System.out.println(nickname + " START TURN ");
-            case DATA -> messageEndPhase(messageServer);
-            case RECEIVE -> System.out.println("ACK il server ha rivevuto il messaggio inviato(o le coordinate,o la colonna)");
+        try{
+            System.out.println(nickname + " RECEIVE MESSAGE");
+            switch (messageServer.getServerMessageHeader().getMessageFromServer()) {
+                case ERROR ->System.out.println("ERROR "+((ErrorType)messageServer.getMessagePayload().get(PayloadKeyServer.ERRORMESSAGE)).getErrorMessage()) ;
+                case START_TURN ->System.out.println(nickname + " START TURN ");
+                case DATA -> messageEndPhase(messageServer);
+                case RECEIVE -> System.out.println("ACK il server ha rivevuto il messaggio inviato(o le coordinate,o la colonna,o il reset)");
+                case END_GAME ->{
+                    System.out.println("END GAME");
+                    for (Player s : (List<Player>)messageServer.getMessagePayload().get(PayloadKeyServer.RANKING)) {
+                        System.out.println(s.getNickname());
+                    }
+                }
+            }
+            ask();
+        }catch(Exception e){
+
         }
-        ask();
+
     }
-    public void messageEndPhase(MessageFromServer mes){
+    public void messageEndPhase(MessageFromServer mes) throws Exception {
         switch(mes.getMessagePayload().getEvent()){
             case BOARD_SELECTION:
                 //if(!mes.getMessagePayload().get(PayloadKeyServer.NICKNAME_CHANGE).equals(this.nickname))
@@ -44,7 +57,7 @@ public class Client {
                 ((Bookshelf) mes.getMessagePayload().get(PayloadKeyServer.NEWBOOKSHELF)).printBookshelf();
                 System.out.println((Integer) mes.getMessagePayload().get(PayloadKeyServer.POINTS)+" This are new points of "+mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE)+" YOU ARE"+this.nickname);
                 System.out.println("END TURN "+this.nickname);
-                break;
+                throw new Exception();
             case REMOVE_TOKEN:
                 //System.out.println(mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE));
                 System.out.println((Integer) mes.getMessagePayload().get(PayloadKeyServer.POINTS)+"This are TOKEN points of"+mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE)+" YOU ARE"+this.nickname);

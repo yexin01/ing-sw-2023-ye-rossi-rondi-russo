@@ -2,7 +2,7 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.exceptions.*;
-import it.polimi.ingsw.exceptions.Error;
+
 
 import java.util.*;
 
