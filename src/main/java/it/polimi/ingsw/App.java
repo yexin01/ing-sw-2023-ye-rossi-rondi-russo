@@ -2,7 +2,7 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.messages.SendMessages;
+import it.polimi.ingsw.server.SendMessages;
 import it.polimi.ingsw.model.Game;
 
 import java.util.HashMap;
@@ -12,7 +12,6 @@ public class App{
 
             Game game=new Game();
             GameController gameController=new GameController(game);
-
 
             HashMap<String, Client> playerMap = new HashMap<String, Client>();
             playerMap.put("TIZIO", new Client("TIZIO",gameController));
@@ -31,8 +30,6 @@ public class App{
             game.getBoard().firstFillBoard(3,gameRules);
             game.createPersonalGoalCard(gameRules);
             game.createCommonGoalCard(gameRules,sendMessages);
-
-
 
             game.updateAllPoints();
             Client player = playerMap.get("TIZIO");
@@ -58,12 +55,6 @@ public class App{
             game.updatePointsCommonGoals();
 
  */
-
-
-
-
-
-
 
         }
 }

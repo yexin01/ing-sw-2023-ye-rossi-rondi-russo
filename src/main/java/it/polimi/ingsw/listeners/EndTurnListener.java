@@ -1,14 +1,11 @@
 package it.polimi.ingsw.listeners;
 
-import it.polimi.ingsw.Client;
 import it.polimi.ingsw.messages.MessageFromServerType;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.messages.PayloadKeyServer;
-import it.polimi.ingsw.messages.SendMessages;
+import it.polimi.ingsw.server.SendMessages;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.Player;
-
-import java.util.HashMap;
 
 public class EndTurnListener extends EventListener{
     public EndTurnListener(SendMessages sendMessage) {

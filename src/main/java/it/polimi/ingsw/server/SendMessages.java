@@ -1,6 +1,7 @@
-package it.polimi.ingsw.messages;
+package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.Client;
+import it.polimi.ingsw.messages.*;
 
 import java.util.Collection;
 import java.util.HashMap;

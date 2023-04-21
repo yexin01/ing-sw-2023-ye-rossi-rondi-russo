@@ -1,6 +1,6 @@
 package it.polimi.ingsw.listeners;
 
-import it.polimi.ingsw.messages.SendMessages;
+import it.polimi.ingsw.server.SendMessages;
 
 public abstract class EventListener {
 

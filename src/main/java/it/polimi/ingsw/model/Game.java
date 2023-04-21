@@ -1,10 +1,9 @@
 package it.polimi.ingsw.model;
 
 
-import it.polimi.ingsw.Client;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.*;
-import it.polimi.ingsw.messages.SendMessages;
+import it.polimi.ingsw.server.SendMessages;
 
 import java.util.*;
 
@@ -333,7 +332,7 @@ public class Game {
     public int updatePointsCommonGoals(){
         int points=0;
         for (int i=0;i<getTurnPlayer().getCommonGoalPoints().length;i++){
-            if (getTurnPlayer().getCommonGoalPoints()[i]==0 && true/*commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())*/){
+            if (getTurnPlayer().getCommonGoalPoints()[i]==0 && commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())){
                 int num=commonGoalCards.get(i).removeToken(getTurnPlayer().getNickname());
                 getTurnPlayer().setToken(i,num);
             }

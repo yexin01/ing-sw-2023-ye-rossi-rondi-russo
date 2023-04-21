@@ -1,13 +1,10 @@
 package it.polimi.ingsw.listeners;
 
 
-import it.polimi.ingsw.Client;
 import it.polimi.ingsw.messages.MessageFromServerType;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.messages.PayloadKeyServer;
-import it.polimi.ingsw.messages.SendMessages;
-
-import java.util.HashMap;
+import it.polimi.ingsw.server.SendMessages;
 
 public class TokenListener  extends EventListener{
     public TokenListener(SendMessages sendMessage) {
