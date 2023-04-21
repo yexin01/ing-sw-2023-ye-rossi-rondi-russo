@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.exceptions.ErrorType;
+import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.Board;
 import it.polimi.ingsw.model.Bookshelf;

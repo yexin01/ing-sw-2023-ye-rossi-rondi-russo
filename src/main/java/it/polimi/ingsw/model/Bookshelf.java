@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 
-import it.polimi.ingsw.exceptions.*;
+import it.polimi.ingsw.messages.ErrorType;
 
 
 import java.util.*;
@@ -120,7 +120,7 @@ public class Bookshelf {
 
     }
 
-    public ErrorType checkBookshelf(int column,int numSelectedTiles) throws Error {
+    public ErrorType checkBookshelf(int column, int numSelectedTiles) throws Error {
         if (column < 0 || column > getMatrix()[0].length-1 ) {
             return ErrorType.INVALID_COLUMN;
            // throw new Error();

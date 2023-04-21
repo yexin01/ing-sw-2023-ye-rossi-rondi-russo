@@ -10,10 +10,30 @@ import it.polimi.ingsw.model.Player;
 
 import java.util.HashMap;
 
-public class EndTurnListener extends SendMessages implements EventListener{
+public class EndTurnListener extends EventListener{
+    public EndTurnListener(SendMessages sendMessage) {
+        super(sendMessage);
+    }
+    @Override
+    public void onEvent(EventType eventType, Object newValue, String nickname) {
+        Player player=(Player)newValue;
+        int newPoints=player.getPlayerPoints();
+        Bookshelf newBookshelf=player.getBookshelf();
+        MessagePayload payload=new MessagePayload(eventType);
+        payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
+        payload.put(PayloadKeyServer.NEWBOOKSHELF,newBookshelf);
+        payload.put(PayloadKeyServer.POINTS,newPoints);
+        //TODO INVIARLO A TUTTI una volta inseriti thread
+        //sendAll(payload, MessageFromServerType.DATA);
+        sendMessage.sendMessage(nickname,payload,MessageFromServerType.DATA);
+    }
+
+    /*
     public EndTurnListener(HashMap<String, Client> playerMap) {
         super(playerMap);
     }
+
+     */
 
     /*
     public PointsListener(HashMap<String, Client> playerMap) {
@@ -31,21 +51,7 @@ public class EndTurnListener extends SendMessages implements EventListener{
 */
 
 
-    @Override
-    public void onEvent(EventType eventType, Object newValue, String nickname) {
-        Player player=(Player)newValue;
-        int newPoints=player.getPlayerPoints();
-        Bookshelf newBookshelf=player.getBookshelf();
-        MessagePayload payload=new MessagePayload(eventType);
-        payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
-        payload.put(PayloadKeyServer.NEWBOOKSHELF,newBookshelf);
-        payload.put(PayloadKeyServer.POINTS,newPoints);
-        //payload.put(PayloadKeyServer.ENDTURN,newBookshelf);
-        //newBoard.printMatrix();
-        //TODO INVIARLO A TUTTI una volta inseriti thread
-        //sendAll(payload, MessageFromServerType.DATA);
-        sendMessage(nickname,payload,MessageFromServerType.DATA);
-    }
+
 
 
 }

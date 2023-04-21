@@ -22,15 +22,15 @@ public class App{
             gameController.setSendMessages(sendMessages);
 
             game.setNumPlayers(3);
-            game.addPlayers("TIZIO",playerMap);
-            game.addPlayers("CAIO",playerMap);
-            game.addPlayers("SEMPRONIO",playerMap);
+            game.addPlayers("TIZIO",sendMessages);
+            game.addPlayers("CAIO",sendMessages);
+            game.addPlayers("SEMPRONIO",sendMessages);
 
             GameRules gameRules=new GameRules();
             game.getBoard().fillBag(gameRules);
             game.getBoard().firstFillBoard(3,gameRules);
             game.createPersonalGoalCard(gameRules);
-            game.createCommonGoalCard(gameRules,playerMap);
+            game.createCommonGoalCard(gameRules,sendMessages);
 
 
 

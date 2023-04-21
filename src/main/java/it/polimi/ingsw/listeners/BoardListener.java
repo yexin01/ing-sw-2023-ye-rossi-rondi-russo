@@ -11,10 +11,24 @@ import it.polimi.ingsw.model.Board;
 import java.util.HashMap;
 
 
-public class BoardListener extends SendMessages implements EventListener{
-    public BoardListener(HashMap<String, Client> playerMap) {
-        super(playerMap);
+public class BoardListener extends EventListener{
+    public BoardListener(SendMessages sendMessage) {
+        super(sendMessage);
     }
+    @Override
+    public void onEvent(EventType eventType, Object newValue, String nickname) {
+        Client player=sendMessage.getClient(nickname);
+        System.out.println(player.getNickname() +" changed Board");
+        Board newBoard=(Board) newValue;
+        MessagePayload payload=new MessagePayload(EventType.BOARD_SELECTION);
+        payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
+        payload.put(PayloadKeyServer.NEWBOARD,newBoard);
+        //newBoard.printMatrix();
+        sendMessage.sendAll(payload,MessageFromServerType.DATA);
+    }
+    //public BoardListener(HashMap<String, Client> playerMap) {
+       // super(playerMap);
+    //}
 
 /*
     public BoardListener(HashMap<String, Client> playerMap) {
@@ -22,15 +36,5 @@ public class BoardListener extends SendMessages implements EventListener{
     }
  */
 
-    @Override
-    public void onEvent(EventType eventType, Object newValue, String nickname) {
-        Client player=getClient(nickname);
-        System.out.println(player.getNickname() +" changed Board");
-        Board newBoard=(Board) newValue;
-        MessagePayload payload=new MessagePayload(EventType.BOARD_SELECTION);
-        payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
-        payload.put(PayloadKeyServer.NEWBOARD,newBoard);
-        //newBoard.printMatrix();
-        sendAll(payload,MessageFromServerType.DATA);
-    }
+
 }

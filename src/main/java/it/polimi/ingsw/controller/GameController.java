@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.exceptions.ErrorType;
+import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 
 import it.polimi.ingsw.messages.*;
@@ -22,7 +22,7 @@ public class GameController {
         private SetupController setupController;
 
      */
-    private TurnController turnController;
+    private PhaseController phaseController;
 
     private Game game;
     //private transient final PropertyChangeSupport listeners=new PropertyChangeSupport(this);
@@ -32,8 +32,8 @@ public class GameController {
         initializeControllers();
     }
 
-    public TurnController getTurnController() {
-        return turnController;
+    public PhaseController getTurnController() {
+        return phaseController;
     }
     public Game getModel() {
         return game;
@@ -41,12 +41,12 @@ public class GameController {
     public void initializeControllers() throws Exception {
         GameRules gameRules=new GameRules();
         int maxPlayers=gameRules.getMaxPlayers();
-        turnController=new TurnController(game);
-        turnController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
+        phaseController =new PhaseController(game);
+        phaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
     }
 
-    public void setTurnController(TurnController turnController) {
-        this.turnController = turnController;
+    public void setTurnController(PhaseController phaseController) {
+        this.phaseController = phaseController;
     }
 
     public void setGame(Game game) {
@@ -57,7 +57,7 @@ public class GameController {
     public void receiveMessageFromClient(MessageFromClient message){
         String nicknamePlayer= message.getNicknameSender();
         try{
-            if (!nicknamePlayer.equals(turnController.getTurnPlayer().getNickname())) {
+            if (!nicknamePlayer.equals(phaseController.getTurnPlayer().getNickname())) {
                 sendMessages.sendError(game.getTurnPlayer().getNickname(),ErrorType.ILLEGAL_TURN);
                 //throw new Error(ErrorType.ILLEGAL_TURN);
             }
@@ -102,7 +102,7 @@ public class GameController {
     public void associatePlayerTiles() throws Exception {
         illegalPhase(TurnPhase.SELECT_FROM_BOARD);
         checkError(game.getBoard().checkFinishChoice());
-        turnController.changePhase();
+        phaseController.changePhase();
         game.getTurnPlayer().selection(game.getBoard());
        // sendMessage(game.getTurnPlayer().getNickname(),MessageFromServerType.END_PHASE);
     }
@@ -110,7 +110,7 @@ public class GameController {
         illegalPhase(TurnPhase.SELECT_ORDER_TILES);
         int[] orderTiles=message.getValue();
         checkError(game.getTurnPlayer().checkPermuteSelection(orderTiles));
-        turnController.changePhase();
+        phaseController.changePhase();
         game.getTurnPlayer().permuteSelection(orderTiles);
         sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.RECEIVE);
     }
@@ -120,14 +120,14 @@ public class GameController {
         int column=message.getValue()[0];
         System.out.println("You selected "+column);
         checkError(game.getTurnPlayer().getBookshelf().checkBookshelf(column,game.getTurnPlayer().getSelectedItems().size()));
-        turnController.changePhase();
+        phaseController.changePhase();
         game.getTurnPlayer().getBookshelf().setColumnSelected(column);
         sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.RECEIVE);
     }
 
     public void insertBookshelf() throws Exception {
         illegalPhase(TurnPhase.INSERT_BOOKSHELF_AND_POINTS);
-        turnController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
+        phaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
         game.getTurnPlayer().insertBookshelf();
         if(game.getTurnPlayer().getBookshelf().isFull()){
             game.setEndGame(true);
@@ -161,7 +161,7 @@ public class GameController {
     }
 
     public void illegalPhase(TurnPhase phase) throws Exception {
-        if(!turnController.getCurrentPhase().equals(phase)){
+        if(!phaseController.getCurrentPhase().equals(phase)){
             sendMessages.sendError(game.getTurnPlayer().getNickname(),ErrorType.ILLEGAL_PHASE);
             throw new Exception();
             //throw new Error(ErrorType.ILLEGAL_PHASE);

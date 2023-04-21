@@ -2,14 +2,10 @@ package it.polimi.ingsw.model;
 
 
 
-import it.polimi.ingsw.exceptions.ErrorType;
+import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
-import java.util.Observable;
 import java.util.Random;
 
 public class Board{

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 
-import it.polimi.ingsw.exceptions.ErrorType;
+import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.*;
 import it.polimi.ingsw.listeners.ListenerManager;

@@ -1,6 +1,14 @@
 package it.polimi.ingsw.listeners;
 
-public interface EventListener {
+import it.polimi.ingsw.messages.SendMessages;
 
-    void onEvent(EventType eventType, Object newValue,String nickname);
+public abstract class EventListener {
+
+    public final SendMessages sendMessage;
+
+    protected EventListener(SendMessages sendMessage) {
+        this.sendMessage = sendMessage;
+    }
+
+    public abstract void onEvent(EventType eventType, Object newValue,String nickname);
 }

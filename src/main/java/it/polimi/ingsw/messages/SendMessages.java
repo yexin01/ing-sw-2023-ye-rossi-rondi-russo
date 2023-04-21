@@ -1,8 +1,6 @@
 package it.polimi.ingsw.messages;
 
 import it.polimi.ingsw.Client;
-import it.polimi.ingsw.exceptions.ErrorType;
-import it.polimi.ingsw.listeners.EventType;
 
 import java.util.Collection;
 import java.util.HashMap;

@@ -4,6 +4,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.Client;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.*;
+import it.polimi.ingsw.messages.SendMessages;
 
 import java.util.*;
 
@@ -96,11 +97,19 @@ public class Game {
 
  */
 
+    public void addPlayers(String nickname, SendMessages sendMessages) throws Exception {
+        if (players.size() < 3) {
+            Player p = new Player(nickname);
+            p.addListener(EventType.BOARD_SELECTION,new BoardListener(sendMessages));
+            //p.addListener(EventType.BOOKSHELF_INSERTION_AND_POINTS, new BookshelfListener(playerMap));
+            p.addListener(EventType.END_TURN, new EndTurnListener(sendMessages));
+            players.add(p);
+        }
+    }
 
 
 
-
-
+/*
     public void addPlayers(String nickname,HashMap<String,Client> playerMap) throws Exception {
         if (players.size() < 3) {
             Player p = new Player(nickname);
@@ -110,6 +119,8 @@ public class Game {
             players.add(p);
         }
     }
+
+ */
 
 
 
@@ -208,14 +219,14 @@ public class Game {
      * @param gameRules
      * @throws Exception
      */
-    public void createCommonGoalCard(GameRules gameRules,HashMap<String,Client> playerMap) throws Exception {
+    public void createCommonGoalCard(GameRules gameRules,SendMessages sendMessages) throws Exception {
 
         int numOfCommonGoals = gameRules.getNumOfCommonGoals();
         int numOfPossibleCommonGoalsCards = gameRules.getCommonGoalCardsSize();
         ArrayList<Integer> numbers = generateRandomNumber(numOfPossibleCommonGoalsCards, numOfCommonGoals);
 
         setCommonGoalCards(new ArrayList<CommonGoalCard>());
-        TokenListener tokenListener=new TokenListener(playerMap);
+        TokenListener tokenListener=new TokenListener(sendMessages);
         for (Integer number : numbers) {
             String className = gameRules.getCommonGoalCard(number);
             Class<?> clazz = Class.forName(className);

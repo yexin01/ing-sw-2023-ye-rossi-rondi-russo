@@ -1,12 +1,5 @@
 package it.polimi.ingsw.listeners;
 
-import it.polimi.ingsw.exceptions.Error;
-import it.polimi.ingsw.exceptions.ErrorType;
-import it.polimi.ingsw.model.*;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Date;
 
 /*
 public class PlayerListener implements EventListener {
