@@ -2,24 +2,14 @@ package it.polimi.ingsw.model;
 
 
 
-import it.polimi.ingsw.exceptions.Error;
-import it.polimi.ingsw.exceptions.ErrorType;
+import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
-import java.util.Observable;
 import java.util.Random;
 
-public class Board implements PropertyChangeListener {
+public class Board{
 
-    private transient PropertyChangeSupport listeners;
-
-    public Board() {
-
-    }
     private BoardBox[][] matrix;
 
     public BoardBox[][] getMatrix() {return matrix;}
@@ -54,11 +44,24 @@ public class Board implements PropertyChangeListener {
         this.selectedBoard = selectedBoard;
 
     }
-    public void checkCoordinates(int x,int y) throws Error {
+    public ErrorType checkCoordinates(int x,int y) {
         if (x < 0 || y<0 || x> matrix.length-1 || y> matrix[0].length-1 || !getBoardBox(x,y).isOccupiable() ) {
-            throw new Error(ErrorType.INVALID_COORDINATES);
+            return ErrorType.INVALID_COORDINATES;
+            //throw new Error(ErrorType.INVALID_COORDINATES);
         }
+        return null;
     }
+
+    public ErrorType checkFinishChoice() {
+        if (selectedBoard.size()==0) {
+            return ErrorType.NOT_TILES_SELECTED;
+            //throw new Error(ErrorType.INVALID_COORDINATES);
+        }
+        return null;
+    }
+
+
+
     private boolean finishPlayer;
     //TODO it will be removed when the non-deprecated version is implemented
 
@@ -75,23 +78,9 @@ public class Board implements PropertyChangeListener {
             System.out.println("");
         }
     }
-    //BOOKSHELF
-
-    private boolean endGame;//true when a player has completely filled the bookshelf
-    //the game ends when the first player has to start the turn
-
-    public boolean isEndGame() {
-        return endGame;
-    }
-
-    public void setEndGame(boolean endGame) {
-        this.endGame = endGame;
-    }
 
     public void firstFillBoard(int numPlayers, GameRules gameRules) throws Exception {
-        //fillBag(gameRules);
         int[][] matrix = gameRules.getMatrix(numPlayers);
-        //TODO FIRTSFILL
         this.matrix=new BoardBox[matrix.length][matrix[0].length];
         Random random=new Random();
         int randomNumber;
@@ -110,7 +99,6 @@ public class Board implements PropertyChangeListener {
             for (int j = 0; j < this.matrix[i].length; j++) {
                 if(this.matrix[i][j].getTile()!=null){
                     setFreeEdges(i,j);
-                    // System.out.println(matrix[i][j].getEdges());
                 }
             }
         }
@@ -130,8 +118,6 @@ public class Board implements PropertyChangeListener {
             }
         }
     }
-
-
 
     /**
      * calculates the number of free edges of the cell having x and y coordinates of the Board
@@ -239,27 +225,27 @@ public class Board implements PropertyChangeListener {
     // must be changed by adding an arraylist to the board, checking at the end
     //TODO pass it the maximum of the player's selectable tile cells as a parameter
     //TODO avoid reading the json file and having to reduce the controller by one check
-    public void checkSelectable(BoardBox boardBox, int numSelectableTiles) throws Error {
+    public ErrorType checkSelectable(BoardBox boardBox, int numSelectableTiles) throws Error {
         if(selectedBoard.size() > (numSelectableTiles+1)){
-            System.err.println("You chose more than "+numSelectableTiles+" tiles");
-            throw new Error(ErrorType.TOO_MANY_TILES);
+            return ErrorType.TOO_MANY_TILES;
+            //throw new Error(ErrorType.TOO_MANY_TILES);
         }
 
         if ((boardBox.getFreeEdges() <= 0)) {
-            System.err.println("This tile isn't selectable");
-            throw new Error(ErrorType.NOT_SELECTABLE_TILE);
+            return ErrorType.NOT_SELECTABLE_TILE;
+            //throw new Error(ErrorType.NOT_SELECTABLE_TILE);
         }
         selectedBoard.add(boardBox);
         if (selectedBoard.size() == 1) {
-            return;
+            return null;
         }
         if (!allAdjacent() || !allSameRowOrSameColumn()) {
             selectedBoard.remove(selectedBoard.size() - 1);
-            throw new Error(ErrorType.NOT_SELECTABLE_TILE);
+            return ErrorType.NOT_SELECTABLE_TILE;
+            //throw new Error(ErrorType.NOT_SELECTABLE_TILE);
         }
-        return;
+        return null;
     }
-
 
     /**
      *
@@ -274,8 +260,13 @@ public class Board implements PropertyChangeListener {
             matrix[selectedBoard.get(i).getX()][selectedBoard.get(i).getY()].setFreeEdges(0);
 
         }
-        selectedBoard=new ArrayList<>();
+        resetBoardChoice();
         return selectedItems;
+    }
+
+    public void resetBoardChoice(){
+        selectedBoard=new ArrayList<>();
+        return;
     }
 
     /**
@@ -331,14 +322,6 @@ public class Board implements PropertyChangeListener {
                 }
             }
         }
-    }
-    public void addListener(PropertyChangeListener listener) {
-        listeners.addPropertyChangeListener(listener);
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        listeners.firePropertyChange(evt.getPropertyName(),evt.getOldValue(),evt.getNewValue());
     }
 }
 /*

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.listeners.EventListener;
+import it.polimi.ingsw.listeners.*;
 import it.polimi.ingsw.listeners.EventType;
 import it.polimi.ingsw.listeners.ListenerManager;
 

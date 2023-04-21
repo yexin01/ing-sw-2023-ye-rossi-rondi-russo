@@ -1,4 +1,4 @@
-package it.polimi.ingsw.exceptions;
+package it.polimi.ingsw.messages;
 
 public enum ErrorType {
     DUPLICATE_NAME("This nickname is already taken"),
@@ -10,6 +10,8 @@ public enum ErrorType {
     NOT_SELECTABLE_TILE("Not selectable tile"),
     TOO_MANY_TILES("Invalid Tile"),
     INVALID_ORDER_TILE("Invalid order tile "),
+    NOT_PLAYER_FOUND("Not player with this nickname found "),
+    NOT_TILES_SELECTED("You haven't selected any tile "),
 
     INVALID_COORDINATES("COORDINATES of the tile are invalid");
 

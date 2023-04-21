@@ -1,14 +1,12 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.Error;
-import it.polimi.ingsw.exceptions.ErrorType;
+
+import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.listeners.EventListener;
-import it.polimi.ingsw.listeners.EventType;
+import it.polimi.ingsw.listeners.*;
 import it.polimi.ingsw.listeners.ListenerManager;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Player {
@@ -22,11 +20,12 @@ public class Player {
         //TODO change pass gameRules as a parameter
         GameRules gameRules=new GameRules();
         commonGoalPoints=new int[gameRules.getNumOfCommonGoals()];
+        this.listenerManager=new ListenerManager();
     }
     public Player(String nickname) throws Exception {
         this();
         this.nickname = nickname;
-        this.listenerManager = new ListenerManager();
+        //this.listenerManager = new ListenerManager();
     }
   /*
     public <T> void addListener(EventType eventType, EventListener<T> listener) { // Aggiungi il parametro generico T
@@ -39,11 +38,16 @@ public class Player {
 
   */
     public void addListener(EventType eventType, EventListener listener) {
-        this.listenerManager.addListener(eventType, listener);
+        this.listenerManager.addListener(eventType,listener);
     }
 
     public void removeListener(EventType eventType, EventListener listener) {
         this.listenerManager.removeListener(eventType, listener);
+    }
+
+
+    public ListenerManager getListenerManager(){
+        return listenerManager;
     }
 
 
@@ -70,7 +74,7 @@ public class Player {
 
     public void selection(Board board) {
         selectedItems=board.selected();
-        listenerManager.fireEvent(EventType.BOARD_SELECTION, board, nickname);
+        listenerManager.fireEvent(EventType.BOARD_SELECTION, board,nickname);
     }
     /*
     public void selection(Board board) {
@@ -81,19 +85,22 @@ public class Player {
      */
 
 
-    public void checkPermuteSelection(int[] order) throws Error {
+    public ErrorType checkPermuteSelection(int[] order) throws Error {
         int maxIndex = selectedItems.size() - 1;
         for (int i = 0; i < order.length; i++) {
             int curIndex = order[i];
             if (curIndex > maxIndex || curIndex < 0) {
-                throw new Error(ErrorType.INVALID_ORDER_TILE);
+                return ErrorType.INVALID_ORDER_TILE;
+                //throw new Error(ErrorType.INVALID_ORDER_TILE);
             }
             for (int j = i + 1; j < order.length; j++) {
                 if (order[j] == curIndex) {
-                    throw new Error(ErrorType.INVALID_ORDER_TILE);
+                    return ErrorType.INVALID_ORDER_TILE;
+                   // throw new Error(ErrorType.INVALID_ORDER_TILE);
                 }
             }
         }
+        return null;
     }
     public void permuteSelection(int[] order){
         ArrayList<ItemTile> temp = new ArrayList<>();
@@ -112,7 +119,7 @@ public class Player {
 
     public void setPlayerPoints(int playerPoints) {
         this.playerPoints = playerPoints;
-        listenerManager.fireEvent(EventType.POINTS, playerPoints, nickname);
+        listenerManager.fireEvent(EventType.END_TURN, this,nickname);
     }
     //PERSONALGOAL
     private int personalGoalPoints;
@@ -139,8 +146,8 @@ public class Player {
     }
 
     public void insertBookshelf() throws Error {
-        bookshelf.insertAsSelected(selectedItems);
-        listenerManager.fireEvent(EventType.BOOKSHELF_INSERTION, bookshelf, nickname);
+        bookshelf.insertTiles(selectedItems);
+        //listenerManager.fireEvent(EventType.BOOKSHELF_INSERTION_AND_POINTS, bookshelf,nickname);
     }
     private int adjacentPoints;
     public int getAdjacentPoints() {
@@ -177,6 +184,9 @@ public class Player {
     }
 
 
+    public void setListenerManager(ListenerManager listenerManager) {
+        this.listenerManager = listenerManager;
+    }
 }
 
 

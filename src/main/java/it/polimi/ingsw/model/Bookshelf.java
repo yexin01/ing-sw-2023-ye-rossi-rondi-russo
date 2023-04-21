@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model;
 
 
-import it.polimi.ingsw.exceptions.*;
-import it.polimi.ingsw.exceptions.Error;
+import it.polimi.ingsw.messages.ErrorType;
+
 
 import java.util.*;
 
@@ -109,7 +109,7 @@ public class Bookshelf {
         return true;
     }
 
-    public void insertAsSelected(ArrayList<ItemTile> selectedItemTiles) throws Error {
+    public void insertTiles(ArrayList<ItemTile> selectedItemTiles) throws Error {
 
         int j = 0;
         for (int i = getMatrix().length - 1; j < selectedItemTiles.size(); i--) {
@@ -120,14 +120,18 @@ public class Bookshelf {
 
     }
 
-    public void checkBookshelf(int column,int numSelectedTiles) throws Error {
+    public ErrorType checkBookshelf(int column, int numSelectedTiles) throws Error {
         if (column < 0 || column > getMatrix()[0].length-1 ) {
-            throw new Error(ErrorType.INVALID_COLUMN);
+            return ErrorType.INVALID_COLUMN;
+           // throw new Error();
         }
         if(!(numSelectedTiles <= getMaxTilesColumn(column))){
-            throw new Error(ErrorType.NOT_ENOUGH_FREE_CELLS_COLUMN);
+            return ErrorType.NOT_ENOUGH_FREE_CELLS_COLUMN;
+            //throw new Error();
         }
+        return null;
     }
+
 
     /**
      * @return a list with the cardinalities of the groups of adjacent tiles found by the algorithm
@@ -151,7 +155,6 @@ public class Bookshelf {
             }
             //algorithm can stop if last row is empty
             if (j == lastColumn) { //every element in the last row is null
-                System.out.println("Bookshelf's empty... No group of adjacent tiles found!");
                 return groupsSizes;
             }
         }
@@ -171,9 +174,9 @@ public class Bookshelf {
                 }
             }
         }
-        if(groupsSizes.isEmpty()) System.out.println("No group of adjacent tiles was found!");
         return groupsSizes;
     }
+
 
     private static final int[][] DIRECTIONS = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}}; //possible directions towards adjacent tiles
 
@@ -187,7 +190,7 @@ public class Bookshelf {
                 continue; //proceeding in other adjacent directions
             }
             ItemTile nextBox = matrix[x][y];
-            if (!visited.contains(nextBox) && (!Objects.equals(currentTile.getTileID(), -1)) && nextBox.getType() == type) {
+            if (!visited.contains(nextBox) && nextBox.getType() == type) {
                 size += dfs(nextBox, visited, type, x, y);
             }
         }

@@ -3,13 +3,12 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.*;
+import it.polimi.ingsw.server.SendMessages;
 
 import java.util.*;
 
 public class Game {
-    private boolean started;
 
-    //private transient final PropertyChangeSupport listeners = new PropertyChangeSupport(this);
     private ArrayList<Player> players;
     private Board board;
     private int numPlayers;
@@ -21,13 +20,10 @@ public class Game {
     public Game(){
         players=new ArrayList<>();
         commonGoalCards=new ArrayList<>();
+        board=new Board();
 
     }
-    public void start() {
-        started = true;
-    }
-
-    //PLAYERS
+      //PLAYERS
 
 
     public int getNumPlayers() {
@@ -68,7 +64,6 @@ public class Game {
         else turnPlayer++;
     }
 
-
     //CURRENT BOARD
 
     public Board getBoard() {
@@ -88,18 +83,47 @@ public class Game {
         this.commonGoalCards = commonGoalCards;
     }
 
+/*
     public void addPlayer(String nickname) throws Exception {
         if (players.size() < numPlayers) {
             Player p = new Player(nickname);
-            BoardListener boardListener = new BoardListener();
-            BookshelfListener bookshelfListener = new BookshelfListener();
-            PointsListener pointsListener = new PointsListener();
-            p.addListener(EventType.BOARD_SELECTION, boardListener);
-            p.addListener(EventType.BOOKSHELF_INSERTION, bookshelfListener);
-            p.addListener(EventType.POINTS, pointsListener);
+            p.addListener(EventType.BOARD_SELECTION, new BoardListener());
+            p.addListener(EventType.BOOKSHELF_INSERTION, new BookshelfListener());
+            p.addListener(EventType.POINTS, new PointsListener());
             players.add(p);
         }
     }
+
+ */
+
+    public void addPlayers(String nickname, SendMessages sendMessages) throws Exception {
+        if (players.size() < 3) {
+            Player p = new Player(nickname);
+            p.addListener(EventType.BOARD_SELECTION,new BoardListener(sendMessages));
+            //p.addListener(EventType.BOOKSHELF_INSERTION_AND_POINTS, new BookshelfListener(playerMap));
+            p.addListener(EventType.END_TURN, new EndTurnListener(sendMessages));
+            players.add(p);
+        }
+    }
+
+
+
+/*
+    public void addPlayers(String nickname,HashMap<String,Client> playerMap) throws Exception {
+        if (players.size() < 3) {
+            Player p = new Player(nickname);
+            p.addListener(EventType.BOARD_SELECTION,new BoardListener(playerMap));
+            //p.addListener(EventType.BOOKSHELF_INSERTION_AND_POINTS, new BookshelfListener(playerMap));
+            p.addListener(EventType.END_TURN, new EndTurnListener(playerMap));
+            players.add(p);
+        }
+    }
+
+ */
+
+
+
+
 
 
     /*
@@ -194,17 +218,19 @@ public class Game {
      * @param gameRules
      * @throws Exception
      */
-    public void createCommonGoalCard(GameRules gameRules) throws Exception {
+    public void createCommonGoalCard(GameRules gameRules,SendMessages sendMessages) throws Exception {
 
         int numOfCommonGoals = gameRules.getNumOfCommonGoals();
         int numOfPossibleCommonGoalsCards = gameRules.getCommonGoalCardsSize();
         ArrayList<Integer> numbers = generateRandomNumber(numOfPossibleCommonGoalsCards, numOfCommonGoals);
 
         setCommonGoalCards(new ArrayList<CommonGoalCard>());
+        TokenListener tokenListener=new TokenListener(sendMessages);
         for (Integer number : numbers) {
             String className = gameRules.getCommonGoalCard(number);
             Class<?> clazz = Class.forName(className);
             Object obj = clazz.getDeclaredConstructor().newInstance();
+            ((CommonGoalCard) obj).addListener(EventType.REMOVE_TOKEN,tokenListener);
             commonGoalCards.add((CommonGoalCard) obj);
         }
 

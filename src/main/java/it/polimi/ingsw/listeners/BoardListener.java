@@ -1,16 +1,38 @@
 package it.polimi.ingsw.listeners;
 
 
+import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.messages.MessageFromServerType;
+import it.polimi.ingsw.messages.MessagePayload;
+import it.polimi.ingsw.messages.PayloadKeyServer;
+import it.polimi.ingsw.server.SendMessages;
 import it.polimi.ingsw.model.Board;
 
 
-public class BoardListener implements EventListener{
+public class BoardListener extends EventListener{
+    public BoardListener(SendMessages sendMessage) {
+        super(sendMessage);
+    }
     @Override
     public void onEvent(EventType eventType, Object newValue, String nickname) {
+        Client player=sendMessage.getClient(nickname);
+        System.out.println(player.getNickname() +" changed Board");
         Board newBoard=(Board) newValue;
-        System.out.println(nickname +" changed Board");
-        newBoard.printMatrix();
-
+        MessagePayload payload=new MessagePayload(EventType.BOARD_SELECTION);
+        payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
+        payload.put(PayloadKeyServer.NEWBOARD,newBoard);
+        //newBoard.printMatrix();
+        sendMessage.sendAll(payload,MessageFromServerType.DATA);
     }
-}
+    //public BoardListener(HashMap<String, Client> playerMap) {
+       // super(playerMap);
+    //}
 
+/*
+    public BoardListener(HashMap<String, Client> playerMap) {
+        super(playerMap);
+    }
+ */
+
+
+}
