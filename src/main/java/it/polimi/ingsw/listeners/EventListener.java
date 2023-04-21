@@ -11,8 +11,6 @@ public abstract class EventListener extends SendMessages {
         super(playerMap);
     }
 
-
-
     /*
     public EventListener() {
         super(playerMap);

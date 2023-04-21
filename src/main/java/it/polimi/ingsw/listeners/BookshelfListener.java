@@ -5,7 +5,7 @@ import it.polimi.ingsw.messages.MessageFromServerType;
 import it.polimi.ingsw.model.Bookshelf;
 
 import java.util.HashMap;
-
+/*
 public class BookshelfListener extends EventListener{
     public BookshelfListener(HashMap<String, Client> playerMap) {
         super(playerMap);
@@ -17,7 +17,7 @@ public class BookshelfListener extends EventListener{
         super(playerMap);
     }
 
- */
+
 
     @Override
     public void onEvent(EventType eventType, Object newValue, String nickname) {
@@ -29,3 +29,4 @@ public class BookshelfListener extends EventListener{
 
 
 }
+        */

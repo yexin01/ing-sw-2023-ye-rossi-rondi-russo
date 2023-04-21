@@ -2,8 +2,6 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
-
-import java.util.ArrayList;
 //SE IL TURNO é finiTo SETTA il giocatore successivo se finisce il turno
 //cambia la fase del turno
 

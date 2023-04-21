@@ -3,8 +3,130 @@ package it.polimi.ingsw.listeners;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
+public class ListenerManager {
+    private HashMap<Object, List<Object>> listenersMap;
+
+    public ListenerManager() {
+        listenersMap = new HashMap<Object, List<Object>>();
+    }
+
+    public void addListener(EventType eventName, Object listener) {
+        if (listenersMap.containsKey(eventName)) {
+            List<Object> listeners = listenersMap.get(eventName);
+            if (!listeners.contains(listener)) {
+                listeners.add(listener);
+            }
+        } else {
+            List<Object> listeners = new ArrayList<Object>();
+            listeners.add(listener);
+            listenersMap.put(eventName, listeners);
+        }
+    }
+
+    public void removeListener(EventType eventName, Object listener) {
+        if (listenersMap.containsKey(eventName)) {
+            List<Object> listeners = listenersMap.get(eventName);
+            listeners.remove(listener);
+        }
+    }
+    public void fireEvent(EventType eventName, Object newValue, String playerNickname) {
+        if (listenersMap.containsKey(eventName)) {
+            List<Object> listeners = listenersMap.get(eventName);
+            for (Object listener : listeners) {
+                if (listener instanceof EventListener) {
+                    ((EventListener) listener).onEvent(eventName, newValue, playerNickname);
+                }
+            }
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+public class ListenerManager {
+    private Map<EventType, Map<String, List<Object>>> listenersMap;
+
+    public ListenerManager() {
+        listenersMap = new HashMap<>();
+        for (EventType eventType : EventType.values()) {
+            listenersMap.put(eventType, new HashMap<>());
+        }
+    }
+
+    public void addListener(EventType eventName, Object listener, String playerNickname) {
+        Map<String, List<Object>> playerListenersMap = listenersMap.get(eventName);
+        if (playerListenersMap.containsKey(playerNickname)) {
+            List<Object> listeners = playerListenersMap.get(playerNickname);
+            if (!listeners.contains(listener)) {
+                listeners.add(listener);
+            }
+        } else {
+            List<Object> listeners = new ArrayList<>();
+            listeners.add(listener);
+            playerListenersMap.put(playerNickname, listeners);
+        }
+    }
+
+    public void removeListener(EventType eventName, Object listener, String playerNickname) {
+        Map<String, List<Object>> playerListenersMap = listenersMap.get(eventName);
+        if (playerListenersMap.containsKey(playerNickname)) {
+            List<Object> listeners = playerListenersMap.get(playerNickname);
+            listeners.remove(listener);
+        }
+    }
+
+    public void fireEvent(EventType eventName, Object newValue, String playerNickname) {
+        Map<String, List<Object>> playerListenersMap = listenersMap.get(eventName);
+        if (playerListenersMap.containsKey(playerNickname)) {
+            List<Object> listeners = playerListenersMap.get(playerNickname);
+            for (Object listener : listeners) {
+                if (listener instanceof EventListener) {
+                    ((EventListener) listener).onEvent(eventName, newValue, playerNickname);
+                }
+            }
+        }
+    }
+
+    public void fireOnlyPlayer(EventType eventName, Object newValue, String playerNickname) {
+        fireEvent(eventName, newValue, playerNickname);
+    }
+
+    public void fireAllPlayer(EventType eventName, Object newValue,String nicknameSource) {
+        Map<String, List<Object>> allPlayerListenersMap = listenersMap.get(eventName);
+        for (String playerNickname : allPlayerListenersMap.keySet()) {
+            fireEvent(eventName, newValue, playerNickname);
+        }
+    }
+}
+
+ */
+
+
+
+
+
+
+
+/*
 public class ListenerManager {
     private HashMap<Object, List<Object>> listenersMap;
 

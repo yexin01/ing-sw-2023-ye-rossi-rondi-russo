@@ -15,7 +15,7 @@ public class MessageFromServer implements Serializable {
         return serverMessageHeader;
     }
 
-    public MessagePayload getClientAndServerMessage() {
+    public MessagePayload getMessagePayload() {
         return messagePayload;
     }
 }

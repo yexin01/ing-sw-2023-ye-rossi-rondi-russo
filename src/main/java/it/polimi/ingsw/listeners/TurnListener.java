@@ -1,17 +1,6 @@
 package it.polimi.ingsw.listeners;
 
 
-import it.polimi.ingsw.Client;
-import it.polimi.ingsw.controller.TurnPhase;
-import it.polimi.ingsw.messages.*;
-import it.polimi.ingsw.model.CommonGoalCard;
-import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.PersonalGoalCard;
-import it.polimi.ingsw.model.Player;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 /*
 //TODO it is not a listener methods will go in the controller
 public class TurnListener extends SendMessages {

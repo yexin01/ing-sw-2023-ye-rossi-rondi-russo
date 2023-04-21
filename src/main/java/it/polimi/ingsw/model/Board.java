@@ -49,13 +49,24 @@ public class Board{
         this.selectedBoard = selectedBoard;
 
     }
-    public ErrorType checkCoordinates(int x,int y) throws Error {
+    public ErrorType checkCoordinates(int x,int y) {
         if (x < 0 || y<0 || x> matrix.length-1 || y> matrix[0].length-1 || !getBoardBox(x,y).isOccupiable() ) {
             return ErrorType.INVALID_COORDINATES;
             //throw new Error(ErrorType.INVALID_COORDINATES);
         }
         return null;
     }
+
+    public ErrorType checkFinishChoice() {
+        if (selectedBoard.size()==0) {
+            return ErrorType.NOT_TILES_SELECTED;
+            //throw new Error(ErrorType.INVALID_COORDINATES);
+        }
+        return null;
+    }
+
+
+
     private boolean finishPlayer;
     //TODO it will be removed when the non-deprecated version is implemented
 

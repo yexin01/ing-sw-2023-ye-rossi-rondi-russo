@@ -21,11 +21,12 @@ public class Player {
         //TODO change pass gameRules as a parameter
         GameRules gameRules=new GameRules();
         commonGoalPoints=new int[gameRules.getNumOfCommonGoals()];
+        this.listenerManager=new ListenerManager();
     }
     public Player(String nickname) throws Exception {
         this();
         this.nickname = nickname;
-        this.listenerManager = new ListenerManager();
+        //this.listenerManager = new ListenerManager();
     }
   /*
     public <T> void addListener(EventType eventType, EventListener<T> listener) { // Aggiungi il parametro generico T
@@ -38,7 +39,7 @@ public class Player {
 
   */
     public void addListener(EventType eventType, EventListener listener) {
-        this.listenerManager.addListener(eventType, listener);
+        this.listenerManager.addListener(eventType,listener);
     }
 
     public void removeListener(EventType eventType, EventListener listener) {
@@ -74,7 +75,7 @@ public class Player {
 
     public void selection(Board board) {
         selectedItems=board.selected();
-        listenerManager.fireEvent(EventType.BOARD_SELECTION, board, nickname);
+        listenerManager.fireEvent(EventType.BOARD_SELECTION, board,nickname);
     }
     /*
     public void selection(Board board) {
@@ -119,7 +120,7 @@ public class Player {
 
     public void setPlayerPoints(int playerPoints) {
         this.playerPoints = playerPoints;
-        listenerManager.fireEvent(EventType.POINTS, playerPoints, nickname);
+        listenerManager.fireEvent(EventType.BOOKSHELF_INSERTION_AND_POINTS, this,nickname);
     }
     //PERSONALGOAL
     private int personalGoalPoints;
@@ -147,7 +148,7 @@ public class Player {
 
     public void insertBookshelf() throws Error {
         bookshelf.insertTiles(selectedItems);
-        listenerManager.fireEvent(EventType.BOOKSHELF_INSERTION, bookshelf, nickname);
+        //listenerManager.fireEvent(EventType.BOOKSHELF_INSERTION_AND_POINTS, bookshelf,nickname);
     }
     private int adjacentPoints;
     public int getAdjacentPoints() {
@@ -184,6 +185,9 @@ public class Player {
     }
 
 
+    public void setListenerManager(ListenerManager listenerManager) {
+        this.listenerManager = listenerManager;
+    }
 }
 
 

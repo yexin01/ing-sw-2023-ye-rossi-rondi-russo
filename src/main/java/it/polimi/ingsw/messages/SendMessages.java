@@ -3,6 +3,7 @@ package it.polimi.ingsw.messages;
 import it.polimi.ingsw.Client;
 import it.polimi.ingsw.exceptions.Error;
 import it.polimi.ingsw.exceptions.ErrorType;
+import it.polimi.ingsw.listeners.EventType;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,25 +24,33 @@ public class SendMessages {
         }
         return null;
     }
-    public void sendAll(Object newValue, MessageFromServerType messageType){
+    public void sendAll(MessagePayload payload, MessageFromServerType messageType){
         Collection<Client> clients = playerMap.values();
         for(Client client : clients) {
-            sendMessage(client.getNickname(),newValue,messageType);
+            sendMessage(client.getNickname(),payload,messageType);
         }
     }
-    public void sendAllExcept(String nickname,Object newValue, MessageFromServerType messageType){
+    public void sendAllExcept(String nickname,MessagePayload payload, MessageFromServerType messageType){
         Collection<Client> clients = playerMap.values();
         for(Client client : clients) {
             if(!(client.getNickname().equals(nickname))){
-                sendMessage(client.getNickname(),newValue,messageType);
+                sendMessage(client.getNickname(),payload,messageType);
             }
         }
     }
 
-    public void sendMessage(String nickname, Object newValue, MessageFromServerType messageType){
+    public void sendMessage(String nickname, MessagePayload payload, MessageFromServerType messageType){
         ServerMessageHeader header=new ServerMessageHeader(messageType,nickname);
-        MessagePayload object=new MessagePayload(newValue);
-        MessageFromServer message=new MessageFromServer(header,object);
-        getClient(nickname).receiveMessageFromClient(nickname,newValue,messageType);
+        MessageFromServer message=new MessageFromServer(header,payload);
+        getClient(nickname).receiveMessageFromClient(nickname,message);
     }
+
+    public void sendError(String nickname, ErrorType error){
+        ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.ERROR,nickname);
+        MessagePayload payload=new MessagePayload(null);
+        payload.put(PayloadKeyServer.ERRORMESSAGE,error);
+        MessageFromServer message=new MessageFromServer(header,payload);
+        getClient(nickname).receiveMessageFromClient(nickname,message);
+    }
+
 }

@@ -4,19 +4,19 @@ import java.io.Serializable;
 
 public class ServerMessageHeader implements Serializable{
     private final MessageFromServerType messageFromServer;
-    private final String nicknameSender;
+    private final String nicknameAddressee;
 
-    public ServerMessageHeader(MessageFromServerType messageFromServer, String nicknameSender) {
+    public ServerMessageHeader(MessageFromServerType messageFromServer, String nicknameAddressee) {
         this.messageFromServer = messageFromServer;
-        this.nicknameSender = nicknameSender;
+        this.nicknameAddressee = nicknameAddressee;
     }
 
     public MessageFromServerType getMessageFromServer() {
         return messageFromServer;
     }
 
-    public String getNicknameSender() {
-        return nicknameSender;
+    public String getNicknameAddressee() {
+        return nicknameAddressee;
     }
 }
 

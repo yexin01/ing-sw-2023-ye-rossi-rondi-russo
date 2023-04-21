@@ -103,8 +103,8 @@ public class Game {
         if (players.size() < 3) {
             Player p = new Player(nickname);
             p.addListener(EventType.BOARD_SELECTION,new BoardListener(playerMap) );
-            p.addListener(EventType.BOOKSHELF_INSERTION, new BookshelfListener(playerMap));
-            p.addListener(EventType.POINTS, new PointsListener(playerMap));
+            //p.addListener(EventType.BOOKSHELF_INSERTION_AND_POINTS, new BookshelfListener(playerMap));
+            p.addListener(EventType.BOOKSHELF_INSERTION_AND_POINTS, new PointsListener(playerMap));
             players.add(p);
         }
     }
