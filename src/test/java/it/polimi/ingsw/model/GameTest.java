@@ -71,6 +71,15 @@ class GameTest {
     }
 
     @Test
+    @DisplayName("createCommonGoalCard: generic check")
+    void createCommonGoalCard() throws Exception {
+        Game game = new Game();
+        GameRules gameRules = new GameRules();
+        game.createCommonGoalCard(gameRules);
+        assertEquals(2, game.getCommonGoalCards().size());
+    }
+
+    @Test
     @DisplayName("updateAdjacentPoints: one 5 tiles group")
     void updateAdjacentPoints() throws Exception {
         GameRules gameRules = new GameRules();
