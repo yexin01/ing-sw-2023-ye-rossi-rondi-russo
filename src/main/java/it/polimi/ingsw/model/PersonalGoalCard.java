@@ -1,9 +1,10 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class PersonalGoalCard {
+public class PersonalGoalCard implements Serializable {
     private final ArrayList<PersonalGoalBox> cells;
 
     public PersonalGoalCard(ArrayList<PersonalGoalBox> cells) {

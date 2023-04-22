@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
-public class PersonalGoalBox {
+import java.io.Serializable;
+
+public class PersonalGoalBox implements Serializable {
     private final int x;
     private final int y;
     private final Type type;
