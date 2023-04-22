@@ -4,6 +4,8 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
+import it.polimi.ingsw.model.modelView.BoardBoxView;
+import it.polimi.ingsw.model.modelView.ItemTileView;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -77,6 +79,19 @@ public class Board{
             }
             System.out.println("");
         }
+    }
+    public BoardBoxView[][] cloneBoard(){
+        BoardBoxView[][] boardView=new BoardBoxView[matrix.length][matrix[0].length];
+        ItemTile itemTile;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                itemTile=matrix[i][j].getTile();
+                if(itemTile!=null){
+                    boardView[i][j]=new BoardBoxView(matrix[i][j].isOccupiable(), new ItemTileView(itemTile.getType(), itemTile.getTileID()));
+                }else boardView[i][j]=new BoardBoxView(matrix[i][j].isOccupiable(), new ItemTileView(null,-1));
+            }
+        }
+        return boardView;
     }
 
     public void firstFillBoard(int numPlayers, GameRules gameRules) throws Exception {

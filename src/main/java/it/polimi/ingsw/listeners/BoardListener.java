@@ -1,12 +1,14 @@
 package it.polimi.ingsw.listeners;
 
-
-import it.polimi.ingsw.client.Client;
+/*
+import it.polimi.ingsw.client.ClientUI;
+import it.polimi.ingsw.model.Board;
+import it.polimi.ingsw.model.modelView.BoardBoxView;
+import it.polimi.ingsw.model.modelView.MatrixView;
 import it.polimi.ingsw.messages.MessageFromServerType;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.messages.PayloadKeyServer;
 import it.polimi.ingsw.server.SendMessages;
-import it.polimi.ingsw.model.Board;
 
 
 public class BoardListener extends EventListener{
@@ -14,13 +16,9 @@ public class BoardListener extends EventListener{
         super(sendMessage);
     }
     @Override
-    public void onEvent(EventType eventType, Object newValue, String nickname) {
-        Client player=sendMessage.getClient(nickname);
+    public void onEvent(MessagePayload payload) {
+        ClientUI player=sendMessage.getClient(nickname);
         System.out.println(player.getNickname() +" changed Board");
-        Board newBoard=(Board) newValue;
-        MessagePayload payload=new MessagePayload(EventType.BOARD_SELECTION);
-        payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
-        payload.put(PayloadKeyServer.NEWBOARD,newBoard);
         //newBoard.printMatrix();
         sendMessage.sendAll(payload,MessageFromServerType.DATA);
     }
@@ -35,4 +33,4 @@ public class BoardListener extends EventListener{
  */
 
 
-}
+

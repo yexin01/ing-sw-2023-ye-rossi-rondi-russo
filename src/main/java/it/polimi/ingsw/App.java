@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.ClientUI;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.server.SendMessages;
@@ -14,10 +15,10 @@ public class App{
             Game game=new Game();
             GameController gameController=new GameController(game);
 
-            HashMap<String, Client> playerMap = new HashMap<String, Client>();
-            playerMap.put("TIZIO", new Client("TIZIO",gameController));
-            playerMap.put("CAIO", new Client("CAIO",gameController));
-            playerMap.put("SEMPRONIO", new Client("SEMPRONIO",gameController));
+            HashMap<String, ClientUI> playerMap = new HashMap<String, ClientUI>();
+            playerMap.put("TIZIO", new ClientUI("TIZIO",gameController,new Client("TIZIO")));
+            playerMap.put("CAIO", new ClientUI("CAIO",gameController,new Client("CAIO")));
+            playerMap.put("SEMPRONIO", new ClientUI("SEMPRONIO",gameController,new Client("SEMPRONIO")));
             SendMessages sendMessages=new SendMessages(playerMap);
             gameController.setSendMessages(sendMessages);
 
@@ -33,8 +34,9 @@ public class App{
             game.createCommonGoalCard(gameRules,sendMessages);
 
             game.updateAllPoints();
-            Client player = playerMap.get("TIZIO");
-            player.ask();
+            ClientUI player = playerMap.get("TIZIO");
+            player.askClient();
+            //player.ask();
 
 /*
             //game.getPlayerByNickname("TIZIO").setPlayerPoints(32);
