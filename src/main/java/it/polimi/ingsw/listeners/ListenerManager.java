@@ -1,6 +1,9 @@
 package it.polimi.ingsw.listeners;
 
+import it.polimi.ingsw.messages.ErrorType;
+import it.polimi.ingsw.messages.MessageFromServerType;
 import it.polimi.ingsw.messages.MessagePayload;
+import it.polimi.ingsw.server.SendMessages;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,20 +12,20 @@ import java.util.Map;
 
 
 public class ListenerManager {
-    private HashMap<EventType, List<Object>> listenersMap;
+    private HashMap<EventType, List<SendMessages>> listenersMap;
 
     public ListenerManager() {
-        listenersMap = new HashMap<EventType, List<Object>>();
+        listenersMap = new HashMap<EventType, List<SendMessages>>();
     }
 
-    public void addListener(EventType eventName, Object listener) {
+    public void addListener(EventType eventName, SendMessages listener) {
         if (listenersMap.containsKey(eventName)) {
-            List<Object> listeners = listenersMap.get(eventName);
+            List<SendMessages> listeners = listenersMap.get(eventName);
             if (!listeners.contains(listener)) {
                 listeners.add(listener);
             }
         } else {
-            List<Object> listeners = new ArrayList<Object>();
+            List<SendMessages> listeners = new ArrayList<SendMessages>();
             listeners.add(listener);
             listenersMap.put(eventName, listeners);
         }
@@ -30,21 +33,61 @@ public class ListenerManager {
 
     public void removeListener(EventType eventName, Object listener) {
         if (listenersMap.containsKey(eventName)) {
-            List<Object> listeners = listenersMap.get(eventName);
+            List<SendMessages> listeners = listenersMap.get(eventName);
             listeners.remove(listener);
         }
     }
+
+    public void fire(EventType eventName, MessagePayload newValue, String playerNickname, boolean excludePlayer, boolean sendToAll) {
+        if (listenersMap.containsKey(eventName)) {
+            List<SendMessages> listeners = listenersMap.get(eventName);
+            for (SendMessages listener : listeners) {
+                if(excludePlayer && listener.getNickname().equals(playerNickname)){
+                    continue;
+                }
+                if(!excludePlayer && !sendToAll && !listener.getNickname().equals(playerNickname)){
+                    continue;
+                }
+                /*
+                if ((excludePlayer && !listener.getNickname().equals(playerNickname)) || (!excludePlayer && (sendToAll || listener.getNickname().equals(playerNickname)))) {
+                    listener.sendMessage(newValue, MessageFromServerType.DATA);
+                }
+                 */
+                listener.sendMessage(newValue, MessageFromServerType.DATA);
+            }
+        }
+    }
+
+
     public void fireEvent(EventType eventName, MessagePayload newValue, String playerNickname) {
         if (listenersMap.containsKey(eventName)) {
-            List<Object> listeners = listenersMap.get(eventName);
-            for (Object listener : listeners) {
-                if (listener instanceof EventListener) {
-                    ((EventListener) listener).onEvent(newValue);
+            List<SendMessages> listeners = listenersMap.get(eventName);
+            for (SendMessages listener : listeners) {
+                if(listener.getNickname().equals(playerNickname)){
+                    listener.sendMessage(newValue, MessageFromServerType.DATA);
                 }
             }
         }
     }
 
+    public void fireAll(EventType eventName, MessagePayload newValue, String playerNickname) {
+        if (listenersMap.containsKey(eventName)) {
+            List<SendMessages> listeners = listenersMap.get(eventName);
+            for (SendMessages listener : listeners) {
+                listener.sendMessage(newValue, MessageFromServerType.DATA);
+            }
+        }
+    }
+    public void fireAllExcept(EventType eventName, MessagePayload newValue, String playerNickname) {
+        if (listenersMap.containsKey(eventName)) {
+            List<SendMessages> listeners = listenersMap.get(eventName);
+            for (SendMessages listener : listeners) {
+                if(!listener.getNickname().equals(playerNickname)){
+                    listener.sendMessage(newValue, MessageFromServerType.DATA);
+                }
+            }
+        }
+    }
 
 }
 
