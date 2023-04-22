@@ -1,5 +1,6 @@
 package it.polimi.ingsw.listeners;
 
+import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.server.SendMessages;
 
 public abstract class EventListener {
@@ -10,5 +11,5 @@ public abstract class EventListener {
         this.sendMessage = sendMessage;
     }
 
-    public abstract void onEvent(EventType eventType, Object newValue,String nickname);
+    public abstract void onEvent(MessagePayload messagePayload);
 }

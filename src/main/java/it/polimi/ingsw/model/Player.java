@@ -5,6 +5,10 @@ import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.*;
 import it.polimi.ingsw.listeners.ListenerManager;
+import it.polimi.ingsw.messages.MessagePayload;
+import it.polimi.ingsw.messages.PayloadKeyServer;
+import it.polimi.ingsw.model.modelView.MatrixView;
+import it.polimi.ingsw.model.modelView.PlayerPointsView;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -74,7 +78,11 @@ public class Player {
 
     public void selection(Board board) {
         selectedItems=board.selected();
-        listenerManager.fireEvent(EventType.BOARD_SELECTION, board,nickname);
+        MatrixView newBoard=new MatrixView(board.cloneBoard());
+        MessagePayload payload=new MessagePayload(EventType.BOARD_SELECTION);
+        payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
+        payload.put(PayloadKeyServer.NEWBOARD,newBoard);
+        listenerManager.fireEvent(EventType.BOARD_SELECTION, payload,nickname);
     }
     /*
     public void selection(Board board) {
@@ -119,7 +127,12 @@ public class Player {
 
     public void setPlayerPoints(int playerPoints) {
         this.playerPoints = playerPoints;
-        listenerManager.fireEvent(EventType.END_TURN, this,nickname);
+        MessagePayload payload=new MessagePayload(EventType.END_TURN);
+        PlayerPointsView playerPointsView=new PlayerPointsView(playerPoints,commonGoalPoints,personalGoalPoints,adjacentPoints);
+        payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
+        payload.put(PayloadKeyServer.NEWBOOKSHELF,bookshelf.cloneBoockshelf());
+        payload.put(PayloadKeyServer.POINTS,playerPointsView);
+        listenerManager.fireEvent(EventType.END_TURN, payload,nickname);
     }
     //PERSONALGOAL
     private int personalGoalPoints;

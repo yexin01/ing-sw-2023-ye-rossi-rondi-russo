@@ -1,16 +1,24 @@
 package it.polimi.ingsw.model.modelView;
 
-import it.polimi.ingsw.model.CommonGoalCard;
-
 public class CommonGoalView {
-    private final CommonGoalCard commonGoalCard;
+    private final int lastPointsLeft;
+    private final String whoWonLastToken;
 
-    public CommonGoalView(CommonGoalCard commonGoalCard) {
-        this.commonGoalCard = commonGoalCard;
+    public CommonGoalView(int lastPointsLeft, String whoWonLastToken) {
+        this.lastPointsLeft = lastPointsLeft;
+        this.whoWonLastToken = whoWonLastToken;
     }
 
-    public int getLastPointRemain() {
-        return commonGoalCard.getLastPoint();
+
+    /*
+    public int getLastPointLeft() {
+        return pointsLeft[pointsLeft.length-1];
+    }
+
+     */
+
+    public String getWhoWonLastToken() {
+        return whoWonLastToken;
     }
 /*
     public CommonGoalCard getCommonGoalCard() {
