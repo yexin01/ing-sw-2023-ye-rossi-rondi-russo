@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.modelView;
 
-public class BoardBoxView {
+import java.io.Serializable;
+
+public class BoardBoxView implements Serializable {
     private final boolean occupiable;
     private final ItemTileView itemTileView;
 

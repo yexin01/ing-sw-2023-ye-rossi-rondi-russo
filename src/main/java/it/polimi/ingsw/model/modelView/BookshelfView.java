@@ -2,7 +2,9 @@ package it.polimi.ingsw.model.modelView;
 
 import it.polimi.ingsw.model.Type;
 
-public class BookshelfView {
+import java.io.Serializable;
+
+public class BookshelfView implements Serializable {
     private final ItemTileView[][] bookshelfView;
 
     public BookshelfView(ItemTileView[][] bookshelfView) {

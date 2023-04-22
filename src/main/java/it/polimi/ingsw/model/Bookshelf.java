@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.messages.ErrorType;
-import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 
 
@@ -39,7 +38,7 @@ public class Bookshelf {
             }
         }
     }
-    public ItemTileView[][] cloneBoockshelf(){
+    public ItemTileView[][] cloneBookshelf(){
         ItemTileView[][] bookshelfView=new ItemTileView[matrix.length][matrix[0].length];
         ItemTile itemTile;
         for (int i = matrix.length-1; i >=0; i--) {

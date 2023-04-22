@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.modelView;
 
-public class CommonGoalView {
+import java.io.Serializable;
+
+public class CommonGoalView implements Serializable {
     private final int lastPointsLeft;
     private final String whoWonLastToken;
 

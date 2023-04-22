@@ -11,8 +11,8 @@ public class Listener extends EventListener{
     }
 
     @Override
-    public void onEvent(MessagePayload messagePayload) {
-        sendMessage.sendAll(messagePayload,MessageFromServerType.DATA);
+    public void onEvent(Object messagePayload) {
+        sendMessage.sendAll((MessagePayload)messagePayload,MessageFromServerType.DATA);
     }
 
 

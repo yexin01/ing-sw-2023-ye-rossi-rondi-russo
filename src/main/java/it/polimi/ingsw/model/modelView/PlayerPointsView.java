@@ -1,7 +1,9 @@
 package it.polimi.ingsw.model.modelView;
 
+import java.io.Serializable;
+
 //TODO based on how the graphic part is implemented, decide to keep it or not
-public class PlayerPointsView {
+public class PlayerPointsView implements Serializable {
     private final int points;
     private final int[] commonGoalPoints;
     private final int personalGoalPoints;

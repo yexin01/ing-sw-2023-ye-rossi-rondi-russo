@@ -8,6 +8,7 @@ import it.polimi.ingsw.listeners.ListenerManager;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.messages.PayloadKeyServer;
 import it.polimi.ingsw.model.modelView.BoardView;
+import it.polimi.ingsw.model.modelView.BookshelfView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
 
 import java.util.ArrayList;
@@ -130,7 +131,7 @@ public class Player {
         MessagePayload payload=new MessagePayload(EventType.END_TURN);
         PlayerPointsView playerPointsView=new PlayerPointsView(playerPoints,commonGoalPoints,personalGoalPoints,adjacentPoints);
         payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
-        payload.put(PayloadKeyServer.NEWBOOKSHELF,bookshelf.cloneBoockshelf());
+        payload.put(PayloadKeyServer.NEWBOOKSHELF,new BookshelfView(bookshelf.cloneBookshelf()));
         payload.put(PayloadKeyServer.POINTS,playerPointsView);
         listenerManager.fireEvent(EventType.END_TURN, payload,nickname);
     }

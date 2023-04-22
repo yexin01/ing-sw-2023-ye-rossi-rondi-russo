@@ -2,7 +2,9 @@ package it.polimi.ingsw.model.modelView;
 
 import it.polimi.ingsw.model.Type;
 
-public class ItemTileView {
+import java.io.Serializable;
+
+public class ItemTileView implements Serializable {
 
     private Type type;
 

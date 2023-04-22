@@ -1,5 +1,8 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.listeners.EventListener;
+import it.polimi.ingsw.listeners.EventType;
+import it.polimi.ingsw.listeners.ListenerManager;
 import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 
@@ -17,7 +20,7 @@ public class GameController {
     private SendMessages sendMessages;
 
     //private HashMap<String, Client> playerMap;
-
+    private ListenerManager listenerManager;
 
     /*
         private SetupController setupController;
@@ -29,6 +32,7 @@ public class GameController {
     //private transient final PropertyChangeSupport listeners=new PropertyChangeSupport(this);
 
     public GameController( Game game) throws Exception {
+        this.listenerManager=new ListenerManager();
         this.game=game;
         initializeControllers();
     }
@@ -105,7 +109,7 @@ public class GameController {
         checkError(game.getBoard().checkFinishChoice());
         phaseController.changePhase();
         game.getTurnPlayer().selection(game.getBoard());
-       // sendMessage(game.getTurnPlayer().getNickname(),MessageFromServerType.END_PHASE);
+        sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.RECEIVE);
     }
     public void permutePlayerTiles(MessageFromClient message) throws Exception {
         illegalPhase(TurnPhase.SELECT_ORDER_TILES);
@@ -179,6 +183,13 @@ public class GameController {
 
     public void setSendMessages(SendMessages sendMessages) {
         this.sendMessages = sendMessages;
+    }
+    public void addListener(EventType eventType, EventListener listener) {
+        this.listenerManager.addListener(eventType,listener);
+    }
+
+    public void removeListener(EventType eventType, EventListener listener) {
+        this.listenerManager.removeListener(eventType, listener);
     }
 
     /*

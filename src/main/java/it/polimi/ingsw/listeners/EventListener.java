@@ -11,5 +11,6 @@ public abstract class EventListener {
         this.sendMessage = sendMessage;
     }
 
-    public abstract void onEvent(MessagePayload messagePayload);
+    public abstract void onEvent(Object messagePayload);
+
 }

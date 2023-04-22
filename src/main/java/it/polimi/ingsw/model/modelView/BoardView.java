@@ -2,7 +2,9 @@ package it.polimi.ingsw.model.modelView;
 
 import it.polimi.ingsw.model.Type;
 
-public class BoardView {
+import java.io.Serializable;
+
+public class BoardView implements Serializable {
     private final BoardBoxView[][] boardView;
 
     public BoardView(BoardBoxView[][] boardView) {
