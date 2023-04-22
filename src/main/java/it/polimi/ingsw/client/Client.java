@@ -25,7 +25,7 @@ public class Client {
         this.game=gameController.getModel();
     }
 
-    public void receiveMessageFromClient(String nickname,MessageFromServer messageServer) {
+    public void receiveMessageFromServer(String nickname, MessageFromServer messageServer) {
         try{
             System.out.println(nickname + " RECEIVE MESSAGE");
             switch (messageServer.getServerMessageHeader().getMessageFromServer()) {

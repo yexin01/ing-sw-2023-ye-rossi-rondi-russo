@@ -46,7 +46,7 @@ public class SendMessages {
     public void sendMessage(String nickname, MessagePayload payload, MessageFromServerType messageType){
         ServerMessageHeader header=new ServerMessageHeader(messageType,nickname);
         MessageFromServer message=new MessageFromServer(header,payload);
-        getClient(nickname).receiveMessageFromClient(nickname,message);
+        getClient(nickname).receiveMessageFromServer(nickname,message);
         //TODO serialize message
     }
 
@@ -55,7 +55,7 @@ public class SendMessages {
         MessagePayload payload=new MessagePayload(null);
         payload.put(PayloadKeyServer.ERRORMESSAGE,error);
         MessageFromServer message=new MessageFromServer(header,payload);
-        getClient(nickname).receiveMessageFromClient(nickname,message);
+        getClient(nickname).receiveMessageFromServer(nickname,message);
         //TODO serialize message
     }
 
