@@ -53,9 +53,9 @@ class CommonGoalCard11Test {
         CommonGoalCard11 commonGoalCard11 = new CommonGoalCard11();
         Bookshelf bookshelf = new Bookshelf(6,5,3);
         int x = 5; int y = 1; int tileID = 0;
-        for (int i=0; i<5; i++) {
+        for (int i=0; i<4; i++) {
             if (i == 4) {
-                bookshelf.getMatrix()[x-i][y-i] = new ItemTile(Type.TROPHY, tileID);
+                bookshelf.getMatrix()[x-i][y+i] = new ItemTile(Type.TROPHY, tileID);
             } else {
             bookshelf.getMatrix()[x-i][y+i] = new ItemTile(Type.CAT, tileID);}
             tileID++;

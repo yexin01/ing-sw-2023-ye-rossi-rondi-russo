@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.exceptions.Error;
 import it.polimi.ingsw.json.GameRules;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +11,28 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTest {
+
+    @Test
+    @DisplayName("checkCoordinates: check for not occupiable tile")
+    void checkCoordinates() throws Exception {
+        Board board = new Board();
+        GameRules gameRules = new GameRules();
+        int numPlayers = 2;
+        board.firstFillBoard(numPlayers, gameRules);
+        int x = 0; int y = 0;
+        assertThrows(Error.class, ()->board.checkCoordinates(x,y));
+    }
+
+    @Test
+    @DisplayName("checkCoordinates: check for out of bound tile")
+    void checkCoordinatesCC1() throws Exception {
+        Board board = new Board();
+        GameRules gameRules = new GameRules();
+        int numPlayers = 2;
+        board.firstFillBoard(numPlayers, gameRules);
+        int x = 0; int y = 9;
+        assertThrows(Error.class, ()->board.checkCoordinates(x,y));
+    }
 
     @Test
     @DisplayName("firstFill: check for starting fill box 0,0 (2P)")

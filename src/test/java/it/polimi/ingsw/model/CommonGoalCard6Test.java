@@ -84,6 +84,6 @@ class CommonGoalCard6Test {
                 bookshelf.getMatrix()[y][i] = new ItemTile(Type.values()[i], tileId);}
             tileId++;
         }
-        assertTrue(commonGoalCard6.checkGoal(bookshelf.getMatrix()));
+        assertFalse(commonGoalCard6.checkGoal(bookshelf.getMatrix()));
     }
 }

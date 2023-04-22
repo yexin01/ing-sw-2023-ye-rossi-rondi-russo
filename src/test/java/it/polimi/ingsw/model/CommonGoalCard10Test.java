@@ -55,7 +55,7 @@ class CommonGoalCard10Test {
     void checkGoalCC3() {
         CommonGoalCard10 commonGoalCard10 = new CommonGoalCard10();
         Bookshelf bookshelf = new Bookshelf(6,5,3);
-        int x = 4; int y = 2; int tileID = 0;
+        int x = 3; int y = 2; int tileID = 0;
         bookshelf.getMatrix()[x][y] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[x-1][y-1] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[x-1][y+1] = new ItemTile(Type.CAT, tileID); tileID++;

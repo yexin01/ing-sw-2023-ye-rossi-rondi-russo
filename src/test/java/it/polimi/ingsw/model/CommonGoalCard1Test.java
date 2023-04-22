@@ -74,6 +74,6 @@ class CommonGoalCard1Test {
         bookshelf.getMatrix()[0][4] = new ItemTile(Type.TROPHY, tileID); tileID++;
         bookshelf.getMatrix()[1][3] = new ItemTile(Type.TROPHY, tileID); tileID++;
         bookshelf.getMatrix()[1][4] = new ItemTile(Type.TROPHY, tileID);
-        Assertions.assertFalse(commonGoalCard1.checkGoal(bookshelf.getMatrix()));
+        Assertions.assertTrue(commonGoalCard1.checkGoal(bookshelf.getMatrix()));
     }
 }

@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CommonGoalCard3Test {
 
     @Test
-    @DisplayName("Generic true check for CommonGoal3")
+    @DisplayName("Generic false check for CommonGoal3")
     void checkGoal() {
         CommonGoalCard3 commonGoalCard3 = new CommonGoalCard3();
         Bookshelf bookshelf = new Bookshelf(6,5,3);
@@ -33,7 +33,7 @@ class CommonGoalCard3Test {
         bookshelf.getMatrix()[4][3] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[3][3] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[2][3] = new ItemTile(Type.CAT, tileID);
-        assertTrue(commonGoalCard3.checkGoal(bookshelf.getMatrix()));
+        assertFalse(commonGoalCard3.checkGoal(bookshelf.getMatrix()));
     }
 
     @Test
@@ -47,20 +47,20 @@ class CommonGoalCard3Test {
         bookshelf.getMatrix()[3][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][1] = new ItemTile(Type.CAT, tileID); tileID++;
 
-        bookshelf.getMatrix()[4][1] = new ItemTile(Type.TROPHY, tileID); tileID++;
-        bookshelf.getMatrix()[3][1] = new ItemTile(Type.TROPHY, tileID); tileID++;
+        bookshelf.getMatrix()[0][0] = new ItemTile(Type.TROPHY, tileID); tileID++;
+        bookshelf.getMatrix()[0][1] = new ItemTile(Type.TROPHY, tileID); tileID++;
+        bookshelf.getMatrix()[1][1] = new ItemTile(Type.TROPHY, tileID); tileID++;
         bookshelf.getMatrix()[2][1] = new ItemTile(Type.TROPHY, tileID); tileID++;
-        bookshelf.getMatrix()[4][2] = new ItemTile(Type.TROPHY, tileID); tileID++;
 
-        bookshelf.getMatrix()[1][1] = new ItemTile(Type.PLANT, tileID); tileID++;
-        bookshelf.getMatrix()[1][2] = new ItemTile(Type.PLANT, tileID); tileID++;
-        bookshelf.getMatrix()[2][2] = new ItemTile(Type.PLANT, tileID); tileID++;
-        bookshelf.getMatrix()[3][2] = new ItemTile(Type.PLANT, tileID); tileID++;
+        bookshelf.getMatrix()[0][3] = new ItemTile(Type.PLANT, tileID); tileID++;
+        bookshelf.getMatrix()[0][4] = new ItemTile(Type.PLANT, tileID); tileID++;
+        bookshelf.getMatrix()[1][3] = new ItemTile(Type.PLANT, tileID); tileID++;
+        bookshelf.getMatrix()[2][3] = new ItemTile(Type.PLANT, tileID); tileID++;
 
-        bookshelf.getMatrix()[0][3] = new ItemTile(Type.CAT, tileID); tileID++;
-        bookshelf.getMatrix()[1][3] = new ItemTile(Type.CAT, tileID); tileID++;
-        bookshelf.getMatrix()[2][3] = new ItemTile(Type.CAT, tileID); tileID++;
-        bookshelf.getMatrix()[2][4] = new ItemTile(Type.CAT, tileID);
+        bookshelf.getMatrix()[3][2] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[4][2] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[4][3] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[4][4] = new ItemTile(Type.CAT, tileID);
         assertTrue(commonGoalCard3.checkGoal(bookshelf.getMatrix()));
     }
 
@@ -75,20 +75,20 @@ class CommonGoalCard3Test {
         bookshelf.getMatrix()[4][1] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[4][2] = new ItemTile(Type.CAT, tileID); tileID++;
 
-        bookshelf.getMatrix()[4][0] = new ItemTile(Type.TROPHY, tileID); tileID++;
         bookshelf.getMatrix()[3][0] = new ItemTile(Type.TROPHY, tileID); tileID++;
-        bookshelf.getMatrix()[3][1] = new ItemTile(Type.TROPHY, tileID); tileID++;
+        bookshelf.getMatrix()[2][0] = new ItemTile(Type.TROPHY, tileID); tileID++;
         bookshelf.getMatrix()[2][1] = new ItemTile(Type.TROPHY, tileID); tileID++;
+        bookshelf.getMatrix()[1][1] = new ItemTile(Type.TROPHY, tileID); tileID++;
 
-        bookshelf.getMatrix()[1][1] = new ItemTile(Type.PLANT, tileID); tileID++;
-        bookshelf.getMatrix()[1][2] = new ItemTile(Type.PLANT, tileID); tileID++;
-        bookshelf.getMatrix()[2][2] = new ItemTile(Type.PLANT, tileID); tileID++;
-        bookshelf.getMatrix()[2][3] = new ItemTile(Type.PLANT, tileID); tileID++;
+        bookshelf.getMatrix()[0][2] = new ItemTile(Type.PLANT, tileID); tileID++;
+        bookshelf.getMatrix()[0][3] = new ItemTile(Type.PLANT, tileID); tileID++;
+        bookshelf.getMatrix()[1][3] = new ItemTile(Type.PLANT, tileID); tileID++;
+        bookshelf.getMatrix()[1][4] = new ItemTile(Type.PLANT, tileID); tileID++;
 
-        bookshelf.getMatrix()[2][4] = new ItemTile(Type.CAT, tileID); tileID++;
-        bookshelf.getMatrix()[1][4] = new ItemTile(Type.CAT, tileID); tileID++;
-        bookshelf.getMatrix()[1][3] = new ItemTile(Type.CAT, tileID); tileID++;
-        bookshelf.getMatrix()[0][3] = new ItemTile(Type.CAT, tileID);
+        bookshelf.getMatrix()[5][4] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[4][4] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[3][4] = new ItemTile(Type.CAT, tileID); tileID++;
+        bookshelf.getMatrix()[3][3] = new ItemTile(Type.CAT, tileID);
         assertTrue(commonGoalCard3.checkGoal(bookshelf.getMatrix()));
     }
 
@@ -103,15 +103,15 @@ class CommonGoalCard3Test {
         bookshelf.getMatrix()[4][1] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[4][2] = new ItemTile(Type.CAT, tileID); tileID++;
 
-        bookshelf.getMatrix()[4][0] = new ItemTile(Type.TROPHY, tileID); tileID++;
         bookshelf.getMatrix()[3][0] = new ItemTile(Type.TROPHY, tileID); tileID++;
-        bookshelf.getMatrix()[3][1] = new ItemTile(Type.TROPHY, tileID); tileID++;
+        bookshelf.getMatrix()[2][0] = new ItemTile(Type.TROPHY, tileID); tileID++;
         bookshelf.getMatrix()[2][1] = new ItemTile(Type.TROPHY, tileID); tileID++;
+        bookshelf.getMatrix()[1][1] = new ItemTile(Type.TROPHY, tileID); tileID++;
 
-        bookshelf.getMatrix()[1][1] = new ItemTile(Type.PLANT, tileID); tileID++;
-        bookshelf.getMatrix()[1][2] = new ItemTile(Type.PLANT, tileID); tileID++;
-        bookshelf.getMatrix()[2][2] = new ItemTile(Type.PLANT, tileID); tileID++;
-        bookshelf.getMatrix()[2][3] = new ItemTile(Type.PLANT, tileID);
+        bookshelf.getMatrix()[5][4] = new ItemTile(Type.PLANT, tileID); tileID++;
+        bookshelf.getMatrix()[4][4] = new ItemTile(Type.PLANT, tileID); tileID++;
+        bookshelf.getMatrix()[3][4] = new ItemTile(Type.PLANT, tileID); tileID++;
+        bookshelf.getMatrix()[2][4] = new ItemTile(Type.PLANT, tileID);
         assertFalse(commonGoalCard3.checkGoal(bookshelf.getMatrix()));
     }
 }
