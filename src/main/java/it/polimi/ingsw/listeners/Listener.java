@@ -6,7 +6,7 @@ import it.polimi.ingsw.server.SendMessages;
 
 public class Listener extends EventListener{
 
-    protected Listener(SendMessages sendMessage) {
+    public Listener(SendMessages sendMessage) {
         super(sendMessage);
     }
 

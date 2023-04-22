@@ -2,10 +2,10 @@ package it.polimi.ingsw.model.modelView;
 
 import it.polimi.ingsw.model.Type;
 
-public class MatrixView {
+public class BoardView {
     private final BoardBoxView[][] boardView;
 
-    public MatrixView(BoardBoxView[][] boardView) {
+    public BoardView(BoardBoxView[][] boardView) {
         this.boardView = boardView;
     }
 

@@ -2,6 +2,8 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.messages.ErrorType;
+import it.polimi.ingsw.model.modelView.BoardBoxView;
+import it.polimi.ingsw.model.modelView.ItemTileView;
 
 
 import java.util.*;
@@ -36,6 +38,17 @@ public class Bookshelf {
                 freeShelves[j]++;
             }
         }
+    }
+    public ItemTileView[][] cloneBoockshelf(){
+        ItemTileView[][] bookshelfView=new ItemTileView[matrix.length][matrix[0].length];
+        ItemTile itemTile;
+        for (int i = matrix.length-1; i >=0; i--) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                itemTile=matrix[i][j];
+                bookshelfView[i][j]=new ItemTileView(itemTile.getType(),itemTile.getTileID());
+            }
+        }
+        return bookshelfView;
     }
 
     private int maxFreeShelves() {
@@ -110,7 +123,6 @@ public class Bookshelf {
     }
 
     public void insertTiles(ArrayList<ItemTile> selectedItemTiles) throws Error {
-
         int j = 0;
         for (int i = getMatrix().length - 1; j < selectedItemTiles.size(); i--) {
             if (getMatrix()[i][columnSelected].getTileID() == -1) {

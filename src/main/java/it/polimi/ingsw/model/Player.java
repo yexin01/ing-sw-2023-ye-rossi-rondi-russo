@@ -7,7 +7,7 @@ import it.polimi.ingsw.listeners.*;
 import it.polimi.ingsw.listeners.ListenerManager;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.messages.PayloadKeyServer;
-import it.polimi.ingsw.model.modelView.MatrixView;
+import it.polimi.ingsw.model.modelView.BoardView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
 
 import java.util.ArrayList;
@@ -78,7 +78,7 @@ public class Player {
 
     public void selection(Board board) {
         selectedItems=board.selected();
-        MatrixView newBoard=new MatrixView(board.cloneBoard());
+        BoardView newBoard=new BoardView(board.cloneBoard());
         MessagePayload payload=new MessagePayload(EventType.BOARD_SELECTION);
         payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
         payload.put(PayloadKeyServer.NEWBOARD,newBoard);

@@ -20,6 +20,10 @@ public class CommonGoalView {
     public String getWhoWonLastToken() {
         return whoWonLastToken;
     }
+
+    public int getLastPointsLeft() {
+        return lastPointsLeft;
+    }
 /*
     public CommonGoalCard getCommonGoalCard() {
         return commonGoalCard;
