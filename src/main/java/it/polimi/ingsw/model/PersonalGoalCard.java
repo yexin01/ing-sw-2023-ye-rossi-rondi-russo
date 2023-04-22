@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 public class PersonalGoalCard {
-    private ArrayList<PersonalGoalBox> cells;
+    private final ArrayList<PersonalGoalBox> cells;
 
     public PersonalGoalCard(ArrayList<PersonalGoalBox> cells) {
         this.cells = cells;

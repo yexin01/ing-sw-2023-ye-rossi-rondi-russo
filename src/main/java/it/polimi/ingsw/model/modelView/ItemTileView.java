@@ -1,15 +1,18 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.modelView;
 
-import java.util.Observable;
+import it.polimi.ingsw.model.Type;
 
-public class ItemTile{
+import java.io.Serializable;
+
+public class ItemTileView implements Serializable {
+
     private Type type;
 
     public Type getType() {
         return type;
     }
 
-    public ItemTile(Type type,int tileID) {
+    public ItemTileView(Type type,int tileID) {
         this.type = type;
         this.tileID = tileID;
     }
@@ -19,10 +22,4 @@ public class ItemTile{
     public int getTileID() {
         return tileID;
     }
-
-    public void setTileID(int tileID) {
-        this.tileID = tileID;
-    }
-
-
 }

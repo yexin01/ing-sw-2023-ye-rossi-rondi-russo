@@ -1,5 +1,7 @@
 package it.polimi.ingsw.listeners;
 
+import it.polimi.ingsw.messages.MessagePayload;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,16 +34,17 @@ public class ListenerManager {
             listeners.remove(listener);
         }
     }
-    public void fireEvent(EventType eventName, Object newValue, String playerNickname) {
+    public void fireEvent(EventType eventName, MessagePayload newValue, String playerNickname) {
         if (listenersMap.containsKey(eventName)) {
             List<Object> listeners = listenersMap.get(eventName);
             for (Object listener : listeners) {
                 if (listener instanceof EventListener) {
-                    ((EventListener) listener).onEvent(eventName, newValue, playerNickname);
+                    ((EventListener) listener).onEvent(newValue);
                 }
             }
         }
     }
+
 
 }
 

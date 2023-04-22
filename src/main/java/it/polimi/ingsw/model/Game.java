@@ -99,9 +99,10 @@ public class Game {
     public void addPlayers(String nickname, SendMessages sendMessages) throws Exception {
         if (players.size() < 3) {
             Player p = new Player(nickname);
-            p.addListener(EventType.BOARD_SELECTION,new BoardListener(sendMessages));
+            Listener listener=new Listener(sendMessages);
+            p.addListener(EventType.BOARD_SELECTION,listener);
             //p.addListener(EventType.BOOKSHELF_INSERTION_AND_POINTS, new BookshelfListener(playerMap));
-            p.addListener(EventType.END_TURN, new EndTurnListener(sendMessages));
+            p.addListener(EventType.END_TURN,listener);
             players.add(p);
         }
     }
@@ -223,14 +224,14 @@ public class Game {
         int numOfCommonGoals = gameRules.getNumOfCommonGoals();
         int numOfPossibleCommonGoalsCards = gameRules.getCommonGoalCardsSize();
         ArrayList<Integer> numbers = generateRandomNumber(numOfPossibleCommonGoalsCards, numOfCommonGoals);
-
         setCommonGoalCards(new ArrayList<CommonGoalCard>());
-        TokenListener tokenListener=new TokenListener(sendMessages);
+        //TokenListener tokenListener=new TokenListener(sendMessages);
         for (Integer number : numbers) {
             String className = gameRules.getCommonGoalCard(number);
             Class<?> clazz = Class.forName(className);
             Object obj = clazz.getDeclaredConstructor().newInstance();
-            ((CommonGoalCard) obj).addListener(EventType.REMOVE_TOKEN,tokenListener);
+            Listener listener=new Listener(sendMessages);
+            ((CommonGoalCard) obj).addListener(EventType.REMOVE_TOKEN,listener);
             commonGoalCards.add((CommonGoalCard) obj);
         }
 

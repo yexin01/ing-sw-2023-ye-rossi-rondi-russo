@@ -5,10 +5,11 @@ package it.polimi.ingsw.messages;
 
 import it.polimi.ingsw.listeners.EventType;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MessagePayload {
+public class MessagePayload implements Serializable {
     private Map<PayloadKeyServer, Object> data;
     private final EventType event;
     public MessagePayload(EventType event) {

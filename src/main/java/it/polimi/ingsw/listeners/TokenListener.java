@@ -5,7 +5,7 @@ import it.polimi.ingsw.messages.MessageFromServerType;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.messages.PayloadKeyServer;
 import it.polimi.ingsw.server.SendMessages;
-
+/*
 public class TokenListener  extends EventListener{
     public TokenListener(SendMessages sendMessage) {
         super(sendMessage);
@@ -39,5 +39,5 @@ public class TokenListener  extends EventListener{
      */
 
 
-}
+
 
