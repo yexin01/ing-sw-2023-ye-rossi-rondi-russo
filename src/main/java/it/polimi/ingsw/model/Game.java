@@ -8,7 +8,7 @@ import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.server.ServerView;
 
 import java.util.*;
-
+//TODO CAMBIARE LA CREAZIONE DELLE PERSONAL GIAL DIRETTAMENTE DI ITEMTILEVIEW
 public class Game {
     //private GameInfo gameInfo;
     private ArrayList<Player> players;

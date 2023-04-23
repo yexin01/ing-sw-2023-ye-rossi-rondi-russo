@@ -4,7 +4,6 @@ import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.PersonalGoalBox;
 import it.polimi.ingsw.model.PersonalGoalCard;
-import it.polimi.ingsw.model.Type;
 import it.polimi.ingsw.model.modelView.*;
 
 //TODO manage it differently by adding the network part, it was needed to see how the message exchange works
@@ -147,8 +146,8 @@ public class ClientView {
         for (int i = 0; i < matrix.length; i++) {
             System.out.printf("row"+i+" ");
             for (int j = 0; j < matrix[i].length; j++) {
-                if (matrix[i][j].getItemTileView().getType()!=null) {
-                    System.out.printf("%-10s",+j+""+matrix[i][j].getItemTileView().getType());
+                if (matrix[i][j].getItemTileView().getTypeView()!=null) {
+                    System.out.printf("%-10s",+j+""+matrix[i][j].getItemTileView().getTypeView());
                 } else {
                     System.out.printf("%-10s",+j+"EMPTY");
                 }
@@ -161,7 +160,7 @@ public class ClientView {
             System.out.printf("row" + i + " ");
             for (int j = 0; j < matrix[i].length; j++) {
                 if (matrix[i][j].getTileID() != -1) {
-                    System.out.printf("%-10s", +j + "" + matrix[i][j].getType());
+                    System.out.printf("%-10s", +j + "" + matrix[i][j].getTypeView());
                 } else {
                     System.out.printf("%-10s", +j + " EMPTY");
                 }
@@ -172,11 +171,11 @@ public class ClientView {
     public void printItemTilesSelected(ItemTileView[] tiles){
         int j=0;
         for(ItemTileView t:tiles){
-            System.out.printf("%-10s", +(j++) + " "+t.getType());
+            System.out.printf("%-10s", +(j++) + " "+t.getTypeView());
         }
         System.out.println("");
     }
-    //TODO finish and test this method and optimize
+    //TODO finish and optimize
     public void printPersonalGoal(PersonalGoalCard coordinates,int rows,int columns){
         //ItemTileView[][] matrix= bookshelf.getBookshelfView();
         System.out.printf(coordinates.getCells().get(0).getType().toString());

@@ -117,7 +117,7 @@ public class GameController {
         }
         MessagePayload payload=new MessagePayload(EventType.TILES_SELECTED);
         payload.put(PayloadKeyServer.TILES_SELECTED,selectedItems);
-        serverView.firePlayer(null,MessageFromServerType.DATA,getTurnNickname());
+        serverView.firePlayer(payload,MessageFromServerType.DATA,getTurnNickname());
     }
     public void permutePlayerTiles(MessageFromClient message) throws Exception {
         illegalPhase(TurnPhase.SELECT_ORDER_TILES);

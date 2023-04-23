@@ -13,7 +13,7 @@ public class BookshelfView implements Serializable {
 
     public ItemTileView[][] getBookshelfView(){return bookshelfView;}
     public Type getTypeBookshelf(int x, int y) {
-        return bookshelfView[x][y].getType();
+        return bookshelfView[x][y].getTypeView();
     }
     public int getIdBookshelf(int x, int y) {
         return bookshelfView[x][y].getTileID();
