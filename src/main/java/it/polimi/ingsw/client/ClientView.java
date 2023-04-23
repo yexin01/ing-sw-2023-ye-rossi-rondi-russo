@@ -1,16 +1,15 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.listeners.EventType;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.modelView.*;
 
 //TODO manage it differently by adding the network part, it was needed to see how the message exchange works
-public class ClientUI {
+public class ClientView {
     private final String nickname;
     private final GameController gameController;
     private final Client client;
-    public ClientUI(String nickname, GameController gameController, Client client) {
+    public ClientView(String nickname, GameController gameController, Client client) {
         this.nickname = nickname;
         this.gameController = gameController;
         this.client = client;
@@ -39,7 +38,7 @@ public class ClientUI {
 
                  */
             }
-            askClient();
+            //askClient();
             //ask();
         }catch(Exception e){
         }
@@ -58,9 +57,13 @@ public class ClientUI {
                 System.out.println(" AdjacentPoint "+points.getAdjacentPoints()+" How many token you have:"+points.getHowManyTokenYouHave()+" PersonalGoalPoint "+points.getPersonalGoalPoints());
                 System.out.println("END TURN "+this.nickname);
                 throw new Exception();
-            case REMOVE_TOKEN:
+            case WIN_TOKEN:
                 CommonGoalView commonGoal=(CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN);
-                System.out.println(commonGoal.getLastPointsLeft()+"This are TOKEN points that remain, who won last token is"+commonGoal.getWhoWonLastToken()+" YOU ARE"+this.nickname);
+                System.out.println(commonGoal.getLastPointsLeft()+"This are TOKEN points that remain, you WON TOKEN  YOU ARE"+this.nickname);
+                break;
+            case LOSE_TOKEN:
+                CommonGoalView commonGoalLoser=(CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN);
+                System.out.println(commonGoalLoser.getLastPointsLeft()+"This are TOKEN points that remain, you LOSE TOKEN, WON "+commonGoalLoser.getWhoWonLastToken()+" YOU ARE"+this.nickname);
                 break;
         }
 

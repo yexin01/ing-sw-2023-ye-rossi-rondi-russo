@@ -3,7 +3,7 @@ package it.polimi.ingsw.messages;
 //TODO change PAYLOAD
 
 
-import it.polimi.ingsw.listeners.EventType;
+import it.polimi.ingsw.server.listener.EventType;
 
 import java.io.Serializable;
 import java.util.HashMap;

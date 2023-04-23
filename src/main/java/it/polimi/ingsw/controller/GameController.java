@@ -1,8 +1,5 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.listeners.EventListener;
-import it.polimi.ingsw.listeners.EventType;
-import it.polimi.ingsw.listeners.ListenerManager;
 import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 
@@ -10,17 +7,17 @@ import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.server.SendMessages;
+import it.polimi.ingsw.server.listener.ServerView;
 
 import java.util.List;
 
 
 public class GameController {
 
-    private SendMessages sendMessages;
+    private ServerView serverView;
 
     //private HashMap<String, Client> playerMap;
-    private ListenerManager listenerManager;
+    //private ListenerManager listenerManager;
 
     /*
         private SetupController setupController;
@@ -32,7 +29,7 @@ public class GameController {
     //private transient final PropertyChangeSupport listeners=new PropertyChangeSupport(this);
 
     public GameController( Game game) throws Exception {
-        this.listenerManager=new ListenerManager();
+        //this.listenerManager=new ListenerManager(serverView);
         this.game=game;
         initializeControllers();
     }
@@ -63,7 +60,7 @@ public class GameController {
         String nicknamePlayer= message.getNicknameSender();
         try{
             if (!nicknamePlayer.equals(phaseController.getTurnPlayer().getNickname())) {
-                sendMessages.sendError(game.getTurnPlayer().getNickname(),ErrorType.ILLEGAL_TURN);
+                serverView.sendError(ErrorType.ILLEGAL_TURN,nicknamePlayer);
                 //throw new Error(ErrorType.ILLEGAL_TURN);
             }
             switch (message.getClientMessage()) {
@@ -89,17 +86,17 @@ public class GameController {
         BoardBox boardBox=game.getBoard().getBoardBox(x,y);
         int maxPlayerSelectableTiles=game.getTurnPlayer().getBookshelf().numSelectableTiles();
         checkError(game.getBoard().checkSelectable(boardBox,maxPlayerSelectableTiles));
-        sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.RECEIVE);
+        serverView.firePlayer(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
     public void resetBoardChoice() throws Exception {
         illegalPhase(TurnPhase.SELECT_FROM_BOARD);
         game.getBoard().resetBoardChoice();
-        sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.RECEIVE);
+        serverView.firePlayer(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
 
     public void checkError(ErrorType possibleInvalidArgoment) throws Exception {
         if(possibleInvalidArgoment!=null){
-            sendMessages.sendError(game.getTurnPlayer().getNickname(),possibleInvalidArgoment);
+            serverView.sendError(possibleInvalidArgoment,getTurnNickname());
             throw new Exception();
         };
     }
@@ -109,7 +106,7 @@ public class GameController {
         checkError(game.getBoard().checkFinishChoice());
         phaseController.changePhase();
         game.getTurnPlayer().selection(game.getBoard());
-        sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.RECEIVE);
+        serverView.firePlayer(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
     public void permutePlayerTiles(MessageFromClient message) throws Exception {
         illegalPhase(TurnPhase.SELECT_ORDER_TILES);
@@ -117,7 +114,7 @@ public class GameController {
         checkError(game.getTurnPlayer().checkPermuteSelection(orderTiles));
         phaseController.changePhase();
         game.getTurnPlayer().permuteSelection(orderTiles);
-        sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.RECEIVE);
+        serverView.firePlayer(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
 
     public void selectingColumn(MessageFromClient message) throws Exception {
@@ -127,7 +124,7 @@ public class GameController {
         checkError(game.getTurnPlayer().getBookshelf().checkBookshelf(column,game.getTurnPlayer().getSelectedItems().size()));
         phaseController.changePhase();
         game.getTurnPlayer().getBookshelf().setColumnSelected(column);
-        sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.RECEIVE);
+        serverView.firePlayer(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
 
     public void insertBookshelf() throws Exception {
@@ -151,7 +148,7 @@ public class GameController {
         }
         //sendMessage(game.getTurnPlayer().getNickname(),MessageFromServerType.END_TURN);
         game.setNextPlayer();
-        sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.START_TURN);
+        serverView.firePlayer(null,MessageFromServerType.START_TURN,getTurnNickname());
         return true;
     }
 
@@ -160,18 +157,30 @@ public class GameController {
         List<Player> ranking=  game.checkWinner();
         MessagePayload payload=new MessagePayload(null);
         payload.put(PayloadKeyServer.RANKING,ranking);
-        sendMessages.sendAll(payload,MessageFromServerType.END_GAME);
+        //TODO
+        //sendMessages.sendAll(payload,MessageFromServerType.END_GAME);
         //sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.END_GAME);
         //endGameListener.endGame(ranking);
     }
 
     public void illegalPhase(TurnPhase phase) throws Exception {
         if(!phaseController.getCurrentPhase().equals(phase)){
-            sendMessages.sendError(game.getTurnPlayer().getNickname(),ErrorType.ILLEGAL_PHASE);
+            serverView.sendError(ErrorType.ILLEGAL_PHASE,getTurnNickname());
             throw new Exception();
             //throw new Error(ErrorType.ILLEGAL_PHASE);
         }
         return;
+    }
+    public String getTurnNickname() {
+        return game.getTurnPlayer().getNickname();
+    }
+
+    public ServerView getServerView() {
+        return serverView;
+    }
+
+    public void setServerView(ServerView serverView) {
+        this.serverView = serverView;
     }
     /*
     public void sendMessage(String nickname,MessageFromServerType messageFromServerType){
@@ -181,9 +190,7 @@ public class GameController {
      */
 
 
-    public void setSendMessages(SendMessages sendMessages) {
-        this.sendMessages = sendMessages;
-    }
+    /*
     public void addListener(EventType eventType, EventListener listener) {
         this.listenerManager.addListener(eventType,listener);
     }
