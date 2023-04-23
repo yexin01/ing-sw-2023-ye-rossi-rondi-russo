@@ -1,10 +1,10 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.client.Client;
-import it.polimi.ingsw.client.ClientUI;
+import it.polimi.ingsw.client.ClientView;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.server.SendMessages;
+import it.polimi.ingsw.server.listener.ServerView;
 import it.polimi.ingsw.model.Game;
 
 import java.util.HashMap;
@@ -15,27 +15,35 @@ public class App{
             Game game=new Game();
             GameController gameController=new GameController(game);
 
-            HashMap<String, ClientUI> playerMap = new HashMap<String, ClientUI>();
-            playerMap.put("TIZIO", new ClientUI("TIZIO",gameController,new Client("TIZIO")));
-            playerMap.put("CAIO", new ClientUI("CAIO",gameController,new Client("CAIO")));
-            playerMap.put("SEMPRONIO", new ClientUI("SEMPRONIO",gameController,new Client("SEMPRONIO")));
-            SendMessages sendMessages=new SendMessages(playerMap);
-            gameController.setSendMessages(sendMessages);
+            HashMap<String, ClientView> playerMap = new HashMap<String, ClientView>();
+            playerMap.put("TIZIO", new ClientView("TIZIO",gameController,new Client("TIZIO")));
+            playerMap.put("CAIO", new ClientView("CAIO",gameController,new Client("CAIO")));
+            playerMap.put("SEMPRONIO", new ClientView("SEMPRONIO",gameController,new Client("SEMPRONIO")));
+            ServerView serverView =new ServerView(playerMap);
+            gameController.setServerView(serverView);
 
             game.setNumPlayers(3);
-            game.addPlayers("TIZIO",sendMessages);
-            game.addPlayers("CAIO",sendMessages);
-            game.addPlayers("SEMPRONIO",sendMessages);
+            game.addPlayer("TIZIO", serverView);
+            game.addPlayer("CAIO", serverView);
+            game.addPlayer("SEMPRONIO", serverView);
 
             GameRules gameRules=new GameRules();
             game.getBoard().fillBag(gameRules);
             game.getBoard().firstFillBoard(3,gameRules);
             game.createPersonalGoalCard(gameRules);
-            game.createCommonGoalCard(gameRules,sendMessages);
+            game.createCommonGoalCard(gameRules, serverView);
+            //game.updateAllPoints();
+            game.getCommonGoalCards().get(0).removeToken(game.getTurnPlayer().getNickname());
+            game.setNextPlayer();
+            game.setNextPlayer();
+            game.getCommonGoalCards().get(0).removeToken(game.getTurnPlayer().getNickname());
+            game.getCommonGoalCards().get(1).removeToken(game.getTurnPlayer().getNickname());
 
-            game.updateAllPoints();
-            ClientUI player = playerMap.get("TIZIO");
-            player.askClient();
+            ClientView player = playerMap.get("TIZIO");
+            while(true){
+                player.askClient();
+            }
+
             //player.ask();
 
 /*
@@ -45,7 +53,7 @@ public class App{
             gameController.endGame();
             game.updatePointsCommonGoals();
             //game.getCommonGoalCards().get(0).removeToken(game.getTurnPlayer().getNickname());
-            game.setNextPlayer();
+
             game.updatePointsCommonGoals();
             game.setNextPlayer();
             game.setNextPlayer();

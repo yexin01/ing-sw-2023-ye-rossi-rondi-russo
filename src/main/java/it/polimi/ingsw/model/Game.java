@@ -3,7 +3,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.*;
-import it.polimi.ingsw.server.SendMessages;
+import it.polimi.ingsw.server.listener.ServerView;
 
 import java.util.*;
 
@@ -83,29 +83,34 @@ public class Game {
         this.commonGoalCards = commonGoalCards;
     }
 
-/*
-    public void addPlayer(String nickname) throws Exception {
+
+    public void addPlayer(String nickname,ServerView serverView) throws Exception {
         if (players.size() < numPlayers) {
             Player p = new Player(nickname);
-            p.addListener(EventType.BOARD_SELECTION, new BoardListener());
-            p.addListener(EventType.BOOKSHELF_INSERTION, new BookshelfListener());
-            p.addListener(EventType.POINTS, new PointsListener());
+            p.setServerView(serverView);
+            //p.addListener(EventType.BOARD_SELECTION, new BoardListener());
+            //p.addListener(EventType.BOOKSHELF_INSERTION, new BookshelfListener());
+            //p.addListener(EventType.POINTS, new PointsListener());
             players.add(p);
         }
     }
 
- */
 
-    public void addPlayers(String nickname, SendMessages sendMessages) throws Exception {
+
+
+    /*
+    public void addPlayers(String nickname, RemoteView remoteView) throws Exception {
         if (players.size() < 3) {
             Player p = new Player(nickname);
-            Listener listener=new Listener(sendMessages);
+            Listener listener=new Listener(remoteView);
             p.addListener(EventType.BOARD_SELECTION,listener);
             //p.addListener(EventType.BOOKSHELF_INSERTION_AND_POINTS, new BookshelfListener(playerMap));
             p.addListener(EventType.END_TURN,listener);
             players.add(p);
         }
     }
+
+     */
 
 
 
@@ -219,7 +224,7 @@ public class Game {
      * @param gameRules
      * @throws Exception
      */
-    public void createCommonGoalCard(GameRules gameRules,SendMessages sendMessages) throws Exception {
+    public void createCommonGoalCard(GameRules gameRules, ServerView serverView) throws Exception {
 
         int numOfCommonGoals = gameRules.getNumOfCommonGoals();
         int numOfPossibleCommonGoalsCards = gameRules.getCommonGoalCardsSize();
@@ -230,8 +235,9 @@ public class Game {
             String className = gameRules.getCommonGoalCard(number);
             Class<?> clazz = Class.forName(className);
             Object obj = clazz.getDeclaredConstructor().newInstance();
-            Listener listener=new Listener(sendMessages);
-            ((CommonGoalCard) obj).addListener(EventType.REMOVE_TOKEN,listener);
+            ((CommonGoalCard) obj).setServerView(serverView);
+            //Listener listener=new Listener(serverView);
+            //((CommonGoalCard) obj).addListener(EventType.REMOVE_TOKEN,listener);
             commonGoalCards.add((CommonGoalCard) obj);
         }
 

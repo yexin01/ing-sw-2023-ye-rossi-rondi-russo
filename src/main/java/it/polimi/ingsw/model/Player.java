@@ -3,13 +3,14 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.listeners.*;
-import it.polimi.ingsw.listeners.ListenerManager;
+import it.polimi.ingsw.messages.MessageFromServerType;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.messages.PayloadKeyServer;
 import it.polimi.ingsw.model.modelView.BoardView;
 import it.polimi.ingsw.model.modelView.BookshelfView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
+import it.polimi.ingsw.server.listener.EventType;
+import it.polimi.ingsw.server.listener.ServerView;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -17,7 +18,7 @@ import java.util.Objects;
 public class Player {
     private String nickname;
     //TODO final
-    private ListenerManager listenerManager;
+    private ServerView serverView;
 
     public Player () throws Exception {
         selectedItems=new ArrayList<>();
@@ -25,7 +26,7 @@ public class Player {
         //TODO change pass gameRules as a parameter
         GameRules gameRules=new GameRules();
         commonGoalPoints=new int[gameRules.getNumOfCommonGoals()];
-        this.listenerManager=new ListenerManager();
+        //this.listenerManager=new ListenerManager(serverView);
     }
     public Player(String nickname) throws Exception {
         this();
@@ -42,6 +43,7 @@ public class Player {
     }
 
   */
+    /*
     public void addListener(EventType eventType, EventListener listener) {
         this.listenerManager.addListener(eventType,listener);
     }
@@ -54,6 +56,8 @@ public class Player {
     public ListenerManager getListenerManager(){
         return listenerManager;
     }
+
+     */
 
 
 
@@ -83,7 +87,8 @@ public class Player {
         MessagePayload payload=new MessagePayload(EventType.BOARD_SELECTION);
         payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
         payload.put(PayloadKeyServer.NEWBOARD,newBoard);
-        listenerManager.fireEvent(EventType.BOARD_SELECTION, payload,nickname);
+        serverView.fireEvent(payload,MessageFromServerType.DATA,true,nickname);
+        //.on(.EventType.BOARD_SELECTION, payload,nickname);
     }
     /*
     public void selection(Board board) {
@@ -133,7 +138,8 @@ public class Player {
         payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
         payload.put(PayloadKeyServer.NEWBOOKSHELF,new BookshelfView(bookshelf.cloneBookshelf()));
         payload.put(PayloadKeyServer.POINTS,playerPointsView);
-        listenerManager.fireEvent(EventType.END_TURN, payload,nickname);
+        serverView.fireEvent(payload, MessageFromServerType.DATA,true,nickname);
+        //listenerManager.fireEvent(EventType.END_TURN, payload,nickname);
     }
     //PERSONALGOAL
     private int personalGoalPoints;
@@ -197,9 +203,19 @@ public class Player {
         return Objects.equals(nickname, player.nickname);
     }
 
-
+/*
     public void setListenerManager(ListenerManager listenerManager) {
         this.listenerManager = listenerManager;
+    }
+ */
+    public ServerView getServerView() {
+        return serverView;
+    }
+
+
+
+    public void setServerView(ServerView serverView) {
+        this.serverView = serverView;
     }
 }
 
