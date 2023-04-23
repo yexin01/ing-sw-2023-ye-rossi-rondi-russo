@@ -63,8 +63,8 @@ public abstract class CommonGoalCard {
         return serverView;
     }
 
+
     public void setServerView(ServerView serverView) {
         this.serverView = serverView;
     }
-
 }

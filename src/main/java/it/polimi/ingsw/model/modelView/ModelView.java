@@ -5,12 +5,13 @@ import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ModelView {
     private int numPlayers;
     private BoardView boardView;
     private CommonGoalView[] commonGoalViews;
-    private ArrayList<Player> players;
+    private String[] players;
     private ItemTileView[][][] bookshelfView;
     private PlayerPointsView[] playerPoints;
     private PersonalGoalCard[] playerPersonalGoal;
@@ -21,13 +22,14 @@ public class ModelView {
         bookshelfView=new ItemTileView[numPlayers][gameRules.getRowsBookshelf()][gameRules.getColumnsBookshelf()];
         playerPoints=new PlayerPointsView[numPlayers];
         playerPersonalGoal=new PersonalGoalCard[numPlayers];
+        players=new String[numPlayers];
     }
 
 
     public int getPlayerByNickname(String nickname) {
         int num=0;
-        for (Player p: players) {
-            if (p.getNickname().equals(nickname)) return num;
+        for (String p: players) {
+            if (p.equals(nickname)) return num;
             num++;
         }
         return -1;
@@ -78,8 +80,18 @@ public class ModelView {
     public void setPlayerPersonalGoal(PersonalGoalCard playerPersonalGoal, int index) {
         this.playerPersonalGoal[index] = playerPersonalGoal;
     }
+    public PlayerPointsView getPlayerPoints(int index) {
+        return playerPoints[index] ;
+    }
+    public PersonalGoalCard getPlayerPersonal(int index) {
+        return playerPersonalGoal[index] ;
+    }
 
-    public void setPlayers(ArrayList<Player> players) {
+    public void setPlayers(String players,int index) {
+        this.players[index] =players;
+    }
+
+    public void setPlayers(String[] players) {
         this.players = players;
     }
 }

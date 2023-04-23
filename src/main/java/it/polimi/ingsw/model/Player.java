@@ -20,11 +20,12 @@ public class Player {
 
     //private GameInfo gameInfo;
     private String nickname;
-    private int id;
-    //TODO final
-    private ServerView serverView;
 
-    public Player () throws Exception {
+    //TODO final
+    private final ServerView serverView;
+
+    public Player (ServerView serverView) throws Exception {
+        this.serverView = serverView;
 
         selectedItems=new ArrayList<>();
 
@@ -33,9 +34,10 @@ public class Player {
         commonGoalPoints=new int[gameRules.getNumOfCommonGoals()];
         //this.listenerManager=new ListenerManager(serverView);
     }
-    public Player(String nickname) throws Exception {
+    public Player(String nickname, ServerView serverView) throws Exception {
         this.nickname = nickname;
         //this.listenerManager = new ListenerManager();
+        this.serverView = serverView;
     }
   /*
     public <T> void addListener(EventType eventType, EventListener<T> listener) { // Aggiungi il parametro generico T
@@ -143,10 +145,10 @@ public class Player {
         MessagePayload payload=new MessagePayload(EventType.END_TURN);
         PlayerPointsView playerPointsView =new PlayerPointsView(playerPoints,commonGoalPoints,personalGoalPoints,adjacentPoints);
         payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
-        payload.put(PayloadKeyServer.NEWBOOKSHELF,new BookshelfView(bookshelfView));
+        payload.put(PayloadKeyServer.NEWBOOKSHELF,bookshelfView);
         payload.put(PayloadKeyServer.POINTS, playerPointsView);
-        serverView.setBookshelfView(bookshelfView,id);
-        serverView.setPlayerPoints(playerPointsView,id);
+        serverView.setBookshelfView(bookshelfView, serverView.getPlayerByNickname(nickname));
+        serverView.setPlayerPoints(playerPointsView,serverView.getPlayerByNickname(nickname));
         serverView.fireEvent(payload, MessageFromServerType.DATA,true,nickname);
         //listenerManager.fireEvent(EventType.END_TURN, payload,nickname);
     }
@@ -223,19 +225,7 @@ public class Player {
 
 
 
-    public void setServerView(ServerView serverView) {
-        this.serverView = serverView;
-    }
 
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 }
 
 

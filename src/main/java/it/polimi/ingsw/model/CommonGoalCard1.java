@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class CommonGoalCard1 extends CommonGoalCard{
 
+
+
     /**
      * Goal1: "Two groups each containing 4 tiles of the same type in a 2x2 square. The tiles of one square can be different from those of the other square."
      * Notes: - the implementation of this function follows the Italian rules where it says "gruppi separati" as groups separated by at least 1 box in the matrix

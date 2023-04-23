@@ -45,14 +45,15 @@ public class ClientView {
     }
 
     public void receiveData(MessageFromServer mes) throws Exception {
+        PlayerPointsView points;
         switch(mes.getMessagePayload().getEvent()){
             case BOARD_SELECTION:
                 System.out.println(mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE));
                 printMatrixBoard((BoardView) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD));
                 break;
             case END_TURN:
-                printMatrixBookshelf((BookshelfView) mes.getMessagePayload().get(PayloadKeyServer.NEWBOOKSHELF));
-                PlayerPointsView points=(PlayerPointsView) mes.getMessagePayload().get(PayloadKeyServer.POINTS);
+                printMatrixBookshelf((ItemTileView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOOKSHELF));
+                points=(PlayerPointsView) mes.getMessagePayload().get(PayloadKeyServer.POINTS);
                 System.out.println(points.getPoints()+" This are new points of "+mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE)+" YOU ARE"+this.nickname);
                 System.out.println(" AdjacentPoint "+points.getAdjacentPoints()+" How many token you have:"+points.getHowManyTokenYouHave()+" PersonalGoalPoint "+points.getPersonalGoalPoints());
                 System.out.println("END TURN "+this.nickname);
@@ -65,6 +66,17 @@ public class ClientView {
                 CommonGoalView commonGoalLoser=(CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN);
                 System.out.println(commonGoalLoser.getLastPointsLeft()+"This are TOKEN points that remain, you LOSE TOKEN, WON "+commonGoalLoser.getWhoWonLastToken()+" YOU ARE"+this.nickname);
                 break;
+            case ALL_INFO:
+                printMatrixBoard((BoardView) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD));
+                printMatrixBookshelf((ItemTileView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOOKSHELF));
+                points=(PlayerPointsView) mes.getMessagePayload().get(PayloadKeyServer.POINTS);
+                System.out.println(points.getPoints()+" This are new points of "+mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE)+" YOU ARE"+this.nickname);
+                System.out.println(" AdjacentPoint "+points.getAdjacentPoints()+" How many token you have:"+points.getHowManyTokenYouHave()+" PersonalGoalPoint "+points.getPersonalGoalPoints());
+                CommonGoalView commonGoalp=(CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN);
+                System.out.println(commonGoalp.getLastPointsLeft()+"This are TOKEN points that remain, you LOSE TOKEN, WON "+commonGoalp.getWhoWonLastToken()+" YOU ARE"+this.nickname);
+
+                break;
+
         }
 
     }
@@ -133,8 +145,8 @@ public class ClientView {
             System.out.println("");
         }
     }
-    public void printMatrixBookshelf(BookshelfView bookshelf){
-        ItemTileView[][] matrix= bookshelf.getBookshelfView();
+    public void printMatrixBookshelf(ItemTileView[][] matrix){
+        //ItemTileView[][] matrix= bookshelf.getBookshelfView();
         for (int i = 0; i < matrix.length; i++) {
             System.out.printf("row" + i + " ");
             for (int j = 0; j < matrix[i].length; j++) {

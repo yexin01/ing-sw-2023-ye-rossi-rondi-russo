@@ -4,6 +4,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.model.modelView.CommonGoalView;
+import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.server.ServerView;
 
 import java.util.*;
@@ -23,7 +24,6 @@ public class Game {
         players=new ArrayList<>();
         commonGoalCards=new ArrayList<>();
         board=new Board();
-
 
     }
       //PLAYERS
@@ -87,16 +87,14 @@ public class Game {
     }
 
 
-    public void addPlayer(String nickname, ServerView serverView, ModelView listener) throws Exception {
+    public void addPlayer(String nickname, ServerView serverView) throws Exception {
         if (players.size() < numPlayers) {
-            Player p = new Player(nickname);
-            p.setServerView(serverView);
-            p.setGameListener(listener);
+            Player p = new Player(nickname, serverView);
+
             //p.addListener(EventType.BOARD_SELECTION, new BoardListener());
             //p.addListener(EventType.BOOKSHELF_INSERTION, new BookshelfListener());
             //p.addListener(EventType.POINTS, new PointsListener());
             players.add(p);
-            p.setId(players.size()-1);
         }
     }
 
@@ -163,7 +161,7 @@ public class Game {
         int numMaxPlayer = playersJson.getMaxPlayers();
         if(!nickname.equals("stop") && players.size() < numMaxPlayer) {
             if(differentNickname(nickname)) {
-                Player player = new Player(nickname);
+                Player player = new Player(nickname, serverView);
                 players.add(player);
                 setNumPlayers(numPlayers + 1);
                 if(players.size() == numMaxPlayer) {
@@ -311,6 +309,7 @@ public class Game {
         int rows= gameRules.getRowsBookshelf();
         int columns= gameRules.getColumnsBookshelf();
         int maxSelectableTiles=gameRules.getMaxSelectableTiles();
+        int[] commonGoalsSetup;
         int i = 0;
         for (Player p : players) {
             PersonalGoalCard turnPersonal=gameRules.getPersonalGoalCard(numbers.get(i));
@@ -319,6 +318,12 @@ public class Game {
             Bookshelf bookshelf=new Bookshelf(rows,columns, maxSelectableTiles);
             p.setBookshelf(bookshelf);
             serverView.setBookshelfView(bookshelf.cloneBookshelf(),i);
+            commonGoalsSetup=new int[commonGoalCards.size()];
+
+            //Arrays.setAll(commonGoalsSetup, num -> 0);
+            Arrays.fill(commonGoalsSetup, 0);
+            PlayerPointsView setupPoints=new PlayerPointsView(0,commonGoalsSetup,0, 0);
+            serverView.setPlayerPoints(setupPoints,i);
             i++;
         }
     }

@@ -2,6 +2,8 @@ package it.polimi.ingsw.model;
 
 public class CommonGoalCard5 extends CommonGoalCard{
 
+
+
     /**
      * Goal5: "Three columns each formed by 6 tiles of maximum three different types. One column can show the same or a different combination of another column."
      * @param mat matrix of ItemTile[][]

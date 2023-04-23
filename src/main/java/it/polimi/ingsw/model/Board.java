@@ -18,6 +18,10 @@ public class Board{
 
     private BoardBox[][] matrix;
 
+    public Board() {
+
+    }
+
     public BoardBox[][] getMatrix() {return matrix;}
     public void setMatrix(BoardBox[][] matrix) {
         this.matrix = matrix;
@@ -350,6 +354,7 @@ public class Board{
     public ServerView getServerView() {
         return serverView;
     }
+
 
     public void setServerView(ServerView serverView) {
         this.serverView = serverView;

@@ -11,7 +11,7 @@ import java.util.Map;
 public class ServerView extends ModelView {
     //TODO Client entity will change once the network part is finished
     private final HashMap<String, ClientView> playerMap;
-    private ModelView modelView;
+
     //private final ClientUI player;
     //private final String nickname;
     public ServerView(HashMap<String, ClientView> playerMap, GameRules gameRules,int numPlayers) {
@@ -49,20 +49,14 @@ public class ServerView extends ModelView {
 
     public void sendInfo(String playerNickname){
         ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.INFO,playerNickname);
-        MessagePayload payload=new MessagePayload(null);
-        payload.put(PayloadKeyServer.NEWBOARD, modelView.getBoardView());
-        payload.put(PayloadKeyServer.NEWBOOKSHELF, modelView.getBookshelfView(modelView.getPlayerByNickname(playerNickname)));
-        //TODO finish send info
+        MessagePayload payload=new MessagePayload(EventType.ALL_INFO);
+        payload.put(PayloadKeyServer.NEWBOARD, getBoardView());
+        payload.put(PayloadKeyServer.NEWBOOKSHELF, getBookshelfView(getPlayerByNickname(playerNickname)));
+        payload.put(PayloadKeyServer.POINTS,getPlayerPoints(getPlayerByNickname(playerNickname)));
+        payload.put(PayloadKeyServer.PERSONAL_GOAL,getPlayerPersonal(getPlayerByNickname(playerNickname)));
         firePlayer(payload,MessageFromServerType.DATA,playerNickname);
     }
 
-    public ModelView getGameListener() {
-        return modelView;
-    }
-
-    public void setGameListener(ModelView modelView) {
-        this.modelView = modelView;
-    }
 /*
 
 
