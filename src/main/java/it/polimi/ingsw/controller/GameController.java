@@ -7,7 +7,7 @@ import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.server.listener.ServerView;
+import it.polimi.ingsw.server.ServerView;
 
 import java.util.List;
 

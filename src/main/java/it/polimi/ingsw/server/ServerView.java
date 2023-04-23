@@ -1,17 +1,21 @@
-package it.polimi.ingsw.server.listener;
+package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.client.ClientView;
+import it.polimi.ingsw.json.GameRules;
+import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.messages.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ServerView {
+public class ServerView extends ModelView {
     //TODO Client entity will change once the network part is finished
     private final HashMap<String, ClientView> playerMap;
+    private ModelView modelView;
     //private final ClientUI player;
     //private final String nickname;
-    public ServerView(HashMap<String, ClientView> playerMap) {
+    public ServerView(HashMap<String, ClientView> playerMap, GameRules gameRules,int numPlayers) {
+       super(gameRules,numPlayers);
         //this.player = player;
         this.playerMap = playerMap;
         //this.nickname = nickname;
@@ -42,6 +46,27 @@ public class ServerView {
         MessageFromServer message=new MessageFromServer(header,payload);
         playerMap.get(playerNickname).receiveMessageFromServer(playerNickname,message);
     }
+
+    public void sendInfo(String playerNickname){
+        ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.INFO,playerNickname);
+        MessagePayload payload=new MessagePayload(null);
+        payload.put(PayloadKeyServer.NEWBOARD, modelView.getBoardView());
+        payload.put(PayloadKeyServer.NEWBOOKSHELF, modelView.getBookshelfView(modelView.getPlayerByNickname(playerNickname)));
+        //TODO finish send info
+        firePlayer(payload,MessageFromServerType.DATA,playerNickname);
+    }
+
+    public ModelView getGameListener() {
+        return modelView;
+    }
+
+    public void setGameListener(ModelView modelView) {
+        this.modelView = modelView;
+    }
+/*
+
+
+ */
 
 
 

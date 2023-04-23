@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server.listener;
+package it.polimi.ingsw.messages;
 
 //TODO delete message from server and message from client
 public enum EventType {

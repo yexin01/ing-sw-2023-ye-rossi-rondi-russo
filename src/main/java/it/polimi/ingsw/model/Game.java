@@ -2,14 +2,16 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.listeners.*;
-import it.polimi.ingsw.server.listener.ServerView;
+import it.polimi.ingsw.model.modelView.ModelView;
+import it.polimi.ingsw.model.modelView.CommonGoalView;
+import it.polimi.ingsw.server.ServerView;
 
 import java.util.*;
 
 public class Game {
-
+    //private GameInfo gameInfo;
     private ArrayList<Player> players;
+    private ServerView serverView;
     private Board board;
     private int numPlayers;
     private int turnPlayer;
@@ -21,6 +23,7 @@ public class Game {
         players=new ArrayList<>();
         commonGoalCards=new ArrayList<>();
         board=new Board();
+
 
     }
       //PLAYERS
@@ -84,14 +87,16 @@ public class Game {
     }
 
 
-    public void addPlayer(String nickname,ServerView serverView) throws Exception {
+    public void addPlayer(String nickname, ServerView serverView, ModelView listener) throws Exception {
         if (players.size() < numPlayers) {
             Player p = new Player(nickname);
             p.setServerView(serverView);
+            p.setGameListener(listener);
             //p.addListener(EventType.BOARD_SELECTION, new BoardListener());
             //p.addListener(EventType.BOOKSHELF_INSERTION, new BookshelfListener());
             //p.addListener(EventType.POINTS, new PointsListener());
             players.add(p);
+            p.setId(players.size()-1);
         }
     }
 
@@ -230,12 +235,15 @@ public class Game {
         int numOfPossibleCommonGoalsCards = gameRules.getCommonGoalCardsSize();
         ArrayList<Integer> numbers = generateRandomNumber(numOfPossibleCommonGoalsCards, numOfCommonGoals);
         setCommonGoalCards(new ArrayList<CommonGoalCard>());
+        int num=0;
         //TokenListener tokenListener=new TokenListener(sendMessages);
         for (Integer number : numbers) {
             String className = gameRules.getCommonGoalCard(number);
             Class<?> clazz = Class.forName(className);
             Object obj = clazz.getDeclaredConstructor().newInstance();
             ((CommonGoalCard) obj).setServerView(serverView);
+            CommonGoalView common=new CommonGoalView(((CommonGoalCard) obj).getLastPoint(),null);
+            serverView.setCommonGoalViews(common,num++);
             //Listener listener=new Listener(serverView);
             //((CommonGoalCard) obj).addListener(EventType.REMOVE_TOKEN,listener);
             commonGoalCards.add((CommonGoalCard) obj);
@@ -305,8 +313,12 @@ public class Game {
         int maxSelectableTiles=gameRules.getMaxSelectableTiles();
         int i = 0;
         for (Player p : players) {
-            p.setPersonalGoalCard(gameRules.getPersonalGoalCard(numbers.get(i)));
-            p.setBookshelf(new Bookshelf(rows,columns, maxSelectableTiles));
+            PersonalGoalCard turnPersonal=gameRules.getPersonalGoalCard(numbers.get(i));
+            p.setPersonalGoalCard(turnPersonal);
+            serverView.setPlayerPersonalGoal(turnPersonal,i);
+            Bookshelf bookshelf=new Bookshelf(rows,columns, maxSelectableTiles);
+            p.setBookshelf(bookshelf);
+            serverView.setBookshelfView(bookshelf.cloneBookshelf(),i);
             i++;
         }
     }
@@ -340,7 +352,7 @@ public class Game {
         int points=0;
         for (int i=0;i<getTurnPlayer().getCommonGoalPoints().length;i++){
             if (getTurnPlayer().getCommonGoalPoints()[i]==0 && commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())){
-                int num=commonGoalCards.get(i).removeToken(getTurnPlayer().getNickname());
+                int num=commonGoalCards.get(i).removeToken(getTurnPlayer().getNickname(),i);
                 getTurnPlayer().setToken(i,num);
             }
             points=points+getTurnPlayer().getCommonGoalPoints(i);
@@ -394,4 +406,7 @@ public class Game {
     }
 
 
+    public void setServerView(ServerView gameInfo) {
+        this.serverView = gameInfo;
+    }
 }

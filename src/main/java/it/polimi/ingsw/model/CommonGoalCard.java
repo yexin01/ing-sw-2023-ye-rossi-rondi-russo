@@ -1,16 +1,18 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.server.listener.EventType;
+import it.polimi.ingsw.messages.EventType;
 import it.polimi.ingsw.messages.MessageFromServerType;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.messages.PayloadKeyServer;
 import it.polimi.ingsw.model.modelView.CommonGoalView;
-import it.polimi.ingsw.server.listener.ServerView;
+import it.polimi.ingsw.server.ServerView;
 
 import java.util.ArrayList;
 
 public abstract class CommonGoalCard {
+   // private GameInfo gameInfo;
     private ServerView serverView;
+
     public int getLastPoint(){
         if(points.size()==0){
             return 0;
@@ -21,12 +23,14 @@ public abstract class CommonGoalCard {
     public CommonGoalCard(){
         points=new ArrayList<>();
     }
-    public int removeToken(String nickname){
+    public int removeToken(String nickname,int index){
         if(points.size()>0){
             int point=points.get(points.size()-1);
             points.remove(points.size()-1);
             MessagePayload payloadWinner=new MessagePayload(EventType.WIN_TOKEN);
-            payloadWinner.put(PayloadKeyServer.TOKEN,new CommonGoalView(getLastPoint(),nickname));
+            CommonGoalView common=new CommonGoalView(getLastPoint(),nickname);
+            payloadWinner.put(PayloadKeyServer.TOKEN,common);
+            serverView.setCommonGoalViews(common,index);
             serverView.firePlayer(payloadWinner, MessageFromServerType.DATA,nickname);
             MessagePayload payloadLoser=new MessagePayload(EventType.LOSE_TOKEN);
             payloadLoser.put(PayloadKeyServer.WHO_CHANGE,nickname);
@@ -62,4 +66,5 @@ public abstract class CommonGoalCard {
     public void setServerView(ServerView serverView) {
         this.serverView = serverView;
     }
+
 }
