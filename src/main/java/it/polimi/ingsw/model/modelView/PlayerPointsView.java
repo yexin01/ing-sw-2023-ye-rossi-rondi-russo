@@ -9,6 +9,7 @@ public class PlayerPointsView implements Serializable {
     private final int personalGoalPoints;
     private final int adjacentPoints;
 
+
     public PlayerPointsView(int points, int[] commonGoalPoints, int personalGoalPoints, int adjacentPoints) {
         this.points = points;
         this.commonGoalPoints = commonGoalPoints;

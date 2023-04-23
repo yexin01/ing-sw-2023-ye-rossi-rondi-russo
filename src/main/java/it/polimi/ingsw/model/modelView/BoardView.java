@@ -20,7 +20,7 @@ public class BoardView implements Serializable {
     }
 
     public Type getTypeBoardBox(int x, int y) {
-        return boardView[x][y].getItemTileView().getType();
+        return boardView[x][y].getItemTileView().getTypeView();
     }
     public int getIdBoardBox(int x, int y) {
         return boardView[x][y].getItemTileView().getTileID();

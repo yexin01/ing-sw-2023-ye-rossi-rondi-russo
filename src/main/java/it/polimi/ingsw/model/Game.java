@@ -2,14 +2,17 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.listeners.*;
-import it.polimi.ingsw.server.listener.ServerView;
+import it.polimi.ingsw.model.modelView.ModelView;
+import it.polimi.ingsw.model.modelView.CommonGoalView;
+import it.polimi.ingsw.model.modelView.PlayerPointsView;
+import it.polimi.ingsw.server.ServerView;
 
 import java.util.*;
-
+//TODO CAMBIARE LA CREAZIONE DELLE PERSONAL GIAL DIRETTAMENTE DI ITEMTILEVIEW
 public class Game {
-
+    //private GameInfo gameInfo;
     private ArrayList<Player> players;
+    private ServerView serverView;
     private Board board;
     private int numPlayers;
     private int turnPlayer;
@@ -84,10 +87,10 @@ public class Game {
     }
 
 
-    public void addPlayer(String nickname,ServerView serverView) throws Exception {
+    public void addPlayer(String nickname, ServerView serverView) throws Exception {
         if (players.size() < numPlayers) {
-            Player p = new Player(nickname);
-            p.setServerView(serverView);
+            Player p = new Player(nickname, serverView);
+
             //p.addListener(EventType.BOARD_SELECTION, new BoardListener());
             //p.addListener(EventType.BOOKSHELF_INSERTION, new BookshelfListener());
             //p.addListener(EventType.POINTS, new PointsListener());
@@ -158,7 +161,7 @@ public class Game {
         int numMaxPlayer = playersJson.getMaxPlayers();
         if(!nickname.equals("stop") && players.size() < numMaxPlayer) {
             if(differentNickname(nickname)) {
-                Player player = new Player(nickname);
+                Player player = new Player(nickname, serverView);
                 players.add(player);
                 setNumPlayers(numPlayers + 1);
                 if(players.size() == numMaxPlayer) {
@@ -230,12 +233,15 @@ public class Game {
         int numOfPossibleCommonGoalsCards = gameRules.getCommonGoalCardsSize();
         ArrayList<Integer> numbers = generateRandomNumber(numOfPossibleCommonGoalsCards, numOfCommonGoals);
         setCommonGoalCards(new ArrayList<CommonGoalCard>());
+        int num=0;
         //TokenListener tokenListener=new TokenListener(sendMessages);
         for (Integer number : numbers) {
             String className = gameRules.getCommonGoalCard(number);
             Class<?> clazz = Class.forName(className);
             Object obj = clazz.getDeclaredConstructor().newInstance();
             ((CommonGoalCard) obj).setServerView(serverView);
+            CommonGoalView common=new CommonGoalView(((CommonGoalCard) obj).getLastPoint(),null);
+            serverView.setCommonGoalViews(common,num++);
             //Listener listener=new Listener(serverView);
             //((CommonGoalCard) obj).addListener(EventType.REMOVE_TOKEN,listener);
             commonGoalCards.add((CommonGoalCard) obj);
@@ -303,10 +309,21 @@ public class Game {
         int rows= gameRules.getRowsBookshelf();
         int columns= gameRules.getColumnsBookshelf();
         int maxSelectableTiles=gameRules.getMaxSelectableTiles();
+        int[] commonGoalsSetup;
         int i = 0;
         for (Player p : players) {
-            p.setPersonalGoalCard(gameRules.getPersonalGoalCard(numbers.get(i)));
-            p.setBookshelf(new Bookshelf(rows,columns, maxSelectableTiles));
+            PersonalGoalCard turnPersonal=gameRules.getPersonalGoalCard(numbers.get(i));
+            p.setPersonalGoalCard(turnPersonal);
+            serverView.setPlayerPersonalGoal(turnPersonal,i);
+            Bookshelf bookshelf=new Bookshelf(rows,columns, maxSelectableTiles);
+            p.setBookshelf(bookshelf);
+            serverView.setBookshelfView(bookshelf.cloneBookshelf(),i);
+            commonGoalsSetup=new int[commonGoalCards.size()];
+
+            //Arrays.setAll(commonGoalsSetup, num -> 0);
+            Arrays.fill(commonGoalsSetup, 0);
+            PlayerPointsView setupPoints=new PlayerPointsView(0,commonGoalsSetup,0, 0);
+            serverView.setPlayerPoints(setupPoints,i);
             i++;
         }
     }
@@ -340,7 +357,7 @@ public class Game {
         int points=0;
         for (int i=0;i<getTurnPlayer().getCommonGoalPoints().length;i++){
             if (getTurnPlayer().getCommonGoalPoints()[i]==0 && commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())){
-                int num=commonGoalCards.get(i).removeToken(getTurnPlayer().getNickname());
+                int num=commonGoalCards.get(i).removeToken(getTurnPlayer().getNickname(),i);
                 getTurnPlayer().setToken(i,num);
             }
             points=points+getTurnPlayer().getCommonGoalPoints(i);
@@ -394,4 +411,7 @@ public class Game {
     }
 
 
+    public void setServerView(ServerView gameInfo) {
+        this.serverView = gameInfo;
+    }
 }

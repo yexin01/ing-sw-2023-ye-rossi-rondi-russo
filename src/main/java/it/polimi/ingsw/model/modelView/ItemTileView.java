@@ -8,7 +8,7 @@ public class ItemTileView implements Serializable {
 
     private Type type;
 
-    public Type getType() {
+    public Type getTypeView() {
         return type;
     }
 

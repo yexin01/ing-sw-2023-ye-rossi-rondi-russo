@@ -1,17 +1,22 @@
-package it.polimi.ingsw.server.listener;
+package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.client.ClientView;
+import it.polimi.ingsw.json.GameRules;
+import it.polimi.ingsw.model.modelView.CommonGoalView;
+import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.messages.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ServerView {
+public class ServerView extends ModelView {
     //TODO Client entity will change once the network part is finished
     private final HashMap<String, ClientView> playerMap;
+
     //private final ClientUI player;
     //private final String nickname;
-    public ServerView(HashMap<String, ClientView> playerMap) {
+    public ServerView(HashMap<String, ClientView> playerMap, GameRules gameRules,int numPlayers) {
+       super(gameRules,numPlayers);
         //this.player = player;
         this.playerMap = playerMap;
         //this.nickname = nickname;
@@ -42,6 +47,22 @@ public class ServerView {
         MessageFromServer message=new MessageFromServer(header,payload);
         playerMap.get(playerNickname).receiveMessageFromServer(playerNickname,message);
     }
+
+    public void sendInfo(String playerNickname){
+        ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.INFO,playerNickname);
+        MessagePayload payload=new MessagePayload(EventType.ALL_INFO);
+        payload.put(PayloadKeyServer.NEWBOARD, getBoardView());
+        payload.put(PayloadKeyServer.NEWBOOKSHELF, getBookshelfView(getPlayerByNickname(playerNickname)));
+        payload.put(PayloadKeyServer.POINTS,getPlayerPoints(getPlayerByNickname(playerNickname)));
+        payload.put(PayloadKeyServer.TOKEN,getCommonGoalViews());
+        payload.put(PayloadKeyServer.PERSONAL_GOAL,getPlayerPersonal(getPlayerByNickname(playerNickname)));
+        firePlayer(payload,MessageFromServerType.DATA,playerNickname);
+    }
+
+/*
+
+
+ */
 
 
 

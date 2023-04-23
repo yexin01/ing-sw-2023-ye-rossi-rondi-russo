@@ -2,6 +2,8 @@ package it.polimi.ingsw.model;
 
 public class CommonGoalCard2 extends CommonGoalCard{
 
+
+
     /**
      * Goal2: "Two columns each formed by 6 different types of tiles."
      * @param mat matrix of ItemTile[][]

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
 public class CommonGoalCard9 extends CommonGoalCard{
+
+
     /**
      * Goal9: "Eight tiles of the same type. There’s no restriction about the position of these tiles."
      * @param mat matrix of ItemTile[][]
