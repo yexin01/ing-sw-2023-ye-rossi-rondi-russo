@@ -59,6 +59,7 @@ public class App{
             //game.getCommonGoalCards().get(1).removeToken(game.getTurnPlayer().getNickname());
 
             ClientView player = playerMap.get("TIZIO");
+            player.printItemTilesSelected(null);
             while(true){
                 player.askClient();
             }

@@ -94,7 +94,7 @@ public class Player {
         payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
         payload.put(PayloadKeyServer.NEWBOARD,newBoard);
         serverView.setBoardView(newBoard);
-        serverView.fireEvent(payload,MessageFromServerType.DATA,true,nickname);
+        //serverView.fireEvent(payload,MessageFromServerType.DATA,true,nickname);
         //.on(.EventType.BOARD_SELECTION, payload,nickname);
     }
     /*

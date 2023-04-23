@@ -2,6 +2,7 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.client.ClientView;
 import it.polimi.ingsw.json.GameRules;
+import it.polimi.ingsw.model.modelView.CommonGoalView;
 import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.messages.*;
 
@@ -53,6 +54,7 @@ public class ServerView extends ModelView {
         payload.put(PayloadKeyServer.NEWBOARD, getBoardView());
         payload.put(PayloadKeyServer.NEWBOOKSHELF, getBookshelfView(getPlayerByNickname(playerNickname)));
         payload.put(PayloadKeyServer.POINTS,getPlayerPoints(getPlayerByNickname(playerNickname)));
+        payload.put(PayloadKeyServer.TOKEN,getCommonGoalViews());
         payload.put(PayloadKeyServer.PERSONAL_GOAL,getPlayerPersonal(getPlayerByNickname(playerNickname)));
         firePlayer(payload,MessageFromServerType.DATA,playerNickname);
     }

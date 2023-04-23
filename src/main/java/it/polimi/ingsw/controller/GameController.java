@@ -6,9 +6,12 @@ import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.server.ServerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -106,7 +109,15 @@ public class GameController {
         checkError(game.getBoard().checkFinishChoice());
         phaseController.changePhase();
         game.getTurnPlayer().selection(game.getBoard());
-        serverView.firePlayer(null,MessageFromServerType.RECEIVE,getTurnNickname());
+        ArrayList<ItemTile> selected=game.getTurnPlayer().getSelectedItems();
+        ItemTileView[] selectedItems=new ItemTileView[selected.size()];
+        int j=0;
+        for(ItemTile i:selected){
+            selectedItems[j++]=new ItemTileView(i.getType(), i.getTileID());
+        }
+        MessagePayload payload=new MessagePayload(EventType.TILES_SELECTED);
+        payload.put(PayloadKeyServer.TILES_SELECTED,selectedItems);
+        serverView.firePlayer(null,MessageFromServerType.DATA,getTurnNickname());
     }
     public void permutePlayerTiles(MessageFromClient message) throws Exception {
         illegalPhase(TurnPhase.SELECT_ORDER_TILES);

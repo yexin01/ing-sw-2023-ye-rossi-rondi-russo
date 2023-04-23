@@ -2,6 +2,9 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.messages.*;
+import it.polimi.ingsw.model.PersonalGoalBox;
+import it.polimi.ingsw.model.PersonalGoalCard;
+import it.polimi.ingsw.model.Type;
 import it.polimi.ingsw.model.modelView.*;
 
 //TODO manage it differently by adding the network part, it was needed to see how the message exchange works
@@ -67,16 +70,24 @@ public class ClientView {
                 System.out.println(commonGoalLoser.getLastPointsLeft()+"This are TOKEN points that remain, you LOSE TOKEN, WON "+commonGoalLoser.getWhoWonLastToken()+" YOU ARE"+this.nickname);
                 break;
             case ALL_INFO:
+                System.out.println("BOARD "+nickname);
                 printMatrixBoard((BoardView) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD));
-                printMatrixBookshelf((ItemTileView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOOKSHELF));
+                System.out.println("BOOKSHELF"+nickname);
+                ItemTileView[][] newBookshelf=(ItemTileView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOOKSHELF);
+                printMatrixBookshelf(newBookshelf);
                 points=(PlayerPointsView) mes.getMessagePayload().get(PayloadKeyServer.POINTS);
-                System.out.println(points.getPoints()+" This are new points of "+mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE)+" YOU ARE"+this.nickname);
+                System.out.println("TOKEN "+nickname);
                 System.out.println(" AdjacentPoint "+points.getAdjacentPoints()+" How many token you have:"+points.getHowManyTokenYouHave()+" PersonalGoalPoint "+points.getPersonalGoalPoints());
-                CommonGoalView commonGoalp=(CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN);
-                System.out.println(commonGoalp.getLastPointsLeft()+"This are TOKEN points that remain, you LOSE TOKEN, WON "+commonGoalp.getWhoWonLastToken()+" YOU ARE"+this.nickname);
+                for(CommonGoalView commonGoalp:(CommonGoalView[]) mes.getMessagePayload().get(PayloadKeyServer.TOKEN)){
+                    System.out.println(commonGoalp.getLastPointsLeft()+"This are TOKEN points that remain, you LOSE TOKEN, WON "+commonGoalp.getWhoWonLastToken()+" YOU ARE"+this.nickname);
 
+                }
+                System.out.println("PERSONAL GOAL "+nickname);
+                //printPersonalGoal((PersonalGoalCard) mes.getMessagePayload().get(PayloadKeyServer.PERSONAL_GOAL),newBookshelf.length,newBookshelf[0].length);
                 break;
-
+            case TILES_SELECTED:
+                printItemTilesSelected((ItemTileView[]) mes.getMessagePayload().get(PayloadKeyServer.TILES_SELECTED));
+                break;
         }
 
     }
@@ -146,7 +157,6 @@ public class ClientView {
         }
     }
     public void printMatrixBookshelf(ItemTileView[][] matrix){
-        //ItemTileView[][] matrix= bookshelf.getBookshelfView();
         for (int i = 0; i < matrix.length; i++) {
             System.out.printf("row" + i + " ");
             for (int j = 0; j < matrix[i].length; j++) {
@@ -154,6 +164,37 @@ public class ClientView {
                     System.out.printf("%-10s", +j + "" + matrix[i][j].getType());
                 } else {
                     System.out.printf("%-10s", +j + " EMPTY");
+                }
+            }
+            System.out.println("");
+        }
+    }
+    public void printItemTilesSelected(ItemTileView[] tiles){
+        int j=0;
+        for(ItemTileView t:tiles){
+            System.out.printf("%-10s", +(j++) + " "+t.getType());
+        }
+        System.out.println("");
+    }
+    //TODO finish and test this method and optimize
+    public void printPersonalGoal(PersonalGoalCard coordinates,int rows,int columns){
+        //ItemTileView[][] matrix= bookshelf.getBookshelfView();
+        System.out.printf(coordinates.getCells().get(0).getType().toString());
+        for (int i = 0; i < rows; i++) {
+            System.out.printf("row" + i + " ");
+            for (int j = 0; j < columns; j++) {
+                for(int k=0;k<coordinates.getCells().size()+1;k++){
+
+                    System.out.printf(coordinates.getCells().get(0).getType().toString());
+                if(k==coordinates.getCells().size()){
+                        System.out.printf("%-10s", +j + " EMPTY");
+                        continue;
+                    }
+                    PersonalGoalBox p=coordinates.getCells().get(k);
+                    if(p.getX()==i && p.getY()==j){
+                        System.out.printf("%-10s"+ j +""+p.getType().toString());
+                        continue;
+                    }
                 }
             }
             System.out.println("");
