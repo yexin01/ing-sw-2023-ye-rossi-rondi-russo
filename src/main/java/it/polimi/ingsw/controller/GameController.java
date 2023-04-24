@@ -1,17 +1,16 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.client.ClientView;
 import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.server.ServerView;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -31,9 +30,9 @@ public class GameController {
     private Game game;
     //private transient final PropertyChangeSupport listeners=new PropertyChangeSupport(this);
 
-    public GameController( Game game) throws Exception {
+    public GameController() throws Exception {
         //this.listenerManager=new ListenerManager(serverView);
-        this.game=game;
+       // this.game=game;
         initializeControllers();
     }
 
@@ -46,7 +45,7 @@ public class GameController {
     public void initializeControllers() throws Exception {
         GameRules gameRules=new GameRules();
         int maxPlayers=gameRules.getMaxPlayers();
-        phaseController =new PhaseController(game);
+        phaseController =new PhaseController();
         phaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
     }
 
@@ -62,7 +61,7 @@ public class GameController {
     public void receiveMessageFromClient(MessageFromClient message){
         String nicknamePlayer= message.getNicknameSender();
         try{
-            if (!nicknamePlayer.equals(phaseController.getTurnPlayer().getNickname())) {
+            if (!nicknamePlayer.equals(game.getTurnPlayer().getNickname())) {
                 serverView.sendError(ErrorType.ILLEGAL_TURN,nicknamePlayer);
                 //throw new Error(ErrorType.ILLEGAL_TURN);
             }
@@ -89,12 +88,12 @@ public class GameController {
         BoardBox boardBox=game.getBoard().getBoardBox(x,y);
         int maxPlayerSelectableTiles=game.getTurnPlayer().getBookshelf().numSelectableTiles();
         checkError(game.getBoard().checkSelectable(boardBox,maxPlayerSelectableTiles));
-        serverView.firePlayer(null,MessageFromServerType.RECEIVE,getTurnNickname());
+        serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
     public void resetBoardChoice() throws Exception {
         illegalPhase(TurnPhase.SELECT_FROM_BOARD);
         game.getBoard().resetBoardChoice();
-        serverView.firePlayer(null,MessageFromServerType.RECEIVE,getTurnNickname());
+        serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
 
     public void checkError(ErrorType possibleInvalidArgoment) throws Exception {
@@ -116,7 +115,7 @@ public class GameController {
         checkError(game.getTurnPlayer().checkPermuteSelection(orderTiles));
         phaseController.changePhase();
         game.getTurnPlayer().permuteSelection(orderTiles);
-        serverView.firePlayer(null,MessageFromServerType.RECEIVE,getTurnNickname());
+        serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
 
     public void selectingColumn(MessageFromClient message) throws Exception {
@@ -126,7 +125,7 @@ public class GameController {
         checkError(game.getTurnPlayer().getBookshelf().checkBookshelf(column,game.getTurnPlayer().getSelectedItems().size()));
         phaseController.changePhase();
         game.getTurnPlayer().getBookshelf().setColumnSelected(column);
-        serverView.firePlayer(null,MessageFromServerType.RECEIVE,getTurnNickname());
+        serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
 
     public void insertBookshelf() throws Exception {
@@ -150,7 +149,7 @@ public class GameController {
         }
         //sendMessage(game.getTurnPlayer().getNickname(),MessageFromServerType.END_TURN);
         game.setNextPlayer();
-        serverView.firePlayer(null,MessageFromServerType.START_TURN,getTurnNickname());
+        serverView.sendMessage(null,MessageFromServerType.START_TURN,getTurnNickname());
         return true;
     }
 

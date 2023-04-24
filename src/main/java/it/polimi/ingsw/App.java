@@ -4,6 +4,11 @@ import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientView;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.json.GameRules;
+import it.polimi.ingsw.listeners.EndTurnListener;
+import it.polimi.ingsw.listeners.FinishSelectionListener;
+import it.polimi.ingsw.listeners.TokenListener;
+import it.polimi.ingsw.messages.EventType;
+import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.server.ServerView;
 import it.polimi.ingsw.model.Game;
 
@@ -13,35 +18,46 @@ import java.util.Map;
 public class App{
         public static void main(String[] args) throws Exception {
             GameRules gameRules=new GameRules();
-            Game game=new Game(gameRules);
+
             ServerView serverView=new ServerView();
-            GameController gameController=new GameController(game);
+            GameController gameController=new GameController();
+            gameController.setServerView(serverView);
             HashMap<String, ClientView> playerMap = new HashMap<String, ClientView>();
-            playerMap.put("TIZIO", new ClientView("TIZIO",gameController, serverView, new Client("TIZIO")));
-            playerMap.put("CAIO", new ClientView("CAIO",gameController, serverView, new Client("CAIO")));
-            playerMap.put("SEMPRONIO", new ClientView("SEMPRONIO",gameController, serverView, new Client("SEMPRONIO")));
+            HashMap<String, Integer> playersId = new HashMap<String, Integer>();
+            String[] playerNames = {"TIZIO", "CAIO", "SEMPRONIO"};
+            for (int i = 0; i < playerNames.length; i++) {
+                String playerName = playerNames[i];
+                ClientView clientView = new ClientView(playerName, gameController, serverView, new Client(playerName));
+                playerMap.put(playerName, clientView);
+                playersId.put(playerName, i);
+            }
 
             serverView.setPlayerMap(playerMap);
-            serverView.setAll(gameRules,playerMap.keySet().size());
-            //ServerView serverView =new ServerView(playerMap,gameRules, playerMap.keySet().size());
+            ModelView modelView=new ModelView(playersId, gameRules);
+            modelView.addListener(EventType.TILES_SELECTED,new FinishSelectionListener(serverView));
+            modelView.addListener(EventType.END_TURN,new EndTurnListener(serverView));
+            modelView.addListener(EventType.WIN_TOKEN,new TokenListener(serverView));
+            serverView.setModelView(modelView);
 
-            int i=0;
+            //ServerView serverView =new ServerView(playerMap,gameRules, playerMap.keySet().size());
+            Game game=new Game(gameRules,modelView);
+            gameController.setGame(game);
+
+
             for(Map.Entry<String, ClientView> entry : playerMap.entrySet()) {
                 String key = entry.getKey();
                 ClientView value = entry.getValue();
-                game.addPlayer(key,serverView);
-                serverView.setPlayers(key,i++);
+                game.addPlayer(key,modelView);
             }
 
-            game.setServerView(serverView);
-            game.createCommonGoalCard(gameRules, serverView);
-            game.createPersonalGoalCard(gameRules);
-
-            game.getBoard().setServerView(serverView);
             game.getBoard().fillBag(gameRules);
             game.getBoard().firstFillBoard(playerMap.keySet().size(), gameRules);
+            game.createCommonGoalCard(gameRules,modelView);
+            game.createPersonalGoalCard(gameRules);
 
-            gameController.setServerView(serverView);
+
+
+            //gameController.setServerView(serverView);
 
             serverView.sendInfo("TIZIO");
 

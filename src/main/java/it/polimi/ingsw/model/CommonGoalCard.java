@@ -1,17 +1,16 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.messages.EventType;
-import it.polimi.ingsw.messages.MessageFromServerType;
-import it.polimi.ingsw.messages.MessagePayload;
-import it.polimi.ingsw.messages.PayloadKeyServer;
 import it.polimi.ingsw.model.modelView.CommonGoalView;
+import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.server.ServerView;
 
 import java.util.ArrayList;
 
 public abstract class CommonGoalCard {
    // private GameInfo gameInfo;
-    private ServerView serverView;
+
+
+    private ModelView modelView;
 
     public int getLastPoint(){
         if(points.size()==0){
@@ -27,14 +26,18 @@ public abstract class CommonGoalCard {
         if(points.size()>0){
             int point=points.get(points.size()-1);
             points.remove(points.size()-1);
-            MessagePayload payloadWinner=new MessagePayload(EventType.WIN_TOKEN);
             int pointsArray[]= points.stream().mapToInt(Integer::intValue).toArray();
-            CommonGoalView common=new CommonGoalView(nickname, pointsArray);
+            CommonGoalView common=new CommonGoalView(nickname, point, pointsArray);
+            modelView.setCommonGoalViews(common,index,nickname);
+            return point;
+            /*
+            MessagePayload payloadWinner=new MessagePayload(EventType.WIN_TOKEN);
+
             payloadWinner.put(PayloadKeyServer.TOKEN,common);
             payloadWinner.put(PayloadKeyServer.POINTS,point);
             payloadWinner.put(PayloadKeyServer.WHO_CHANGE,nickname);
             payloadWinner.put(PayloadKeyServer.INDEX_TOKEN,index);
-            serverView.setCommonGoalViews(common,index);
+
             serverView.fireEvent(payloadWinner, MessageFromServerType.DATA,true,nickname);
             /*
 
@@ -46,7 +49,7 @@ public abstract class CommonGoalCard {
             serverView.fireEvent(payloadLoser, MessageFromServerType.DATA,false,nickname);
 
              */
-            return point;
+
         }
         return 0;
     }
@@ -69,12 +72,8 @@ public abstract class CommonGoalCard {
         this.points = points;
     }
 
-    public ServerView getServerView() {
-        return serverView;
-    }
 
-
-    public void setServerView(ServerView serverView) {
-        this.serverView = serverView;
+    public void setModelView(ModelView modelView) {
+        this.modelView = modelView;
     }
 }

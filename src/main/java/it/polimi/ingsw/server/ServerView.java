@@ -7,30 +7,30 @@ import it.polimi.ingsw.messages.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ServerView extends ModelView {
+public class ServerView  {
     //TODO Client entity will change once the network part is finished
     private HashMap<String, ClientView> playerMap;
-
+    private ModelView modelView;
     //private final ClientUI player;
     //private final String nickname;
     public ServerView() {
-       super();
         //this.player = player;
         //this.playerMap = playerMap;
         //this.nickname = nickname;
+        //this.playerMap = playerMap;
     }
     //se e true lo invia a tutti se e false a tutti eccetto il giocatore con quel nickname
-    public void fireEvent(MessagePayload payload, MessageFromServerType messageType, boolean sendToAll, String playerNickname) {
+    public void sendAllMessage(MessagePayload payload, MessageFromServerType messageType, boolean sendToAll, String playerNickname) {
         for (Map.Entry<String, ClientView> entry : playerMap.entrySet()) {
             String nickname = entry.getKey();
             ClientView listener = entry.getValue();
             if (sendToAll || !nickname.equals(playerNickname)) {
-                firePlayer(payload, messageType, nickname);
+                sendMessage(payload, messageType, nickname);
             }
         }
     }
 
-    public void firePlayer(MessagePayload payload, MessageFromServerType messageType, String playerNickname){
+    public void sendMessage(MessagePayload payload, MessageFromServerType messageType, String playerNickname){
         ServerMessageHeader header=new ServerMessageHeader(messageType,playerNickname);
         MessageFromServer message=new MessageFromServer(header,payload);
         //System.out.println(playerNickname+" RECEIVE");
@@ -49,13 +49,22 @@ public class ServerView extends ModelView {
     public void sendInfo(String playerNickname){
         ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.INFO,playerNickname);
         MessagePayload payload=new MessagePayload(EventType.ALL_INFO);
-        payload.put(PayloadKeyServer.NEWBOARD, getBoardView());
-        payload.put(PayloadKeyServer.NEWBOOKSHELF, getBookshelfView(getPlayerByNickname(playerNickname)));
-        payload.put(PayloadKeyServer.POINTS,getPlayerPoints(getPlayerByNickname(playerNickname)));
-        payload.put(PayloadKeyServer.TOKEN,getCommonGoalViews());
-        payload.put(PayloadKeyServer.PERSONAL_GOAL,getPlayerPersonal(getPlayerByNickname(playerNickname)));
-        payload.put(PayloadKeyServer.TOKEN,getCommonGoalViews());
-        firePlayer(payload,MessageFromServerType.DATA,playerNickname);
+        payload.put(PayloadKeyServer.NEWBOARD, modelView.getBoardView());
+        payload.put(PayloadKeyServer.NEWBOOKSHELF, modelView.getBookshelfView(playerNickname));
+        payload.put(PayloadKeyServer.POINTS,modelView.getPlayerPoints(playerNickname));
+        payload.put(PayloadKeyServer.TOKEN,modelView.getCommonGoalViews());
+        payload.put(PayloadKeyServer.PERSONAL_GOAL,modelView.getPlayerPersonal(playerNickname));
+        payload.put(PayloadKeyServer.TOKEN,modelView.getCommonGoalViews());
+        sendMessage(payload,MessageFromServerType.DATA,playerNickname);
+    }
+
+
+    public ModelView getModelView() {
+        return modelView;
+    }
+
+    public void setModelView(ModelView modelView) {
+        this.modelView = modelView;
     }
 
     public void setPlayerMap(HashMap<String, ClientView> playerMap) {

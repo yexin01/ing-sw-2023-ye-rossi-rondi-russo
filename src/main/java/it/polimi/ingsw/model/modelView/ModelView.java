@@ -1,42 +1,39 @@
 package it.polimi.ingsw.model.modelView;
 
 import it.polimi.ingsw.json.GameRules;
+import it.polimi.ingsw.listeners.EventListener;
+import it.polimi.ingsw.listeners.ListenerManager;
+import it.polimi.ingsw.messages.EventType;
 import it.polimi.ingsw.model.PersonalGoalCard;
-import it.polimi.ingsw.model.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 
 public class ModelView {
-    private int numPlayers;
+    private HashMap<String, Integer> playersId;
+    private ListenerManager listenerManager;
+
+    private int indexRemoveToken;
     private BoardView boardView;
     private CommonGoalView[] commonGoalViews;
-    private String[] players;
+
     private ItemTileView[][][] bookshelfView;
     private PlayerPointsView[] playerPoints;
     private PersonalGoalCard[] playerPersonalGoal;
+    private ItemTileView[] selectedItems;
 
-    public ModelView(){
-        /*
-        this.numPlayers=numPlayers;
+    public ModelView(HashMap<String, Integer> playersId, GameRules gameRules){
+        int numPlayers=playersId.keySet().size();
+        this.playersId=playersId;
+        listenerManager=new ListenerManager();
         commonGoalViews=new CommonGoalView[gameRules.getNumOfCommonGoals()];
         bookshelfView=new ItemTileView[numPlayers][gameRules.getRowsBookshelf()][gameRules.getColumnsBookshelf()];
         playerPoints=new PlayerPointsView[numPlayers];
         playerPersonalGoal=new PersonalGoalCard[numPlayers];
-        players=new String[numPlayers];
 
-         */
-    }
-    public void setAll(GameRules gameRules,int numPlayers){
-        this.numPlayers=numPlayers;
-        commonGoalViews=new CommonGoalView[gameRules.getNumOfCommonGoals()];
-        bookshelfView=new ItemTileView[numPlayers][gameRules.getRowsBookshelf()][gameRules.getColumnsBookshelf()];
-        playerPoints=new PlayerPointsView[numPlayers];
-        playerPersonalGoal=new PersonalGoalCard[numPlayers];
-        players=new String[numPlayers];
+
     }
 
-
+/*
     public int getPlayerByNickname(String nickname) {
         int num=0;
         for (String p: players) {
@@ -44,6 +41,15 @@ public class ModelView {
             num++;
         }
         return -1;
+    }
+
+ */
+    public int getIntegerValue(String key) {
+        if (playersId.containsKey(key)) {
+            return playersId.get(key);
+        } else {
+            return 0;
+        }
     }
 
 
@@ -59,51 +65,74 @@ public class ModelView {
         return commonGoalViews;
     }
 
-    public void setCommonGoalViews(CommonGoalView commonGoalViews,int index) {
+    public void setCommonGoalViews(CommonGoalView commonGoalViews,int index,String nickname) {
         this.commonGoalViews[index] = commonGoalViews;
+        listenerManager.fireEvent(EventType.WIN_TOKEN,nickname,this);
     }
 
 
 
 
-    public ItemTileView[][] getBookshelfView(int index) {
-        return bookshelfView[index];
+    public ItemTileView[][] getBookshelfView(String nickname) {
+        return bookshelfView[getIntegerValue(nickname)];
     }
 
-    public void setBookshelfView(ItemTileView[][] bookshelfView,int index) {
-        this.bookshelfView[index] = bookshelfView;
+    public void setBookshelfView(ItemTileView[][] bookshelfView,String nickname) {
+        this.bookshelfView[getIntegerValue(nickname)] = bookshelfView;
     }
 
-    public PlayerPointsView[] getPlayerPoints() {
-        return playerPoints;
+    public PlayerPointsView getPlayerPoints(String nickname) {
+        return playerPoints[getIntegerValue(nickname)];
     }
 
-    public void setPlayerPoints(PlayerPointsView playerPersonalGoal, int index) {
-        this.playerPoints[index] = playerPersonalGoal;
+    public void setPlayerPoints(PlayerPointsView playerPersonalGoal,String nickname) {
+        this.playerPoints[getIntegerValue(nickname)] = playerPersonalGoal;
+        listenerManager.fireEvent(EventType.END_TURN,nickname,this);
     }
 
 
 
 
-    public PersonalGoalCard[] getPlayerPersonalGoal() {
-        return playerPersonalGoal;
+    public PersonalGoalCard getPlayerPersonalGoal(String nickname) {
+        return playerPersonalGoal[getIntegerValue(nickname)];
     }
-    public void setPlayerPersonalGoal(PersonalGoalCard playerPersonalGoal, int index) {
-        this.playerPersonalGoal[index] = playerPersonalGoal;
-    }
-    public PlayerPointsView getPlayerPoints(int index) {
-        return playerPoints[index] ;
-    }
-    public PersonalGoalCard getPlayerPersonal(int index) {
-        return playerPersonalGoal[index] ;
+    public void setPlayerPersonalGoal(PersonalGoalCard playerPersonalGoal, String nickname) {
+        this.playerPersonalGoal[getIntegerValue(nickname)] = playerPersonalGoal;
     }
 
-    public void setPlayers(String players,int index) {
-        this.players[index] =players;
+    public PersonalGoalCard getPlayerPersonal(String nickname) {
+        return playerPersonalGoal[getIntegerValue(nickname)] ;
     }
 
-    public void setPlayers(String[] players) {
-        this.players = players;
+
+
+    public ItemTileView[] getSelectedItems() {
+        return selectedItems;
+    }
+
+    public void setSelectedItems(ItemTileView[] selectedItems,String nickname) {
+        this.selectedItems = selectedItems;
+        listenerManager.fireEvent(EventType.TILES_SELECTED,nickname,this);
+    }
+    public void addListener(EventType eventType, EventListener listener) {
+        this.listenerManager.addListener(eventType,listener);
+    }
+
+    public void removeListener(EventType eventType, EventListener listener) {
+        this.listenerManager.removeListener(eventType, listener);
+    }
+
+
+    public ListenerManager getListenerManager(){
+        return listenerManager;
+    }
+
+    public int getIndexRemoveToken() {
+        return indexRemoveToken;
+    }
+
+    public void setIndexRemoveToken(int indexRemoveToken) {
+        this.indexRemoveToken = indexRemoveToken;
     }
 }
 

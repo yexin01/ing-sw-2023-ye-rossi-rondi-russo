@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.model.modelView.CommonGoalView;
+import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.server.ServerView;
 
@@ -11,7 +12,7 @@ import java.util.*;
 public class Game {
     //private GameInfo gameInfo;
     private ArrayList<Player> players;
-    private ServerView serverView;
+    private final ModelView modelview;
     private Board board;
     private int numMaxPlayers;
     private int turnPlayer;
@@ -19,10 +20,11 @@ public class Game {
     private boolean endGame;
 
 
-    public Game(GameRules gameRules){
+    public Game(GameRules gameRules,ModelView modelView){
         players=new ArrayList<>();
         commonGoalCards=new ArrayList<>();
-        board=new Board();
+        board=new Board(modelView);
+        this.modelview=modelView;
         numMaxPlayers= gameRules.getMaxPlayers();
 
     }
@@ -87,9 +89,10 @@ public class Game {
     }
 
 
-    public void addPlayer(String nickname, ServerView serverView) throws Exception {
+    public void addPlayer(String nickname, ModelView modelView) throws Exception {
         if (players.size() < numMaxPlayers) {
-            Player p = new Player(nickname, serverView);
+            Player p = new Player(nickname, modelView);
+
             //p.addListener(EventType.BOARD_SELECTION, new BoardListener());
             //p.addListener(EventType.BOOKSHELF_INSERTION, new BookshelfListener());
             //p.addListener(EventType.POINTS, new PointsListener());
@@ -229,7 +232,7 @@ public class Game {
      * @param gameRules
      * @throws Exception
      */
-    public void createCommonGoalCard(GameRules gameRules, ServerView serverView) throws Exception {
+    public void createCommonGoalCard(GameRules gameRules, ModelView modelView) throws Exception {
 
         int numOfCommonGoals = gameRules.getNumOfCommonGoals();
         int numOfPossibleCommonGoalsCards = gameRules.getCommonGoalCardsSize();
@@ -240,7 +243,8 @@ public class Game {
             String className = gameRules.getCommonGoalCard(number);
             Class<?> clazz = Class.forName(className);
             Object obj = clazz.getDeclaredConstructor().newInstance();
-            ((CommonGoalCard) obj).setServerView(serverView);
+            ((CommonGoalCard) obj).setModelView(modelView);
+
             //CommonGoalView common=new CommonGoalView(((CommonGoalCard) obj).getLastPoint(),null, points);
             //serverView.setCommonGoalViews(common,num++);
             //Listener listener=new Listener(serverView);
@@ -271,12 +275,12 @@ public class Game {
         int numCommonGoal=0;
         for(CommonGoalCard c: commonGoalCards){
             int[] pointsView= points.stream().mapToInt(Integer::intValue).toArray();
-            common=new CommonGoalView(null,pointsView);
-            serverView.setCommonGoalViews(common,numCommonGoal++);
+            common=new CommonGoalView(null, 0, pointsView);
+            modelview.setCommonGoalViews(common,numCommonGoal++,null);
+            //serverView.setCommonGoalViews(common,numCommonGoal++);
             for(int i=0;i<points.size();i++){
                 c.getPoints().add(points.get(i));
             }
-
         }
     }
 
@@ -322,16 +326,16 @@ public class Game {
         for (Player p : players) {
             PersonalGoalCard turnPersonal=gameRules.getPersonalGoalCard(numbers.get(i));
             p.setPersonalGoalCard(turnPersonal);
-            serverView.setPlayerPersonalGoal(turnPersonal,i);
+            modelview.setPlayerPersonalGoal(turnPersonal,p.getNickname());
             Bookshelf bookshelf=new Bookshelf(rows,columns, maxSelectableTiles);
             p.setBookshelf(bookshelf);
-            serverView.setBookshelfView(bookshelf.cloneBookshelf(),i);
+            modelview.setBookshelfView(bookshelf.cloneBookshelf(),p.getNickname());
             commonGoalsSetup=new int[commonGoalCards.size()];
 
             //Arrays.setAll(commonGoalsSetup, num -> 0);
             Arrays.fill(commonGoalsSetup, 0);
             PlayerPointsView setupPoints=new PlayerPointsView(0,commonGoalsSetup,0, 0);
-            serverView.setPlayerPoints(setupPoints,i);
+            modelview.setPlayerPoints(setupPoints,p.getNickname());
             i++;
         }
     }
@@ -419,7 +423,4 @@ public class Game {
     }
 
 
-    public void setServerView(ServerView gameInfo) {
-        this.serverView = gameInfo;
-    }
 }

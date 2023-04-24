@@ -53,6 +53,7 @@ public class ClientView {
                  */
             }
 
+
         }catch(Exception e){
         }
     }
@@ -87,12 +88,12 @@ public class ClientView {
         setCommonGoalPoints((int)mes.getMessagePayload().get(PayloadKeyServer.POINTS),index);
         setCommonGoalViews((CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN),index);
         printCommonGoalPoints();
-        System.out.println("YOU WON TOKEN n:"+(index+1)+" .Points that remain: "+commonGoalViews[index].getLastPointsLeft());
+        System.out.println("YOU WON TOKEN POINTS"+commonGoalViews[index].getPointsWon()+" n:"+(index+1)+" .Points that remain: "+commonGoalViews[index].getLastPointsLeft());
     }
     public void loseToken(MessageFromServer mes){
         int index=(int)mes.getMessagePayload().get(PayloadKeyServer.INDEX_TOKEN);
         setCommonGoalViews((CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN),index);
-        System.out.println("YOU LOSE TOKEN n:"+(index+1)+" .Points that remain: "+commonGoalViews[index].getLastPointsLeft());
+        System.out.println("YOU LOSE TOKEN POINTS"+commonGoalViews[index].getPointsWon()+" n:"+(index+1)+" .Points that remain: "+commonGoalViews[index].getLastPointsLeft());
     }
 
 

@@ -7,19 +7,22 @@ import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.BoardView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
+import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.server.ServerView;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Board{
+    private ModelView modelView;
+
     //private GameInfo gameInfo;
-    private ServerView serverView;
+
 
     private BoardBox[][] matrix;
 
-    public Board() {
-
+    public Board(ModelView modelView) {
+        this.modelView=modelView;
     }
 
     public BoardBox[][] getMatrix() {return matrix;}
@@ -126,7 +129,7 @@ public class Board{
                 }
             }
         }
-        serverView.setBoardView(cloneBoard());
+        modelView.setBoardView(cloneBoard());
     }
     /**
      * instantiate numTilesType for each type of tile
@@ -347,18 +350,12 @@ public class Board{
                 }
             }
         }
-        serverView.setBoardView(cloneBoard());
+        modelView.setBoardView(cloneBoard());
     }
 
 
-    public ServerView getServerView() {
-        return serverView;
-    }
 
 
-    public void setServerView(ServerView serverView) {
-        this.serverView = serverView;
-    }
 }
 /*
     private int numOfTile;
