@@ -14,12 +14,9 @@ public class Client {
 
     public Client(String nickname) {
         this.nickname = nickname;
-        //this.nickname = nickname;
         this.scanner=new Scanner(System.in);
-        //this.listenerManager=new ListenerManager(serverView);
 
     }
-
 
     public int ask(){
         int i=1;
@@ -28,7 +25,6 @@ public class Client {
             i++;
         }
         System.out.println("");
-        //System.err.println(gameController.getTurnController().getCurrentPhase()+" controller phase: ");
         int num = scanner.nextInt();
         return num;
 

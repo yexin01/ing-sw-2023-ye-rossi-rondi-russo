@@ -32,39 +32,12 @@ public class App{
                 playersId.put(playerName, i);
             }
 
-            serverView.setPlayerMap(playerMap);
-            ModelView modelView=new ModelView(playersId, gameRules);
-            modelView.addListener(EventType.TILES_SELECTED,new FinishSelectionListener(serverView));
-            modelView.addListener(EventType.END_TURN,new EndTurnListener(serverView));
-            modelView.addListener(EventType.WIN_TOKEN,new TokenListener(serverView));
-            serverView.setModelView(modelView);
-
-            //ServerView serverView =new ServerView(playerMap,gameRules, playerMap.keySet().size());
-            Game game=new Game(gameRules,modelView);
-            gameController.setGame(game);
-
-
-            for(Map.Entry<String, ClientView> entry : playerMap.entrySet()) {
-                String key = entry.getKey();
-                ClientView value = entry.getValue();
-                game.addPlayer(key,modelView);
-            }
-
-            game.getBoard().fillBag(gameRules);
-            game.getBoard().firstFillBoard(playerMap.keySet().size(), gameRules);
-            game.createCommonGoalCard(gameRules,modelView);
-            game.createPersonalGoalCard(gameRules);
-
-
-
-            //gameController.setServerView(serverView);
-
+            gameController.startGame(playerMap,playersId,serverView);
             serverView.sendInfo("TIZIO");
 
-
-            ClientView player = playerMap.get("TIZIO");
             while(true){
-                player.askClient();
+                playerMap.get(gameController.getModel().getTurnPlayer().getNickname()).askClient();
+
             }
 
             //serverView.sendInfo("TIZIO");

@@ -13,7 +13,7 @@ public class ClientView {
     private CommonGoalView[] commonGoalViews;
     private int[] commonGoalPoints;
     //TODO initialization will be inserted in the method related to the start of the game
-    private int[] freeShelves=new int[5];
+
     private String[] players;
     private ItemTileView[][] bookshelfView;
     private ItemTileView[] tilesSelected;
@@ -52,7 +52,7 @@ public class ClientView {
 
                  */
             }
-
+            askClient();
 
         }catch(Exception e){
         }
@@ -157,7 +157,6 @@ public class ClientView {
             case 5:
                 System.out.println("These are the free shelves, to select a column write a number from 0 to 4");
                 computeFreeShelves();
-                printFreeShelves();
                 printMatrixBookshelf();
                 int column = client.number();
                 mes=new MessageFromClient(DataClientType.COLUMN,nickname,new int[]{column});
@@ -263,19 +262,21 @@ public class ClientView {
         System.out.println("AdjacentPoint "+playerPoints.getAdjacentPoints()+" How many token you have:"+playerPoints.getHowManyTokenYouHave()+" PersonalGoalPoint "+playerPoints.getPersonalGoalPoints());
         System.out.println("END TURN "+this.nickname);
     }
-    public void printFreeShelves() {
+    public void printFreeShelves(int[] freeShelves) {
         for (int i = 0; i < freeShelves.length; i++) {
             System.out.print(freeShelves[i] + "  ");
         }
         System.out.println("");
     }
     public void computeFreeShelves() {
+        int[] freeShelves=new int[bookshelfView[0].length];
         for (int j = 0; j < bookshelfView[0].length; j++) {
             freeShelves[j] = 0;
             for (int i = 0; i < bookshelfView.length && bookshelfView[i][j].getTileID() == -1; i++) {
                 freeShelves[j]++;
             }
         }
+        printFreeShelves(freeShelves);
     }
 
     public BoardView getBoardView() {

@@ -1,6 +1,10 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientView;
+import it.polimi.ingsw.listeners.EndTurnListener;
+import it.polimi.ingsw.listeners.FinishSelectionListener;
+import it.polimi.ingsw.listeners.TokenListener;
 import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 
@@ -8,10 +12,12 @@ import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.server.ServerView;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class GameController {
@@ -48,6 +54,28 @@ public class GameController {
         phaseController =new PhaseController();
         phaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
     }
+
+    public void startGame(HashMap<String, ClientView> playerMap,HashMap<String, Integer> playersId,ServerView serverView ) throws Exception {
+        GameRules gameRules=new GameRules();
+        serverView.setPlayerMap(playerMap);
+        ModelView modelView=new ModelView(playersId, gameRules);
+        serverView.setModelView(modelView);
+        game=new Game(gameRules,modelView);
+        for(Map.Entry<String, ClientView> entry : playerMap.entrySet()) {
+            String key = entry.getKey();
+            ClientView value = entry.getValue();
+            game.addPlayer(key,modelView);
+        }
+        game.getBoard().fillBag(gameRules);
+        game.getBoard().firstFillBoard(playerMap.keySet().size(), gameRules);
+        game.createCommonGoalCard(gameRules,modelView);
+        game.createPersonalGoalCard(gameRules);
+        modelView.addListener(EventType.TILES_SELECTED,new FinishSelectionListener(serverView));
+        modelView.addListener(EventType.END_TURN,new EndTurnListener(serverView));
+        modelView.addListener(EventType.WIN_TOKEN,new TokenListener(serverView));
+
+    }
+
 
     public void setTurnController(PhaseController phaseController) {
         this.phaseController = phaseController;
