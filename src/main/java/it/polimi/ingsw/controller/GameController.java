@@ -118,7 +118,7 @@ public class GameController {
         }
         serverView.removeClient(nicknameSender);
         for(Player p:game.getPlayers()){
-            //serverView.sendInfo(p.getNickname());
+            serverView.sendInfo(p.getNickname());
         }
         serverView.sendMessage(null,MessageFromServerType.START_TURN,getTurnNickname());
 
