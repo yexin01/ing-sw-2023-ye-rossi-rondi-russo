@@ -27,6 +27,6 @@ public class TokenListener implements EventListener {
         payloadWinner.put(PayloadKeyServer.WHO_CHANGE,playerNickname);
         payloadWinner.put(PayloadKeyServer.INDEX_TOKEN,index);
         //serverView.sendMessage(payloadWinner, MessageFromServerType.DATA,playerNickname);
-        serverView.sendAllMessage(payloadWinner, MessageFromServerType.DATA,true,playerNickname);
+        serverView.sendAllMessage(payloadWinner, MessageFromServerType.DATA);
     }
 }

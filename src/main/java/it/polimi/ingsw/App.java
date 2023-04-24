@@ -1,19 +1,12 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.client.Client;
-import it.polimi.ingsw.client.ClientView;
+import it.polimi.ingsw.client.clientView.ClientView;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.listeners.EndTurnListener;
-import it.polimi.ingsw.listeners.FinishSelectionListener;
-import it.polimi.ingsw.listeners.TokenListener;
-import it.polimi.ingsw.messages.EventType;
-import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.server.ServerView;
-import it.polimi.ingsw.model.Game;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class App{
         public static void main(String[] args) throws Exception {
@@ -33,7 +26,9 @@ public class App{
             }
 
             gameController.startGame(playerMap,playersId,serverView);
-            serverView.sendInfo("TIZIO");
+            gameController.getModel().setNextPlayer();
+            //gameController.getModel().setNextPlayer();
+            gameController.removePlayer("CAIO");
 
             while(true){
                 playerMap.get(gameController.getModel().getTurnPlayer().getNickname()).askClient();

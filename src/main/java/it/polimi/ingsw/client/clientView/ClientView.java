@@ -1,5 +1,6 @@
-package it.polimi.ingsw.client;
+package it.polimi.ingsw.client.clientView;
 
+import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.PersonalGoalBox;
@@ -7,9 +8,11 @@ import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.*;
 import it.polimi.ingsw.server.ServerView;
 
+import java.util.List;
+
 //TODO manage it differently by adding the network part, it was needed to see how the message exchange works
 public class ClientView {
-    private BoardView boardView;
+    private BoardBoxView[][] boardView;
     private CommonGoalView[] commonGoalViews;
     private int[] commonGoalPoints;
     //TODO initialization will be inserted in the method related to the start of the game
@@ -42,15 +45,7 @@ public class ClientView {
                 case START_TURN ->System.out.println(nickname + " START TURN ");
                 case DATA ->receiveData(messageServer);
                 case RECEIVE -> System.out.println("Server has received the sent message ");
-                /*
-                case END_GAME ->{
-                    System.out.println("END GAME");
-                    for (Player s : (List<Player>)messageServer.getMessagePayload().get(PayloadKeyServer.RANKING)) {
-                        System.out.println(s.getNickname());
-                    }
-                }
-
-                 */
+                case END_GAME->endGame(messageServer);
             }
             askClient();
 
@@ -70,57 +65,6 @@ public class ClientView {
             case TILES_SELECTED->tilesSelected(mes);
         }
     }
-    public void boardSelection(MessageFromServer mes){
-        setBoardView((BoardView) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD));
-        System.out.println(getMessageWhoChange(mes)+" change board");
-        printMatrixBoard();
-    }
-    public void endTurn(MessageFromServer mes) throws Exception {
-        setPlayerPoints((PlayerPointsView) mes.getMessagePayload().get(PayloadKeyServer.POINTS));
-        printPlayerPoints();
-        setBookshelfView((ItemTileView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOOKSHELF));;
-        printMatrixBookshelf();
-        throw new Exception();
-    }
-
-    public void winToken(MessageFromServer mes){
-        int index=(int)mes.getMessagePayload().get(PayloadKeyServer.INDEX_TOKEN);
-        setCommonGoalPoints((int)mes.getMessagePayload().get(PayloadKeyServer.POINTS),index);
-        setCommonGoalViews((CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN),index);
-        printCommonGoalPoints();
-        System.out.println("YOU WON TOKEN POINTS"+commonGoalViews[index].getPointsWon()+" n:"+(index+1)+" .Points that remain: "+commonGoalViews[index].getLastPointsLeft());
-    }
-    public void loseToken(MessageFromServer mes){
-        int index=(int)mes.getMessagePayload().get(PayloadKeyServer.INDEX_TOKEN);
-        setCommonGoalViews((CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN),index);
-        System.out.println("YOU LOSE TOKEN POINTS"+commonGoalViews[index].getPointsWon()+" n:"+(index+1)+" .Points that remain: "+commonGoalViews[index].getLastPointsLeft());
-    }
-
-
-    public void allInfo(MessageFromServer mes){
-        setBoardView((BoardView) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD));
-        printMatrixBoard();
-        setBookshelfView((ItemTileView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOOKSHELF));;
-        printMatrixBookshelf();
-        setPlayerPoints((PlayerPointsView) mes.getMessagePayload().get(PayloadKeyServer.POINTS));
-        printPlayerPoints();
-        setCommonGoalViews((CommonGoalView[]) mes.getMessagePayload().get(PayloadKeyServer.TOKEN));
-        setPlayerPersonalGoal((PersonalGoalCard) mes.getMessagePayload().get(PayloadKeyServer.PERSONAL_GOAL));
-        printCommonGoalPoints();
-        printPersonalGoal();
-
-    }
-    public void tilesSelected(MessageFromServer mes){
-        setBoardView((BoardView) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD));
-        printMatrixBoard();
-        setTilesSelected((ItemTileView[]) mes.getMessagePayload().get(PayloadKeyServer.TILES_SELECTED));
-        printItemTilesSelected();
-    }
-    public String getMessageWhoChange(MessageFromServer mes){
-        return (String)mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE);
-
-    }
-
     public void askClient(){
         int num=client.ask();
         MessageFromClient mes;
@@ -171,7 +115,7 @@ public class ClientView {
                 serverView.sendInfo(nickname);
                 break;
             case 8:
-                mes=new MessageFromClient(DataClientType.INSERT_TILE_AND_POINTS,nickname,null);
+                mes=new MessageFromClient(DataClientType.ABANDON_GAME,nickname,null);
                 gameController.receiveMessageFromClient(mes);
                 break;
             default:
@@ -180,9 +124,69 @@ public class ClientView {
                 break;
         }
     }
+
+    public void boardSelection(MessageFromServer mes){
+        setBoardView((BoardBoxView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD));
+        System.out.println(getMessageWhoChange(mes)+" change board");
+        printMatrixBoard();
+    }
+    public void endTurn(MessageFromServer mes) throws Exception {
+        setPlayerPoints((PlayerPointsView) mes.getMessagePayload().get(PayloadKeyServer.POINTS));
+        printPlayerPoints();
+        setBookshelfView((ItemTileView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOOKSHELF));;
+        printMatrixBookshelf();
+        throw new Exception();
+    }
+    public void endGame(MessageFromServer mes) throws Exception {
+        List<String> ranking=(List<String>) mes.getMessagePayload().get(PayloadKeyServer.RANKING);
+        for (String nickname : ranking) {
+            System.out.println(nickname);
+        }
+        throw new Exception();
+    }
+
+    public void winToken(MessageFromServer mes){
+        int index=(int)mes.getMessagePayload().get(PayloadKeyServer.INDEX_TOKEN);
+        setCommonGoalPoints((int)mes.getMessagePayload().get(PayloadKeyServer.POINTS),index);
+        setCommonGoalViews((CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN),index);
+        printCommonGoalPoints();
+        System.out.println("YOU WON TOKEN POINTS"+commonGoalViews[index].getPointsWon()+" n:"+(index+1)+" .Points that remain: "+commonGoalViews[index].getLastPointsLeft());
+    }
+    public void loseToken(MessageFromServer mes){
+        int index=(int)mes.getMessagePayload().get(PayloadKeyServer.INDEX_TOKEN);
+        setCommonGoalViews((CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN),index);
+        System.out.println("YOU LOSE TOKEN POINTS"+commonGoalViews[index].getPointsWon()+" n:"+(index+1)+" .Points that remain: "+commonGoalViews[index].getLastPointsLeft());
+    }
+
+
+    public void allInfo(MessageFromServer mes){
+        setBoardView((BoardBoxView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD));
+        printMatrixBoard();
+        setBookshelfView((ItemTileView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOOKSHELF));;
+        printMatrixBookshelf();
+        setPlayerPoints((PlayerPointsView) mes.getMessagePayload().get(PayloadKeyServer.POINTS));
+        printPlayerPoints();
+        setCommonGoalViews((CommonGoalView[]) mes.getMessagePayload().get(PayloadKeyServer.TOKEN));
+        setPlayerPersonalGoal((PersonalGoalCard) mes.getMessagePayload().get(PayloadKeyServer.PERSONAL_GOAL));
+        printCommonGoalPoints();
+        printPersonalGoal();
+
+    }
+    public void tilesSelected(MessageFromServer mes){
+        setBoardView((BoardBoxView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD));
+        printMatrixBoard();
+        setTilesSelected((ItemTileView[]) mes.getMessagePayload().get(PayloadKeyServer.TILES_SELECTED));
+        printItemTilesSelected();
+    }
+    public String getMessageWhoChange(MessageFromServer mes){
+        return (String)mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE);
+
+    }
+
+
     public void printMatrixBoard(){
         System.out.println("BOARD ");
-        BoardBoxView[][] matrix= boardView.getMatrix();
+        BoardBoxView[][] matrix= boardView;
         for (int i = 0; i < matrix.length; i++) {
             System.out.printf("row"+i+" ");
             for (int j = 0; j < matrix[i].length; j++) {
@@ -279,13 +283,8 @@ public class ClientView {
         printFreeShelves(freeShelves);
     }
 
-    public BoardView getBoardView() {
-        return boardView;
-    }
 
-    public void setBoardView(BoardView boardView) {
-        this.boardView = boardView;
-    }
+
 
     public CommonGoalView[] getCommonGoalViews() {
         return commonGoalViews;
@@ -341,5 +340,13 @@ public class ClientView {
 
     public void setTilesSelected(ItemTileView[] tilesSelected) {
         this.tilesSelected = tilesSelected;
+    }
+
+    public BoardBoxView[][] getBoardView(){
+        return boardView;
+    }
+
+    public void setBoardView(BoardBoxView[][] boardView) {
+        this.boardView = boardView;
     }
 }

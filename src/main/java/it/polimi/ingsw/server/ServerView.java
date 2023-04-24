@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.client.ClientView;
+import it.polimi.ingsw.client.clientView.ClientView;
 import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.messages.*;
 
@@ -19,14 +19,13 @@ public class ServerView  {
         //this.nickname = nickname;
         //this.playerMap = playerMap;
     }
-    //se e true lo invia a tutti se e false a tutti eccetto il giocatore con quel nickname
-    public void sendAllMessage(MessagePayload payload, MessageFromServerType messageType, boolean sendToAll, String playerNickname) {
+
+    public void sendAllMessage(MessagePayload payload, MessageFromServerType messageType) {
         for (Map.Entry<String, ClientView> entry : playerMap.entrySet()) {
             String nickname = entry.getKey();
             ClientView listener = entry.getValue();
-            if (sendToAll || !nickname.equals(playerNickname)) {
                 sendMessage(payload, messageType, nickname);
-            }
+
         }
     }
 
@@ -58,6 +57,10 @@ public class ServerView  {
         sendMessage(payload,MessageFromServerType.DATA,playerNickname);
     }
 
+    public void removeClient(String nickname) {
+        playerMap.remove(nickname);
+    }
+
 
     public ModelView getModelView() {
         return modelView;
@@ -70,6 +73,30 @@ public class ServerView  {
     public void setPlayerMap(HashMap<String, ClientView> playerMap) {
         this.playerMap = playerMap;
     }
+
+
+    /*
+   //se e true lo invia a tutti se e false a tutti eccetto il giocatore con quel nickname
+    public void sendAllMessage(MessagePayload payload, MessageFromServerType messageType, boolean sendToAll, String playerNickname) {
+        for (Map.Entry<String, ClientView> entry : playerMap.entrySet()) {
+            String nickname = entry.getKey();
+            ClientView listener = entry.getValue();
+            if (sendToAll || !nickname.equals(playerNickname)) {
+                sendMessage(payload, messageType, nickname);
+            }
+        }
+    }
+
+    public void sendMessage(MessagePayload payload, MessageFromServerType messageType, String playerNickname){
+        ServerMessageHeader header=new ServerMessageHeader(messageType,playerNickname);
+        MessageFromServer message=new MessageFromServer(header,payload);
+        //System.out.println(playerNickname+" RECEIVE");
+        //System.out.println(playerNickname+" RECEIVE"+message.getMessagePayload().getEvent());
+        playerMap.get(playerNickname).receiveMessageFromServer(playerNickname,message);
+    }
+
+
+     */
 
     /*
 

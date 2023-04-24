@@ -6,14 +6,17 @@ import it.polimi.ingsw.listeners.ListenerManager;
 import it.polimi.ingsw.messages.EventType;
 import it.polimi.ingsw.model.PersonalGoalCard;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ModelView {
-    private HashMap<String, Integer> playersId;
-    private ListenerManager listenerManager;
 
+    private ListenerManager listenerManager;
     private int indexRemoveToken;
-    private BoardView boardView;
+    private HashMap<String, Integer> playersId;
+
+    private BoardBoxView[][] boardView;
     private CommonGoalView[] commonGoalViews;
 
     private ItemTileView[][][] bookshelfView;
@@ -33,17 +36,6 @@ public class ModelView {
 
     }
 
-/*
-    public int getPlayerByNickname(String nickname) {
-        int num=0;
-        for (String p: players) {
-            if (p.equals(nickname)) return num;
-            num++;
-        }
-        return -1;
-    }
-
- */
     public int getIntegerValue(String key) {
         if (playersId.containsKey(key)) {
             return playersId.get(key);
@@ -51,15 +43,38 @@ public class ModelView {
             return 0;
         }
     }
-
-
-    public BoardView getBoardView() {
-        return boardView;
+    public <T> T[] deleteObjectByIndex(T[] array, int indexToDelete) {
+        int length = array.length;
+        if (indexToDelete < 0 || indexToDelete >= length) {
+            return array;
+        }
+        T[] newArray = (T[]) Array.newInstance(array.getClass().getComponentType(), length-1);
+        int counter = 0;
+        for (int i = 0; i < length; i++) {
+            if (i != indexToDelete) {
+                newArray[counter++] = array[i];
+            }
+        }
+        return newArray;
     }
 
-    public void setBoardView(BoardView boardView) {
-        this.boardView = boardView;
+    public int deleteAllObjectByIndex(String nickname){
+        int index=getIntegerValue(nickname);
+        playerPoints = deleteObjectByIndex(playerPoints, index);
+        playerPersonalGoal=deleteObjectByIndex(playerPersonalGoal,index);
+        bookshelfView=deleteObjectByIndex(bookshelfView,index);
+        playersId.remove(nickname);
+        for(Map.Entry<String, Integer> entry : playersId.entrySet()) {
+            if(entry.getValue() >= index) {
+                entry.setValue(entry.getValue() - 1);
+            }
+        }
+        return index;
+
     }
+
+
+
 
     public CommonGoalView[] getCommonGoalViews() {
         return commonGoalViews;
@@ -133,6 +148,14 @@ public class ModelView {
 
     public void setIndexRemoveToken(int indexRemoveToken) {
         this.indexRemoveToken = indexRemoveToken;
+    }
+
+    public BoardBoxView[][] getBoardView() {
+        return boardView;
+    }
+
+    public void setBoardView(BoardBoxView[][] boardView) {
+        this.boardView = boardView;
     }
 }
 
