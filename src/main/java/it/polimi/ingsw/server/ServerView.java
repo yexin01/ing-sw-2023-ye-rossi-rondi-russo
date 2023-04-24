@@ -1,8 +1,6 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.client.ClientView;
-import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.model.modelView.CommonGoalView;
 import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.messages.*;
 

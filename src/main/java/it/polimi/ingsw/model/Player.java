@@ -93,7 +93,14 @@ public class Player {
         MessagePayload payload=new MessagePayload(EventType.BOARD_SELECTION);
         payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
         payload.put(PayloadKeyServer.NEWBOARD,newBoard);
+        ItemTileView[] selectedItem=new ItemTileView[selectedItems.size()];
+        int j=0;
+        for(ItemTile i:selectedItems){
+            selectedItem[j++]=new ItemTileView(i.getType(), i.getTileID());
+        }
+        payload.put(PayloadKeyServer.TILES_SELECTED,selectedItems);
         serverView.setBoardView(newBoard);
+        serverView.firePlayer(payload,MessageFromServerType.DATA,nickname);
         //serverView.fireEvent(payload,MessageFromServerType.DATA,true,nickname);
         //.on(.EventType.BOARD_SELECTION, payload,nickname);
     }
@@ -149,7 +156,7 @@ public class Player {
         payload.put(PayloadKeyServer.POINTS, playerPointsView);
         serverView.setBookshelfView(bookshelfView, serverView.getPlayerByNickname(nickname));
         serverView.setPlayerPoints(playerPointsView,serverView.getPlayerByNickname(nickname));
-        serverView.fireEvent(payload, MessageFromServerType.DATA,true,nickname);
+        serverView.firePlayer(payload, MessageFromServerType.DATA,nickname);
         //listenerManager.fireEvent(EventType.END_TURN, payload,nickname);
     }
     //PERSONALGOAL

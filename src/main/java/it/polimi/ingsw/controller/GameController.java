@@ -109,15 +109,6 @@ public class GameController {
         checkError(game.getBoard().checkFinishChoice());
         phaseController.changePhase();
         game.getTurnPlayer().selection(game.getBoard());
-        ArrayList<ItemTile> selected=game.getTurnPlayer().getSelectedItems();
-        ItemTileView[] selectedItems=new ItemTileView[selected.size()];
-        int j=0;
-        for(ItemTile i:selected){
-            selectedItems[j++]=new ItemTileView(i.getType(), i.getTileID());
-        }
-        MessagePayload payload=new MessagePayload(EventType.TILES_SELECTED);
-        payload.put(PayloadKeyServer.TILES_SELECTED,selectedItems);
-        serverView.firePlayer(payload,MessageFromServerType.DATA,getTurnNickname());
     }
     public void permutePlayerTiles(MessageFromClient message) throws Exception {
         illegalPhase(TurnPhase.SELECT_ORDER_TILES);

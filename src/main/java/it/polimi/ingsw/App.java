@@ -45,6 +45,7 @@ public class App{
 
             serverView.sendInfo("TIZIO");
 
+
             ClientView player = playerMap.get("TIZIO");
             while(true){
                 player.askClient();
@@ -57,6 +58,14 @@ public class App{
             game.addPlayer("TIZIO", serverView);
             game.addPlayer("CAIO", serverView);
             game.addPlayer("SEMPRONIO", serverView);
+
+            game.getCommonGoalCards().get(0).removeToken(game.getTurnPlayer().getNickname(),0);
+            game.setNextPlayer();
+            game.setNextPlayer();
+            game.getCommonGoalCards().get(1).removeToken(game.getTurnPlayer().getNickname(),1);
+            game.setNextPlayer();
+            game.getCommonGoalCards().get(0).removeToken(game.getTurnPlayer().getNickname(),0);
+
 
              */
 

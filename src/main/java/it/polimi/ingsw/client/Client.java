@@ -41,4 +41,6 @@ public class Client {
     public String getNickname() {
         return nickname;
     }
+
+
 }

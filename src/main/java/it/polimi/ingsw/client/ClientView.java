@@ -9,6 +9,14 @@ import it.polimi.ingsw.server.ServerView;
 
 //TODO manage it differently by adding the network part, it was needed to see how the message exchange works
 public class ClientView {
+    private BoardView boardView;
+    private CommonGoalView[] commonGoalViews;
+    private int[] commonGoalPoints;
+    private String[] players;
+    private ItemTileView[][] bookshelfView;
+    private ItemTileView[] tilesSelected;
+    private PlayerPointsView playerPoints;
+    private PersonalGoalCard playerPersonalGoal;
     private final String nickname;
     private final GameController gameController;
     private final ServerView serverView;
@@ -30,9 +38,8 @@ public class ClientView {
             switch (messageServer.getServerMessageHeader().getMessageFromServer()) {
                 case ERROR ->System.out.println("ERROR "+((ErrorType)messageServer.getMessagePayload().get(PayloadKeyServer.ERRORMESSAGE)).getErrorMessage()) ;
                 case START_TURN ->System.out.println(nickname + " START TURN ");
-                case DATA -> receiveData(messageServer);
-                //TODO differentiate types of message reception
-                case RECEIVE -> System.out.println("Server has received the sent message( coordinates, or column, or reset)");
+                case DATA ->receiveData(messageServer);
+                case RECEIVE -> System.out.println("Server has received the sent message ");
                 /*
                 case END_GAME ->{
                     System.out.println("END GAME");
@@ -43,59 +50,69 @@ public class ClientView {
 
                  */
             }
-            //askClient();
-            //ask();
+
         }catch(Exception e){
         }
     }
-
     public void receiveData(MessageFromServer mes) throws Exception {
-        PlayerPointsView points;
         switch(mes.getMessagePayload().getEvent()){
-            case BOARD_SELECTION:
-                System.out.println(mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE));
-                printMatrixBoard((BoardView) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD));
-                break;
-            case END_TURN:
-                printMatrixBookshelf((ItemTileView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOOKSHELF));
-                points=(PlayerPointsView) mes.getMessagePayload().get(PayloadKeyServer.POINTS);
-                System.out.println(points.getPoints()+" This are new points of "+mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE)+" YOU ARE"+this.nickname);
-                System.out.println(" AdjacentPoint "+points.getAdjacentPoints()+" How many token you have:"+points.getHowManyTokenYouHave()+" PersonalGoalPoint "+points.getPersonalGoalPoints());
-                System.out.println("END TURN "+this.nickname);
-                throw new Exception();
-            case WIN_TOKEN:
-                CommonGoalView commonGoal=(CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN);
-                System.out.println(commonGoal.getLastPointsLeft()+" This are TOKEN points that remain, you WON TOKEN "+ ((int) mes.getMessagePayload().get(PayloadKeyServer.POINTS)));
-                break;
-            case LOSE_TOKEN:
-                CommonGoalView commonGoalLoser=(CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN);
-                System.out.println(commonGoalLoser.getLastPointsLeft()+" This are TOKEN points that remain, you LOSE TOKEN,"+mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE)+" WON "+commonGoalLoser.getWhoWonLastToken()+" "+ ((int) mes.getMessagePayload().get(PayloadKeyServer.POINTS)));
-                break;
-            case ALL_INFO:
-                System.out.println("BOARD "+nickname);
-                printMatrixBoard((BoardView) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD));
-                System.out.println("BOOKSHELF"+nickname);
-                ItemTileView[][] newBookshelf=(ItemTileView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOOKSHELF);
-                printMatrixBookshelf(newBookshelf);
-                points=(PlayerPointsView) mes.getMessagePayload().get(PayloadKeyServer.POINTS);
-                System.out.println("TOKEN "+nickname);
-                System.out.println("AdjacentPoint "+points.getAdjacentPoints()+" How many token you have:"+points.getHowManyTokenYouHave()+" PersonalGoalPoint "+points.getPersonalGoalPoints());
-                String whoChange;
-                for(CommonGoalView commonGoalp:(CommonGoalView[]) mes.getMessagePayload().get(PayloadKeyServer.TOKEN)){
-
-                    if(commonGoalp.getWhoWonLastToken()==null){
-                        whoChange="NO ONE HAS WON A TOKEN";
-                    }else whoChange=commonGoalp.getWhoWonLastToken()+" ONE HAS WON A TOKEN";
-                    System.out.println(commonGoalp.getLastPointsLeft()+" This are TOKEN points that remain, you LOSE TOKEN,"+whoChange+" YOU ARE"+this.nickname);
-                }
-                System.out.println("PERSONAL GOAL "+nickname);
-                printPersonalGoal((PersonalGoalCard) mes.getMessagePayload().get(PayloadKeyServer.PERSONAL_GOAL),newBookshelf.length,newBookshelf[0].length);
-                break;
-            case TILES_SELECTED:
-                printItemTilesSelected((ItemTileView[]) mes.getMessagePayload().get(PayloadKeyServer.TILES_SELECTED));
-                break;
-
+            case BOARD_SELECTION->boardSelection(mes);
+            case END_TURN->endTurn(mes);
+            case WIN_TOKEN->{
+                if(getMessageWhoChange(mes)==nickname)
+                    winToken(mes);
+                else loseToken(mes);
+            }
+            case ALL_INFO->allInfo(mes);
+            case TILES_SELECTED->tilesSelected(mes);
         }
+    }
+    public void boardSelection(MessageFromServer mes){
+        setBoardView((BoardView) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD));
+        System.out.println(getMessageWhoChange(mes)+" change board");
+        printMatrixBoard();
+    }
+    public void endTurn(MessageFromServer mes) throws Exception {
+        setPlayerPoints((PlayerPointsView) mes.getMessagePayload().get(PayloadKeyServer.POINTS));
+        printPlayerPoints();
+        setBookshelfView((ItemTileView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOOKSHELF));;
+        printMatrixBookshelf();
+        throw new Exception();
+    }
+
+    public void winToken(MessageFromServer mes){
+        int index=(int)mes.getMessagePayload().get(PayloadKeyServer.INDEX_TOKEN);
+        setCommonGoalPoints((int)mes.getMessagePayload().get(PayloadKeyServer.POINTS),index);
+        setCommonGoalViews((CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN),index);
+        printCommonGoalPoints();
+        System.out.println("YOU WON TOKEN n:"+(index+1)+" .Points that remain: "+commonGoalViews[index].getLastPointsLeft());
+    }
+    public void loseToken(MessageFromServer mes){
+        int index=(int)mes.getMessagePayload().get(PayloadKeyServer.INDEX_TOKEN);
+        setCommonGoalViews((CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN),index);
+        System.out.println("YOU LOSE TOKEN n:"+(index+1)+" .Points that remain: "+commonGoalViews[index].getLastPointsLeft());
+    }
+
+
+    public void allInfo(MessageFromServer mes){
+        setBoardView((BoardView) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD));
+        printMatrixBoard();
+        setBookshelfView((ItemTileView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOOKSHELF));;
+        printMatrixBookshelf();
+        setPlayerPoints((PlayerPointsView) mes.getMessagePayload().get(PayloadKeyServer.POINTS));
+        printPlayerPoints();
+        setCommonGoalViews((CommonGoalView[]) mes.getMessagePayload().get(PayloadKeyServer.TOKEN));
+        setPlayerPersonalGoal((PersonalGoalCard) mes.getMessagePayload().get(PayloadKeyServer.PERSONAL_GOAL));
+        printCommonGoalPoints();
+        printPersonalGoal();
+
+    }
+    public void tilesSelected(MessageFromServer mes){
+        setTilesSelected((ItemTileView[]) mes.getMessagePayload().get(PayloadKeyServer.TILES_SELECTED));
+        printItemTilesSelected();
+    }
+    public String getMessageWhoChange(MessageFromServer mes){
+        return (String)mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE);
 
     }
 
@@ -145,7 +162,7 @@ public class ClientView {
                 break;
             case 7:
                 mes=new MessageFromClient(DataClientType.ASK_INFO_GAME,nickname,null);
-                gameController.receiveMessageFromClient(mes);
+                serverView.sendInfo(nickname);
                 break;
             case 8:
                 mes=new MessageFromClient(DataClientType.INSERT_TILE_AND_POINTS,nickname,null);
@@ -157,26 +174,30 @@ public class ClientView {
                 break;
         }
     }
-    public void printMatrixBoard(BoardView board){
-        BoardBoxView[][] matrix= board.getMatrix();
+    public void printMatrixBoard(){
+        System.out.println("BOARD ");
+        BoardBoxView[][] matrix= boardView.getMatrix();
         for (int i = 0; i < matrix.length; i++) {
             System.out.printf("row"+i+" ");
             for (int j = 0; j < matrix[i].length; j++) {
                 if (matrix[i][j].getItemTileView().getTypeView()!=null) {
                     System.out.printf("%-10s",+j+""+matrix[i][j].getItemTileView().getTypeView());
                 } else {
-                    System.out.printf("%-10s",+j+"EMPTY");
+                    if(matrix[i][j].isOccupiable()){
+                        System.out.printf("%-10s",+j+"SELECTED");
+                    }else System.out.printf("%-10s",+j+"EMPTY");
                 }
             }
             System.out.println("");
         }
     }
-    public void printMatrixBookshelf(ItemTileView[][] matrix){
-        for (int i = 0; i < matrix.length; i++) {
+    public void printMatrixBookshelf(){
+        System.out.println("BOOKSHELF "+nickname);
+        for (int i = 0; i < bookshelfView.length; i++) {
             System.out.printf("row"+i+" ");
-            for (int j = 0; j < matrix[i].length; j++) {
-                if (matrix[i][j].getTileID() != -1) {
-                    System.out.printf("%-10s",+j+""+matrix[i][j].getTypeView());
+            for (int j = 0; j < bookshelfView[i].length; j++) {
+                if (bookshelfView[i][j].getTileID() != -1) {
+                    System.out.printf("%-10s",+j+""+bookshelfView[i][j].getTypeView());
                 } else {
                     System.out.printf("%-10s",+j+" EMPTY");
                 }
@@ -184,25 +205,26 @@ public class ClientView {
             System.out.println("");
         }
     }
-    public void printItemTilesSelected(ItemTileView[] tiles){
+    public void printItemTilesSelected(){
         int j=0;
-        for(ItemTileView t:tiles){
+        for(ItemTileView t:tilesSelected){
             System.out.printf("%-10s",+(j++)+" "+t.getTypeView());
         }
         System.out.println("");
     }
-    public void printPersonalGoal(PersonalGoalCard coordinates,int rows,int columns) {
-        for (PersonalGoalBox p : coordinates.getCells()) {
+    public void printPersonalGoal() {
+        System.out.println("PERSONAL GOAL "+nickname);
+        for (PersonalGoalBox p : playerPersonalGoal.getCells()) {
             System.out.printf("%-10s", "row "+p.getX());
             System.out.printf("%-10s", "column "+p.getY());
             System.out.printf(p.getTypePersonal().toString());
             System.out.println("");
         }
-        for (int i = 0; i < rows; i++) {
+        for (int i = 0; i < bookshelfView.length; i++) {
             System.out.printf("row"+i+" ");
-            for (int j = 0; j < columns; j++) {
+            for (int j = 0; j < bookshelfView[0].length; j++) {
                 boolean found = false;
-                for (PersonalGoalBox p : coordinates.getCells()) {
+                for (PersonalGoalBox p : playerPersonalGoal.getCells()) {
                     if (p.getX() == i && p.getY() == j) {
                         System.out.printf("%-10s",j+" "+p.getTypePersonal().toString());
                         found = true;
@@ -216,6 +238,86 @@ public class ClientView {
             System.out.println("");
         }
     }
+    public void printCommonGoalPoints(){
+        System.out.println("POINTS "+nickname);
+        System.out.println("AdjacentPoint "+playerPoints.getAdjacentPoints()+" How many token you have:"+playerPoints.getHowManyTokenYouHave()+" PersonalGoalPoint "+playerPoints.getPersonalGoalPoints());
+        System.out.println("COMMONGOALCARDS "+nickname);
+        String whoChange;
+
+        for(CommonGoalView commonGoalp:commonGoalViews){
+            if(commonGoalp.getWhoWonLastToken()==null){
+                whoChange="NO ONE HAS WON A TOKEN";
+            }else whoChange=commonGoalp.getWhoWonLastToken()+" ONE HAS WON A TOKEN";
+            System.out.println(commonGoalp.getLastPointsLeft()+" This are TOKEN points that remain,"+whoChange);
+        }
+    }
+    public void printPlayerPoints(){
+        System.out.println("POINTS "+nickname);
+        System.out.println("AdjacentPoint "+playerPoints.getAdjacentPoints()+" How many token you have:"+playerPoints.getHowManyTokenYouHave()+" PersonalGoalPoint "+playerPoints.getPersonalGoalPoints());
+        System.out.println("END TURN "+this.nickname);
+    }
+
+    public BoardView getBoardView() {
+        return boardView;
+    }
+
+    public void setBoardView(BoardView boardView) {
+        this.boardView = boardView;
+    }
+
+    public CommonGoalView[] getCommonGoalViews() {
+        return commonGoalViews;
+    }
+
+    public void setCommonGoalViews(CommonGoalView[] commonGoalViews) {
+        this.commonGoalViews = commonGoalViews;
+    }
+    public void setCommonGoalViews(CommonGoalView commonGoalViews,int index) {
+        this.commonGoalViews[index] = commonGoalViews;
+    }
+    public void setCommonGoalPoints(int points,int index) {
+        this.commonGoalPoints[index] = points;
+    }
 
 
+    public String[] getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(String[] players) {
+        this.players = players;
+    }
+
+    public ItemTileView[][] getBookshelfView() {
+        return bookshelfView;
+    }
+
+    public void setBookshelfView(ItemTileView[][] bookshelfView) {
+        this.bookshelfView = bookshelfView;
+    }
+
+    public PlayerPointsView getPlayerPoints() {
+        return playerPoints;
+    }
+
+    public void setPlayerPoints(PlayerPointsView playerPoints) {
+        this.playerPoints = playerPoints;
+    }
+
+    public PersonalGoalCard getPlayerPersonalGoal() {
+        return playerPersonalGoal;
+    }
+
+    public void setPlayerPersonalGoal(PersonalGoalCard playerPersonalGoal) {
+        this.playerPersonalGoal = playerPersonalGoal;
+    }
+
+
+    public ItemTileView[] getTilesSelected() {
+        return tilesSelected;
+    }
+
+    public void setTilesSelected(ItemTileView[] tilesSelected) {
+        this.tilesSelected = tilesSelected;
+    }
 }
