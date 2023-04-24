@@ -1,15 +1,14 @@
 package it.polimi.ingsw.model;
 
 
+import it.polimi.ingsw.listeners.EventListener;
+import it.polimi.ingsw.listeners.ListenerManager;
 import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.messages.MessageFromServerType;
 import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.messages.PayloadKeyServer;
-import it.polimi.ingsw.model.modelView.BoardView;
-import it.polimi.ingsw.model.modelView.BookshelfView;
-import it.polimi.ingsw.model.modelView.ItemTileView;
-import it.polimi.ingsw.model.modelView.PlayerPointsView;
+import it.polimi.ingsw.model.modelView.*;
 import it.polimi.ingsw.messages.EventType;
 import it.polimi.ingsw.server.ServerView;
 
@@ -18,27 +17,25 @@ import java.util.Objects;
 
 public class Player {
 
+
     //private GameInfo gameInfo;
     private String nickname;
 
-    //TODO final
-    private final ServerView serverView;
 
-    public Player (ServerView serverView) throws Exception {
-        this.serverView = serverView;
+    private ModelView modelView;
 
+    public Player (String nickname,ModelView modelView) throws Exception {
+        this.modelView=modelView;
         selectedItems=new ArrayList<>();
-
         //TODO change pass gameRules as a parameter
         GameRules gameRules=new GameRules();
         commonGoalPoints=new int[gameRules.getNumOfCommonGoals()];
-        //this.listenerManager=new ListenerManager(serverView);
-    }
-    public Player(String nickname, ServerView serverView) throws Exception {
         this.nickname = nickname;
         //this.listenerManager = new ListenerManager();
-        this.serverView = serverView;
+
+        //this.listenerManager=new ListenerManager(serverView);
     }
+
   /*
     public <T> void addListener(EventType eventType, EventListener<T> listener) { // Aggiungi il parametro generico T
         listenerManager.addListener(eventType, listener);
@@ -49,7 +46,7 @@ public class Player {
     }
 
   */
-    /*
+/*
     public void addListener(EventType eventType, EventListener listener) {
         this.listenerManager.addListener(eventType,listener);
     }
@@ -89,18 +86,15 @@ public class Player {
 
     public void selection(Board board) {
         selectedItems=board.selected();
-        BoardView newBoard=new BoardView(board.cloneBoard().getMatrix());
-        MessagePayload payload=new MessagePayload(EventType.TILES_SELECTED);
-        payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
-        payload.put(PayloadKeyServer.NEWBOARD,newBoard);
         ItemTileView[] selectedItem=new ItemTileView[selectedItems.size()];
         int j=0;
         for(ItemTile i:selectedItems){
             selectedItem[j++]=new ItemTileView(i.getType(), i.getTileID());
         }
-        payload.put(PayloadKeyServer.TILES_SELECTED,selectedItem);
-        serverView.setBoardView(newBoard);
-        serverView.firePlayer(payload,MessageFromServerType.DATA,nickname);
+        modelView.setBoardView(new BoardView(board.cloneBoard().getMatrix()));
+        modelView.setSelectedItems(selectedItem,nickname);
+
+        //serverView.firePlayer(payload,MessageFromServerType.DATA,nickname);
         //serverView.fireEvent(payload,MessageFromServerType.DATA,true,nickname);
         //.on(.EventType.BOARD_SELECTION, payload,nickname);
     }
@@ -111,7 +105,6 @@ public class Player {
     }
 
      */
-
 
     public ErrorType checkPermuteSelection(int[] order) throws Error {
         int maxIndex = selectedItems.size() - 1;
@@ -148,16 +141,22 @@ public class Player {
 
     public void setPlayerPoints(int playerPoints) {
         this.playerPoints = playerPoints;
-        ItemTileView[][] bookshelfView=bookshelf.cloneBookshelf();
-        MessagePayload payload=new MessagePayload(EventType.END_TURN);
+        modelView.setBookshelfView(bookshelf.cloneBookshelf(),nickname);
         PlayerPointsView playerPointsView =new PlayerPointsView(playerPoints,commonGoalPoints,personalGoalPoints,adjacentPoints);
+        modelView.setPlayerPoints(playerPointsView,nickname);
+        /*
+
+
+        MessagePayload payload=new MessagePayload(EventType.END_TURN);
         payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
         payload.put(PayloadKeyServer.NEWBOOKSHELF,bookshelfView);
         payload.put(PayloadKeyServer.POINTS, playerPointsView);
-        serverView.setBookshelfView(bookshelfView, serverView.getPlayerByNickname(nickname));
-        serverView.setPlayerPoints(playerPointsView,serverView.getPlayerByNickname(nickname));
         serverView.firePlayer(payload, MessageFromServerType.DATA,nickname);
         //listenerManager.fireEvent(EventType.END_TURN, payload,nickname);
+         */
+        //modelView.setBookshelfView(bookshelfView, serverView.getPlayerByNickname(nickname));
+        //modelView.setPlayerPoints(playerPointsView,serverView.getPlayerByNickname(nickname));
+
     }
     //PERSONALGOAL
     private int personalGoalPoints;
@@ -226,13 +225,12 @@ public class Player {
         this.listenerManager = listenerManager;
     }
  */
-    public ServerView getServerView() {
-        return serverView;
+
+
+
+    public void setModelView(ModelView modelView) {
+        this.modelView = modelView;
     }
-
-
-
-
 }
 
 
