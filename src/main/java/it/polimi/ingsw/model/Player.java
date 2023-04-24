@@ -90,7 +90,7 @@ public class Player {
     public void selection(Board board) {
         selectedItems=board.selected();
         BoardView newBoard=new BoardView(board.cloneBoard().getMatrix());
-        MessagePayload payload=new MessagePayload(EventType.BOARD_SELECTION);
+        MessagePayload payload=new MessagePayload(EventType.TILES_SELECTED);
         payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
         payload.put(PayloadKeyServer.NEWBOARD,newBoard);
         ItemTileView[] selectedItem=new ItemTileView[selectedItems.size()];
@@ -98,7 +98,7 @@ public class Player {
         for(ItemTile i:selectedItems){
             selectedItem[j++]=new ItemTileView(i.getType(), i.getTileID());
         }
-        payload.put(PayloadKeyServer.TILES_SELECTED,selectedItems);
+        payload.put(PayloadKeyServer.TILES_SELECTED,selectedItem);
         serverView.setBoardView(newBoard);
         serverView.firePlayer(payload,MessageFromServerType.DATA,nickname);
         //serverView.fireEvent(payload,MessageFromServerType.DATA,true,nickname);

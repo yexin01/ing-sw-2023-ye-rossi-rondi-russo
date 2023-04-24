@@ -12,6 +12,8 @@ public class ClientView {
     private BoardView boardView;
     private CommonGoalView[] commonGoalViews;
     private int[] commonGoalPoints;
+    //TODO initialization will be inserted in the method related to the start of the game
+    private int[] freeShelves=new int[5];
     private String[] players;
     private ItemTileView[][] bookshelfView;
     private ItemTileView[] tilesSelected;
@@ -108,6 +110,8 @@ public class ClientView {
 
     }
     public void tilesSelected(MessageFromServer mes){
+        setBoardView((BoardView) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD));
+        printMatrixBoard();
         setTilesSelected((ItemTileView[]) mes.getMessagePayload().get(PayloadKeyServer.TILES_SELECTED));
         printItemTilesSelected();
     }
@@ -121,7 +125,7 @@ public class ClientView {
         MessageFromClient mes;
         switch(num){
             case 1:
-                gameController.getModel().getBoard().printMatrix();
+                printMatrixBoard();
                 int[] coordinates = new int[2];
                 System.out.println("Insert row:");
                 coordinates[0] = client.number();
@@ -140,6 +144,7 @@ public class ClientView {
                 break;
             case 4:
                 System.out.println("insert numbers from 0 to max selected tiles-1.\nFor example, if you have selected 2 tiles and want to insert the second selected first, just insert: 1,then 0.");
+                printItemTilesSelected();
                 int[] orderTiles=new int[gameController.getModel().getTurnPlayer().getSelectedItems().size()];
                 for(int i=0;i<gameController.getModel().getTurnPlayer().getSelectedItems().size();i++){
                     System.out.println("Insert number:");
@@ -150,8 +155,9 @@ public class ClientView {
                 break;
             case 5:
                 System.out.println("These are the free shelves, to select a column write a number from 0 to 4");
-                gameController.getModel().getTurnPlayer().getBookshelf().printFreeShelves();
-                gameController.getModel().getTurnPlayer().getBookshelf().printBookshelf();
+                computeFreeShelves();
+                printFreeShelves();
+                printMatrixBookshelf();
                 int column = client.number();
                 mes=new MessageFromClient(DataClientType.COLUMN,nickname,new int[]{column});
                 gameController.receiveMessageFromClient(mes);
@@ -255,6 +261,20 @@ public class ClientView {
         System.out.println("POINTS "+nickname);
         System.out.println("AdjacentPoint "+playerPoints.getAdjacentPoints()+" How many token you have:"+playerPoints.getHowManyTokenYouHave()+" PersonalGoalPoint "+playerPoints.getPersonalGoalPoints());
         System.out.println("END TURN "+this.nickname);
+    }
+    public void printFreeShelves() {
+        for (int i = 0; i < freeShelves.length; i++) {
+            System.out.print(freeShelves[i] + "  ");
+        }
+        System.out.println("");
+    }
+    public void computeFreeShelves() {
+        for (int j = 0; j < bookshelfView[0].length; j++) {
+            freeShelves[j] = 0;
+            for (int i = 0; i < bookshelfView.length && bookshelfView[i][j].getTileID() == -1; i++) {
+                freeShelves[j]++;
+            }
+        }
     }
 
     public BoardView getBoardView() {
