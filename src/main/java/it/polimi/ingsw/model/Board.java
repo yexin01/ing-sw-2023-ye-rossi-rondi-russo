@@ -5,10 +5,8 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
-import it.polimi.ingsw.model.modelView.BoardView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.model.modelView.ModelView;
-import it.polimi.ingsw.server.ServerView;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -92,7 +90,7 @@ public class Board{
         }
 
     }
-    public BoardView cloneBoard(){
+    public BoardBoxView[][] cloneBoard(){
         BoardBoxView[][] boardView=new BoardBoxView[matrix.length][matrix[0].length];
         ItemTile itemTile;
         for (int i = 0; i < matrix.length; i++) {
@@ -103,7 +101,7 @@ public class Board{
                 }else boardView[i][j]=new BoardBoxView(matrix[i][j].isOccupiable(), new ItemTileView(null,-1));
             }
         }
-        return new BoardView(boardView);
+        return boardView;
     }
 
     public void firstFillBoard(int numPlayers, GameRules gameRules) throws Exception {

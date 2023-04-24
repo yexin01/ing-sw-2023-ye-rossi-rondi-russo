@@ -1,7 +1,6 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.client.Client;
-import it.polimi.ingsw.client.ClientView;
+import it.polimi.ingsw.client.clientView.ClientView;
 import it.polimi.ingsw.listeners.EndTurnListener;
 import it.polimi.ingsw.listeners.FinishSelectionListener;
 import it.polimi.ingsw.listeners.TokenListener;
@@ -73,9 +72,10 @@ public class GameController {
         modelView.addListener(EventType.TILES_SELECTED,new FinishSelectionListener(serverView));
         modelView.addListener(EventType.END_TURN,new EndTurnListener(serverView));
         modelView.addListener(EventType.WIN_TOKEN,new TokenListener(serverView));
-
+        for(Player p:game.getPlayers()){
+            //serverView.sendInfo(p.getNickname());
+        }
     }
-
 
     public void setTurnController(PhaseController phaseController) {
         this.phaseController = phaseController;
@@ -100,10 +100,28 @@ public class GameController {
                 case ORDER_TILE -> permutePlayerTiles(message);
                 case COLUMN->selectingColumn(message);
                 case INSERT_TILE_AND_POINTS -> insertBookshelf();
+                case ABANDON_GAME -> removePlayer(message.getNicknameSender());
                 default -> throw new IllegalArgumentException();
             }
         }catch(Exception e){
         }
+    }
+
+    public void removePlayer(String nicknameSender) {
+        int index=game.deletePlayer(nicknameSender);
+        if(index==game.getPlayers().size()){
+            game.setTurnPlayer(0);
+            if(game.isEndGame()){
+                endGame();
+                return;
+            }
+        }
+        serverView.removeClient(nicknameSender);
+        for(Player p:game.getPlayers()){
+            serverView.sendInfo(p.getNickname());
+        }
+        serverView.sendMessage(null,MessageFromServerType.START_TURN,getTurnNickname());
+
     }
 
     public void checkAndInsertBoardBox( MessageFromClient message) throws Exception {
@@ -166,26 +184,25 @@ public class GameController {
         game.updateAllPoints();
         finishTurn();
     }
-    public boolean finishTurn() {
+    public void finishTurn() {
         //TODO da finire
         if(game.isEndGame() && game.getTurnPlayer().equals(game.getLastPlayer())){
-            //endGame();
-            return false;
+            endGame();
+            return ;
         }
         if(game.getBoard().checkRefill()){
             game.getBoard().refill();
         }
-        //sendMessage(game.getTurnPlayer().getNickname(),MessageFromServerType.END_TURN);
         game.setNextPlayer();
         serverView.sendMessage(null,MessageFromServerType.START_TURN,getTurnNickname());
-        return true;
     }
 
     public void endGame() {
         //TODO change END GAME
-        List<Player> ranking=  game.checkWinner();
+        List<String> ranking=  game.checkWinner();
         MessagePayload payload=new MessagePayload(null);
         payload.put(PayloadKeyServer.RANKING,ranking);
+        serverView.sendAllMessage(payload,MessageFromServerType.END_GAME);
         //TODO
         //sendMessages.sendAll(payload,MessageFromServerType.END_GAME);
         //sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.END_GAME);

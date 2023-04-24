@@ -64,7 +64,8 @@ public class Game {
     }
 
     public void setNextPlayer() {
-        if(turnPlayer == (players.size() - 1))
+        // in case a player abandons the game and is the last one, index is > of players.size()-1
+        if(turnPlayer >= (players.size() - 1))
             turnPlayer=0;
         else turnPlayer++;
     }
@@ -399,19 +400,23 @@ public class Game {
 
     public Bookshelf turnBookshelf(){return getTurnPlayer().getBookshelf();}
 
-    public List<Player> checkWinner() {
-        //controlla i punteggi dei giocatori e li ordina dal primo all'ultimo
-        List<Player> scoreBoard = players.stream().sorted(Comparator.comparingInt(Player::getPlayerPoints).reversed()).toList();
-        return scoreBoard;
+    public List<String> checkWinner() {
+        List<String> ranking = Collections.unmodifiableList(
+                players.stream()
+                        .sorted(Comparator.comparingInt(Player::getPlayerPoints).reversed())
+                        .map(Player::getNickname)
+                        .toList());
+
+        return ranking;
         //TODO: check exception error when using List instead of ArrayList
         //throw new RuntimeException();
     }
-
-    public void endGame() {
-        List<Player> ranking=checkWinner();
-        //TODO END LISTENER
-        //listeners.firePropertyChange(new PropertyChangeEvent(this, "EndGame", null, ranking));
+    public int deletePlayer(String nickname) {
+        int index=modelview.deleteAllObjectByIndex(nickname);
+        players.remove(index);
+        return index;
     }
+
 
 
     public boolean isEndGame() {
@@ -420,6 +425,9 @@ public class Game {
 
     public void setEndGame(boolean endGame) {
         this.endGame = endGame;
+    }
+    public void setTurnPlayer(int num) {
+        this.turnPlayer=num;
     }
 
 
