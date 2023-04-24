@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.model.modelView.CommonGoalView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.server.ServerView;
@@ -14,27 +13,28 @@ public class Game {
     private ArrayList<Player> players;
     private ServerView serverView;
     private Board board;
-    private int numPlayers;
+    private int numMaxPlayers;
     private int turnPlayer;
     private ArrayList<CommonGoalCard> commonGoalCards;
     private boolean endGame;
 
 
-    public Game(){
+    public Game(GameRules gameRules){
         players=new ArrayList<>();
         commonGoalCards=new ArrayList<>();
         board=new Board();
+        numMaxPlayers= gameRules.getMaxPlayers();
 
     }
       //PLAYERS
 
 
-    public int getNumPlayers() {
-        return numPlayers;
+    public int getNumMaxPlayers() {
+        return numMaxPlayers;
     }
 
-    public void setNumPlayers(int numPlayers) {
-        this.numPlayers = numPlayers;
+    public void setNumMaxPlayersNumPlayers(int numMaxPlayers) {
+        this.numMaxPlayers = numMaxPlayers;
     }
 
 
@@ -88,9 +88,8 @@ public class Game {
 
 
     public void addPlayer(String nickname, ServerView serverView) throws Exception {
-        if (players.size() < numPlayers) {
+        if (players.size() < numMaxPlayers) {
             Player p = new Player(nickname, serverView);
-
             //p.addListener(EventType.BOARD_SELECTION, new BoardListener());
             //p.addListener(EventType.BOOKSHELF_INSERTION, new BookshelfListener());
             //p.addListener(EventType.POINTS, new PointsListener());
@@ -156,6 +155,7 @@ public class Game {
      * @return
      */
     //TODO insertNickname it depends on how we implement the controller in the future it could change
+    /*
     public boolean insertNickname(String nickname) throws Exception {
         GameRules playersJson = new GameRules();
         int numMaxPlayer = playersJson.getMaxPlayers();
@@ -177,6 +177,8 @@ public class Game {
         }
         return true;
     }
+
+     */
 
     /**
      * check that the string passed as a parameter is not already present in the usedNames set
@@ -233,15 +235,14 @@ public class Game {
         int numOfPossibleCommonGoalsCards = gameRules.getCommonGoalCardsSize();
         ArrayList<Integer> numbers = generateRandomNumber(numOfPossibleCommonGoalsCards, numOfCommonGoals);
         setCommonGoalCards(new ArrayList<CommonGoalCard>());
-        int num=0;
         //TokenListener tokenListener=new TokenListener(sendMessages);
         for (Integer number : numbers) {
             String className = gameRules.getCommonGoalCard(number);
             Class<?> clazz = Class.forName(className);
             Object obj = clazz.getDeclaredConstructor().newInstance();
             ((CommonGoalCard) obj).setServerView(serverView);
-            CommonGoalView common=new CommonGoalView(((CommonGoalCard) obj).getLastPoint(),null);
-            serverView.setCommonGoalViews(common,num++);
+            //CommonGoalView common=new CommonGoalView(((CommonGoalCard) obj).getLastPoint(),null, points);
+            //serverView.setCommonGoalViews(common,num++);
             //Listener listener=new Listener(serverView);
             //((CommonGoalCard) obj).addListener(EventType.REMOVE_TOKEN,listener);
             commonGoalCards.add((CommonGoalCard) obj);
@@ -256,6 +257,7 @@ public class Game {
         int numCommonGoalCards=gameRules.getNumOfCommonGoals();
         for(Player p:players){
             p.setCommonGoalPoints(new int[numCommonGoalCards]);
+
         }
     }
 
@@ -264,11 +266,17 @@ public class Game {
      * Match arraylist of scores based on number of players
      */
     public void setCommonGoalCardsPoints(GameRules gameRules) throws Exception {
-        ArrayList<Integer> points=gameRules.getCommonGoalPoints(numPlayers);
+        ArrayList<Integer> points=gameRules.getCommonGoalPoints(players.size());
+        CommonGoalView common;
+        int numCommonGoal=0;
         for(CommonGoalCard c: commonGoalCards){
+            int[] pointsView= points.stream().mapToInt(Integer::intValue).toArray();
+            common=new CommonGoalView(null,pointsView);
+            serverView.setCommonGoalViews(common,numCommonGoal++);
             for(int i=0;i<points.size();i++){
                 c.getPoints().add(points.get(i));
             }
+
         }
     }
 
@@ -305,7 +313,7 @@ public class Game {
      */
 
     public void createPersonalGoalCard(GameRules gameRules) {
-        ArrayList<Integer> numbers = generateRandomNumber(gameRules.getPossiblePersonalGoalsSize(), numPlayers);
+        ArrayList<Integer> numbers = generateRandomNumber(gameRules.getPossiblePersonalGoalsSize(), players.size());
         int rows= gameRules.getRowsBookshelf();
         int columns= gameRules.getColumnsBookshelf();
         int maxSelectableTiles=gameRules.getMaxSelectableTiles();

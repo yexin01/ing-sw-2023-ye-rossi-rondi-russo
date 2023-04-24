@@ -11,14 +11,14 @@ import java.util.Map;
 
 public class ServerView extends ModelView {
     //TODO Client entity will change once the network part is finished
-    private final HashMap<String, ClientView> playerMap;
+    private HashMap<String, ClientView> playerMap;
 
     //private final ClientUI player;
     //private final String nickname;
-    public ServerView(HashMap<String, ClientView> playerMap, GameRules gameRules,int numPlayers) {
-       super(gameRules,numPlayers);
+    public ServerView() {
+       super();
         //this.player = player;
-        this.playerMap = playerMap;
+        //this.playerMap = playerMap;
         //this.nickname = nickname;
     }
     //se e true lo invia a tutti se e false a tutti eccetto il giocatore con quel nickname
@@ -56,10 +56,15 @@ public class ServerView extends ModelView {
         payload.put(PayloadKeyServer.POINTS,getPlayerPoints(getPlayerByNickname(playerNickname)));
         payload.put(PayloadKeyServer.TOKEN,getCommonGoalViews());
         payload.put(PayloadKeyServer.PERSONAL_GOAL,getPlayerPersonal(getPlayerByNickname(playerNickname)));
+        payload.put(PayloadKeyServer.TOKEN,getCommonGoalViews());
         firePlayer(payload,MessageFromServerType.DATA,playerNickname);
     }
 
-/*
+    public void setPlayerMap(HashMap<String, ClientView> playerMap) {
+        this.playerMap = playerMap;
+    }
+
+    /*
 
 
  */

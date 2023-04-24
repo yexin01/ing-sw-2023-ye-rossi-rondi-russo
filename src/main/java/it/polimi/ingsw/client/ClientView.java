@@ -5,15 +5,18 @@ import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.PersonalGoalBox;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.*;
+import it.polimi.ingsw.server.ServerView;
 
 //TODO manage it differently by adding the network part, it was needed to see how the message exchange works
 public class ClientView {
     private final String nickname;
     private final GameController gameController;
+    private final ServerView serverView;
     private final Client client;
-    public ClientView(String nickname, GameController gameController, Client client) {
+    public ClientView(String nickname, GameController gameController, ServerView serverView, Client client) {
         this.nickname = nickname;
         this.gameController = gameController;
+        this.serverView = serverView;
         this.client = client;
     }
 
@@ -62,11 +65,11 @@ public class ClientView {
                 throw new Exception();
             case WIN_TOKEN:
                 CommonGoalView commonGoal=(CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN);
-                System.out.println(commonGoal.getLastPointsLeft()+"This are TOKEN points that remain, you WON TOKEN  YOU ARE"+this.nickname);
+                System.out.println(commonGoal.getLastPointsLeft()+" This are TOKEN points that remain, you WON TOKEN "+ ((int) mes.getMessagePayload().get(PayloadKeyServer.POINTS)));
                 break;
             case LOSE_TOKEN:
                 CommonGoalView commonGoalLoser=(CommonGoalView) mes.getMessagePayload().get(PayloadKeyServer.TOKEN);
-                System.out.println(commonGoalLoser.getLastPointsLeft()+"This are TOKEN points that remain, you LOSE TOKEN, WON "+commonGoalLoser.getWhoWonLastToken()+" YOU ARE"+this.nickname);
+                System.out.println(commonGoalLoser.getLastPointsLeft()+" This are TOKEN points that remain, you LOSE TOKEN,"+mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE)+" WON "+commonGoalLoser.getWhoWonLastToken()+" "+ ((int) mes.getMessagePayload().get(PayloadKeyServer.POINTS)));
                 break;
             case ALL_INFO:
                 System.out.println("BOARD "+nickname);
@@ -76,10 +79,14 @@ public class ClientView {
                 printMatrixBookshelf(newBookshelf);
                 points=(PlayerPointsView) mes.getMessagePayload().get(PayloadKeyServer.POINTS);
                 System.out.println("TOKEN "+nickname);
-                System.out.println(" AdjacentPoint "+points.getAdjacentPoints()+" How many token you have:"+points.getHowManyTokenYouHave()+" PersonalGoalPoint "+points.getPersonalGoalPoints());
+                System.out.println("AdjacentPoint "+points.getAdjacentPoints()+" How many token you have:"+points.getHowManyTokenYouHave()+" PersonalGoalPoint "+points.getPersonalGoalPoints());
+                String whoChange;
                 for(CommonGoalView commonGoalp:(CommonGoalView[]) mes.getMessagePayload().get(PayloadKeyServer.TOKEN)){
-                    System.out.println(commonGoalp.getLastPointsLeft()+"This are TOKEN points that remain, you LOSE TOKEN, WON "+commonGoalp.getWhoWonLastToken()+" YOU ARE"+this.nickname);
 
+                    if(commonGoalp.getWhoWonLastToken()==null){
+                        whoChange="NO ONE HAS WON A TOKEN";
+                    }else whoChange=commonGoalp.getWhoWonLastToken()+" ONE HAS WON A TOKEN";
+                    System.out.println(commonGoalp.getLastPointsLeft()+" This are TOKEN points that remain, you LOSE TOKEN,"+whoChange+" YOU ARE"+this.nickname);
                 }
                 System.out.println("PERSONAL GOAL "+nickname);
                 //printPersonalGoal((PersonalGoalCard) mes.getMessagePayload().get(PayloadKeyServer.PERSONAL_GOAL),newBookshelf.length,newBookshelf[0].length);
@@ -87,6 +94,7 @@ public class ClientView {
             case TILES_SELECTED:
                 printItemTilesSelected((ItemTileView[]) mes.getMessagePayload().get(PayloadKeyServer.TILES_SELECTED));
                 break;
+
         }
 
     }
@@ -132,6 +140,14 @@ public class ClientView {
                 gameController.receiveMessageFromClient(mes);
                 break;
             case 6:
+                mes=new MessageFromClient(DataClientType.INSERT_TILE_AND_POINTS,nickname,null);
+                gameController.receiveMessageFromClient(mes);
+                break;
+            case 7:
+                mes=new MessageFromClient(DataClientType.ASK_INFO_GAME,nickname,null);
+                gameController.receiveMessageFromClient(mes);
+                break;
+            case 8:
                 mes=new MessageFromClient(DataClientType.INSERT_TILE_AND_POINTS,nickname,null);
                 gameController.receiveMessageFromClient(mes);
                 break;

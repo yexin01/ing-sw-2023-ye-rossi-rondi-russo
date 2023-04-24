@@ -4,7 +4,6 @@ import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ClientView;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.server.ServerView;
 import it.polimi.ingsw.model.Game;
 
@@ -13,16 +12,19 @@ import java.util.Map;
 
 public class App{
         public static void main(String[] args) throws Exception {
-
-            Game game=new Game();
+            GameRules gameRules=new GameRules();
+            Game game=new Game(gameRules);
+            ServerView serverView=new ServerView();
             GameController gameController=new GameController(game);
             HashMap<String, ClientView> playerMap = new HashMap<String, ClientView>();
-            playerMap.put("TIZIO", new ClientView("TIZIO",gameController,new Client("TIZIO")));
-            playerMap.put("CAIO", new ClientView("CAIO",gameController,new Client("CAIO")));
-            playerMap.put("SEMPRONIO", new ClientView("SEMPRONIO",gameController,new Client("SEMPRONIO")));
-            GameRules gameRules=new GameRules();
-            ServerView serverView =new ServerView(playerMap,gameRules, playerMap.keySet().size());
-            game.setNumPlayers(playerMap.keySet().size());
+            playerMap.put("TIZIO", new ClientView("TIZIO",gameController, serverView, new Client("TIZIO")));
+            playerMap.put("CAIO", new ClientView("CAIO",gameController, serverView, new Client("CAIO")));
+            playerMap.put("SEMPRONIO", new ClientView("SEMPRONIO",gameController, serverView, new Client("SEMPRONIO")));
+
+            serverView.setPlayerMap(playerMap);
+            serverView.setAll(gameRules,playerMap.keySet().size());
+            //ServerView serverView =new ServerView(playerMap,gameRules, playerMap.keySet().size());
+
             int i=0;
             for(Map.Entry<String, ClientView> entry : playerMap.entrySet()) {
                 String key = entry.getKey();
@@ -40,7 +42,16 @@ public class App{
             game.getBoard().firstFillBoard(playerMap.keySet().size(), gameRules);
 
             gameController.setServerView(serverView);
+
             serverView.sendInfo("TIZIO");
+
+            ClientView player = playerMap.get("TIZIO");
+            while(true){
+                player.askClient();
+            }
+
+            //serverView.sendInfo("TIZIO");
+
 
             /*
             game.addPlayer("TIZIO", serverView);
@@ -49,19 +60,20 @@ public class App{
 
              */
 
-            game.updateAllPoints();
-            serverView.sendInfo("TIZIO");
-            //
-            //game.getCommonGoalCards().get(0).removeToken(game.getTurnPlayer().getNickname());
-            //game.setNextPlayer();
-            //game.setNextPlayer();
-            //game.getCommonGoalCards().get(0).removeToken(game.getTurnPlayer().getNickname());
-            //game.getCommonGoalCards().get(1).removeToken(game.getTurnPlayer().getNickname());
+            //game.updateAllPoints();
 
-            ClientView player = playerMap.get("TIZIO");
-            while(true){
-                player.askClient();
-            }
+
+            /*
+            game.getCommonGoalCards().get(0).removeToken(game.getTurnPlayer().getNickname(),0);
+            game.setNextPlayer();
+            game.setNextPlayer();
+            game.getCommonGoalCards().get(1).removeToken(game.getTurnPlayer().getNickname(),1);
+            game.setNextPlayer();
+            game.getCommonGoalCards().get(0).removeToken(game.getTurnPlayer().getNickname(),0);
+
+             */
+
+
 
             //player.ask();
 

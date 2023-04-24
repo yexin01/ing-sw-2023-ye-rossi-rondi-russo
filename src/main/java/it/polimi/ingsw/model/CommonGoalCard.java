@@ -28,13 +28,16 @@ public abstract class CommonGoalCard {
             int point=points.get(points.size()-1);
             points.remove(points.size()-1);
             MessagePayload payloadWinner=new MessagePayload(EventType.WIN_TOKEN);
-            CommonGoalView common=new CommonGoalView(getLastPoint(),nickname);
+            int pointsArray[]= points.stream().mapToInt(Integer::intValue).toArray();
+            CommonGoalView common=new CommonGoalView(nickname, pointsArray);
             payloadWinner.put(PayloadKeyServer.TOKEN,common);
+            payloadWinner.put(PayloadKeyServer.POINTS,point);
             serverView.setCommonGoalViews(common,index);
             serverView.firePlayer(payloadWinner, MessageFromServerType.DATA,nickname);
             MessagePayload payloadLoser=new MessagePayload(EventType.LOSE_TOKEN);
             payloadLoser.put(PayloadKeyServer.WHO_CHANGE,nickname);
-            payloadLoser.put(PayloadKeyServer.TOKEN,new CommonGoalView(getLastPoint(),nickname));
+            payloadLoser.put(PayloadKeyServer.TOKEN,common);
+            payloadLoser.put(PayloadKeyServer.POINTS,point);
             serverView.fireEvent(payloadLoser, MessageFromServerType.DATA,false,nickname);
             return point;
         }

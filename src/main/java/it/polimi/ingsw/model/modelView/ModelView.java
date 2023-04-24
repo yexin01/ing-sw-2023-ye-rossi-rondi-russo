@@ -16,7 +16,18 @@ public class ModelView {
     private PlayerPointsView[] playerPoints;
     private PersonalGoalCard[] playerPersonalGoal;
 
-    public ModelView(GameRules gameRules, int numPlayers){
+    public ModelView(){
+        /*
+        this.numPlayers=numPlayers;
+        commonGoalViews=new CommonGoalView[gameRules.getNumOfCommonGoals()];
+        bookshelfView=new ItemTileView[numPlayers][gameRules.getRowsBookshelf()][gameRules.getColumnsBookshelf()];
+        playerPoints=new PlayerPointsView[numPlayers];
+        playerPersonalGoal=new PersonalGoalCard[numPlayers];
+        players=new String[numPlayers];
+
+         */
+    }
+    public void setAll(GameRules gameRules,int numPlayers){
         this.numPlayers=numPlayers;
         commonGoalViews=new CommonGoalView[gameRules.getNumOfCommonGoals()];
         bookshelfView=new ItemTileView[numPlayers][gameRules.getRowsBookshelf()][gameRules.getColumnsBookshelf()];
