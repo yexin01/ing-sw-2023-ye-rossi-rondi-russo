@@ -32,7 +32,7 @@ public class RMIServer {
             Registry registry = LocateRegistry.createRegistry(port);
             registry.bind("Server", rmiHandler);
         } catch (IOException | AlreadyBoundException e) {
-            Server.LOGGER.severe(e.getMessage());
+            System.out.println("RMI server non started;");
         }
     }
 }
