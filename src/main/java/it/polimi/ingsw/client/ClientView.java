@@ -89,7 +89,7 @@ public class ClientView {
                     System.out.println(commonGoalp.getLastPointsLeft()+" This are TOKEN points that remain, you LOSE TOKEN,"+whoChange+" YOU ARE"+this.nickname);
                 }
                 System.out.println("PERSONAL GOAL "+nickname);
-                //printPersonalGoal((PersonalGoalCard) mes.getMessagePayload().get(PayloadKeyServer.PERSONAL_GOAL),newBookshelf.length,newBookshelf[0].length);
+                printPersonalGoal((PersonalGoalCard) mes.getMessagePayload().get(PayloadKeyServer.PERSONAL_GOAL),newBookshelf.length,newBookshelf[0].length);
                 break;
             case TILES_SELECTED:
                 printItemTilesSelected((ItemTileView[]) mes.getMessagePayload().get(PayloadKeyServer.TILES_SELECTED));
@@ -173,12 +173,12 @@ public class ClientView {
     }
     public void printMatrixBookshelf(ItemTileView[][] matrix){
         for (int i = 0; i < matrix.length; i++) {
-            System.out.printf("row" + i + " ");
+            System.out.printf("row"+i+" ");
             for (int j = 0; j < matrix[i].length; j++) {
                 if (matrix[i][j].getTileID() != -1) {
-                    System.out.printf("%-10s", +j + "" + matrix[i][j].getTypeView());
+                    System.out.printf("%-10s",+j+""+matrix[i][j].getTypeView());
                 } else {
-                    System.out.printf("%-10s", +j + " EMPTY");
+                    System.out.printf("%-10s",+j+" EMPTY");
                 }
             }
             System.out.println("");
@@ -187,33 +187,35 @@ public class ClientView {
     public void printItemTilesSelected(ItemTileView[] tiles){
         int j=0;
         for(ItemTileView t:tiles){
-            System.out.printf("%-10s", +(j++) + " "+t.getTypeView());
+            System.out.printf("%-10s",+(j++)+" "+t.getTypeView());
         }
         System.out.println("");
     }
-    //TODO finish and optimize
-    public void printPersonalGoal(PersonalGoalCard coordinates,int rows,int columns){
-        //ItemTileView[][] matrix= bookshelf.getBookshelfView();
-        System.out.printf(coordinates.getCells().get(0).getType().toString());
+    public void printPersonalGoal(PersonalGoalCard coordinates,int rows,int columns) {
+        for (PersonalGoalBox p : coordinates.getCells()) {
+            System.out.printf("%-10s", "row "+p.getX());
+            System.out.printf("%-10s", "column "+p.getY());
+            System.out.printf(p.getTypePersonal().toString());
+            System.out.println("");
+        }
         for (int i = 0; i < rows; i++) {
-            System.out.printf("row" + i + " ");
+            System.out.printf("row"+i+" ");
             for (int j = 0; j < columns; j++) {
-                for(int k=0;k<coordinates.getCells().size()+1;k++){
-
-                    System.out.printf(coordinates.getCells().get(0).getType().toString());
-                if(k==coordinates.getCells().size()){
-                        System.out.printf("%-10s", +j + " EMPTY");
-                        continue;
+                boolean found = false;
+                for (PersonalGoalBox p : coordinates.getCells()) {
+                    if (p.getX() == i && p.getY() == j) {
+                        System.out.printf("%-10s",j+" "+p.getTypePersonal().toString());
+                        found = true;
+                        break;
                     }
-                    PersonalGoalBox p=coordinates.getCells().get(k);
-                    if(p.getX()==i && p.getY()==j){
-                        System.out.printf("%-10s"+ j +""+p.getType().toString());
-                        continue;
-                    }
+                }
+                if (!found) {
+                    System.out.printf("%-10s",j+" EMPTY");
                 }
             }
             System.out.println("");
         }
     }
+
 
 }

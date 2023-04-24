@@ -22,7 +22,7 @@ public class PersonalGoalBox implements Serializable {
         return y;
     }
 
-    public Type getType() {
+    public Type getTypePersonal() {
         return type;
     }
 }

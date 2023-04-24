@@ -376,7 +376,7 @@ public class Game {
         int[] points= gameRules.getPersonalGoalPoints();
         int numScored = 0;
         for (PersonalGoalBox box : turnPersonalGoal().getCells()){
-            if (turnBookshelf().getMatrix()[box.getX()][box.getY()].getType() != null && turnBookshelf().getMatrix()[box.getX()][box.getY()].getType().equals(box.getType())){
+            if (turnBookshelf().getMatrix()[box.getX()][box.getY()].getType() != null && turnBookshelf().getMatrix()[box.getX()][box.getY()].getType().equals(box.getTypePersonal())){
                 numScored++;
             }
         }
