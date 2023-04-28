@@ -15,7 +15,6 @@ public abstract class Client extends UnicastRemoteObject {
     // per avere random serialversionUID clicca Option+Enter sul mac dopo =
 
     private final String username;
-    private final String password;
     private final String ip;
     private final int port;
 
@@ -24,11 +23,8 @@ public abstract class Client extends UnicastRemoteObject {
 
     final transient List<Message> messageQueue;
 
-    //TODO non so se ci va password
-
-    public Client(String username, String password, String ip, int port) throws RemoteException {
+    public Client(String username,String ip, int port) throws RemoteException {
         this.username = username;
-        this.password = password;
         this.ip = ip;
         this.port = port;
         this.messageQueue = new ArrayList<>();
@@ -36,10 +32,6 @@ public abstract class Client extends UnicastRemoteObject {
 
     public String getUsername() {
         return username;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getIp() {
@@ -61,17 +53,6 @@ public abstract class Client extends UnicastRemoteObject {
     public abstract void disconnectMe() throws RemoteException;
 
     public abstract void sendMessage(Message message) throws Exception;
-
-    /*
-    public void addMessageToQueue(Message message) {
-        messageQueue.add(message);
-    }
-
-    public void clearMessageQueue() {
-        messageQueue.clear();
-    }
-    */
-
 
 }
 

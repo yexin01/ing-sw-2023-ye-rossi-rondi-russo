@@ -9,7 +9,7 @@ import java.io.IOException;
  */
 public abstract class Connection {
     private boolean connected = true;
-    //private String token;
+    private String token;
 
     public boolean isConnected() {
         return connected;
@@ -30,7 +30,7 @@ public abstract class Connection {
 
     public abstract void ping();
 
-    /*
+
     public String getToken() {
         return token;
     }
@@ -38,6 +38,4 @@ public abstract class Connection {
     public void setToken(String token) {
         this.token = token;
     }
-
-     */
 }

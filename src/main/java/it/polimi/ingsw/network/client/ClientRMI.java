@@ -18,23 +18,12 @@ public class ClientRMI extends Client implements RMIClientConnection {
 
     private transient RMIHandler server;
 
-    public ClientRMI (String username, String password, String ip, int port) throws RemoteException {
-        super(username, password, ip, port);
+    public ClientRMI (String username, String ip, int port) throws RemoteException {
+        super(username, ip, port);
     }
 
     @Override
     public void startConnection() throws RemoteException, NotBoundException {
-
-        // TODO to adapt
-        /*
-        Registry registry = LocateRegistry.getRegistry();
-        AppServer server = (AppServer) registry.lookup("server");
-
-        ClientImpl client = new ClientImpl(server.connect());
-        client.run();
-
-         */
-
         Registry registry = LocateRegistry.getRegistry(getIp(), getPort());
         server = (RMIHandler) registry.lookup("server");
 
@@ -65,6 +54,9 @@ public class ClientRMI extends Client implements RMIClientConnection {
     @Override
     public void ping() throws RemoteException {
         //TODO
+        super.pingTimer.cancel();
+        super.pingTimer = new Timer();
+        super.pingTimer.schedule(new PingTimerTask(super.disconnectionListener), Client.DISCONNECTION_TIME);
     }
 
     @Override

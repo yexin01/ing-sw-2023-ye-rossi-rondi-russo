@@ -21,8 +21,8 @@ public class ClientSocket extends Client implements Runnable{
 
     private transient Thread messageReceiver;
 
-    public ClientSocket(String username, String password, String ip, int port) throws RemoteException {
-        super(username, password, ip, port);
+    public ClientSocket(String username, String ip, int port) throws RemoteException {
+        super(username, ip, port);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class ClientSocket extends Client implements Runnable{
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
 
-        //sendMessage(new ConnectionRequest(getUsername()));
+        sendMessage(new ConnectionRequest(getUsername()));
 
         messageReceiver = new Thread(this);
         messageReceiver.start();
