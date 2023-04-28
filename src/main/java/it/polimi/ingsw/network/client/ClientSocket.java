@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.client;
 
+import it.polimi.ingsw.messages.MessageFromClient;
 import it.polimi.ingsw.network.networkmessages.Message;
 
 import java.io.IOException;
@@ -9,6 +10,9 @@ import java.io.Serial;
 import java.net.Socket;
 import java.rmi.RemoteException;
 
+/**
+ * This class represents a Socket connection with a server as a client
+ */
 public class ClientSocket extends Client implements Runnable{
 
     @Serial
@@ -21,32 +25,54 @@ public class ClientSocket extends Client implements Runnable{
 
     private transient Thread messageReceiver;
 
-    public ClientSocket(String username, String ip, int port) throws RemoteException {
-        super(username, ip, port);
+    /**
+     * Constructs a connection over the socket with the server as a client with the given username and token and ip and port of the server to connect to
+     * @param username is the username of the client
+     * @param ip is the ip of the server to connect to
+     * @param port is the port of the server to connect to
+     * @param token is the token of the client
+     * @throws RemoteException if there are connection problems
+     */
+    public ClientSocket(String username, String ip, int port, String token) throws RemoteException {
+        super(username, ip, port, token);
     }
 
+    /**
+     * This method starts the connection with the server as a client over the socket and starts the message receiver thread to receive messages from the server
+     * @throws IOException if there are connection problems
+     */
     @Override
     public void startConnection() throws IOException {
         socket = new Socket(getIp(), getPort());
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
 
-        sendMessage(new ConnectionRequest(getUsername()));
+        //TODO ask to giuliaR how to set it
+        sendMessage(new MessageFromClient(/*setType to ConnectionRequest*/,getUsername()));
 
         messageReceiver = new Thread(this);
         messageReceiver.start();
     }
 
+    /**
+     * This method disconnects the client from the server by closing the connection and interrupting the message receiver thread with the method closeConnection
+     * @throws RemoteException if there are connection problems
+     */
     @Override
     public void disconnectMe() throws RemoteException {
         try {
             closeConnection();
         } catch (Exception e) {
             e.printStackTrace();
-            //Logger.getLogger("client").severe(e.getMessage());
+            System.out.println("Error while closing connection");
         }
     }
 
+    /**
+     * This method sends a message to the server over the socket connection using the writeObject method of the ObjectOutputStream
+     * @param message is the message to send
+     * @throws RemoteException if there are connection problems
+     */
     @Override
     public void sendMessage(Message message) throws RemoteException {
         if (out != null) {
@@ -59,6 +85,10 @@ public class ClientSocket extends Client implements Runnable{
         }
     }
 
+    /**
+     * This method closes the connection with the server by closing the socket and setting the ObjectInputStream and the ObjectOutputStream to null and interrupting the message receiver thread
+     * @throws RemoteException if there are connection problems
+     */
     @Override
     public void closeConnection() throws RemoteException {
         try {
@@ -73,6 +103,9 @@ public class ClientSocket extends Client implements Runnable{
         }
     }
 
+    /**
+     * This method receives messages from the server over the socket connection using the readObject method of the ObjectInputStream and adds them to the message queue of the client to be processed by the client itself
+     */
     @Override
     public void run() {
         //TODO to adapt
@@ -87,8 +120,5 @@ public class ClientSocket extends Client implements Runnable{
             }
         }
     }
-
-
-
 
 }
