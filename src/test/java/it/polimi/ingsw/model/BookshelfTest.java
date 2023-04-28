@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.Error;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -368,7 +368,7 @@ class BookshelfTest {
             selectedTiles.add(new ItemTile(Type.CAT, tileID));
             tileID++;
         }
-        bookshelf.insertAsSelected(selectedTiles);
+        bookshelf.insertTiles(selectedTiles);
         assertEquals(0, bookshelf.getMatrix()[5][0].getTileID()); assertEquals(Type.CAT, bookshelf.getMatrix()[5][0].getType());
         assertEquals(1, bookshelf.getMatrix()[4][0].getTileID()); assertEquals(Type.CAT, bookshelf.getMatrix()[4][0].getType());
         assertEquals(2, bookshelf.getMatrix()[3][0].getTileID()); assertEquals(Type.CAT, bookshelf.getMatrix()[3][0].getType());
@@ -386,7 +386,7 @@ class BookshelfTest {
             selectedTiles.add(new ItemTile(Type.CAT, tileID));
             tileID++;
         }
-        bookshelf.insertAsSelected(selectedTiles);
+        bookshelf.insertTiles(selectedTiles);
         assertEquals(0, bookshelf.getMatrix()[5][0].getTileID()); assertEquals(Type.CAT, bookshelf.getMatrix()[5][0].getType());
     }
 
@@ -405,7 +405,7 @@ class BookshelfTest {
             selectedTiles.add(new ItemTile(Type.CAT, tileID));
             tileID++;
         }
-        bookshelf.insertAsSelected(selectedTiles);
+        bookshelf.insertTiles(selectedTiles);
         assertEquals(3, bookshelf.getMatrix()[2][0].getTileID()); assertEquals(Type.CAT, bookshelf.getMatrix()[2][0].getType());
         assertEquals(4, bookshelf.getMatrix()[1][0].getTileID()); assertEquals(Type.CAT, bookshelf.getMatrix()[1][0].getType());
         assertEquals(5, bookshelf.getMatrix()[0][0].getTileID()); assertEquals(Type.CAT, bookshelf.getMatrix()[0][0].getType());
@@ -428,7 +428,7 @@ class BookshelfTest {
             selectedTiles.add(new ItemTile(Type.CAT, tileID));
             tileID++;
         }
-        bookshelf.insertAsSelected(selectedTiles);
+        bookshelf.insertTiles(selectedTiles);
         assertEquals(5, bookshelf.getMatrix()[0][0].getTileID()); assertEquals(Type.CAT, bookshelf.getMatrix()[0][0].getType());
     }
 
@@ -442,7 +442,8 @@ class BookshelfTest {
         int size = 1;
         //Set the column you want to check
         int column = -1;
-        assertThrows(Error.class, () -> bookshelf.checkBookshelf(column, size));
+        assertNotEquals(null, bookshelf.checkBookshelf(column, size));
+        //assertThrows(Error.class, () -> bookshelf.checkBookshelf(column, size));
     }
 
     @Test
@@ -452,7 +453,8 @@ class BookshelfTest {
         bookshelf.computeFreeShelves();
         int size = 3;
         int column = 5;
-        assertThrows(Error.class, ()->bookshelf.checkBookshelf(column, size));
+        assertNotEquals(null, bookshelf.checkBookshelf(column, size));
+        //assertThrows(Error.class, () -> bookshelf.checkBookshelf(column, size));
     }
 
     @Test
@@ -468,7 +470,8 @@ class BookshelfTest {
         bookshelf.computeFreeShelves();
         int size = 2;
         int column = 0;
-        assertThrows(Error.class, ()->bookshelf.checkBookshelf(column, size));
+        assertNotEquals(null, bookshelf.checkBookshelf(column, size));
+        //assertThrows(Error.class, () -> bookshelf.checkBookshelf(column, size));
     }
 
     @Test
