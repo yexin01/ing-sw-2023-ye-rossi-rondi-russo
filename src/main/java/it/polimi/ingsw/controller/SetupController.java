@@ -32,7 +32,7 @@ public class SetupController implements Serializable {
     public boolean checkNickname(String nickname) {
         return waitingPlayers.contains(nickname) && nickname.length() > 1 && nickname.length() <= MAX_USERNAME_LENGTH;
     }
-    
+
     public void addPlayer(String nickname) {
         waitingPlayers.add(nickname);
     }

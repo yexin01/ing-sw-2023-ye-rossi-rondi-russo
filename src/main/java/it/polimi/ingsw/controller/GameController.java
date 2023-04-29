@@ -202,7 +202,7 @@ public class GameController {
         MessagePayload payload=new MessagePayload(null);
         payload.put(PayloadKeyServer.RANKING,ranking);
         serverView.sendAllMessage(payload,MessageFromServerType.END_GAME);
-        //TODO
+        //TODO set GamePhase a END_GAME
         //sendMessages.sendAll(payload,MessageFromServerType.END_GAME);
         //sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.END_GAME);
         //endGameListener.endGame(ranking);
