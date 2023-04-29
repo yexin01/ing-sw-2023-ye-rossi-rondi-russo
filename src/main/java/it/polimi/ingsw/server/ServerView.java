@@ -1,15 +1,19 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.client.clientView.ClientView;
+import it.polimi.ingsw.view.ClientView;
+
+import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.network.messages.EventType;
+
 import it.polimi.ingsw.model.modelView.ModelView;
-import it.polimi.ingsw.messages.*;
+
 
 import java.util.HashMap;
 import java.util.Map;
-
+//TODO cambiare enumerazione dei messaggi dal server una volta terminata la parte di rete
 public class ServerView  {
     //TODO Client entity will change once the network part is finished
-    private HashMap<String, ClientView> playerMap;
+    private HashMap<java.lang.String, ClientView> playerMap;
     private ModelView modelView;
     //private final ClientUI player;
     //private final String nickname;
@@ -34,18 +38,20 @@ public class ServerView  {
         MessageFromServer message=new MessageFromServer(header,payload);
         //System.out.println(playerNickname+" RECEIVE");
         //System.out.println(playerNickname+" RECEIVE"+message.getMessagePayload().getEvent());
-        playerMap.get(playerNickname).receiveMessageFromServer(playerNickname,message);
+        //TODO gestire invio messaggio
+       // playerMap.get(playerNickname).receiveMessageFromServer(playerNickname,message);
     }
 
-    public void sendError(ErrorType error,String playerNickname){
+    public void sendError(ErrorType error, java.lang.String playerNickname){
         ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.ERROR,playerNickname);
         MessagePayload payload=new MessagePayload(null);
         payload.put(PayloadKeyServer.ERRORMESSAGE,error);
         MessageFromServer message=new MessageFromServer(header,payload);
-        playerMap.get(playerNickname).receiveMessageFromServer(playerNickname,message);
+        //TODO gestire invio messaggio
+       // playerMap.get(playerNickname).receiveMessageFromServer(playerNickname,message);
     }
 
-    public void sendInfo(String playerNickname){
+    public void sendInfo(java.lang.String playerNickname){
         ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.INFO,playerNickname);
         MessagePayload payload=new MessagePayload(EventType.ALL_INFO);
         payload.put(PayloadKeyServer.NEWBOARD, modelView.getBoardView());
@@ -54,10 +60,11 @@ public class ServerView  {
         payload.put(PayloadKeyServer.TOKEN,modelView.getCommonGoalViews());
         payload.put(PayloadKeyServer.PERSONAL_GOAL,modelView.getPlayerPersonal(playerNickname));
         payload.put(PayloadKeyServer.TOKEN,modelView.getCommonGoalViews());
-        sendMessage(payload,MessageFromServerType.DATA,playerNickname);
+        //TODO gestire invio messaggio (quando viene inizializzato il gioco viene inviato questo messaggio)
+        //sendMessage(payload,MessageFromServerType.DATA,playerNickname);
     }
 
-    public void removeClient(String nickname) {
+    public void removeClient(java.lang.String nickname) {
         playerMap.remove(nickname);
     }
 
@@ -70,7 +77,7 @@ public class ServerView  {
         this.modelView = modelView;
     }
 
-    public void setPlayerMap(HashMap<String, ClientView> playerMap) {
+    public void setPlayerMap(HashMap<java.lang.String, ClientView> playerMap) {
         this.playerMap = playerMap;
     }
 

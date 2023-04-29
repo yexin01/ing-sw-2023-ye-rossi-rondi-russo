@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.modelView;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.EventListener;
 import it.polimi.ingsw.listeners.ListenerManager;
-import it.polimi.ingsw.messages.EventType;
+import it.polimi.ingsw.network.messages.EventType;
 import it.polimi.ingsw.model.PersonalGoalCard;
 
 import java.lang.reflect.Array;
@@ -14,7 +14,7 @@ public class ModelView {
 
     private ListenerManager listenerManager;
     private int indexRemoveToken;
-    private HashMap<String, Integer> playersId;
+    private HashMap<java.lang.String, Integer> playersId;
 
     private BoardBoxView[][] boardView;
     private CommonGoalView[] commonGoalViews;
@@ -24,7 +24,7 @@ public class ModelView {
     private PersonalGoalCard[] playerPersonalGoal;
     private ItemTileView[] selectedItems;
 
-    public ModelView(HashMap<String, Integer> playersId, GameRules gameRules){
+    public ModelView(HashMap<java.lang.String, Integer> playersId, GameRules gameRules){
         int numPlayers=playersId.keySet().size();
         this.playersId=playersId;
         listenerManager=new ListenerManager();
@@ -36,7 +36,7 @@ public class ModelView {
 
     }
 
-    public int getIntegerValue(String key) {
+    public int getIntegerValue(java.lang.String key) {
         if (playersId.containsKey(key)) {
             return playersId.get(key);
         } else {
@@ -58,13 +58,13 @@ public class ModelView {
         return newArray;
     }
 
-    public int deleteAllObjectByIndex(String nickname){
+    public int deleteAllObjectByIndex(java.lang.String nickname){
         int index=getIntegerValue(nickname);
         playerPoints = deleteObjectByIndex(playerPoints, index);
         playerPersonalGoal=deleteObjectByIndex(playerPersonalGoal,index);
         bookshelfView=deleteObjectByIndex(bookshelfView,index);
         playersId.remove(nickname);
-        for(Map.Entry<String, Integer> entry : playersId.entrySet()) {
+        for(Map.Entry<java.lang.String, Integer> entry : playersId.entrySet()) {
             if(entry.getValue() >= index) {
                 entry.setValue(entry.getValue() - 1);
             }
@@ -73,14 +73,11 @@ public class ModelView {
 
     }
 
-
-
-
     public CommonGoalView[] getCommonGoalViews() {
         return commonGoalViews;
     }
 
-    public void setCommonGoalViews(CommonGoalView commonGoalViews,int index,String nickname) {
+    public void setCommonGoalViews(CommonGoalView commonGoalViews, int index, java.lang.String nickname) {
         this.commonGoalViews[index] = commonGoalViews;
         listenerManager.fireEvent(EventType.WIN_TOKEN,nickname,this);
     }
@@ -88,19 +85,19 @@ public class ModelView {
 
 
 
-    public ItemTileView[][] getBookshelfView(String nickname) {
+    public ItemTileView[][] getBookshelfView(java.lang.String nickname) {
         return bookshelfView[getIntegerValue(nickname)];
     }
 
-    public void setBookshelfView(ItemTileView[][] bookshelfView,String nickname) {
+    public void setBookshelfView(ItemTileView[][] bookshelfView, java.lang.String nickname) {
         this.bookshelfView[getIntegerValue(nickname)] = bookshelfView;
     }
 
-    public PlayerPointsView getPlayerPoints(String nickname) {
+    public PlayerPointsView getPlayerPoints(java.lang.String nickname) {
         return playerPoints[getIntegerValue(nickname)];
     }
 
-    public void setPlayerPoints(PlayerPointsView playerPersonalGoal,String nickname) {
+    public void setPlayerPoints(PlayerPointsView playerPersonalGoal, java.lang.String nickname) {
         this.playerPoints[getIntegerValue(nickname)] = playerPersonalGoal;
         listenerManager.fireEvent(EventType.END_TURN,nickname,this);
     }
@@ -108,14 +105,14 @@ public class ModelView {
 
 
 
-    public PersonalGoalCard getPlayerPersonalGoal(String nickname) {
+    public PersonalGoalCard getPlayerPersonalGoal(java.lang.String nickname) {
         return playerPersonalGoal[getIntegerValue(nickname)];
     }
-    public void setPlayerPersonalGoal(PersonalGoalCard playerPersonalGoal, String nickname) {
+    public void setPlayerPersonalGoal(PersonalGoalCard playerPersonalGoal, java.lang.String nickname) {
         this.playerPersonalGoal[getIntegerValue(nickname)] = playerPersonalGoal;
     }
 
-    public PersonalGoalCard getPlayerPersonal(String nickname) {
+    public PersonalGoalCard getPlayerPersonal(java.lang.String nickname) {
         return playerPersonalGoal[getIntegerValue(nickname)] ;
     }
 
@@ -125,7 +122,7 @@ public class ModelView {
         return selectedItems;
     }
 
-    public void setSelectedItems(ItemTileView[] selectedItems,String nickname) {
+    public void setSelectedItems(ItemTileView[] selectedItems, java.lang.String nickname) {
         this.selectedItems = selectedItems;
         listenerManager.fireEvent(EventType.TILES_SELECTED,nickname,this);
     }

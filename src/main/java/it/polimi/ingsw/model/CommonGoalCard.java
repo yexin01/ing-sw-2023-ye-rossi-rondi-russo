@@ -30,26 +30,6 @@ public abstract class CommonGoalCard {
             CommonGoalView common=new CommonGoalView(nickname, point, pointsArray);
             modelView.setCommonGoalViews(common,index,nickname);
             return point;
-            /*
-            MessagePayload payloadWinner=new MessagePayload(EventType.WIN_TOKEN);
-
-            payloadWinner.put(PayloadKeyServer.TOKEN,common);
-            payloadWinner.put(PayloadKeyServer.POINTS,point);
-            payloadWinner.put(PayloadKeyServer.WHO_CHANGE,nickname);
-            payloadWinner.put(PayloadKeyServer.INDEX_TOKEN,index);
-
-            serverView.fireEvent(payloadWinner, MessageFromServerType.DATA,true,nickname);
-            /*
-
-            MessagePayload payloadLoser=new MessagePayload(EventType.LOSE_TOKEN);
-            payloadLoser.put(PayloadKeyServer.WHO_CHANGE,nickname);
-            payloadLoser.put(PayloadKeyServer.TOKEN,common);
-            payloadLoser.put(PayloadKeyServer.POINTS,point);
-            payloadLoser.put(PayloadKeyServer.INDEX_TOKEN,index);
-            serverView.fireEvent(payloadLoser, MessageFromServerType.DATA,false,nickname);
-
-             */
-
         }
         return 0;
     }

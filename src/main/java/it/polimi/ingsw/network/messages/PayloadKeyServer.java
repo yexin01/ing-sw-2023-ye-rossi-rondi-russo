@@ -1,4 +1,4 @@
-package it.polimi.ingsw.messages;
+package it.polimi.ingsw.network.messages;
 
 public enum PayloadKeyServer {
     NEWBOARD,NEWBOOKSHELF,POINTS,WHO_CHANGE,ERRORMESSAGE,RANKING,TOKEN,PERSONAL_GOAL,TILES_SELECTED,INDEX_TOKEN;

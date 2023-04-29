@@ -1,21 +1,21 @@
-package it.polimi.ingsw.messages;
+package it.polimi.ingsw.network.messages;
 
 import java.io.Serializable;
 
 public class ServerMessageHeader implements Serializable {
     private final MessageFromServerType messageFromServer;
-    private final String nicknameAddressee;
+    private final EventType nicknameAddressee;
 
-    public ServerMessageHeader(MessageFromServerType messageFromServer, String nicknameAddressee) {
+    public ServerMessageHeader(MessageFromServerType messageFromServer, EventType nicknameAddressee) {
         this.messageFromServer = messageFromServer;
         this.nicknameAddressee = nicknameAddressee;
     }
 
-    public MessageFromServerType getMessageFromServer() {
+    public MessageFromServerType getMessageFromServerType() {
         return messageFromServer;
     }
 
-    public String getNicknameAddressee() {
+    public EventType getNicknameAddressee() {
         return nicknameAddressee;
     }
 }

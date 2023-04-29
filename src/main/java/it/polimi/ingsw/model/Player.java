@@ -1,16 +1,10 @@
 package it.polimi.ingsw.model;
 
 
-import it.polimi.ingsw.listeners.EventListener;
-import it.polimi.ingsw.listeners.ListenerManager;
-import it.polimi.ingsw.messages.ErrorType;
+import it.polimi.ingsw.network.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.messages.MessageFromServerType;
-import it.polimi.ingsw.messages.MessagePayload;
-import it.polimi.ingsw.messages.PayloadKeyServer;
 import it.polimi.ingsw.model.modelView.*;
-import it.polimi.ingsw.messages.EventType;
-import it.polimi.ingsw.server.ServerView;
+import it.polimi.ingsw.network.messages.EventType;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -19,12 +13,12 @@ public class Player {
 
 
     //private GameInfo gameInfo;
-    private String nickname;
+    private EventType nickname;
 
 
     private ModelView modelView;
 
-    public Player (String nickname,ModelView modelView) throws Exception {
+    public Player (EventType nickname, ModelView modelView) throws Exception {
         this.modelView=modelView;
         selectedItems=new ArrayList<>();
         //TODO change pass gameRules as a parameter
@@ -64,10 +58,10 @@ public class Player {
 
 
 
-    public String getNickname() {
+    public EventType getNickname() {
         return nickname;
     }
-    public void setNickname(String nickname) {
+    public void setNickname(EventType nickname) {
         this.nickname = nickname;
     }
 

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.messages;
+package it.polimi.ingsw.network.messages;
 
 import java.io.Serializable;
 
@@ -6,11 +6,13 @@ import java.io.Serializable;
 
 public class MessageFromClient implements Serializable {
 
+    private final EventType messageType;
     private final DataClientType clientMessage;
-    private final String NicknameSender;
+    private final EventType NicknameSender;
     private final int[] value;
 
-    public MessageFromClient(DataClientType clientMessage, String nicknameSender, int[] value) {
+    public MessageFromClient(EventType messageType, DataClientType clientMessage, EventType nicknameSender, int[] value) {
+        this.messageType = messageType;
         this.clientMessage = clientMessage;
         NicknameSender = nicknameSender;
         this.value = value;
@@ -20,12 +22,17 @@ public class MessageFromClient implements Serializable {
         return clientMessage;
     }
 
-    public String getNicknameSender() {
+    public EventType getNicknameSender() {
         return NicknameSender;
     }
 
     public int[] getValue() {
         return value;
+    }
+
+
+    public EventType getMessageType() {
+        return messageType;
     }
 }
 

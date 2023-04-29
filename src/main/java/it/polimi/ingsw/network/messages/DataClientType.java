@@ -1,5 +1,6 @@
-package it.polimi.ingsw.messages;
+package it.polimi.ingsw.network.messages;
 
 public enum DataClientType {
+    //ERROR, ACK,SETUP,
     COORDINATES,RESET_BOARD_CHOICE,FINISH_SELECTION,ORDER_TILE,COLUMN,INSERT_TILE_AND_POINTS,ASK_INFO_GAME,ABANDON_GAME;
 }

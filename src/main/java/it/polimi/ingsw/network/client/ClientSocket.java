@@ -1,6 +1,8 @@
 package it.polimi.ingsw.network.client;
 
-import it.polimi.ingsw.messages.MessageFromClient;
+import it.polimi.ingsw.network.messages.DataClientType;
+import it.polimi.ingsw.network.messages.MessageFromClient;
+import it.polimi.ingsw.network.messages.EventType;
 import it.polimi.ingsw.network.networkmessages.Message;
 
 import java.io.IOException;
@@ -33,7 +35,7 @@ public class ClientSocket extends Client implements Runnable{
      * @param token is the token of the client
      * @throws RemoteException if there are connection problems
      */
-    public ClientSocket(String username, String ip, int port, String token) throws RemoteException {
+    public ClientSocket(EventType username, EventType ip, int port, EventType token) throws RemoteException {
         super(username, ip, port, token);
     }
 
@@ -48,6 +50,7 @@ public class ClientSocket extends Client implements Runnable{
         in = new ObjectInputStream(socket.getInputStream());
 
         //TODO ask to giuliaR how to set it
+
         sendMessage(new MessageFromClient(/*setType to ConnectionRequest*/,getUsername()));
 
         messageReceiver = new Thread(this);
@@ -74,7 +77,8 @@ public class ClientSocket extends Client implements Runnable{
      * @throws RemoteException if there are connection problems
      */
     @Override
-    public void sendMessage(Message message) throws RemoteException {
+    public void sendMessage(EventType messageType, DataClientType clientMessage, EventType userName, int[] value) throws RemoteException {
+        MessageFromClient message=new MessageFromClient(messageType,clientMessage,userName,value);
         if (out != null) {
             try {
                 out.writeObject(message);
