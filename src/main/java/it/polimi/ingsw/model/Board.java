@@ -2,8 +2,8 @@ package it.polimi.ingsw.model;
 
 
 
-import it.polimi.ingsw.network.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
+import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.model.modelView.ModelView;
@@ -55,7 +55,7 @@ public class Board{
         this.selectedBoard = selectedBoard;
 
     }
-    public ErrorType checkCoordinates(int x,int y) {
+    public ErrorType checkCoordinates(int x, int y) {
         if (x < 0 || y<0 || x> matrix.length-1 || y> matrix[0].length-1 || !getBoardBox(x,y).isOccupiable() ) {
             return ErrorType.INVALID_COORDINATES;
             //throw new Error(ErrorType.INVALID_COORDINATES);

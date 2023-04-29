@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.client.messageHandlers;
 
 import it.polimi.ingsw.listeners.ListenerManager;
+import it.polimi.ingsw.messages.PayloadKeyServer;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.CommonGoalView;
@@ -8,9 +9,7 @@ import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.network.client.ClientListener;
 import it.polimi.ingsw.network.client.ClientSocket;
-import it.polimi.ingsw.network.messages.MessageFromServer;
-import it.polimi.ingsw.network.messages.PayloadKeyServer;
-import it.polimi.ingsw.network.messages.EventType;
+
 import it.polimi.ingsw.view.ClientView;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public class DataHandler extends MessageHandler {
             case END_TURN->endTurn(mes);
             case WIN_TOKEN->{
                 //TODO gestione dei token verrà cambiata
-                if(getMessageWhoChange(mes)==getClientInterface().getNickname()){
+                if(getMessageWhoChange(mes).equals(getClientListener().getNickname())){
                     //winToken(mes);
                     //else loseToken(mes);
                 }
@@ -90,8 +89,8 @@ public class DataHandler extends MessageHandler {
         //printItemTilesSelected();
         listeners.fireEvent(EventType.valueOf("TileSelected"),null,mes);
     }
-    public EventType getMessageWhoChange(MessageFromServer mes){
-        return (EventType)mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE);
+    public String getMessageWhoChange(MessageFromServer mes){
+        return (String)mes.getMessagePayload().get(PayloadKeyServer.WHO_CHANGE);
 
     }
     //TODO token arriva con il messaggio di entTurn, questi metodi verranno spostati

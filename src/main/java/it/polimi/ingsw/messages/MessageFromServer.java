@@ -1,4 +1,4 @@
-package it.polimi.ingsw.network.messages;
+package it.polimi.ingsw.messages;
 
 import java.io.Serializable;
 
@@ -19,3 +19,4 @@ public class MessageFromServer implements Serializable {
         return messagePayload;
     }
 }
+

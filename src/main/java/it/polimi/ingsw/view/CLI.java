@@ -2,6 +2,7 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.listeners.EventListener;
 import it.polimi.ingsw.listeners.ListenerManager;
+import it.polimi.ingsw.messages.PayloadKeyServer;
 import it.polimi.ingsw.model.PersonalGoalBox;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
@@ -9,14 +10,13 @@ import it.polimi.ingsw.model.modelView.CommonGoalView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.network.client.ClientListener;
-import it.polimi.ingsw.network.messages.MessageFromServer;
-import it.polimi.ingsw.network.messages.PayloadKeyServer;
+
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 //TODO una volta terminati gli handler finire di implementare i metodi
-public class CLI implements ClientListener {
+public class CLI extends ClientListener{
     private String nickname;
     private Scanner scanner;
     private ClientView clientView;
@@ -25,6 +25,27 @@ public class CLI implements ClientListener {
         this.listenerManager=new ListenerManager();
         this.scanner= new Scanner(System.in);
     }
+
+    @Override
+    public String getNickname() {
+        return null;
+    }
+
+    @Override
+    public void askNickname() {
+
+    }
+
+    @Override
+    public void printBoardBox(BoardBoxView[][] boardBoxView) {
+
+    }
+
+    @Override
+    public void printTilesSelected(ItemTileView[] tilesSelected) {
+
+    }
+
     @Override
     public void askCoordinates(BoardBoxView[][] board) {
         //TODO change 3,insert parameter
@@ -40,7 +61,7 @@ public class CLI implements ClientListener {
             System.out.println("Insert column:");
             coordinates.add(scanner.nextInt());
         }
-        listenerManager.fireEvent("BOARD_SELECTION",nickname,coordinates.stream().mapToInt(Integer::intValue).toArray());
+        //listenerManager.fireEvent(EventType.BOARD_SELECTION,nickname,coordinates.stream().mapToInt(Integer::intValue).toArray());
     }
 
     @Override
@@ -52,7 +73,7 @@ public class CLI implements ClientListener {
             System.out.println("Insert number:");
             orderTiles[i] = scanner.nextInt();
         }
-        listenerManager.fireEvent("ORDER_TILES",nickname,orderTiles);
+        //listenerManager.fireEvent(EventType.TILES_SELECTED,nickname,orderTiles);
     }
 
     @Override
@@ -61,7 +82,8 @@ public class CLI implements ClientListener {
         computeFreeShelves(bookshelf);
         printMatrixBookshelf(bookshelf);
         int column = scanner.nextInt();
-        listenerManager.fireEvent("COLUMN",nickname,column);
+        //TODO CMBIARE EVENTO
+        //.fireEvent(EventType.TILES_SELECTED,nickname,column);
 
     }
     @Override
@@ -186,8 +208,17 @@ public class CLI implements ClientListener {
         printFreeShelves(freeShelves);
     }
 
-    public void addListener (String string, EventListener listener){
-        this.listenerManager.addListener(string, listener);
+    public void addListener (EventType event, EventListener listener){
+        this.listenerManager.addListener(event, listener);
     }
 
+    @Override
+    public void shutdown() {
+
+    }
+
+    @Override
+    public void fireEvent(EventType event, String playerNickname, Object newValue) {
+
+    }
 }

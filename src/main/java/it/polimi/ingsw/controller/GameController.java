@@ -1,13 +1,15 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.client.clientView.ClientView;
+import it.polimi.ingsw.messages.*;
+import it.polimi.ingsw.view.ClientView;
+
 import it.polimi.ingsw.listeners.EndTurnListener;
 import it.polimi.ingsw.listeners.FinishSelectionListener;
 import it.polimi.ingsw.listeners.TokenListener;
-import it.polimi.ingsw.messages.ErrorType;
+
 import it.polimi.ingsw.json.GameRules;
 
-import it.polimi.ingsw.messages.*;
+
 import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
@@ -54,14 +56,14 @@ public class GameController {
         phaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
     }
 
-    public void startGame(HashMap<String, ClientView> playerMap,HashMap<String, Integer> playersId,ServerView serverView ) throws Exception {
+    public void startGame(HashMap<java.lang.String, ClientView> playerMap, HashMap<java.lang.String, Integer> playersId, ServerView serverView ) throws Exception {
         GameRules gameRules=new GameRules();
         serverView.setPlayerMap(playerMap);
         ModelView modelView=new ModelView(playersId, gameRules);
         serverView.setModelView(modelView);
         game=new Game(gameRules,modelView);
-        for(Map.Entry<String, ClientView> entry : playerMap.entrySet()) {
-            String key = entry.getKey();
+        for(Map.Entry<java.lang.String, ClientView> entry : playerMap.entrySet()) {
+            java.lang.String key = entry.getKey();
             ClientView value = entry.getValue();
             game.addPlayer(key,modelView);
         }
@@ -87,7 +89,7 @@ public class GameController {
 
 
     public void receiveMessageFromClient(MessageFromClient message){
-        String nicknamePlayer= message.getNicknameSender();
+        java.lang.String nicknamePlayer= message.getNicknameSender();
         try{
             if (!nicknamePlayer.equals(game.getTurnPlayer().getNickname())) {
                 serverView.sendError(ErrorType.ILLEGAL_TURN,nicknamePlayer);
@@ -107,7 +109,7 @@ public class GameController {
         }
     }
 
-    public void removePlayer(String nicknameSender) {
+    public void removePlayer(java.lang.String nicknameSender) {
         int index=game.deletePlayer(nicknameSender);
         if(index==game.getPlayers().size()){
             game.setTurnPlayer(0);
@@ -120,8 +122,7 @@ public class GameController {
         for(Player p:game.getPlayers()){
             serverView.sendInfo(p.getNickname());
         }
-        serverView.sendMessage(null,MessageFromServerType.START_TURN,getTurnNickname());
-
+        serverView.sendMessage(null, MessageFromServerType.START_TURN,getTurnNickname());
     }
 
     public void checkAndInsertBoardBox( MessageFromClient message) throws Exception {
@@ -199,7 +200,7 @@ public class GameController {
 
     public void endGame() {
         //TODO change END GAME
-        List<String> ranking=  game.checkWinner();
+        List<java.lang.String> ranking=  game.checkWinner();
         MessagePayload payload=new MessagePayload(null);
         payload.put(PayloadKeyServer.RANKING,ranking);
         serverView.sendAllMessage(payload,MessageFromServerType.END_GAME);
@@ -217,7 +218,7 @@ public class GameController {
         }
         return;
     }
-    public String getTurnNickname() {
+    public java.lang.String getTurnNickname() {
         return game.getTurnPlayer().getNickname();
     }
 

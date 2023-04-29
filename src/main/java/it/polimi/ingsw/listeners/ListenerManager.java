@@ -1,6 +1,7 @@
 package it.polimi.ingsw.listeners;
 
 
+
 import it.polimi.ingsw.messages.EventType;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class ListenerManager {
             listeners.remove(listener);
         }
     }
-    public void fireEvent(EventType eventName, String playerNickname,Object newValue) {
+    public void fireEvent(EventType eventName, String playerNickname, Object newValue) {
         if (listenersMap.containsKey(eventName)) {
             List<EventListener> listeners = listenersMap.get(eventName);
             for (EventListener listener : listeners) {

@@ -1,9 +1,7 @@
 package it.polimi.ingsw.network.client.messageHandlers;
 
-import it.polimi.ingsw.listeners.EventListener;
 import it.polimi.ingsw.network.client.ClientListener;
 import it.polimi.ingsw.network.client.ClientSocket;
-import it.polimi.ingsw.network.messages.MessageFromServer;
 import it.polimi.ingsw.view.ClientView;
 
 public class SetupHandler extends MessageHandler {

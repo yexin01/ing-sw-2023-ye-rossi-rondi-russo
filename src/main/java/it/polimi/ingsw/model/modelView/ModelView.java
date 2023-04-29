@@ -3,7 +3,8 @@ package it.polimi.ingsw.model.modelView;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.EventListener;
 import it.polimi.ingsw.listeners.ListenerManager;
-import it.polimi.ingsw.network.messages.EventType;
+
+import it.polimi.ingsw.messages.EventType;
 import it.polimi.ingsw.model.PersonalGoalCard;
 
 import java.lang.reflect.Array;

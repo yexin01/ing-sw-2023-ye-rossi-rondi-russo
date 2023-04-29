@@ -1,9 +1,8 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.view.ClientView;
 
-import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.network.messages.EventType;
 
 import it.polimi.ingsw.model.modelView.ModelView;
 
@@ -13,7 +12,7 @@ import java.util.Map;
 //TODO cambiare enumerazione dei messaggi dal server una volta terminata la parte di rete
 public class ServerView  {
     //TODO Client entity will change once the network part is finished
-    private HashMap<java.lang.String, ClientView> playerMap;
+    private HashMap<String, ClientView> playerMap;
     private ModelView modelView;
     //private final ClientUI player;
     //private final String nickname;
@@ -51,7 +50,7 @@ public class ServerView  {
        // playerMap.get(playerNickname).receiveMessageFromServer(playerNickname,message);
     }
 
-    public void sendInfo(java.lang.String playerNickname){
+    public void sendInfo(String playerNickname){
         ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.INFO,playerNickname);
         MessagePayload payload=new MessagePayload(EventType.ALL_INFO);
         payload.put(PayloadKeyServer.NEWBOARD, modelView.getBoardView());
@@ -64,7 +63,7 @@ public class ServerView  {
         //sendMessage(payload,MessageFromServerType.DATA,playerNickname);
     }
 
-    public void removeClient(java.lang.String nickname) {
+    public void removeClient(String nickname) {
         playerMap.remove(nickname);
     }
 
@@ -77,7 +76,7 @@ public class ServerView  {
         this.modelView = modelView;
     }
 
-    public void setPlayerMap(HashMap<java.lang.String, ClientView> playerMap) {
+    public void setPlayerMap(HashMap<String, ClientView> playerMap) {
         this.playerMap = playerMap;
     }
 

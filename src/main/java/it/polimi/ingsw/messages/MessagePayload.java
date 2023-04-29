@@ -1,7 +1,4 @@
-package it.polimi.ingsw.network.messages;
-
-//TODO change PAYLOAD
-
+package it.polimi.ingsw.messages;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -32,34 +29,3 @@ public class MessagePayload implements Serializable {
     }
 }
 
-
-/*
-public class MessagePayload<T> {
-    private final T data;
-
-    public MessagePayload(T data) {
-        this.data = data;
-    }
-
-    public T getData() {
-        return data;
-    }
-}
-
- */
-
-
-/*
-public class MessagePayload {
-    private final Object object;
-
-    public MessagePayload(Object object) {
-        this.object = object;
-    }
-
-    public Object getObject() {
-        return object;
-    }
-}
-
- */

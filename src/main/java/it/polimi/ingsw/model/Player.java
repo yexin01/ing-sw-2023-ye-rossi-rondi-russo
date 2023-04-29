@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 
+import it.polimi.ingsw.messages.ErrorType;
 import it.polimi.ingsw.network.messages.ErrorType;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.model.modelView.*;
@@ -13,12 +14,12 @@ public class Player {
 
 
     //private GameInfo gameInfo;
-    private EventType nickname;
+    private String nickname;
 
 
     private ModelView modelView;
 
-    public Player (EventType nickname, ModelView modelView) throws Exception {
+    public Player (String nickname, ModelView modelView) throws Exception {
         this.modelView=modelView;
         selectedItems=new ArrayList<>();
         //TODO change pass gameRules as a parameter
@@ -58,10 +59,10 @@ public class Player {
 
 
 
-    public EventType getNickname() {
+    public String getNickname() {
         return nickname;
     }
-    public void setNickname(EventType nickname) {
+    public void setNickname(String nickname) {
         this.nickname = nickname;
     }
 
