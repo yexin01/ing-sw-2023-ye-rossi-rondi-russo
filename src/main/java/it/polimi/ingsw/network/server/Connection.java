@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.network.networkmessages.Message;
+import it.polimi.ingsw.messages.MessageFromServer;
+import it.polimi.ingsw.network.networkmessages.NetworkMessage;
 
 import java.io.IOException;
 
@@ -21,7 +22,7 @@ public abstract class Connection {
      * @param message message to send to the client
      * @throws IOException in case of problems with communication with client
      */
-    public abstract void sendMessage(Message message) throws IOException;
+    public abstract void sendMessage(MessageFromServer message) throws IOException;
 
     /**
      * Disconnects from the client

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.client;
 
-import it.polimi.ingsw.network.networkmessages.Message;
+import it.polimi.ingsw.network.networkmessages.NetworkMessage;
 import it.polimi.ingsw.network.server.RMIHandler;
 
 import java.io.Serial;
@@ -62,7 +62,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
      * @throws RemoteException if there are connection problems
      */
     @Override
-    public void sendMessage(Message message) throws RemoteException {
+    public void sendMessage(NetworkMessage message) throws RemoteException {
         if (server == null) {
             throw new RemoteException();
         }
@@ -76,7 +76,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
      * @throws RemoteException if there are connection problems
      */
     @Override
-    public void messageToClient(Message message) throws RemoteException {
+    public void messageToClient(NetworkMessage message) throws RemoteException {
         synchronized (getMessageQueue()) {
             getMessageQueue().add(message);
         }

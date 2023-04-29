@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.network.networkmessages.Message;
+import it.polimi.ingsw.network.networkmessages.NetworkMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -61,7 +61,7 @@ public class SocketConnection extends Connection implements Runnable {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 synchronized (inLock) {
-                    Message message = (Message) in.readObject();
+                    NetworkMessage message = (NetworkMessage) in.readObject();
 
                     if (message != null) {
                         if (message.getContent() == MessageContent.CONNECTION) {
@@ -90,7 +90,7 @@ public class SocketConnection extends Connection implements Runnable {
      * @param message to send to the client
      */
     @Override
-    public void sendMessage(Message message) {
+    public void sendMessage(NetworkMessage message) {
         if (connected) {
             try {
                 synchronized (outLock) {

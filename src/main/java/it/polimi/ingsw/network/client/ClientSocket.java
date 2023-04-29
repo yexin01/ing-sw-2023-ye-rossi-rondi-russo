@@ -3,7 +3,7 @@ package it.polimi.ingsw.network.client;
 import it.polimi.ingsw.network.messages.DataClientType;
 import it.polimi.ingsw.network.messages.MessageFromClient;
 import it.polimi.ingsw.network.messages.EventType;
-import it.polimi.ingsw.network.networkmessages.Message;
+import it.polimi.ingsw.network.networkmessages.NetworkMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -115,7 +115,7 @@ public class ClientSocket extends Client implements Runnable{
         //TODO to adapt
         while (!socket.isClosed()) {
             try {
-                Message message = (Message) in.readObject();
+                NetworkMessage message = (NetworkMessage) in.readObject();
                 synchronized (messageQueue) {
                     messageQueue.add(message);
                 }

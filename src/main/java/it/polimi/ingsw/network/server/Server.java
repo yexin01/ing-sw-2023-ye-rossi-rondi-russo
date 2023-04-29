@@ -4,10 +4,12 @@ package it.polimi.ingsw.network.server;
 
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.controller.GamePhase;
+import it.polimi.ingsw.controller.GamePhaseController;
+import it.polimi.ingsw.controller.SetupController;
+import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.network.networkmessages.ConnectionResponseMessage;
-import it.polimi.ingsw.network.networkmessages.Message;
 
 import java.io.IOException;
 import java.util.*;
@@ -25,8 +27,9 @@ public class Server implements Runnable {
 
     private Map<String, Connection> clients;
 
-    private Game game;
     private GameController gameController;
+    private GamePhaseController gamePhaseController;
+    private SetupController setupController;
     private boolean waitForLoad;
 
 
@@ -40,8 +43,7 @@ public class Server implements Runnable {
         }
 
         startServers();
-        game = new Game();
-        gameController = new GameController(game);
+        gameController = new GameController();
 
         Thread pingThread = new Thread(this);
         pingThread.start();
@@ -52,13 +54,11 @@ public class Server implements Runnable {
         SocketServer serverSocket = new SocketServer(this, socketPort);
         serverSocket.startServer();
 
-        //TODO da mandare al client
         System.out.println("Socket Server Started");
 
         RMIServer rmiServer = new RMIServer(this, rmiPort);
         rmiServer.startServer();
 
-        //TODO da mandare al client
         System.out.println("RMI Server Started");
     }
 
@@ -111,31 +111,41 @@ public class Server implements Runnable {
      * @throws IOException when send message fails
      */
     private void knownPlayerLogin(String username, Connection connection) throws IOException {
+
         if (clients.get(username) == null || !clients.get(username).isConnected()) { // Player Reconnection
             clients.replace(username, connection);
 
             String token = UUID.randomUUID().toString();
             connection.setToken(token);
 
-            if (gameController.getGameState() == PossibleGameState.GAME_ROOM) { // Game in lobby state
-                connection.sendMessage(
-                        new ConnectionResponse("Successfully reconnected", token, MessageStatus.OK)
-                );
+            if (gamePhaseController.getCurrentGamePhase() == GamePhase.GAME_SETUP) { // Game in lobby state
+                MessagePayload payload = new MessagePayload(null);
+                payload.put(PayloadKeyServer.NETWORK_CONTENT, "Reconnection to lobby successful!");
+                ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.CONNECTION_RESPONSE, username);
+                connection.sendMessage(new MessageFromServer(header, payload));
             } else { // Game started
-                connection.sendMessage(
-                        gameController.onConnectionMessage(new LobbyMessage(username, token, null, false))
-                );
-            }
-            //TODO da mandare nella lobby
-            System.out.println(username+" reconnected to server!");
-        } else { // Player already connected
-            connection.sendMessage(
-                    //TODO: aggiusta messaggi
-                    new ConnectionResponseMessage("Player already connected", null, MessageStatus.ERROR)
-            );
+                MessagePayload payload = new MessagePayload(null);
+                payload.put(PayloadKeyServer.NETWORK_CONTENT, "Reconnection to game successful!");
+                ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.CONNECTION_RESPONSE, username);
+                connection.sendMessage(new MessageFromServer(header, payload));
 
+                //TODO: to reconnect the client to his game (with an handler)
+                //gameController.onConnectionMessage(new LobbyMessage(username, token, null, false))
+
+            }
+            MessagePayload payload = new MessagePayload(null);
+            payload.put(PayloadKeyServer.NETWORK_CONTENT, username + " reconnected to server!"));
+            ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.BROADCAST, username);
+            sendMessageToAllExcept(new MessageFromServer(header, payload), username);
+
+        } else { // Player already connected
+            MessagePayload payload = new MessagePayload(null);
+            payload.put(PayloadKeyServer.NETWORK_CONTENT, username + " already connected to server!");
+            ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.NETWORK_ERROR, username);
+            sendMessageToAllExcept(new MessageFromServer(header, payload), username);
+
+            connection.sendMessage(new MessageFromServer(header,payload));
             connection.disconnect();
-            LOGGER.log(Level.INFO, "{0} already connected to server!", username);
         }
     }
 
@@ -146,70 +156,52 @@ public class Server implements Runnable {
      * @param connection connection of the client
      * @throws IOException when send message fails
      */
-    private void newPlayerLogin(String username, Connection connection) throws IOException {
-        if (gameController.getGameInstance().isGameStarted()) { // Game Started
-            connection.sendMessage(
-                    new ConnectionResponse("Game is already started!", null, MessageStatus.ERROR)
-            );
+    private void newPlayerLogin(String username, Connection connection) throws Exception {
+
+        if (gamePhaseController.getCurrentGamePhase() == GamePhase.GAME_STARTED) { // Game Started
+            MessagePayload payload = new MessagePayload(null);
+            payload.put(PayloadKeyServer.NETWORK_CONTENT, "Game already started! Cannot join!");
+            ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.NETWORK_ERROR, username);
+            connection.sendMessage(new MessageFromServer(header, payload));
 
             connection.disconnect();
-            LOGGER.log(Level.INFO, "{0} attempted to connect!", username);
-        } else if (gameController.isLobbyFull()) { // Lobby Full
-            connection.sendMessage(
-                    new ConnectionResponse("Max number of player reached", null, MessageStatus.ERROR)
-            );
+
+        } else if (setupController.isFull()) { // Waiting room is full
+            MessagePayload payload = new MessagePayload(null);
+            payload.put(PayloadKeyServer.NETWORK_CONTENT, "Max number of player reached!");
+            ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.NETWORK_ERROR, username);
+            connection.sendMessage(new MessageFromServer(header, payload));
 
             connection.disconnect();
-            LOGGER.log(Level.INFO, "{0} tried to connect but game is full!", username);
+
         } else { // New player
-            if (isUsernameLegit(username)) { // Username legit
+            if (setupController.checkNickname(username)) { // Username valid
                 clients.put(username, connection);
 
                 String token = UUID.randomUUID().toString();
                 connection.setToken(token);
 
-                connection.sendMessage(
-                        new ConnectionResponse("Successfully connected", token, MessageStatus.OK)
-                );
+                MessagePayload payload = new MessagePayload(null);
+                payload.put(PayloadKeyServer.NETWORK_CONTENT, "Successfully connected as a new player");
+                ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.CONNECTION_RESPONSE, username);
+                connection.sendMessage(new MessageFromServer(header, payload));
 
-                LOGGER.log(Level.INFO, "{0} connected to server!", username);
-            } else { // Username not legit
-                connection.sendMessage(
-                        new ConnectionResponse("Invalid Username", null, MessageStatus.ERROR)
-                );
+                payload = new MessagePayload(null);
+                payload.put(PayloadKeyServer.NETWORK_CONTENT, username + " connected to server!");
+                header = new ServerMessageHeader(MessageFromServerType.BROADCAST, username);
+                sendMessageToAllExcept(new MessageFromServer(header, payload), username);
 
+            } else { // Username not valid
+                MessagePayload payload = new MessagePayload(null);
+                payload.put(PayloadKeyServer.NETWORK_CONTENT, "Invalid Username");
+                ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.NETWORK_ERROR, username);
+                connection.sendMessage(new MessageFromServer(header, payload));
+
+                //TODO: a bit extreme, maybe we can just send a message to the client
                 connection.disconnect();
-                LOGGER.log(Level.INFO, "{0} tried to connect with invalid name!", username);
+
             }
         }
-    }
-
-    /**
-     * Checks if all player of the loaded game have joined the game
-     */
-    private void checkLoadReady() {
-        synchronized (clientsLock) {
-            if (clients.entrySet().stream().noneMatch(entry -> entry.getValue() == null || !entry.getValue().isConnected())) {
-                waitForLoad = false;
-                gameController.sendPrivateUpdates();
-            }
-        }
-    }
-
-    /**
-     * Checks if a username is legit by checking that is not equal to a forbidden username
-     *
-     * @param username username to check
-     * @return if a username is legit
-     */
-    private boolean isUsernameLegit(String username) {
-        for (String forbidden : GameConstants.getForbiddenUsernames()) {
-            if (username.equalsIgnoreCase(forbidden)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -217,7 +209,7 @@ public class Server implements Runnable {
      *
      * @param message message sent to server
      */
-    void onMessage(Message message) {
+    void onMessage(MessageFromServer message) {
         if (message != null && message.getSenderUsername() != null && (message.getToken() != null || message.getSenderUsername().equals("god"))) {
             if (message.getContent().equals(MessageContent.SHOOT)) {
                 String messageString = message.toString();
@@ -236,7 +228,7 @@ public class Server implements Runnable {
             if (conn == null) {
                 LOGGER.log(Level.INFO, "Message Request {0} - Unknown username {1}", new Object[]{message.getContent().name(), message.getSenderUsername()});
             } else if (msgToken.equals(conn.getToken())) { // Checks that sender is the real player
-                Message response = gameController.onMessage(message);
+                NetworkMessage response = gameController.onMessage(message);
 
                 updateTimer();
 
@@ -294,9 +286,27 @@ public class Server implements Runnable {
      *
      * @param message message to send
      */
-    public void sendMessageToAll(Message message) {
+    public void sendMessageToAll(MessageFromServer message) {
         for (Map.Entry<String, Connection> client : clients.entrySet()) {
             if (client.getValue() != null && client.getValue().isConnected()) {
+                try {
+                    client.getValue().sendMessage(message);
+                } catch (IOException e) {
+                    //TODO: send a message to the server as an error
+                }
+            }
+        }
+        LOGGER.log(Level.INFO, "Send to all: {0}", message);
+    }
+
+    /**
+     * Sends a message to all clients except one
+     * @param message message to send
+     * @param username username of the client who will not receive the message
+     */
+    public void sendMessageToAllExcept(MessageFromServer message, String username) {
+        for (Map.Entry<String, Connection> client : clients.entrySet()) {
+            if (client.getValue() != null && client.getValue().isConnected() && !client.getKey().equals(username)) {
                 try {
                     client.getValue().sendMessage(message);
                 } catch (IOException e) {
@@ -304,7 +314,7 @@ public class Server implements Runnable {
                 }
             }
         }
-        LOGGER.log(Level.INFO, "Send to all: {0}", message);
+        LOGGER.log(Level.INFO, "Send to all except {0}: {1}", new Object[]{username, message});
     }
 
     /**
@@ -313,7 +323,7 @@ public class Server implements Runnable {
      * @param username username of the client who will receive the message
      * @param message  message to send
      */
-    public void sendMessage(String username, Message message) {
+    public void sendMessage(String username, MessageFromServer message) {
         synchronized (clientsLock) {
             for (Map.Entry<String, Connection> client : clients.entrySet()) {
                 if (client.getKey().equals(username) && client.getValue() != null && client.getValue().isConnected()) {

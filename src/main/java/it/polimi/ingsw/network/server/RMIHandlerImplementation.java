@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.network.client.RMIClientConnection;
-import it.polimi.ingsw.network.networkmessages.Message;
+import it.polimi.ingsw.network.networkmessages.NetworkMessage;
 
 import java.io.Serial;
 import java.rmi.RemoteException;
@@ -34,7 +34,7 @@ public class RMIHandlerImplementation extends UnicastRemoteObject implements RMI
      * @param message message sent to server
      */
     @Override
-    public void onMessage(Message message) {
+    public void onMessage(NetworkMessage message) {
         server.onMessage(message);
     }
 

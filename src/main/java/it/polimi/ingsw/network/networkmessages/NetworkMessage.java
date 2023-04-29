@@ -6,17 +6,19 @@ import java.io.Serializable;
 /**
  * This abstract class need to differentiate that the server can send to the client or vice versa
  */
-public abstract class Message implements Serializable {
+public class NetworkMessage implements Serializable {
     @Serial
     private static final long serialVersionUID = 7399837214350719199L;
 
     private final String senderUsername;
     private final String token;
-    private final MessageContent content;
+    private final NetworkMessageType networkMessageType;
+    private final String content;
 
-    Message(String senderUsername, String token, MessageContent content) {
+    public NetworkMessage(String senderUsername, String token, NetworkMessageType networkMessageType, String content) {
         this.senderUsername = senderUsername;
         this.token = token;
+        this.networkMessageType = networkMessageType;
         this.content = content;
     }
 
@@ -24,19 +26,21 @@ public abstract class Message implements Serializable {
         return senderUsername;
     }
 
-    public MessageContent getContent() {
-        return content;
-    }
-
+    public NetworkMessageType getNetworkMessageType() { return networkMessageType; }
     public String getToken() {
         return token;
+    }
+
+    public String getContent() {
+        return content;
     }
 
     @Override
     public String toString() {
         return "Message{" +
                 "senderUsername='" + senderUsername + '\'' +
-                ", content=" + content +
+                ", type='" + networkMessageType + '\'' +
+                ", content='" + content +
                 '}';
     }
 }

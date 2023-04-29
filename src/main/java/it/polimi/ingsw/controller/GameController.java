@@ -28,10 +28,8 @@ public class GameController {
     //private HashMap<String, Client> playerMap;
     //private ListenerManager listenerManager;
 
-    /*
-        private SetupController setupController;
+    private SetupController setupController;
 
-     */
     private TurnPhaseController turnPhaseController;
 
     private Game game;

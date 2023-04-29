@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.network.client.RMIClientConnection;
-import it.polimi.ingsw.network.networkmessages.Message;
+import it.polimi.ingsw.network.networkmessages.NetworkMessage;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -18,7 +18,7 @@ public interface RMIHandler extends Remote {
      *
      * @param message message sent to server
      */
-    void onMessage(Message message) throws RemoteException;
+    void onMessage(NetworkMessage message) throws RemoteException;
 
     void disconnectMe() throws RemoteException;
 }

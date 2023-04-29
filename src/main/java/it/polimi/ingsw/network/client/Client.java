@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.client;
 
-import it.polimi.ingsw.network.networkmessages.Message;
+import it.polimi.ingsw.network.networkmessages.NetworkMessage;
 
 import java.io.Serial;
 import java.rmi.RemoteException;
@@ -13,7 +13,6 @@ import java.util.Timer;
  * This abstract class represents a Client that can connect to the server
  */
 public abstract class Client extends UnicastRemoteObject {
-    public static final int MAX_USERNAME_LENGTH = 15;
 
     @Serial
     private static final long serialVersionUID = 2056368610379158146L;
@@ -24,7 +23,7 @@ public abstract class Client extends UnicastRemoteObject {
     private String token;
 
     transient Timer pingTimer;
-    final transient List<Message> messageQueue;
+    final transient List<NetworkMessage> messageQueue;
 
     //TODO lavora con ClientHandler per la gestione della coda di messaggi
 
@@ -90,7 +89,7 @@ public abstract class Client extends UnicastRemoteObject {
      * This method returns the message queue of the client
      * @return the message queue of the client
      */
-    public List<Message> getMessageQueue() {
+    public List<NetworkMessage> getMessageQueue() {
         return messageQueue;
     }
 
@@ -117,6 +116,20 @@ public abstract class Client extends UnicastRemoteObject {
      * @param message is the message to send
      * @throws Exception if there are connection problems
      */
-    public abstract void sendMessage(Message message) throws Exception;
+    public abstract void sendMessage(NetworkMessage message) throws Exception;
+
+    /**
+     * @return the list of messages in the queue
+     */
+    List<NetworkMessage> receiveMessages() {
+        ArrayList<NetworkMessage> copyList;
+
+        synchronized (messageQueue) {
+            copyList = new ArrayList<>(List.copyOf(messageQueue));
+            messageQueue.clear();
+        }
+
+        return copyList;
+    }
 
 }

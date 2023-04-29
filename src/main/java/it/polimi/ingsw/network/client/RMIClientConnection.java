@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.client;
 
-import it.polimi.ingsw.network.networkmessages.Message;
+import it.polimi.ingsw.network.networkmessages.NetworkMessage;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -14,7 +14,7 @@ public interface RMIClientConnection extends Remote {
      * Sends a message to the client connected to the server through RMI protocol
      * @param message message sent to client
      */
-    void messageToClient(Message message) throws RemoteException;
+    void messageToClient(NetworkMessage message) throws RemoteException;
 
     /**
      * Sends a ping message to client connected to the server through RMI protocol
