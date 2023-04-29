@@ -32,7 +32,7 @@ public class GameController {
         private SetupController setupController;
 
      */
-    private PhaseController phaseController;
+    private TurnPhaseController turnPhaseController;
 
     private Game game;
     //private transient final PropertyChangeSupport listeners=new PropertyChangeSupport(this);
@@ -43,8 +43,8 @@ public class GameController {
         initializeControllers();
     }
 
-    public PhaseController getTurnController() {
-        return phaseController;
+    public TurnPhaseController getTurnController() {
+        return turnPhaseController;
     }
     public Game getModel() {
         return game;
@@ -52,8 +52,8 @@ public class GameController {
     public void initializeControllers() throws Exception {
         GameRules gameRules=new GameRules();
         int maxPlayers=gameRules.getMaxPlayers();
-        phaseController =new PhaseController();
-        phaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
+        turnPhaseController =new TurnPhaseController();
+        turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
     }
 
     public void startGame(HashMap<java.lang.String, ClientView> playerMap, HashMap<java.lang.String, Integer> playersId, ServerView serverView ) throws Exception {
@@ -79,8 +79,8 @@ public class GameController {
         }
     }
 
-    public void setTurnController(PhaseController phaseController) {
-        this.phaseController = phaseController;
+    public void setTurnController(TurnPhaseController turnPhaseController) {
+        this.turnPhaseController = turnPhaseController;
     }
 
     public void setGame(Game game) {
@@ -153,14 +153,14 @@ public class GameController {
     public void associatePlayerTiles() throws Exception {
         illegalPhase(TurnPhase.SELECT_FROM_BOARD);
         checkError(game.getBoard().checkFinishChoice());
-        phaseController.changePhase();
+        turnPhaseController.changePhase();
         game.getTurnPlayer().selection(game.getBoard());
     }
     public void permutePlayerTiles(MessageFromClient message) throws Exception {
         illegalPhase(TurnPhase.SELECT_ORDER_TILES);
         int[] orderTiles=message.getValue();
         checkError(game.getTurnPlayer().checkPermuteSelection(orderTiles));
-        phaseController.changePhase();
+        turnPhaseController.changePhase();
         game.getTurnPlayer().permuteSelection(orderTiles);
         serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
@@ -170,14 +170,14 @@ public class GameController {
         int column=message.getValue()[0];
         System.out.println("You selected "+column);
         checkError(game.getTurnPlayer().getBookshelf().checkBookshelf(column,game.getTurnPlayer().getSelectedItems().size()));
-        phaseController.changePhase();
+        turnPhaseController.changePhase();
         game.getTurnPlayer().getBookshelf().setColumnSelected(column);
         serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
 
     public void insertBookshelf() throws Exception {
         illegalPhase(TurnPhase.INSERT_BOOKSHELF_AND_POINTS);
-        phaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
+        turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
         game.getTurnPlayer().insertBookshelf();
         if(game.getTurnPlayer().getBookshelf().isFull()){
             game.setEndGame(true);
@@ -211,7 +211,7 @@ public class GameController {
     }
 
     public void illegalPhase(TurnPhase phase) throws Exception {
-        if(!phaseController.getCurrentPhase().equals(phase)){
+        if(!turnPhaseController.getCurrentPhase().equals(phase)){
             serverView.sendError(ErrorType.ILLEGAL_PHASE,getTurnNickname());
             throw new Exception();
             //throw new Error(ErrorType.ILLEGAL_PHASE);
