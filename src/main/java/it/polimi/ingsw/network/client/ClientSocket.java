@@ -1,16 +1,11 @@
 package it.polimi.ingsw.network.client;
 
-import it.polimi.ingsw.messages.DataClientType;
 import it.polimi.ingsw.messages.EventType;
 import it.polimi.ingsw.messages.MessageFromClient;
-import it.polimi.ingsw.messages.MessageFromServerType;
 import it.polimi.ingsw.network.client.handlers.HandlerData;
 import it.polimi.ingsw.network.client.handlers.HandlerEndGame;
 import it.polimi.ingsw.network.client.handlers.HandlerSetup;
 import it.polimi.ingsw.network.client.handlers.ManagerHandlers;
-import it.polimi.ingsw.network.messages.DataClientType;
-import it.polimi.ingsw.network.messages.MessageFromClient;
-import it.polimi.ingsw.network.messages.EventType;
 import it.polimi.ingsw.network.networkmessages.NetworkMessage;
 import it.polimi.ingsw.view.CLI.CLI;
 import it.polimi.ingsw.view.ClientView;

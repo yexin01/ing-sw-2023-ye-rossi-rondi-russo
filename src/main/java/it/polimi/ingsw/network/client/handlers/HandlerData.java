@@ -1,8 +1,7 @@
 package it.polimi.ingsw.network.client.handlers;
 
-import it.polimi.ingsw.messages.ErrorType;
+import it.polimi.ingsw.network.server.ErrorType;
 import it.polimi.ingsw.messages.MessageFromServer;
-import it.polimi.ingsw.messages.PayloadKeyServer;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.CommonGoalView;
@@ -10,7 +9,6 @@ import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.network.client.ClientInterface;
 import it.polimi.ingsw.network.client.ClientSocket;
-import it.polimi.ingsw.network.client.handlers.MessageHandler;
 
 import java.util.List;
 
@@ -20,16 +18,16 @@ public class HandlerData extends MessageHandler {
 
     //TODO questa classe verrà cambiata suddividendo la gestione del messaggi in diversi handler
 
-    protected HandlerData(ClientSocket connection, ClientInterface clientInterface) {
+    public HandlerData(ClientSocket connection, ClientInterface clientInterface) {
         super(connection, clientInterface);
     }
 
     @Override
-    public void handleMessageFromServer(MessageFromServer messageServer) {
+    public void handleMessage(MessageFromServer messageServer) {
         switch(messageServer.getServerMessageHeader().getMessageFromServer()){
             case DATA -> receiveMessageDataFromServer(messageServer);
             case ERROR ->System.out.println("ERROR "+((ErrorType)messageServer.getMessagePayload().get(PayloadKeyServer.ERRORMESSAGE)).getErrorMessage()) ;
-            case START_TURN ->System.out.println(getClientInterface().askCoordinates(messageServer));
+            case START_TURN ->System.out.println(getClientInterface().askCoordinates());
             case RECEIVE ->{
                 System.out.println("Server has received the sent message ");
                 // askClient(5);
@@ -73,7 +71,7 @@ public class HandlerData extends MessageHandler {
         BoardBoxView[][] newBoard=(BoardBoxView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD);
         getClientView().setBoardView(newBoard);
         System.out.println(getMessageWhoChange(mes)+" change board");
-        getClientInterface().askCoordinates(mes);
+        getClientInterface().askCoordinates();
     }
     public void endTurn(MessageFromServer mes) throws Exception {
         getClientView().setPlayerPoints((PlayerPointsView) mes.getMessagePayload().get(PayloadKeyServer.POINTS));
@@ -108,10 +106,10 @@ public class HandlerData extends MessageHandler {
     }
     public void tilesSelected(MessageFromServer mes){
         getClientView().setBoardView((BoardBoxView[][]) mes.getMessagePayload().get(PayloadKeyServer.NEWBOARD));
-        getClientInterface().printMatrixBoard();
+        //getClientInterface().printMatrixBoard();
         getClientView().setTilesSelected((ItemTileView[]) mes.getMessagePayload().get(PayloadKeyServer.TILES_SELECTED));
-        getClientInterface().printItemTilesSelected();
-        getClientInterface().askOrder(mes);
+        //getClientInterface().printItemTilesSelected();
+        getClientInterface().askOrder();
         //listeners.fireEvent(EventType.valueOf("TileSelected"),null,mes);
     }
     public String getMessageWhoChange(MessageFromServer mes){

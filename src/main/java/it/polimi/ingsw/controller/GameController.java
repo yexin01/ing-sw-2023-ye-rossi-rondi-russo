@@ -2,12 +2,12 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.network.PhaseGame;
+import it.polimi.ingsw.network.server.Connection;
 import it.polimi.ingsw.network.server.ErrorType;
 import it.polimi.ingsw.view.ClientView;
 
 import it.polimi.ingsw.listeners.EndTurnListener;
 import it.polimi.ingsw.listeners.FinishSelectionListener;
-import it.polimi.ingsw.listeners.TokenListener;
 
 import it.polimi.ingsw.json.GameRules;
 
@@ -30,7 +30,7 @@ public class GameController {
     //private HashMap<String, Client> playerMap;
     //private ListenerManager listenerManager;
 
-    private SetupController setupController;
+
 
     private PhaseController<TurnPhase> turnPhaseController;
     private PhaseController<PhaseGame> gamePhaseController;
@@ -55,24 +55,24 @@ public class GameController {
         turnPhaseController =new PhaseController<>(TurnPhase.SELECT_FROM_BOARD);
     }
 
-    public void startGame(HashMap<String, ClientView> playerMap, HashMap<String, Integer> playersId, ServerView serverView ) throws Exception {
+    public void startGame(HashMap<String, Connection> playerMap, HashMap<String, Integer> playersId, ServerView serverView ) throws Exception {
         GameRules gameRules=new GameRules();
         serverView.setPlayerMap(playerMap);
         ModelView modelView=new ModelView(playersId, gameRules);
         serverView.setModelView(modelView);
         game=new Game(gameRules,modelView);
-        for(Map.Entry<String, ClientView> entry : playerMap.entrySet()) {
+        for(Map.Entry<String, Connection> entry : playerMap.entrySet()) {
             String key = entry.getKey();
-            ClientView value = entry.getValue();
+            Connection value = entry.getValue();
             game.addPlayer(key,modelView);
         }
         game.getBoard().fillBag(gameRules);
         game.getBoard().firstFillBoard(playerMap.keySet().size(), gameRules);
         game.createCommonGoalCard(gameRules,modelView);
         game.createPersonalGoalCard(gameRules);
-        modelView.addListener(EventType.TILES_SELECTED,new FinishSelectionListener(serverView));
+        modelView.addListener(EventType.BOARD_SELECTION,new FinishSelectionListener(serverView));
         modelView.addListener(EventType.END_TURN,new EndTurnListener(serverView));
-        modelView.addListener(EventType.WIN_TOKEN,new TokenListener(serverView));
+        //modelView.addListener(EventTypenew TokenListener(serverView));
         for(Player p:game.getPlayers()){
             //serverView.sendInfo(p.getNickname());
         }
@@ -91,13 +91,13 @@ public class GameController {
                 serverView.sendError(ErrorType.ILLEGAL_TURN,nicknamePlayer);
                 //throw new Error(ErrorType.ILLEGAL_TURN);
             }
-            switch (message.getClientMessage()) {
-                case COORDINATES ->  checkAndInsertBoardBox(message);
-                case FINISH_SELECTION->associatePlayerTiles();
-                case RESET_BOARD_CHOICE -> resetBoardChoice();
-                case ORDER_TILE -> permutePlayerTiles(message);
+            switch (message.getEvent()) {
+                case BOARD_SELECTION ->  checkAndInsertBoardBox(message);
+                //case FINISH_SELECTION->associatePlayerTiles();
+                //case RESET_BOARD_CHOICE -> resetBoardChoice();
+                case ORDER_TILES-> permutePlayerTiles(message);
                 case COLUMN->selectingColumn(message);
-                case INSERT_TILE_AND_POINTS -> insertBookshelf();
+                //case INSERT_TILE_AND_POINTS -> insertBookshelf();
                 case ABANDON_GAME -> removePlayer(message.getNicknameSender());
                 default -> throw new IllegalArgumentException();
             }
@@ -118,7 +118,8 @@ public class GameController {
         for(Player p:game.getPlayers()){
             serverView.sendInfo(p.getNickname());
         }
-        serverView.sendMessage(null, MessageFromServerType.START_TURN,getTurnNickname());
+        //TODO inviare mes
+        //serverView.sendMessage(null, MessageFromServerType.START_TURN,getTurnNickname());
     }
 
     public void checkAndInsertBoardBox( MessageFromClient message) throws Exception {
@@ -131,12 +132,13 @@ public class GameController {
         BoardBox boardBox=game.getBoard().getBoardBox(x,y);
         int maxPlayerSelectableTiles=game.getTurnPlayer().getBookshelf().numSelectableTiles();
         checkError(game.getBoard().checkSelectable(boardBox,maxPlayerSelectableTiles));
-        serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
+        //serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
     public void resetBoardChoice() throws Exception {
         illegalPhase(TurnPhase.SELECT_FROM_BOARD);
         game.getBoard().resetBoardChoice();
-        serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
+        //TODO inviare mes
+        //serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
 
     public void checkError(ErrorType possibleInvalidArgoment) throws Exception {
@@ -158,7 +160,7 @@ public class GameController {
         checkError(game.getTurnPlayer().checkPermuteSelection(orderTiles));
         turnPhaseController.changePhase();
         game.getTurnPlayer().permuteSelection(orderTiles);
-        serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
+        //serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
 
     public void selectingColumn(MessageFromClient message) throws Exception {
@@ -168,7 +170,7 @@ public class GameController {
         checkError(game.getTurnPlayer().getBookshelf().checkBookshelf(column,game.getTurnPlayer().getSelectedItems().size()));
         turnPhaseController.changePhase();
         game.getTurnPlayer().getBookshelf().setColumnSelected(column);
-        serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
+        //serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
 
     public void insertBookshelf() throws Exception {
@@ -191,15 +193,15 @@ public class GameController {
             game.getBoard().refill();
         }
         game.setNextPlayer();
-        serverView.sendMessage(null,MessageFromServerType.START_TURN,getTurnNickname());
+        //serverView.sendMessage(null,MessageFromServerType.START_TURN,getTurnNickname());
     }
 
     public void endGame() {
         //TODO change END GAME
         List<String> ranking=  game.checkWinner();
-        MessagePayload payload=new MessagePayload(null);
-        payload.put(PayloadKeyServer.RANKING,ranking);
-        serverView.sendAllMessage(payload,MessageFromServerType.END_GAME);
+        MessagePayload payload=new MessagePayload();
+        payload.put(KeyPayload.PLAYERS,ranking);
+        //serverView.sendAllMessage(payload,MessageFromServerType.END_GAME);
         //TODO set GamePhase a END_GAME
         //sendMessages.sendAll(payload,MessageFromServerType.END_GAME);
         //sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.END_GAME);
@@ -226,9 +228,7 @@ public class GameController {
         this.serverView = serverView;
     }
 
-    public String getTurnOwnerUsername() {
-        return game.getTurnPlayer().getNickname();
-    }
+
     /*
     public void sendMessage(String nickname,MessageFromServerType messageFromServerType){
         sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null, messageFromServerType);

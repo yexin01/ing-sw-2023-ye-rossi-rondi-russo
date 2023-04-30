@@ -118,18 +118,26 @@ public class Server implements Runnable {
 
             String token = UUID.randomUUID().toString();
             connection.setToken(token);
-            //TODO possiamo anche non dividerle,saranno gli handler del server a mandargli lo stato della partita, basta un ack
+
+            //TODO gestiscono gli handler in modo da inviare i dati della modelview se il gioco e gia cominciato
 
             if (gamePhaseController.getCurrentPhase() == PhaseGame.GAME_SETUP) { // Game in lobby state
-                MessagePayload payload = new MessagePayload(null);
+                sendError(ErrorType);
+
+                /*MessagePayload payload = new MessagePayload(null);
                 payload.put(PayloadKeyServer.NETWORK_CONTENT, "Reconnection to lobby successful!");
                 ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.CONNECTION_RESPONSE, connection);
                 connection.sendMessage(new MessageFromServer(header, payload));
+
+                 */
             } else { // Game started
-                MessagePayload payload = new MessagePayload(null);
-                payload.put(PayloadKeyServer.NETWORK_CONTENT, "Reconnection to game successful!");
-                ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.CONNECTION_RESPONSE,connection);
-                connection.sendMessage(new MessageFromServer(header, payload));
+                //TODO conviene scrivere un metodo di invio di messaggio e chiamare sempre quello
+                // (inserendo come parametro la stringa da stampare)
+
+                MessagePayload payload = new MessagePayload();
+                payload.put(KeyPayload.NETWORK_CONTENT,"Reconnection to game successful!");
+                MessageFromServer message=new MessageFromServer(new ServerMessageHeader(EventType.DISCONNECT,username),payload);
+                connection.sendMessage(message);
 
                 //TODO: to reconnect the client to his game (with an handler)
                 //gameController.onConnectionMessage(new LobbyMessage(username, token, null, false))
@@ -162,24 +170,21 @@ public class Server implements Runnable {
 
 
         if (gamePhaseController.getCurrentPhase() == PhaseGame.GAME_STARTED) {
-            sendError(ErrorType.GAME_STARTED,connection);
+            sendError(ErrorType.GAME_STARTED,username,connection);
         }
         ErrorType possibleError=addPlayer(username);
         if(possibleError==null){
-            sendError(ErrorType.TOO_MANY_PLAYERS,connection);
+            sendError(ErrorType.TOO_MANY_PLAYERS,username,connection);
         }else{
             String token = UUID.randomUUID().toString();
             connection.setToken(token);
-            //TODO se é l'unico all'interno della classe fatto in questo modo lasciatelo
-            //TODO altrimenti gestitelo come sendError,in modo da non ripetere codice
-            ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.ACK_MESSAGE,connection);
-            MessagePayload payload=new MessagePayload(null);
+            ServerMessageHeader header=new ServerMessageHeader(EventType.SETUP,username);
+            MessagePayload payload=new MessagePayload();
+            payload.put(KeyPayload.WHO_CHANGE,username);
+            payload.put(KeyPayload.PLAYERS,playersId);
+            //TODO mandarlo a tutti
             connection.sendMessage(new MessageFromServer(header, payload));
 
-            payload = new MessagePayload(EventType.NICKNAME);
-            payload.put(PayloadKeyServer.NICKNAME_CONNECTED, username);
-            header = new ServerMessageHeader(null,connection);
-            sendMessageToAllExcept(new MessageFromServer(header, payload), username);
         }
 
     }
@@ -248,10 +253,13 @@ public class Server implements Runnable {
         if (username != null) {
             LOGGER.log(Level.INFO, "{0} disconnected from server!", username);
 
-            if (gameController.getGameState() == PossibleGameState.GAME_ROOM) {
+            if (gamePhaseController.getCurrentPhase()== PhaseGame.GAME_SETUP) {
                 synchronized (clientsLock) {
                     clients.remove(username);
                 }
+                //TODO la lobby la gestisce il server, senno duplichiamo i dati solo per il setup
+                //TODO se si disconnette un utente lo gestiscono gli handler
+
                 gameController.onMessage(new LobbyMessage(username, null, null, true));
                 LOGGER.log(Level.INFO, "{0} removed from client list!", username);
             } else {
@@ -376,11 +384,12 @@ public class Server implements Runnable {
             return null;
         }
     }
-    public void sendError(ErrorType error,Connection connection){
-        ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.ERROR,connection);
-        MessagePayload payload=new MessagePayload(null);
-        payload.put(PayloadKeyServer.ERRORMESSAGE,error);
-        MessageFromServer message=new MessageFromServer(header,payload);
+    public void sendError(ErrorType error,String nickname,Connection connection){
+        ServerMessageHeader header=new ServerMessageHeader(EventType.ERROR,nickname);
+        MessagePayload payload=new MessagePayload();
+        payload.put(KeyPayload.MESSAGE_ERROR,error.getErrorMessage());
+        MessageFromServer message=new MessageFromServer(header,null);
+        //TODO inviare il messaggio
         connection.disconnect();
 
     }

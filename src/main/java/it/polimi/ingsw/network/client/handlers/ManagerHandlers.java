@@ -1,7 +1,6 @@
 package it.polimi.ingsw.network.client.handlers;
 
 import it.polimi.ingsw.messages.MessageFromServer;
-import it.polimi.ingsw.messages.MessageFromServerType;
 
 import java.rmi.RemoteException;
 import java.util.HashMap;
