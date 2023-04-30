@@ -39,5 +39,13 @@ public class Colors {
             System.out.print("\u001B[0m");
         }
     }
+    public void colorize(String color, String text) {
+        int lengthDifference = 7 - text.length();
+        String space = "";
+        for(int i=0; i<lengthDifference; i++) {
+            space += " ";
+        }
+        System.out.printf("%s%s%s\u001B[0m", color, text, space);
+    }
 }
 

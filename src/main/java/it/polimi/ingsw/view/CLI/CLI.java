@@ -107,13 +107,13 @@ public class CLI implements ClientInterface {
     public void printMatrixBookshelf(){
         ItemTileView[][] bookshelfView= clientView.getBookshelfView();
         System.out.println("BOOKSHELF "+nickname);
+        computeFreeShelves();
         for (int i = 0; i < bookshelfView.length; i++) {
-            System.out.printf("row"+i+" ");
             for (int j = 0; j < bookshelfView[i].length; j++) {
                 if (bookshelfView[i][j].getTileID() != -1) {
-                    System.out.printf("%-10s",+j+""+bookshelfView[i][j].getTypeView());
+                    colors.printTypeWithTypeColor(bookshelfView[i][j].getTypeView());
                 } else {
-                    System.out.printf("%-10s",+j+" EMPTY");
+                    colors.colorize(Colors.BLACK_CODE,"EMPTY");
                 }
             }
             System.out.println("");
@@ -186,8 +186,8 @@ public class CLI implements ClientInterface {
 
 
     public void printFreeShelves(int[] freeShelves) {
-      for (int i = 0; i < freeShelves.length; i++) {
-            System.out.print(freeShelves[i] + "  ");
+        for (int i = 0; i < freeShelves.length; i++) {
+            System.out.printf("%-7d", freeShelves[i]);
         }
         System.out.println("");
     }
@@ -196,7 +196,7 @@ public class CLI implements ClientInterface {
         int[] freeShelves=new int[bookshelfView[0].length];
         for (int j = 0; j < bookshelfView[0].length; j++) {
             freeShelves[j] = 0;
-            for (int i = 0; i < bookshelfView.length && bookshelfView[i][j].getTileID() == -1; i++) {
+            for (int i = 0; i <bookshelfView.length && bookshelfView[i][j].getTileID() == -1; i++) {
                 freeShelves[j]++;
             }
         }
