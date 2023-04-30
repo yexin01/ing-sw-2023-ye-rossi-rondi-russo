@@ -18,10 +18,13 @@ public class EndTurnListener implements EventListener{
         ModelView model=(ModelView) newValue;
         ItemTileView[][] bookshelfView=model.getBookshelfView(playerNickname);
         PlayerPointsView playerPointsView=model.getPlayerPoints(playerNickname);
-        MessagePayload payload=new MessagePayload(EventType.END_TURN);
-        payload.put(PayloadKeyServer.WHO_CHANGE,playerNickname);
-        payload.put(PayloadKeyServer.NEWBOOKSHELF,bookshelfView);
-        payload.put(PayloadKeyServer.POINTS, playerPointsView);
+        MessagePayload payload=new MessagePayload();
+        payload.put(KeyPayload.WHO_CHANGE,playerNickname);
+        payload.put(KeyPayload.NEW_BOOKSHELF,bookshelfView);
+        payload.put(KeyPayload.POINTS, playerPointsView);
+        MessageFromServer messageFromServer=new MessageFromServer(new ServerMessageHeader(EventType.END_TURN,playerNickname),payload);
+        //TODO aggiungere i token
+        //TODO inviarlo a client socket
        // serverView.sendMessage(payload, MessageFromServerType.DATA,playerNickname);
     }
 }

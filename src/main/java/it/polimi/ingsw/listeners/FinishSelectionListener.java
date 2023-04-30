@@ -19,11 +19,13 @@ public class FinishSelectionListener implements EventListener {
         ModelView model=(ModelView) newValue;
         BoardBoxView[][] boardView=model.getBoardView();
         ItemTileView[] selectedItem=model.getSelectedItems();
-        MessagePayload payload=new MessagePayload(EventType.TILES_SELECTED);
-        payload.put(PayloadKeyServer.WHO_CHANGE,playerNickname);
-        payload.put(PayloadKeyServer.NEWBOARD,boardView);
-        payload.put(PayloadKeyServer.TILES_SELECTED,selectedItem);
-        serverView.sendAllMessage(payload, MessageFromServerType.DATA);
+        MessagePayload payload=new MessagePayload();
+        payload.put(KeyPayload.WHO_CHANGE,playerNickname);
+        payload.put(KeyPayload.NEW_BOARD,boardView);
+        payload.put(KeyPayload.TILES_SELECTED,selectedItem);
+        //TODO verra gestito diversamente
+        MessageFromServer messageFromServer=new MessageFromServer(new ServerMessageHeader(EventType.BOARD_SELECTION,playerNickname),payload);
+        //serverView.sendAllMessage(payload, MessageFromServerType.DATA);
 
     }
 }

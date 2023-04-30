@@ -5,29 +5,31 @@ import it.polimi.ingsw.network.server.Connection;
 import java.io.Serializable;
 
 public class ServerMessageHeader implements Serializable {
-    private final MessageFromServerType messageFromServer;
-    private final Connection connection;
-    //private final String nicknameAddressee;
+    private final EventType messageFromServer;
 
-    public ServerMessageHeader(MessageFromServerType messageFromServer, Connection connection) {
+    private final String nicknameAddressee;
+
+    public ServerMessageHeader(EventType messageFromServer, String nicknameAddressee) {
         this.messageFromServer = messageFromServer;
-        //this.nicknameAddressee = nicknameAddressee;
-        this.connection =connection;
+        this.nicknameAddressee = nicknameAddressee;
+
     }
 
-    public MessageFromServerType getMessageFromServer() {
+    public EventType getMessageFromServer() {
         return messageFromServer;
     }
 
-    public Connection getConnection() {
+    /*public Connection getConnection() {
         return connection;
     }
-    /*
+
+     */
+
 
     public String getNicknameAddressee() {
         return nicknameAddressee;
     }
 
-     */
+
 }
 

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.server;
 
+//TODO molti non verranno piu ulizzati
 public enum ErrorType {
     DUPLICATE_NAME("This nickname is already taken"),
     WRONG_PHASE("You can't do this action now."),
@@ -15,7 +16,9 @@ public enum ErrorType {
 
     INVALID_COORDINATES("COORDINATES of the tile are invalid"),
     TOO_MANY_PLAYERS("Max number of player reached!"),
-    GAME_STARTED("Game already started! Cannot join!");
+    GAME_STARTED("Game already started! Cannot join!"),
+    NOT_RECEIVED_TILES("Problem with receiving tiles"),
+    DISCONNECTION("")
 
     private final String errorMessage;
 

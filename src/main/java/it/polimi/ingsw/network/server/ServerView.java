@@ -14,15 +14,29 @@ public class ServerView  {
     //TODO Client entity will change once the network part is finished
     private HashMap<String, Connection> playerMap;
     private ModelView modelView;
-    //private final ClientUI player;
-    //private final String nickname;
-    public ServerView() {
-        //this.player = player;
-        //this.playerMap = playerMap;
-        //this.nickname = nickname;
-        //this.playerMap = playerMap;
+
+
+    public void sendError(ErrorType error, java.lang.String playerNickname){
+        ServerMessageHeader header=new ServerMessageHeader(EventType.ERROR,playerNickname);
+        MessageFromServer message=new MessageFromServer(header,null);
+        //TODO gestire invio messaggio
     }
 
+    public void sendInfo(String playerNickname){
+        ServerMessageHeader header=new ServerMessageHeader(EventType.ALL_INFO,playerNickname);
+        MessagePayload payload=new MessagePayload();
+        payload.put(KeyPayload.NEW_BOARD, modelView.getBoardView());
+        payload.put(KeyPayload.NEW_BOOKSHELF, modelView.getBookshelfView(playerNickname));
+        payload.put(KeyPayload.POINTS,modelView.getPlayerPoints(playerNickname));
+        payload.put(KeyPayload.TOKEN,modelView.getCommonGoalViews());
+        payload.put(KeyPayload.PERSONAL_GOAL_CARD,modelView.getPlayerPersonal(playerNickname));
+        //payload.put(PayloadKeyServer.TOKEN,modelView.getCommonGoalViews());
+        //TODO gestire invio messaggio (quando viene inizializzato il gioco viene inviato questo messaggio)
+        //sendMessage(payload,MessageFromServerType.DATA,playerNickname);
+    }
+
+    //TODO questi verranno cambiati
+/*
     public void sendAllMessage(MessagePayload payload, MessageFromServerType messageType) {
         for (Map.Entry<String, ClientView> entry : playerMap.entrySet()) {
             String nickname = entry.getKey();
@@ -41,27 +55,9 @@ public class ServerView  {
        // playerMap.get(playerNickname).receiveMessageFromServer(playerNickname,message);
     }
 
-    public void sendError(ErrorType error, java.lang.String playerNickname){
-        ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.ERROR,playerNickname, connection);
-        MessagePayload payload=new MessagePayload(null);
-        payload.put(PayloadKeyServer.ERRORMESSAGE,error);
-        MessageFromServer message=new MessageFromServer(header,payload);
-        //TODO gestire invio messaggio
-       // playerMap.get(playerNickname).receiveMessageFromServer(playerNickname,message);
-    }
+ */
 
-    public void sendInfo(String playerNickname){
-        ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.INFO,playerNickname, connection);
-        MessagePayload payload=new MessagePayload(EventType.ALL_INFO);
-        payload.put(PayloadKeyServer.NEWBOARD, modelView.getBoardView());
-        payload.put(PayloadKeyServer.NEWBOOKSHELF, modelView.getBookshelfView(playerNickname));
-        payload.put(PayloadKeyServer.POINTS,modelView.getPlayerPoints(playerNickname));
-        payload.put(PayloadKeyServer.TOKEN,modelView.getCommonGoalViews());
-        payload.put(PayloadKeyServer.PERSONAL_GOAL,modelView.getPlayerPersonal(playerNickname));
-        payload.put(PayloadKeyServer.TOKEN,modelView.getCommonGoalViews());
-        //TODO gestire invio messaggio (quando viene inizializzato il gioco viene inviato questo messaggio)
-        //sendMessage(payload,MessageFromServerType.DATA,playerNickname);
-    }
+
 
     public void removeClient(String nickname) {
         playerMap.remove(nickname);
@@ -76,7 +72,7 @@ public class ServerView  {
         this.modelView = modelView;
     }
 
-    public void setPlayerMap(HashMap<String, ClientView> playerMap) {
+    public void setPlayerMap(HashMap<String, Connection> playerMap) {
         this.playerMap = playerMap;
     }
 

@@ -1,10 +1,5 @@
 package it.polimi.ingsw.view.CLI;
 
-import it.polimi.ingsw.controller.TurnPhase;
-import it.polimi.ingsw.listeners.EventListener;
-import it.polimi.ingsw.messages.EventType;
-import it.polimi.ingsw.messages.PayloadKeyServer;
-import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.PersonalGoalBox;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.BoardBoxView;

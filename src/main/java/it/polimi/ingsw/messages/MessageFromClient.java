@@ -4,19 +4,13 @@ import java.io.Serializable;
 
 public class MessageFromClient implements Serializable {
     private final EventType event;
-    private final DataClientType clientMessage;
     private final String nicknameSender;
     private final int[] value;
 
-    public MessageFromClient(EventType event,DataClientType clientMessage, String nicknameSender, int[] value) {
-        this.clientMessage = clientMessage;
+    public MessageFromClient(EventType event,String nicknameSender, int[] value) {
         this.event=event;
         this.nicknameSender = nicknameSender;
         this.value = value;
-    }
-
-    public DataClientType getClientMessage() {
-        return clientMessage;
     }
 
     public String getNicknameSender() {
@@ -25,6 +19,10 @@ public class MessageFromClient implements Serializable {
 
     public int[] getValue() {
         return value;
+    }
+
+    public EventType getEvent() {
+        return event;
     }
 }
 

@@ -27,7 +27,6 @@
   </properties>
 
   <dependencies>
-    <!-- Aggiungi questa dipendenza per la libreria Gson -->
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
