@@ -12,7 +12,7 @@ import java.util.Map;
 //TODO cambiare enumerazione dei messaggi dal server una volta terminata la parte di rete
 public class ServerView  {
     //TODO Client entity will change once the network part is finished
-    private HashMap<String, ClientView> playerMap;
+    private HashMap<String, Connection> playerMap;
     private ModelView modelView;
     //private final ClientUI player;
     //private final String nickname;
@@ -33,7 +33,7 @@ public class ServerView  {
     }
 
     public void sendMessage(MessagePayload payload, MessageFromServerType messageType, String playerNickname){
-        ServerMessageHeader header=new ServerMessageHeader(messageType,playerNickname);
+        ServerMessageHeader header=new ServerMessageHeader(messageType,playerNickname, connection);
         MessageFromServer message=new MessageFromServer(header,payload);
         //System.out.println(playerNickname+" RECEIVE");
         //System.out.println(playerNickname+" RECEIVE"+message.getMessagePayload().getEvent());
@@ -42,7 +42,7 @@ public class ServerView  {
     }
 
     public void sendError(ErrorType error, java.lang.String playerNickname){
-        ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.ERROR,playerNickname);
+        ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.ERROR,playerNickname, connection);
         MessagePayload payload=new MessagePayload(null);
         payload.put(PayloadKeyServer.ERRORMESSAGE,error);
         MessageFromServer message=new MessageFromServer(header,payload);
@@ -51,7 +51,7 @@ public class ServerView  {
     }
 
     public void sendInfo(String playerNickname){
-        ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.INFO,playerNickname);
+        ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.INFO,playerNickname, connection);
         MessagePayload payload=new MessagePayload(EventType.ALL_INFO);
         payload.put(PayloadKeyServer.NEWBOARD, modelView.getBoardView());
         payload.put(PayloadKeyServer.NEWBOOKSHELF, modelView.getBookshelfView(playerNickname));

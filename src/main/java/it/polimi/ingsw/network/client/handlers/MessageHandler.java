@@ -1,10 +1,11 @@
 package it.polimi.ingsw.network.client.handlers;
 
-import it.polimi.ingsw.messages.MessageFromClient;
 import it.polimi.ingsw.messages.MessageFromServer;
 import it.polimi.ingsw.network.client.ClientInterface;
 import it.polimi.ingsw.network.client.ClientSocket;
 import it.polimi.ingsw.view.ClientView;
+
+import java.rmi.RemoteException;
 
 public abstract class MessageHandler {
     private final ClientSocket connection;
@@ -14,7 +15,7 @@ public abstract class MessageHandler {
         this.connection = connection;
         this.clientInterface = clientInterface;
     }
-    public abstract void handleMessageFromServer(MessageFromServer mes);
+    public abstract void handleMessage(MessageFromServer mes) throws RemoteException;
 
 
     public ClientSocket getConnection() {

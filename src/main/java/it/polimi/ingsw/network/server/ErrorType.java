@@ -1,4 +1,4 @@
-package it.polimi.ingsw.messages;
+package it.polimi.ingsw.network.server;
 
 public enum ErrorType {
     DUPLICATE_NAME("This nickname is already taken"),
@@ -13,7 +13,9 @@ public enum ErrorType {
     NOT_PLAYER_FOUND("Not player with this nickname found "),
     NOT_TILES_SELECTED("You haven't selected any tile "),
 
-    INVALID_COORDINATES("COORDINATES of the tile are invalid");
+    INVALID_COORDINATES("COORDINATES of the tile are invalid"),
+    TOO_MANY_PLAYERS("Max number of player reached!"),
+    GAME_STARTED("Game already started! Cannot join!");
 
     private final String errorMessage;
 

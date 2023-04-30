@@ -13,7 +13,7 @@ import it.polimi.ingsw.view.ClientView;
 public interface ClientInterface {
     String getNickname();
 
-    void askNickname();
+    String askNickname();
 
 
 

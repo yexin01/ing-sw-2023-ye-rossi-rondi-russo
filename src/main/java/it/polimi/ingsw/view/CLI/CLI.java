@@ -26,9 +26,7 @@ public class CLI implements ClientInterface {
     private Scanner scanner;
     private ClientView clientView;
 
-    public CLI(String nickname, ClientView clientView){
-        this.nickname = nickname;
-        this.clientView = clientView;
+    public CLI(){
         this.scanner= new Scanner(System.in);
     }
 
@@ -229,4 +227,11 @@ public class CLI implements ClientInterface {
     }
 
 
+    public void setClientView(ClientView clientView) {
+        this.clientView = clientView;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

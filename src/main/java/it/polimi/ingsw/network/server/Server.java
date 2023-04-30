@@ -2,6 +2,7 @@ package it.polimi.ingsw.network.server;
 
 
 import it.polimi.ingsw.controller.*;
+import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
@@ -21,11 +22,13 @@ public class Server implements Runnable {
     private int socketPort = 12345;
     private int rmiPort = 12346;
 
-    private Map<String, Connection> clients;
+    private HashMap<String, Connection> clients;
+    private HashMap<String, Integer> playersId;
+    private int maxPlayers;
 
     private GameController gameController;
     private PhaseController<PhaseGame> gamePhaseController;
-    private SetupController setupController;
+
     private boolean waitForLoad;
 
 
@@ -41,7 +44,8 @@ public class Server implements Runnable {
         startServers();
         gameController = new GameController();
         gamePhaseController =new PhaseController<>(PhaseGame.GAME_SETUP);
-
+        GameRules gameRules=new GameRules();
+        maxPlayers=gameRules.getMaxPlayers();
         Thread pingThread = new Thread(this);
         pingThread.start();
 
@@ -114,16 +118,17 @@ public class Server implements Runnable {
 
             String token = UUID.randomUUID().toString();
             connection.setToken(token);
+            //TODO possiamo anche non dividerle,saranno gli handler del server a mandargli lo stato della partita, basta un ack
 
             if (gamePhaseController.getCurrentPhase() == PhaseGame.GAME_SETUP) { // Game in lobby state
                 MessagePayload payload = new MessagePayload(null);
                 payload.put(PayloadKeyServer.NETWORK_CONTENT, "Reconnection to lobby successful!");
-                ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.CONNECTION_RESPONSE, username);
+                ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.CONNECTION_RESPONSE, connection);
                 connection.sendMessage(new MessageFromServer(header, payload));
             } else { // Game started
                 MessagePayload payload = new MessagePayload(null);
                 payload.put(PayloadKeyServer.NETWORK_CONTENT, "Reconnection to game successful!");
-                ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.CONNECTION_RESPONSE, username);
+                ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.CONNECTION_RESPONSE,connection);
                 connection.sendMessage(new MessageFromServer(header, payload));
 
                 //TODO: to reconnect the client to his game (with an handler)
@@ -132,13 +137,13 @@ public class Server implements Runnable {
             }
             MessagePayload payload = new MessagePayload(null);
             payload.put(PayloadKeyServer.NETWORK_CONTENT, username + " reconnected to server!"));
-            ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.BROADCAST, username);
+            ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.BROADCAST, connection);
             sendMessageToAllExcept(new MessageFromServer(header, payload), username);
 
         } else { // Player already connected
             MessagePayload payload = new MessagePayload(null);
             payload.put(PayloadKeyServer.NETWORK_CONTENT, username + " already connected to server!");
-            ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.NETWORK_ERROR, username);
+            ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.NETWORK_ERROR, connection);
             sendMessageToAllExcept(new MessageFromServer(header, payload), username);
 
             connection.sendMessage(new MessageFromServer(header,payload));
@@ -155,50 +160,28 @@ public class Server implements Runnable {
      */
     private void newPlayerLogin(String username, Connection connection) throws Exception {
 
-        if (gamePhaseController.getCurrentPhase() == PhaseGame.GAME_STARTED) { // Game Started
-            MessagePayload payload = new MessagePayload(null);
-            payload.put(PayloadKeyServer.NETWORK_CONTENT, "Game already started! Cannot join!");
-            ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.NETWORK_ERROR, username);
-            connection.sendMessage(new MessageFromServer(header, payload));
 
-            connection.disconnect();
-
-        } else if (setupController.isFull()) { // Waiting room is full
-            MessagePayload payload = new MessagePayload(null);
-            payload.put(PayloadKeyServer.NETWORK_CONTENT, "Max number of player reached!");
-            ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.NETWORK_ERROR, username);
-            connection.sendMessage(new MessageFromServer(header, payload));
-
-            connection.disconnect();
-
-        } else { // New player
-            if (setupController.checkNickname(username)) { // Username valid
-                clients.put(username, connection);
-
-                String token = UUID.randomUUID().toString();
-                connection.setToken(token);
-
-                MessagePayload payload = new MessagePayload(null);
-                payload.put(PayloadKeyServer.NETWORK_CONTENT, "Successfully connected as a new player");
-                ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.CONNECTION_RESPONSE, username);
-                connection.sendMessage(new MessageFromServer(header, payload));
-
-                payload = new MessagePayload(null);
-                payload.put(PayloadKeyServer.NETWORK_CONTENT, username + " connected to server!");
-                header = new ServerMessageHeader(MessageFromServerType.BROADCAST, username);
-                sendMessageToAllExcept(new MessageFromServer(header, payload), username);
-
-            } else { // Username not valid
-                MessagePayload payload = new MessagePayload(null);
-                payload.put(PayloadKeyServer.NETWORK_CONTENT, "Invalid Username");
-                ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.NETWORK_ERROR, username);
-                connection.sendMessage(new MessageFromServer(header, payload));
-
-                //TODO: a bit extreme, maybe we can just send a message to the client
-                connection.disconnect();
-
-            }
+        if (gamePhaseController.getCurrentPhase() == PhaseGame.GAME_STARTED) {
+            sendError(ErrorType.GAME_STARTED,connection);
         }
+        ErrorType possibleError=addPlayer(username);
+        if(possibleError==null){
+            sendError(ErrorType.TOO_MANY_PLAYERS,connection);
+        }else{
+            String token = UUID.randomUUID().toString();
+            connection.setToken(token);
+            //TODO se é l'unico all'interno della classe fatto in questo modo lasciatelo
+            //TODO altrimenti gestitelo come sendError,in modo da non ripetere codice
+            ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.ACK_MESSAGE,connection);
+            MessagePayload payload=new MessagePayload(null);
+            connection.sendMessage(new MessageFromServer(header, payload));
+
+            payload = new MessagePayload(EventType.NICKNAME);
+            payload.put(PayloadKeyServer.NICKNAME_CONNECTED, username);
+            header = new ServerMessageHeader(null,connection);
+            sendMessageToAllExcept(new MessageFromServer(header, payload), username);
+        }
+
     }
 
     /**
@@ -381,4 +364,26 @@ public class Server implements Runnable {
             }
         }
     }
+
+    public ErrorType addPlayer(String nickname) {
+        if (playersId.containsKey(nickname)) {
+            return ErrorType.DUPLICATE_NAME;
+        } else if (playersId.size() >= maxPlayers) {
+            return ErrorType.TOO_MANY_PLAYERS;
+        } else {
+            int playerCount = playersId.size();
+            playersId.put(nickname, playerCount);
+            return null;
+        }
+    }
+    public void sendError(ErrorType error,Connection connection){
+        ServerMessageHeader header=new ServerMessageHeader(MessageFromServerType.ERROR,connection);
+        MessagePayload payload=new MessagePayload(null);
+        payload.put(PayloadKeyServer.ERRORMESSAGE,error);
+        MessageFromServer message=new MessageFromServer(header,payload);
+        connection.disconnect();
+
+    }
+
+
 }
