@@ -10,7 +10,7 @@ import it.polimi.ingsw.view.ClientView;
 
 //TODO will change
 
-public interface ClientInterface extends EventListener {
+public interface ClientInterface {
     String getNickname();
 
     void askNickname();
@@ -22,16 +22,8 @@ public interface ClientInterface extends EventListener {
     int[] askColumn();
 
 
-    public void printFreeShelves(int[] freeShelves);
-
-    public void printItemTilesSelected();
-    public void printMatrixBookshelf();
-    public void printMatrixBoard();
-    public void addListener(EventType eventType, EventListener listener);
-
-    public TurnPhase getCurrentPhase();
     public ClientView getCurrentView();
-    public int[] getValueToSend();
+
 
     void shutdown();
 }

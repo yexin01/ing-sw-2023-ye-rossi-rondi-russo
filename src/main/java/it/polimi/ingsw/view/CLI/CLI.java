@@ -22,6 +22,7 @@ import java.util.Scanner;
 //TODO branch CLI correggo gli errori e cambio la stampa degli oggetti
 public class CLI implements ClientInterface {
     private String nickname;
+    private Colors colors=new Colors();
     private Scanner scanner;
     private ClientView clientView;
 
@@ -49,13 +50,13 @@ public class CLI implements ClientInterface {
             coordinates.add(scanner.nextInt());
         }
         return coordinates.stream().mapToInt(Integer::intValue).toArray();
-
     }
 
     @Override
-    public int[] askOrder(ItemTileView[] tileSelected) {
+    public int[] askOrder() {
         System.out.println("Insert numbers from 0 to max selected tiles-1.\nFor example, if you have selected 2 tiles and want to insert the second selected first, just insert: 1,then 0.");
         printItemTilesSelected();
+        ItemTileView[] tileSelected= clientView.getTilesSelected();
         int[] orderTiles = new int[tileSelected.length];
         for (int i = 0; i < tileSelected.length; i++) {
             System.out.println("Insert number:");
@@ -74,18 +75,17 @@ public class CLI implements ClientInterface {
     }
 
     public void printMatrixBoard(){
-        System.out.println("BOARD ");
-        BoardBoxView[][] matrix= clientView.getBoardView();
+        System.out.println("BOARD");
+        BoardBoxView[][] matrix = clientView.getBoardView();
         for (int i = 0; i < matrix.length; i++) {
-            System.out.printf("row"+i+" ");
             for (int j = 0; j < matrix[i].length; j++) {
                 if (matrix[i][j].getItemTileView().getTypeView()!=null) {
-
-                    System.out.printf("%-10s",+j+""+matrix[i][j].getItemTileView().getTypeView());
+                    System.out.printf("%-6s","("+i+","+j+")");
+                    colors.printTypeWithTypeColor(matrix[i][j].getItemTileView().getTypeView());
                 } else {
                     if(matrix[i][j].isOccupiable()){
-                        System.out.printf("%-10s",+j+"SELECTED");
-                    }else System.out.printf("%-10s",+j+"EMPTY");
+                        System.out.printf("%-13s",+j+"SELECTED");
+                    }else System.out.printf("%-13s","");
                 }
             }
             System.out.println("");
@@ -95,18 +95,8 @@ public class CLI implements ClientInterface {
 
 
     @Override
-    public TurnPhase getCurrentPhase() {
-        return null;
-    }
-
-    @Override
     public ClientView getCurrentView() {
         return null;
-    }
-
-    @Override
-    public int[] getValueToSend() {
-        return new int[0];
     }
 
     @Override
