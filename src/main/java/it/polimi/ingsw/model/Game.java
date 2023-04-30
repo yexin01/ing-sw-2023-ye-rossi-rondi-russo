@@ -5,7 +5,6 @@ import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.model.modelView.CommonGoalView;
 import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
-import it.polimi.ingsw.server.ServerView;
 
 import java.util.*;
 //TODO CAMBIARE LA CREAZIONE DELLE PERSONAL GIAL DIRETTAMENTE DI ITEMTILEVIEW

@@ -1,14 +1,16 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.*;
+
 
 public class ClientView {
     private BoardBoxView[][] boardView;
     private CommonGoalView[] commonGoalViews;
     private int[] commonGoalPoints;
     //TODO initialization will be inserted in the method related to the start of the game
-
+    private TurnPhase turnPhase;
     private String[] players;
     private ItemTileView[][] bookshelfView;
     private ItemTileView[] tilesSelected;
@@ -16,7 +18,9 @@ public class ClientView {
     private PersonalGoalCard playerPersonalGoal;
     private String nickname;
 
-
+    public ClientView(){
+        turnPhase=TurnPhase.SELECT_FROM_BOARD;
+    }
 
     public String getNickname(){
         return nickname;

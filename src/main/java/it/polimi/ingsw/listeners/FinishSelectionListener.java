@@ -4,7 +4,7 @@ package it.polimi.ingsw.listeners;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.*;
-import it.polimi.ingsw.server.ServerView;
+import it.polimi.ingsw.network.server.ServerView;
 
 public class FinishSelectionListener implements EventListener {
     private final ServerView serverView;

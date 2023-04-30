@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.modelView.CommonGoalView;
 import it.polimi.ingsw.model.modelView.ModelView;
-import it.polimi.ingsw.server.ServerView;
 
 import java.util.ArrayList;
 

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.client;
 
+import it.polimi.ingsw.messages.MessageFromServer;
 import it.polimi.ingsw.network.networkmessages.NetworkMessage;
 import it.polimi.ingsw.network.server.RMIHandler;
 
@@ -62,7 +63,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
      * @throws RemoteException if there are connection problems
      */
     @Override
-    public void sendMessage(NetworkMessage message) throws RemoteException {
+    public void sendMessage(MessageFromClient message) throws RemoteException {
         if (server == null) {
             throw new RemoteException();
         }

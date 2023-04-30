@@ -1,16 +1,14 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.client.Client;
-import it.polimi.ingsw.client.clientView.ClientView;
+import it.polimi.ingsw.view.clientView.ClientView;
 import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.server.ServerView;
+import it.polimi.ingsw.network.server.ServerView;
 
 import java.util.HashMap;
 
 public class App{
         public static void main(String[] args) throws Exception {
-            GameRules gameRules=new GameRules();
+
 
             ServerView serverView=new ServerView();
             GameController gameController=new GameController();
@@ -20,10 +18,12 @@ public class App{
             String[] playerNames = {"TIZIO", "CAIO", "SEMPRONIO"};
             for (int i = 0; i < playerNames.length; i++) {
                 String playerName = playerNames[i];
-                ClientView clientView = new ClientView(playerName, gameController, serverView, new Client(playerName));
+                ClientView clientView = new ClientView(playerName, gameController, serverView, new Client(clientView, playerName));
                 playerMap.put(playerName, clientView);
                 playersId.put(playerName, i);
             }
+
+
 
             gameController.startGame(playerMap,playersId,serverView);
             gameController.getModel().setNextPlayer();

@@ -1,5 +1,8 @@
 package it.polimi.ingsw.network.client;
 
+import it.polimi.ingsw.messages.DataClientType;
+import it.polimi.ingsw.messages.EventType;
+import it.polimi.ingsw.messages.MessageFromClient;
 import it.polimi.ingsw.network.messages.DataClientType;
 import it.polimi.ingsw.network.messages.MessageFromClient;
 import it.polimi.ingsw.network.messages.EventType;
@@ -77,8 +80,7 @@ public class ClientSocket extends Client implements Runnable{
      * @throws RemoteException if there are connection problems
      */
     @Override
-    public void sendMessage(EventType messageType, DataClientType clientMessage, EventType userName, int[] value) throws RemoteException {
-        MessageFromClient message=new MessageFromClient(messageType,clientMessage,userName,value);
+    public void sendMessage(MessageFromClient message) throws RemoteException {
         if (out != null) {
             try {
                 out.writeObject(message);
