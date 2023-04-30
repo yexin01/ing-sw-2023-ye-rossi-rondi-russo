@@ -36,20 +36,32 @@ public class CLI implements ClientInterface {
 
     @Override
     public int[] askCoordinates() {
-        //TODO change 3,insert parameter
+        clientView.setCoordinatesSelected(new ArrayList<>());
         printMatrixBoard();
-        ArrayList<Integer> coordinates=new ArrayList<>();
+        //TODO aggiungere attributo che indica il numero di tile massimo
         for (int i = 0; i < 3; i++) {
-            System.out.println("(If you want to select less than 3 tiles insert -1 after you last tile)\nInsert row:");
+            System.out.println("If you want to reset your selection write -2 before inserting row");
+            System.out.println("If you want to select less than 3 tiles insert -1 after you last tile\nInsert row:");
             int row=scanner.nextInt();
             if(row==-1){
                 break;
             }
-            coordinates.add(row);
+            if(row==-2){
+                clientView.setCoordinatesSelected(new ArrayList<>());
+                printMatrixBoard();
+                i=-1;
+                continue;
+            }
+            clientView.getCoordinatesSelected().add(row);
             System.out.println("Insert column:");
-            coordinates.add(scanner.nextInt());
+            clientView.getCoordinatesSelected().add(scanner.nextInt());
+            printMatrixBoard();
         }
-        return coordinates.stream().mapToInt(Integer::intValue).toArray();
+        System.out.println("You selected your tiles, if you want to confirm the choice write -1,otherwise -2");
+        if(scanner.nextInt()==-2){
+            askCoordinates();
+        }
+        return clientView.getCoordinatesSelected().stream().mapToInt(Integer::intValue).toArray();
     }
 
     @Override
@@ -77,15 +89,27 @@ public class CLI implements ClientInterface {
     public void printMatrixBoard(){
         System.out.println("BOARD");
         BoardBoxView[][] matrix = clientView.getBoardView();
+        ArrayList<Integer> coordinates=clientView.getCoordinatesSelected();
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
                 if (matrix[i][j].getItemTileView().getTypeView()!=null) {
                     System.out.printf("%-6s","("+i+","+j+")");
-                    colors.printTypeWithTypeColor(matrix[i][j].getItemTileView().getTypeView());
+                    boolean selected=false;
+                    for (int k = 0;coordinates.size()>0&& k < coordinates.size(); k += 2) {
+                        if (coordinates.get(k).equals(i) && coordinates.get(k + 1).equals(j)) {
+                            colors.colorize(Colors.RED_CODE,"SELECTED");
+                            selected=true;
+                            break;
+                        }
+                    }
+                    if(!selected){
+                        colors.printTypeWithTypeColor(matrix[i][j].getItemTileView().getTypeView());
+                    }
                 } else {
                     if(matrix[i][j].isOccupiable()){
-                        System.out.printf("%-13s",+j+"SELECTED");
-                    }else System.out.printf("%-13s","");
+                        System.out.printf("%-6s","("+i+","+j+")");
+                        colors.colorize(Colors.RED_CODE,"SELECTED");
+                    }else System.out.printf("%-14s","");
                 }
             }
             System.out.println("");
@@ -122,40 +146,35 @@ public class CLI implements ClientInterface {
     public void printItemTilesSelected(){
         int j=0;
         for(ItemTileView t: clientView.getTilesSelected()){
-            System.out.printf("%-10s",+(j++)+" "+t.getTypeView());
+            System.out.printf("%-2s",(j++));
+            colors.printTypeWithTypeColor(t.getTypeView());
+            System.out.printf("%-2s",(j++));
         }
         System.out.println("");
     }
     public void printPersonalGoal() {
-        System.out.println("PERSONAL GOAL "+nickname);
-        PersonalGoalCard personalGoalCard=clientView.getPlayerPersonalGoal();
-        for (PersonalGoalBox p :personalGoalCard.getCells()) {
-            System.out.printf("%-10s", "row "+p.getX());
-            System.out.printf("%-10s", "column "+p.getY());
-            System.out.printf(p.getTypePersonal().toString());
-            System.out.println("");
-        }
         ItemTileView[][] bookshelfView=clientView.getBookshelfView();
-        int rows=bookshelfView.length;
-        int columns=bookshelfView[0].length;
-        for (int i = 0; i < rows; i++) {
-            System.out.printf("row"+i+" ");
-            for (int j = 0; j <columns; j++) {
+        PersonalGoalCard personalGoalCard=clientView.getPlayerPersonalGoal();
+        System.out.println("PERSONAL GOAL "+nickname);
+        for (int i = 0; i < bookshelfView.length; i++) {
+            for (int j = 0; j < bookshelfView[0].length; j++) {
+                System.out.printf("%-6s","("+i+","+j+")");
                 boolean found = false;
                 for (PersonalGoalBox p : personalGoalCard.getCells()) {
                     if (p.getX() == i && p.getY() == j) {
-                        System.out.printf("%-10s",j+" "+p.getTypePersonal().toString());
+                        colors.printTypeWithTypeColor(p.getTypePersonal());
                         found = true;
                         break;
                     }
                 }
                 if (!found) {
-                    System.out.printf("%-10s",j+" EMPTY");
+                    colors.colorize(Colors.BLACK_CODE,"EMPTY");
                 }
             }
             System.out.println("");
         }
     }
+
     public void printCommonGoalPoints(){
       String whoChange;
         CommonGoalView[] commonGoalViews= clientView.getCommonGoalViews();
@@ -186,8 +205,9 @@ public class CLI implements ClientInterface {
 
 
     public void printFreeShelves(int[] freeShelves) {
+        System.out.println("these are the free cells for each column ");
         for (int i = 0; i < freeShelves.length; i++) {
-            System.out.printf("%-7d", freeShelves[i]);
+            System.out.printf("%-8d", freeShelves[i]);
         }
         System.out.println("");
     }

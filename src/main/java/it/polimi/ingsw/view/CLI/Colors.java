@@ -19,6 +19,7 @@ public class Colors {
     public final static String ORANGE_CODE = "\u001B[38;2;255;165;0m";
     public final static String BLUE_CODE = "\u001B[38;2;133;163;220m";
     public final static String PINK_CODE = "\u001B[38;2;255;192;203m";
+    public final static String RESET_CODE = "\u001B[0m";
 
     private static final Map<Type, String> TYPE_COLORS = new HashMap<>();
 
@@ -31,16 +32,16 @@ public class Colors {
         TYPE_COLORS.put(Type.PLANT, PINK_CODE);
     }
 
-
     public void printTypeWithTypeColor(Type type) {
         if (TYPE_COLORS.containsKey(type)) {
             System.out.print(TYPE_COLORS.get(type));
-            System.out.print(String.format("%-7s", type.name()));
+            System.out.print(String.format("%-8s", type.name()));
             System.out.print("\u001B[0m");
+
         }
     }
     public void colorize(String color, String text) {
-        int lengthDifference = 7 - text.length();
+        int lengthDifference = 8 - text.length();
         String space = "";
         for(int i=0; i<lengthDifference; i++) {
             space += " ";
