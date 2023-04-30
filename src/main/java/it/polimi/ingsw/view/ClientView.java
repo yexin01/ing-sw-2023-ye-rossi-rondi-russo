@@ -4,9 +4,12 @@ import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.*;
 
+import java.util.ArrayList;
+
 
 public class ClientView {
     private BoardBoxView[][] boardView;
+    private ArrayList<Integer> coordinatesSelected;
     private CommonGoalView[] commonGoalViews;
     private int[] commonGoalPoints;
     //TODO initialization will be inserted in the method related to the start of the game
@@ -94,5 +97,13 @@ public class ClientView {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public ArrayList<Integer> getCoordinatesSelected() {
+        return coordinatesSelected;
+    }
+
+    public void setCoordinatesSelected(ArrayList<Integer> coordinatesSelected) {
+        this.coordinatesSelected = coordinatesSelected;
     }
 }

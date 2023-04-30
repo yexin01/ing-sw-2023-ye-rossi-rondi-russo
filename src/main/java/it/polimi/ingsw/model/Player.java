@@ -1,11 +1,11 @@
 package it.polimi.ingsw.model;
 
 
-import it.polimi.ingsw.messages.ErrorType;
-import it.polimi.ingsw.network.messages.ErrorType;
+import it.polimi.ingsw.network.server.ErrorType;
+
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.model.modelView.*;
-import it.polimi.ingsw.network.messages.EventType;
+
 
 import java.util.ArrayList;
 import java.util.Objects;

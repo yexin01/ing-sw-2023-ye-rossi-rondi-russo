@@ -3,10 +3,17 @@ package it.polimi.ingsw.network.client;
 import it.polimi.ingsw.messages.DataClientType;
 import it.polimi.ingsw.messages.EventType;
 import it.polimi.ingsw.messages.MessageFromClient;
+import it.polimi.ingsw.messages.MessageFromServerType;
+import it.polimi.ingsw.network.client.handlers.HandlerData;
+import it.polimi.ingsw.network.client.handlers.HandlerEndGame;
+import it.polimi.ingsw.network.client.handlers.HandlerSetup;
+import it.polimi.ingsw.network.client.handlers.ManagerHandlers;
 import it.polimi.ingsw.network.messages.DataClientType;
 import it.polimi.ingsw.network.messages.MessageFromClient;
 import it.polimi.ingsw.network.messages.EventType;
 import it.polimi.ingsw.network.networkmessages.NetworkMessage;
+import it.polimi.ingsw.view.CLI.CLI;
+import it.polimi.ingsw.view.ClientView;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -29,6 +36,8 @@ public class ClientSocket extends Client implements Runnable{
     private transient ObjectOutputStream out;
 
     private transient Thread messageReceiver;
+
+    private ManagerHandlers managerHandlers;
 
     /**
      * Constructs a connection over the socket with the server as a client with the given username and token and ip and port of the server to connect to
@@ -107,6 +116,15 @@ public class ClientSocket extends Client implements Runnable{
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public void setupHandler(){
+        CLI cli=new CLI();
+        cli.setClientView(new ClientView());
+        //TODO ne verranno aggiunti altri
+        managerHandlers.registerEventHandler(MessageFromServerType.DATA,new HandlerData(this,cli));
+        managerHandlers.registerEventHandler(MessageFromServerType.END_GAME,new HandlerEndGame(this,cli));
+        managerHandlers.registerEventHandler(MessageFromServerType.SETUP,new HandlerSetup(this,cli));
+
     }
 
     /**

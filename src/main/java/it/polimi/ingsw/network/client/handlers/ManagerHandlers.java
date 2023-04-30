@@ -1,26 +1,29 @@
 package it.polimi.ingsw.network.client.handlers;
 
 import it.polimi.ingsw.messages.MessageFromServer;
-import it.polimi.ingsw.network.client.handlers.MessageHandler;
+import it.polimi.ingsw.messages.MessageFromServerType;
 
+import java.rmi.RemoteException;
 import java.util.HashMap;
 
 public class ManagerHandlers {
 
-    private HashMap<String, MessageHandler> eventHandlerMap;
+    private HashMap<MessageFromServerType, MessageHandler> eventHandlerMap;
 
     public ManagerHandlers() {
+
         this.eventHandlerMap = new HashMap<>();
+
     }
 
-    public void registerEventHandler(String eventType, MessageHandler messageHandler) {
+    public void registerEventHandler(MessageFromServerType eventType, MessageHandler messageHandler) {
         this.eventHandlerMap.put(eventType, messageHandler);
     }
 
-    public void handleMessage(String eventType, MessageFromServer message) {
+    public void handleMessage(MessageFromServerType eventType, MessageFromServer message) throws RemoteException {
         MessageHandler messageHandler = this.eventHandlerMap.get(eventType);
         if (messageHandler != null) {
-            messageHandler.handleMessageFromServer(message);
+            messageHandler.handleMessage(message);
         }
     }
 }
