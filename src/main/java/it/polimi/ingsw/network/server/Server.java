@@ -258,8 +258,7 @@ public class Server implements Runnable {
                 synchronized (clientsLock) {
                     clients.remove(username);
                 }
-                //TODO la lobby la gestisce il server, senno duplichiamo i dati solo per il setup
-                //TODO se si disconnette un utente lo gestiscono gli handler
+
 
                 gameController.onMessage(new LobbyMessage(username, null, null, true));
                 LOGGER.log(Level.INFO, "{0} removed from client list!", username);
@@ -282,6 +281,7 @@ public class Server implements Runnable {
                     client.getValue().sendMessage(message);
                 } catch (IOException e) {
                     //TODO: send a message to the server as an error
+
                 }
             }
         }
