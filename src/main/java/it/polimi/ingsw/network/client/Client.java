@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.client;
 
+import it.polimi.ingsw.messages.MessageFromClient;
 import it.polimi.ingsw.network.networkmessages.NetworkMessage;
 
 import java.io.Serial;
@@ -17,13 +18,16 @@ public abstract class Client extends UnicastRemoteObject {
     @Serial
     private static final long serialVersionUID = 2056368610379158146L;
 
+    static final int DISCONNECTION_TIME = 15000;
+
     private final String username;
     private final String ip;
     private final int port;
     private String token;
 
     transient Timer pingTimer;
-    final transient List<NetworkMessage> messageQueue;
+    transient DisconnectionListener disconnectionListener;
+    final transient List<MessageFromClient> messageQueue;
 
     //TODO lavora con ClientHandler per la gestione della coda di messaggi
 
@@ -35,13 +39,14 @@ public abstract class Client extends UnicastRemoteObject {
      * @param token is the token of the client
      * @throws RemoteException if there are connection problems
      */
-    public Client(String username,String ip, int port, String token) throws RemoteException {
+    public Client(String username,String ip, int port, String token, DisconnectionListener disconnectionListener) throws RemoteException {
         this.username = username;
         this.ip = ip;
         this.port = port;
         this.token = token;
-
         this.pingTimer = new Timer();
+        this.disconnectionListener = disconnectionListener;
+
         this.messageQueue = new ArrayList<>();
     }
 
@@ -89,7 +94,7 @@ public abstract class Client extends UnicastRemoteObject {
      * This method returns the message queue of the client
      * @return the message queue of the client
      */
-    public List<NetworkMessage> getMessageQueue() {
+    public List<MessageFromClient> getMessageQueue() {
         return messageQueue;
     }
 
@@ -116,13 +121,13 @@ public abstract class Client extends UnicastRemoteObject {
      * @param message is the message to send
      * @throws Exception if there are connection problems
      */
-    public abstract void sendMessage(NetworkMessage message) throws Exception;
+    public abstract void sendMessage(MessageFromClient message) throws Exception;
 
     /**
      * @return the list of messages in the queue
      */
-    List<NetworkMessage> receiveMessages() {
-        ArrayList<NetworkMessage> copyList;
+    List<MessageFromClient> receiveMessages() {
+        ArrayList<MessageFromClient> copyList;
 
         synchronized (messageQueue) {
             copyList = new ArrayList<>(List.copyOf(messageQueue));

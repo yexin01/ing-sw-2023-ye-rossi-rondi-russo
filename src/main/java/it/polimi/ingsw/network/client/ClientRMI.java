@@ -29,8 +29,8 @@ public class ClientRMI extends Client implements RMIClientConnection {
      * @param token is the token of the client
      * @throws RemoteException if there are connection problems
      */
-    public ClientRMI (String username, String ip, int port, String token) throws RemoteException {
-        super(username, ip, port, token);
+    public ClientRMI (String username, String ip, int port, String token, DisconnectionListener disconnectionListener) throws RemoteException {
+        super(username, ip, port, token, disconnectionListener);
     }
 
     /**
@@ -89,10 +89,9 @@ public class ClientRMI extends Client implements RMIClientConnection {
      */
     @Override
     public void ping() throws RemoteException {
-        //TODO: to adjust
         super.pingTimer.cancel();
         super.pingTimer = new Timer();
-        //super.pingTimer.schedule(new PingTimerTask(super.disconnectionListener), Client.DISCONNECTION_TIME);
+        super.pingTimer.schedule(new TimerDisconnect(super.disconnectionListener), Client.DISCONNECTION_TIME); //if the server doesn't respond in 1.5 seconds, disconnect calling the disconnectionListener
     }
 
     /**

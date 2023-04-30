@@ -97,6 +97,8 @@ public class Server implements Runnable {
             }
         } catch (IOException e) {
             connection.disconnect();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -131,7 +133,7 @@ public class Server implements Runnable {
 
             }
             MessagePayload payload = new MessagePayload(null);
-            payload.put(PayloadKeyServer.NETWORK_CONTENT, username + " reconnected to server!"));
+            payload.put(PayloadKeyServer.NETWORK_CONTENT, username + " reconnected to server!");
             ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.BROADCAST, username);
             sendMessageToAllExcept(new MessageFromServer(header, payload), username);
 
@@ -194,9 +196,6 @@ public class Server implements Runnable {
                 ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.NETWORK_ERROR, username);
                 connection.sendMessage(new MessageFromServer(header, payload));
 
-                //TODO: a bit extreme, maybe we can just send a message to the client
-                connection.disconnect();
-
             }
         }
     }
@@ -206,28 +205,24 @@ public class Server implements Runnable {
      *
      * @param message message sent to server
      */
-    void onMessage(MessageFromServer message) {
-        if (message != null && message.getSenderUsername() != null && (message.getToken() != null || message.getSenderUsername().equals("god"))) {
-            if (message.getContent().equals(MessageContent.SHOOT)) {
-                String messageString = message.toString();
-                LOGGER.log(Level.INFO, messageString);
-            } else {
-                LOGGER.log(Level.INFO, "Received: {0}", message);
-            }
+    void onMessage(MessageFromClient message) throws IOException {
+        if (message != null && message.getNicknameSender() != null) {
 
             String msgToken = message.getToken();
             Connection conn;
 
             synchronized (clientsLock) {
-                conn = clients.get(message.getSenderUsername());
+                connection = clients.get(message.getNicknameSender());
             }
 
-            if (conn == null) {
-                LOGGER.log(Level.INFO, "Message Request {0} - Unknown username {1}", new Object[]{message.getContent().name(), message.getSenderUsername()});
-            } else if (msgToken.equals(conn.getToken())) { // Checks that sender is the real player
-                NetworkMessage response = gameController.onMessage(message);
+            if (connection == null) {
+                System.out.println("Message request from unknown Username");
 
-                updateTimer();
+            } else {
+
+                gameController.receiveMessageFromClient(message); //it handles the game logic and the response ack, ecc
+
+                //TODO: create response message ping
 
                 // send message to client
                 sendMessage(message.getSenderUsername(), response);
@@ -263,6 +258,11 @@ public class Server implements Runnable {
         String username = getUsernameByConnection(playerConnection);
 
         if (username != null) {
+            MessagePayload payload = new MessagePayload(null);
+            payload.put(PayloadKeyServer.NETWORK_CONTENT, "Successfully connected as a new player");
+            ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.CONNECTION_RESPONSE, username);
+            connection.sendMessage(new MessageFromServer(header, payload));
+
             LOGGER.log(Level.INFO, "{0} disconnected from server!", username);
 
             if (gameController.getGameState() == PossibleGameState.GAME_ROOM) {
