@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.messages.*;
+import it.polimi.ingsw.network.PhaseGame;
 import it.polimi.ingsw.view.ClientView;
 
 import it.polimi.ingsw.listeners.EndTurnListener;
@@ -14,7 +15,7 @@ import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.modelView.ModelView;
-import it.polimi.ingsw.server.ServerView;
+import it.polimi.ingsw.network.server.ServerView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,9 @@ public class GameController {
 
     private SetupController setupController;
 
-    private TurnPhaseController turnPhaseController;
+    private PhaseController<TurnPhase> turnPhaseController;
+    private PhaseController<PhaseGame> gamePhaseController;
+
 
     private Game game;
     //private transient final PropertyChangeSupport listeners=new PropertyChangeSupport(this);
@@ -41,17 +44,14 @@ public class GameController {
         initializeControllers();
     }
 
-    public TurnPhaseController getTurnController() {
-        return turnPhaseController;
-    }
+
     public Game getModel() {
         return game;
     }
     public void initializeControllers() throws Exception {
         GameRules gameRules=new GameRules();
         int maxPlayers=gameRules.getMaxPlayers();
-        turnPhaseController =new TurnPhaseController();
-        turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
+        turnPhaseController =new PhaseController<>(TurnPhase.SELECT_FROM_BOARD);
     }
 
     public void startGame(HashMap<java.lang.String, ClientView> playerMap, HashMap<java.lang.String, Integer> playersId, ServerView serverView ) throws Exception {
@@ -77,9 +77,6 @@ public class GameController {
         }
     }
 
-    public void setTurnController(TurnPhaseController turnPhaseController) {
-        this.turnPhaseController = turnPhaseController;
-    }
 
     public void setGame(Game game) {
         this.game = game;
@@ -226,6 +223,10 @@ public class GameController {
 
     public void setServerView(ServerView serverView) {
         this.serverView = serverView;
+    }
+
+    public String getTurnOwnerUsername() {
+        return game.getTurnPlayer().getNickname();
     }
     /*
     public void sendMessage(String nickname,MessageFromServerType messageFromServerType){

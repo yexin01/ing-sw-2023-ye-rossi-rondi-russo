@@ -3,6 +3,13 @@ package it.polimi.ingsw.controller;
 //SE IL TURNO é finiTo SETTA il giocatore successivo se finisce il turno
 //cambia la fase del turno
 
+/*
+public class TurnPhaseController extends PhaseController<TurnPhase> {
+
+}
+
+ */
+/*
 public class TurnPhaseController {
     private TurnPhase currentPhase;
 
@@ -16,9 +23,11 @@ public class TurnPhaseController {
     public void setCurrentPhase(TurnPhase currentPhase) {
         this.currentPhase=currentPhase;
     }
-
-
-
-
-
 }
+ */
+
+
+
+
+
+

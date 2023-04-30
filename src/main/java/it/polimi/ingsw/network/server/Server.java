@@ -1,15 +1,11 @@
 package it.polimi.ingsw.network.server;
 
-package it.polimi.ingsw.network.server;
 
-import com.google.gson.JsonObject;
-import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.controller.GamePhase;
-import it.polimi.ingsw.controller.GamePhaseController;
-import it.polimi.ingsw.controller.SetupController;
+import it.polimi.ingsw.controller.*;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.network.PhaseGame;
 
 import java.io.IOException;
 import java.util.*;
@@ -28,7 +24,7 @@ public class Server implements Runnable {
     private Map<String, Connection> clients;
 
     private GameController gameController;
-    private GamePhaseController gamePhaseController;
+    private PhaseController<PhaseGame> gamePhaseController;
     private SetupController setupController;
     private boolean waitForLoad;
 
@@ -44,6 +40,7 @@ public class Server implements Runnable {
 
         startServers();
         gameController = new GameController();
+        gamePhaseController =new PhaseController<>(PhaseGame.GAME_SETUP);
 
         Thread pingThread = new Thread(this);
         pingThread.start();
@@ -118,7 +115,7 @@ public class Server implements Runnable {
             String token = UUID.randomUUID().toString();
             connection.setToken(token);
 
-            if (gamePhaseController.getCurrentGamePhase() == GamePhase.GAME_SETUP) { // Game in lobby state
+            if (gamePhaseController.getCurrentPhase() == PhaseGame.GAME_SETUP) { // Game in lobby state
                 MessagePayload payload = new MessagePayload(null);
                 payload.put(PayloadKeyServer.NETWORK_CONTENT, "Reconnection to lobby successful!");
                 ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.CONNECTION_RESPONSE, username);
@@ -158,7 +155,7 @@ public class Server implements Runnable {
      */
     private void newPlayerLogin(String username, Connection connection) throws Exception {
 
-        if (gamePhaseController.getCurrentGamePhase() == GamePhase.GAME_STARTED) { // Game Started
+        if (gamePhaseController.getCurrentPhase() == PhaseGame.GAME_STARTED) { // Game Started
             MessagePayload payload = new MessagePayload(null);
             payload.put(PayloadKeyServer.NETWORK_CONTENT, "Game already started! Cannot join!");
             ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.NETWORK_ERROR, username);
