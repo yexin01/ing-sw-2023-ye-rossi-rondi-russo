@@ -1,13 +1,10 @@
 package it.polimi.ingsw.model;
 
-
-
-import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.model.modelView.ModelView;
+import it.polimi.ingsw.network.server.ErrorType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -36,7 +33,7 @@ class PlayerTest {
         board.setSelectedBoard(selectedTiles);
         player.selection(board);
         int [] order = new int[]{1, 2, 5};
-        assertNotEquals(null, player.checkPermuteSelection(order));
+        assertEquals(ErrorType.INVALID_ORDER_TILE, player.checkPermuteSelection(order));
         //assertThrows(Error.class, ()->player.checkPermuteSelection(order));
     }
 
@@ -61,7 +58,7 @@ class PlayerTest {
         board.setSelectedBoard(selectedTiles);
         player.selection(board);
         int [] order = new int[]{1, 2, 1};
-        assertNotEquals(null, player.checkPermuteSelection(order));
+        assertEquals(ErrorType.INVALID_ORDER_TILE, player.checkPermuteSelection(order));
         //assertThrows(Error.class, ()->player.checkPermuteSelection(order));
     }
 

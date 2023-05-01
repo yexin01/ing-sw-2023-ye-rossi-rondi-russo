@@ -354,8 +354,8 @@ class BookshelfTest {
     }
 
     @Test
-    @DisplayName("insertAsSelected: Generic check for blank bookshelf")
-    void insertAsSelected() throws Error {
+    @DisplayName("insertTiles: Generic check for blank bookshelf")
+    void insertTiles() throws Error {
         Bookshelf bookshelf = new Bookshelf(6,5,3);
         //Blank bookshelf set, create and insert tiles as you want
         bookshelf.computeFreeShelves();
@@ -375,8 +375,8 @@ class BookshelfTest {
     }
 
     @Test
-    @DisplayName("insertAsSelected: Checking insert of 1 tile in a blank bookshelf")
-    void insertAsSelectedCC1() throws Error {
+    @DisplayName("insertTiles: Checking insert of 1 tile in a blank bookshelf")
+    void insertTilesCC1() throws Error {
         Bookshelf bookshelf = new Bookshelf(6,5,3);
         bookshelf.computeFreeShelves();
         bookshelf.setColumnSelected(0);
@@ -391,8 +391,8 @@ class BookshelfTest {
     }
 
     @Test
-    @DisplayName("insertAsSelected: Checking insert of 3 tiles in a bookshelf column with 3 free shelves")
-    void insertAsSelectedCC2() throws Error {
+    @DisplayName("insertTiles: Checking insert of 3 tiles in a bookshelf column with 3 free shelves")
+    void insertTilesCC2() throws Error {
         Bookshelf bookshelf = new Bookshelf(6,5,3);
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, 0);
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, 1);
@@ -412,8 +412,8 @@ class BookshelfTest {
     }
 
     @Test
-    @DisplayName("insertAsSelected: Checking insert of 1 tile in a bookshelf column with 1 free shelve")
-    void insertAsSelectedCC3() throws Error {
+    @DisplayName("insertTiles: Checking insert of 1 tile in a bookshelf column with 1 free shelve")
+    void insertTilesCC3() throws Error {
         Bookshelf bookshelf = new Bookshelf(6,5,3);
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, 0);
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, 1);
