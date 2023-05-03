@@ -1,19 +1,41 @@
 package it.polimi.ingsw.model;
 
-
-
-import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.model.modelView.ModelView;
+import it.polimi.ingsw.network.server.ErrorType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
+
+    @Test
+    @DisplayName("selection: generic 3 tiles check")
+    void selection() throws Exception {
+        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
+        GameRules gameRules = new GameRules();
+        ModelView modelView = new ModelView(playersId, gameRules);
+        Player player = new Player("player1", modelView);
+        Board board = new Board(modelView);
+        board.fillBag(gameRules);
+        board.firstFillBoard(2, new GameRules());
+        ArrayList<BoardBox> selectedTiles = new ArrayList<>();
+        int size = 3; int tileID = 0;
+        for (int i = 0; i<size; i++) {
+            BoardBox boardBox = new BoardBox(i, i);
+            boardBox.setTile(new ItemTile(Type.CAT, tileID));
+            selectedTiles.add(boardBox);
+            tileID++;
+        }
+        board.setSelectedBoard(selectedTiles);
+        player.selection(board);
+        int [] order = new int[]{1, 2, 5};
+        assertEquals(ErrorType.INVALID_ORDER_TILE, player.checkPermuteSelection(order));
+        //assertThrows(Error.class, ()->player.checkPermuteSelection(order));
+    }
 
     @Test
     @DisplayName("checkPermuteSelection: out of bounds order index")
@@ -36,7 +58,7 @@ class PlayerTest {
         board.setSelectedBoard(selectedTiles);
         player.selection(board);
         int [] order = new int[]{1, 2, 5};
-        assertNotEquals(null, player.checkPermuteSelection(order));
+        assertEquals(ErrorType.INVALID_ORDER_TILE, player.checkPermuteSelection(order));
         //assertThrows(Error.class, ()->player.checkPermuteSelection(order));
     }
 
@@ -61,7 +83,7 @@ class PlayerTest {
         board.setSelectedBoard(selectedTiles);
         player.selection(board);
         int [] order = new int[]{1, 2, 1};
-        assertNotEquals(null, player.checkPermuteSelection(order));
+        assertEquals(ErrorType.INVALID_ORDER_TILE, player.checkPermuteSelection(order));
         //assertThrows(Error.class, ()->player.checkPermuteSelection(order));
     }
 
