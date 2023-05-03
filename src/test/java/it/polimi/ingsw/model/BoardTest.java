@@ -315,6 +315,23 @@ class BoardTest {
     }
 
     @Test
+    @DisplayName("checkSelectable: generic check")
+    void checkSelectable() throws Exception {
+        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
+        GameRules gameRules = new GameRules();
+        ModelView modelView = new ModelView(playersId, gameRules);
+        Board board = new Board(modelView);
+        int numPlayers = 2;
+        board.fillBag(gameRules);
+        board.firstFillBoard(numPlayers, gameRules);
+        ArrayList<BoardBox> selectedBoard = new ArrayList<>();
+        selectedBoard.add(new BoardBox(7,3));
+        selectedBoard.add(new BoardBox(7,4));
+        board.setSelectedBoard(selectedBoard);
+        assertEquals(null, board.checkSelectable(new BoardBox(7,5), 3));
+    }
+
+    @Test
     @DisplayName("selected: 3 different tiles")
     void selected() throws Exception {
         HashMap<String, Integer> playersId = new HashMap<String, Integer>();
@@ -553,6 +570,23 @@ class BoardTest {
         board.refill();
         //Set the coordinate of the tile you want to check
         int x=0; int y=0;
+        assertEquals(null, board.getBoardBox(x,y).getTile());
+    }
+
+    @Test
+    @DisplayName("refill: check for box 6,2 (2P)")
+    void refillCC1() throws Exception {
+        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
+        GameRules gameRules = new GameRules();
+        ModelView modelView = new ModelView(playersId, gameRules);
+        Board board = new Board(modelView);
+        //Set the matrix of the number of players you want to test
+        int numPlayers = 2;
+        board.fillBag(gameRules);
+        board.firstFillBoard(numPlayers, gameRules);
+        board.refill();
+        //Set the coordinate of the tile you want to check
+        int x=6; int y=2;
         assertEquals(null, board.getBoardBox(x,y).getTile());
     }
 }
