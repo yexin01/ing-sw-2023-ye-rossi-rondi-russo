@@ -8,6 +8,7 @@ import it.polimi.ingsw.messages.EventType;
 import it.polimi.ingsw.model.PersonalGoalCard;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ public class ModelView {
 
     private ListenerManager listenerManager;
     private int indexRemoveToken;
-    private HashMap<java.lang.String, Integer> playersId;
+    private ArrayList<String> playersOrder;
 
     private BoardBoxView[][] boardView;
     private CommonGoalView[] commonGoalViews;
@@ -25,10 +26,10 @@ public class ModelView {
     private PersonalGoalCard[] playerPersonalGoal;
     private ItemTileView[] selectedItems;
 
-    public ModelView(HashMap<java.lang.String, Integer> playersId, GameRules gameRules){
-        int numPlayers=playersId.keySet().size();
-        this.playersId=playersId;
-        listenerManager=new ListenerManager();
+    public ModelView(int numPlayers,GameRules gameRules,ListenerManager listenerManager){
+        //this.playersId=playersId;
+        this.listenerManager=listenerManager;
+        playersOrder=new ArrayList<>();
         commonGoalViews=new CommonGoalView[gameRules.getNumOfCommonGoals()];
         bookshelfView=new ItemTileView[numPlayers][gameRules.getRowsBookshelf()][gameRules.getColumnsBookshelf()];
         playerPoints=new PlayerPointsView[numPlayers];
@@ -37,12 +38,8 @@ public class ModelView {
 
     }
 
-    public int getIntegerValue(java.lang.String key) {
-        if (playersId.containsKey(key)) {
-            return playersId.get(key);
-        } else {
-            return 0;
-        }
+    public int getIntegerValue(String nickname) {
+        return playersOrder.indexOf(nickname);
     }
     public <T> T[] deleteObjectByIndex(T[] array, int indexToDelete) {
         int length = array.length;
@@ -59,17 +56,20 @@ public class ModelView {
         return newArray;
     }
 
-    public int deleteAllObjectByIndex(java.lang.String nickname){
+    public int deleteAllObjectByIndex(String nickname){
         int index=getIntegerValue(nickname);
         playerPoints = deleteObjectByIndex(playerPoints, index);
         playerPersonalGoal=deleteObjectByIndex(playerPersonalGoal,index);
         bookshelfView=deleteObjectByIndex(bookshelfView,index);
-        playersId.remove(nickname);
+        playersOrder.remove(nickname);
+        /*
         for(Map.Entry<java.lang.String, Integer> entry : playersId.entrySet()) {
             if(entry.getValue() >= index) {
                 entry.setValue(entry.getValue() - 1);
             }
         }
+
+         */
         return index;
 
     }
@@ -80,7 +80,7 @@ public class ModelView {
 
     public void setCommonGoalViews(CommonGoalView commonGoalViews, int index, java.lang.String nickname) {
         this.commonGoalViews[index] = commonGoalViews;
-        listenerManager.fireEvent(EventType.WIN_TOKEN,nickname,this);
+        //listenerManager.fireEvent(EventType.WIN_TOKEN,nickname,this);
     }
 
 
@@ -125,7 +125,7 @@ public class ModelView {
 
     public void setSelectedItems(ItemTileView[] selectedItems, java.lang.String nickname) {
         this.selectedItems = selectedItems;
-        listenerManager.fireEvent(EventType.TILES_SELECTED,nickname,this);
+        listenerManager.fireEvent(EventType.BOARD_SELECTION,nickname,this);
     }
     public void addListener(EventType eventType, EventListener listener) {
         this.listenerManager.addListener(eventType,listener);
@@ -155,6 +155,19 @@ public class ModelView {
     public void setBoardView(BoardBoxView[][] boardView) {
         this.boardView = boardView;
     }
+    public ArrayList<String> getPlayersOrder() {
+        return playersOrder;
+    }
+
+    public void setPlayersOrder(ArrayList<String> playersOrder) {
+        this.playersOrder = playersOrder;
+    }
+/*
+    public void setPlayersId(HashMap<String, Integer> playersId) {
+        this.playersId = playersId;
+    }
+
+ */
 }
 
 

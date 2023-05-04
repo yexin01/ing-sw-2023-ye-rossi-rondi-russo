@@ -1,27 +1,31 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.messages.*;
-import it.polimi.ingsw.view.ClientView;
 
 
 import it.polimi.ingsw.model.modelView.ModelView;
 
 
 import java.util.HashMap;
-import java.util.Map;
+
 //TODO cambiare enumerazione dei messaggi dal server una volta terminata la parte di rete
-public class ServerView  {
+public class GameLobby {
     //TODO Client entity will change once the network part is finished
     private HashMap<String, Connection> playerMap;
     private ModelView modelView;
 
 
-    public void sendError(ErrorType error, java.lang.String playerNickname){
-        ServerMessageHeader header=new ServerMessageHeader(EventType.ERROR,playerNickname);
-        MessageFromServer message=new MessageFromServer(header,null);
+
+    public void sendMessage(MessagePayload payload,EventType messageType, String playerNickname){
+        ServerMessageHeader header=new ServerMessageHeader(messageType,playerNickname);
+        MessageFromServer message=new MessageFromServer(header,payload);
+        //System.out.println(playerNickname+" RECEIVE");
+        //System.out.println(playerNickname+" RECEIVE"+message.getMessagePayload().getEvent());
         //TODO gestire invio messaggio
+        // playerMap.get(playerNickname).receiveMessageFromServer(playerNickname,message);
     }
 
+    //TODO se il nickname é uguale a null significa che é il gioco é cominciato e quindi va inviato a tutti
     public void sendInfo(String playerNickname){
         ServerMessageHeader header=new ServerMessageHeader(EventType.ALL_INFO,playerNickname);
         MessagePayload payload=new MessagePayload();

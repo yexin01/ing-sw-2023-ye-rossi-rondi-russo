@@ -18,7 +18,7 @@ public enum ErrorType {
     TOO_MANY_PLAYERS("Max number of player reached!"),
     GAME_STARTED("Game already started! Cannot join!"),
     NOT_RECEIVED_TILES("Problem with receiving tiles"),
-    DISCONNECTION("")
+    DISCONNECTION("Disconnection from the server");
 
     private final String errorMessage;
 

@@ -4,15 +4,12 @@ package it.polimi.ingsw.listeners;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.*;
-import it.polimi.ingsw.network.server.ServerView;
+import it.polimi.ingsw.network.server.GameLobby;
 
-public class FinishSelectionListener implements EventListener {
-    private final ServerView serverView;
-
-    public FinishSelectionListener(ServerView serverView) {
-        this.serverView = serverView;
+public class FinishSelectionListener extends EventListener {
+    public FinishSelectionListener(GameLobby gameLobby) {
+        super(gameLobby);
     }
-
 
     @Override
     public void fireEvent(EventType event, String playerNickname, Object newValue) {

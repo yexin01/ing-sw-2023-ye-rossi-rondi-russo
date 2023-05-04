@@ -1,83 +1,55 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.listeners.*;
 import it.polimi.ingsw.messages.*;
-import it.polimi.ingsw.network.PhaseGame;
-import it.polimi.ingsw.network.server.Connection;
 import it.polimi.ingsw.network.server.ErrorType;
-import it.polimi.ingsw.view.ClientView;
-
-import it.polimi.ingsw.listeners.EndTurnListener;
-import it.polimi.ingsw.listeners.FinishSelectionListener;
 
 import it.polimi.ingsw.json.GameRules;
 
 
 import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.modelView.ModelView;
-import it.polimi.ingsw.network.server.ServerView;
+import it.polimi.ingsw.network.server.GameLobby;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 public class GameController {
 
-    private ServerView serverView;
-
-    //private HashMap<String, Client> playerMap;
-    //private ListenerManager listenerManager;
-
+    private ListenerManager listenerManager;
 
 
     private PhaseController<TurnPhase> turnPhaseController;
-    private PhaseController<PhaseGame> gamePhaseController;
-
-
     private Game game;
-    //private transient final PropertyChangeSupport listeners=new PropertyChangeSupport(this);
 
-    public GameController() throws Exception {
-        //this.listenerManager=new ListenerManager(serverView);
-       // this.game=game;
-        initializeControllers();
+
+    public GameController(GameLobby gameLobby, ArrayList<String> nicknames) throws Exception {
+        listenerManager=new ListenerManager();
+        turnPhaseController =new PhaseController<>(TurnPhase.SELECT_FROM_BOARD);
+        listenerManager.addListener(EventType.ERROR,new ErrorListener(gameLobby));
+        listenerManager.addListener(EventType.START_GAME,new StartAndEndGameListener(gameLobby));
+        GameRules gameRules=new GameRules();
+        ModelView modelView=new ModelView(nicknames.size(), gameRules,listenerManager);
+
+        game=new Game(gameRules, nicknames.size(),modelView);
+        game.addPlayers(nicknames);
+
+        game.getBoard().fillBag(gameRules);
+        game.getBoard().firstFillBoard(nicknames.size(), gameRules);
+
+        game.createCommonGoalCard(gameRules);
+        game.createPersonalGoalCard(gameRules);
+
+        modelView.addListener(EventType.BOARD_SELECTION,new FinishSelectionListener(gameLobby));
+        modelView.addListener(EventType.END_TURN,new EndTurnListener(gameLobby));
+        listenerManager.fireEvent(EventType.START_GAME,null,game.getModelView());
     }
-
 
     public Game getModel() {
         return game;
     }
-    public void initializeControllers() throws Exception {
-        GameRules gameRules=new GameRules();
-        int maxPlayers=gameRules.getMaxPlayers();
-        turnPhaseController =new PhaseController<>(TurnPhase.SELECT_FROM_BOARD);
-    }
-
-    public void startGame(HashMap<String, Connection> playerMap, HashMap<String, Integer> playersId, ServerView serverView ) throws Exception {
-        GameRules gameRules=new GameRules();
-        serverView.setPlayerMap(playerMap);
-        ModelView modelView=new ModelView(playersId, gameRules);
-        serverView.setModelView(modelView);
-        game=new Game(gameRules,modelView);
-        for(Map.Entry<String, Connection> entry : playerMap.entrySet()) {
-            String key = entry.getKey();
-            Connection value = entry.getValue();
-            game.addPlayer(key,modelView);
-        }
-        game.getBoard().fillBag(gameRules);
-        game.getBoard().firstFillBoard(playerMap.keySet().size(), gameRules);
-        game.createCommonGoalCard(gameRules,modelView);
-        game.createPersonalGoalCard(gameRules);
-        modelView.addListener(EventType.BOARD_SELECTION,new FinishSelectionListener(serverView));
-        modelView.addListener(EventType.END_TURN,new EndTurnListener(serverView));
-        //modelView.addListener(EventTypenew TokenListener(serverView));
-        for(Player p:game.getPlayers()){
-            //serverView.sendInfo(p.getNickname());
-        }
-    }
-
 
     public void setGame(Game game) {
         this.game = game;
@@ -88,7 +60,8 @@ public class GameController {
         String nicknamePlayer= message.getNicknameSender();
         try{
             if (!nicknamePlayer.equals(game.getTurnPlayer().getNickname())) {
-                serverView.sendError(ErrorType.ILLEGAL_TURN,nicknamePlayer);
+                listenerManager.fireEvent(EventType.ERROR,nicknamePlayer,ErrorType.ILLEGAL_TURN);
+                //serverView.sendError(ErrorType.ILLEGAL_TURN,nicknamePlayer);
                 //throw new Error(ErrorType.ILLEGAL_TURN);
             }
             switch (message.getEvent()) {
@@ -114,10 +87,9 @@ public class GameController {
                 return;
             }
         }
-        serverView.removeClient(nicknameSender);
-        for(Player p:game.getPlayers()){
-            serverView.sendInfo(p.getNickname());
-        }
+        //TODO cancellare dalle connessioni
+        //serverView.removeClient(nicknameSender);
+
         //TODO inviare mes
         //serverView.sendMessage(null, MessageFromServerType.START_TURN,getTurnNickname());
     }
@@ -143,7 +115,8 @@ public class GameController {
 
     public void checkError(ErrorType possibleInvalidArgoment) throws Exception {
         if(possibleInvalidArgoment!=null){
-            serverView.sendError(possibleInvalidArgoment,getTurnNickname());
+            listenerManager.fireEvent(EventType.ERROR,getTurnNickname(),possibleInvalidArgoment);
+            //serverView.sendError(possibleInvalidArgoment,getTurnNickname());
             throw new Exception();
         };
     }
@@ -174,7 +147,7 @@ public class GameController {
     }
 
     public void insertBookshelf() throws Exception {
-        illegalPhase(TurnPhase.INSERT_BOOKSHELF_AND_POINTS);
+        illegalPhase(TurnPhase.END_TURN);
         turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
         game.getTurnPlayer().insertBookshelf();
         if(game.getTurnPlayer().getBookshelf().isFull()){
@@ -210,7 +183,8 @@ public class GameController {
 
     public void illegalPhase(TurnPhase phase) throws Exception {
         if(!turnPhaseController.getCurrentPhase().equals(phase)){
-            serverView.sendError(ErrorType.ILLEGAL_PHASE,getTurnNickname());
+            listenerManager.fireEvent(EventType.ERROR,getTurnNickname(),ErrorType.ILLEGAL_PHASE);
+            //serverView.sendError(ErrorType.ILLEGAL_PHASE,getTurnNickname());
             throw new Exception();
             //throw new Error(ErrorType.ILLEGAL_PHASE);
         }
@@ -219,13 +193,23 @@ public class GameController {
     public String getTurnNickname() {
         return game.getTurnPlayer().getNickname();
     }
-
+/*
     public ServerView getServerView() {
         return serverView;
     }
 
     public void setServerView(ServerView serverView) {
         this.serverView = serverView;
+    }
+
+ */
+
+    public ListenerManager getListenerManager() {
+        return listenerManager;
+    }
+
+    public void setListenerManager(ListenerManager listenerManager) {
+        this.listenerManager = listenerManager;
     }
 
 

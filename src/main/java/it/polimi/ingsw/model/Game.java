@@ -2,6 +2,9 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.json.GameRules;
+import it.polimi.ingsw.listeners.EndTurnListener;
+import it.polimi.ingsw.listeners.FinishSelectionListener;
+import it.polimi.ingsw.messages.EventType;
 import it.polimi.ingsw.model.modelView.CommonGoalView;
 import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
@@ -19,13 +22,11 @@ public class Game {
     private boolean endGame;
 
 
-    public Game(GameRules gameRules,ModelView modelView){
-        players=new ArrayList<>();
+    public Game(GameRules gameRules,int numMaxPlayers,ModelView modelview){
+        //players=new ArrayList<>();
         commonGoalCards=new ArrayList<>();
-        board=new Board(modelView);
-        this.modelview=modelView;
-        numMaxPlayers= gameRules.getMaxPlayers();
-
+        this.modelview=modelview;
+        board=new Board(modelview);
     }
       //PLAYERS
 
@@ -88,7 +89,28 @@ public class Game {
         this.commonGoalCards = commonGoalCards;
     }
 
+    public void addPlayers(ArrayList<String> nicknames) throws Exception {
+        ArrayList<Integer> orderPlayers=generateRandomNumber(nicknames.size(), nicknames.size());
 
+        players = new ArrayList<Player>();
+        for(Integer player:orderPlayers){
+            String nickname=nicknames.get(player);
+            players.add(new Player(nickname,modelview));
+            modelview.getPlayersOrder().add(nickname);
+        }
+        //modelview.setPlayersOrder(players);
+
+
+    }
+
+    /*
+    public void addPlayer(String nickname, ModelView modelView,int index) throws Exception {
+        if (players.size() < numMaxPlayers) {
+            //Player p = new Player(nickname, modelView);
+            players.set(index, new Player(nickname, modelView));
+        }
+    }
+    /*
     public void addPlayer(String nickname, ModelView modelView) throws Exception {
         if (players.size() < numMaxPlayers) {
             Player p = new Player(nickname, modelView);
@@ -99,6 +121,8 @@ public class Game {
             players.add(p);
         }
     }
+
+     */
 
 
 
@@ -232,7 +256,7 @@ public class Game {
      * @param gameRules
      * @throws Exception
      */
-    public void createCommonGoalCard(GameRules gameRules, ModelView modelView) throws Exception {
+    public void createCommonGoalCard(GameRules gameRules) throws Exception {
 
         int numOfCommonGoals = gameRules.getNumOfCommonGoals();
         int numOfPossibleCommonGoalsCards = gameRules.getCommonGoalCardsSize();
@@ -243,7 +267,7 @@ public class Game {
             String className = gameRules.getCommonGoalCard(number);
             Class<?> clazz = Class.forName(className);
             Object obj = clazz.getDeclaredConstructor().newInstance();
-            ((CommonGoalCard) obj).setModelView(modelView);
+            ((CommonGoalCard) obj).setModelView(modelview);
 
             //CommonGoalView common=new CommonGoalView(((CommonGoalCard) obj).getLastPoint(),null, points);
             //serverView.setCommonGoalViews(common,num++);
@@ -427,6 +451,10 @@ public class Game {
     }
     public void setTurnPlayer(int num) {
         this.turnPlayer=num;
+    }
+
+    public ModelView getModelView() {
+        return modelview;
     }
 
 

@@ -1,39 +1,53 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.view.clientView.ClientView;
 import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.network.server.ServerView;
+import it.polimi.ingsw.model.modelView.ModelView;
+import it.polimi.ingsw.network.server.GameLobby;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class App{
         public static void main(String[] args) throws Exception {
 
 
-            ServerView serverView=new ServerView();
-            GameController gameController=new GameController();
+            GameLobby gameLobby =new GameLobby();
+            ArrayList<String> playerNames = new ArrayList<>(List.of("TIZIO", "CAIO", "SEMPRONIO","PIPPO"));
+            GameController gameController=new GameController(gameLobby, playerNames);
+            /*
             gameController.setServerView(serverView);
             HashMap<String, ClientView> playerMap = new HashMap<String, ClientView>();
             HashMap<String, Integer> playersId = new HashMap<String, Integer>();
-            String[] playerNames = {"TIZIO", "CAIO", "SEMPRONIO"};
-            for (int i = 0; i < playerNames.length; i++) {
-                String playerName = playerNames[i];
+
+             */
+
+
+
+
+/*
+
+            for (int i = 0; i < playerNames.size(); i++) {
+                String playerName = playerNames.get(i);
                 ClientView clientView = new ClientView(playerName, gameController, serverView, new Client(clientView, playerName));
                 playerMap.put(playerName, clientView);
                 playersId.put(playerName, i);
             }
 
+ */
 
 
-            gameController.startGame(playerMap,playersId,serverView);
+
+            //gameController.startGame(playerNames,0);
             gameController.getModel().setNextPlayer();
             //gameController.getModel().setNextPlayer();
             gameController.removePlayer("CAIO");
-
+/*
             while(true){
                 playerMap.get(gameController.getModel().getTurnPlayer().getNickname()).askClient();
 
             }
+
+ */
 
             //serverView.sendInfo("TIZIO");
 

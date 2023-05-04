@@ -4,12 +4,15 @@ package it.polimi.ingsw.listeners;
 
 import it.polimi.ingsw.messages.EventType;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class ListenerManager {
     private HashMap<EventType, List<EventListener>> listenersMap;
+
+
 
     public ListenerManager() {
         listenersMap = new HashMap<EventType, List<EventListener>>();
