@@ -1,14 +1,23 @@
 package it.polimi.ingsw.model.modelView;
 
+import it.polimi.ingsw.model.Type;
+
 import java.io.Serializable;
+
 
 public class BoardBoxView implements Serializable {
     private final boolean occupiable;
     private final ItemTileView itemTileView;
+    private final int x;
+    private final int y;
+    private final int freeEdges;
 
-    public BoardBoxView(boolean occupiable, ItemTileView itemTileView) {
+    public BoardBoxView(boolean occupiable, ItemTileView itemTileView, int x, int y, int freeEdges) {
         this.occupiable = occupiable;
         this.itemTileView = itemTileView;
+        this.x = x;
+        this.y = y;
+        this.freeEdges = freeEdges;
     }
 
     public boolean isOccupiable() {
@@ -17,6 +26,24 @@ public class BoardBoxView implements Serializable {
 
     public ItemTileView getItemTileView() {
         return itemTileView;
+    }
+    public Type getType() {
+        return itemTileView.getTypeView();
+    }
+    public int getId() {
+        return itemTileView.getTileID();
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getFreeEdges() {
+        return freeEdges;
     }
 }
 

@@ -5,6 +5,7 @@ import it.polimi.ingsw.messages.MessageFromClient;
 
 import it.polimi.ingsw.messages.MessageFromServer;
 import it.polimi.ingsw.network.client.handlers.HandlerUpdater;
+import it.polimi.ingsw.view.ClientInterface;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -40,7 +41,7 @@ public class ClientSocket extends Client implements Runnable{
      * @param token is the token of the client
      * @throws RemoteException if there are connection problems
 **/
-    public ClientSocket(String username, String ip, int port, String token,ClientInterface clientInterface) throws RemoteException {
+    public ClientSocket(String username, String ip, int port, String token, ClientInterface clientInterface) throws RemoteException {
         super(username,ip,port,token,clientInterface);
     }
 

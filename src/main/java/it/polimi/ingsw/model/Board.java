@@ -97,8 +97,8 @@ public class Board{
             for (int j = 0; j < matrix[i].length; j++) {
                 itemTile=matrix[i][j].getTile();
                 if(itemTile!=null){
-                    boardView[i][j]=new BoardBoxView(matrix[i][j].isOccupiable(), new ItemTileView(itemTile.getType(), itemTile.getTileID()));
-                }else boardView[i][j]=new BoardBoxView(matrix[i][j].isOccupiable(), new ItemTileView(null,-1));
+                    boardView[i][j]=new BoardBoxView(matrix[i][j].isOccupiable(), new ItemTileView(itemTile.getType(), itemTile.getTileID()), i, j, matrix[i][j].getFreeEdges());
+                }else boardView[i][j]=new BoardBoxView(matrix[i][j].isOccupiable(), new ItemTileView(null,-1), i, j, matrix[i][j].getFreeEdges());
             }
         }
         return boardView;
