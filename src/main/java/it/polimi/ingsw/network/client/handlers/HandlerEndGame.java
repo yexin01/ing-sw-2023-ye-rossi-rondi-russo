@@ -1,5 +1,5 @@
 package it.polimi.ingsw.network.client.handlers;
-
+/*
 import it.polimi.ingsw.messages.MessageFromServer;
 import it.polimi.ingsw.network.client.ClientInterface;
 import it.polimi.ingsw.network.client.ClientSocket;
@@ -14,3 +14,5 @@ public class HandlerEndGame extends MessageHandler{
         //TODO cambiare panel della clientInterface e stampare classifica
     }
 }
+
+ */

@@ -1,5 +1,5 @@
 package it.polimi.ingsw.network.client.handlers;
-
+/*
 import it.polimi.ingsw.messages.EventType;
 import it.polimi.ingsw.messages.MessageFromClient;
 import it.polimi.ingsw.network.client.ClientInterface;
@@ -20,3 +20,5 @@ public class HandlerToServer {
         connection.sendMessage(message);
     }
 }
+
+ */

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.messages.MessageFromClient;
-import it.polimi.ingsw.network.networkmessages.NetworkMessage;
+import it.polimi.ingsw.messages.MessageFromServer;
 
 import java.io.Serial;
 import java.rmi.RemoteException;
@@ -26,8 +26,8 @@ public abstract class Client extends UnicastRemoteObject {
     private String token;
 
     transient Timer pingTimer;
-    transient DisconnectionListener disconnectionListener;
-    final transient List<MessageFromClient> messageQueue;
+    transient ClientInterface clientInterface;
+    final transient List<MessageFromServer> messageQueue;
 
     //TODO lavora con ClientHandler per la gestione della coda di messaggi
 
@@ -39,15 +39,15 @@ public abstract class Client extends UnicastRemoteObject {
      * @param token is the token of the client
      * @throws RemoteException if there are connection problems
      */
-    public Client(String username,String ip, int port, String token, DisconnectionListener disconnectionListener) throws RemoteException {
+    public Client(String username,String ip, int port, String token, ClientInterface clientInterface) throws RemoteException {
         this.username = username;
         this.ip = ip;
         this.port = port;
         this.token = token;
         this.pingTimer = new Timer();
-        this.disconnectionListener = disconnectionListener;
+        this.clientInterface = clientInterface;
 
-        this.messageQueue = new ArrayList<>();
+        this.messageQueue = new ArrayList<MessageFromServer>();
     }
 
     /**
@@ -94,7 +94,7 @@ public abstract class Client extends UnicastRemoteObject {
      * This method returns the message queue of the client
      * @return the message queue of the client
      */
-    public List<MessageFromClient> getMessageQueue() {
+    public List<MessageFromServer> getMessageQueue() {
         return messageQueue;
     }
 
@@ -114,6 +114,7 @@ public abstract class Client extends UnicastRemoteObject {
      * This method sends a message to the server
      * @throws RemoteException if there are connection problems
      */
+    //TODO verra tolto, lo gestisce l handler
     public abstract void disconnectMe() throws RemoteException;
 
     /**
@@ -126,8 +127,8 @@ public abstract class Client extends UnicastRemoteObject {
     /**
      * @return the list of messages in the queue
      */
-    List<MessageFromClient> receiveMessages() {
-        ArrayList<MessageFromClient> copyList;
+    public ArrayList<MessageFromServer> receiveMessages() {
+        ArrayList<MessageFromServer> copyList;
 
         synchronized (messageQueue) {
             copyList = new ArrayList<>(List.copyOf(messageQueue));

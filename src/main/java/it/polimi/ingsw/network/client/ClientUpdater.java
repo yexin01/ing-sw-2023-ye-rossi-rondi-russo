@@ -8,6 +8,7 @@ import java.util.List;
  * This class run a process that wait messages from the server
  * and notify the Client whenever one arrives
  */
+/*
 public class ClientUpdater implements Runnable {
     private final Client client;
     private ClientUpdateListener updateListener;
@@ -56,4 +57,5 @@ public class ClientUpdater implements Runnable {
             this.thread.start();
         }
     }
-}
+}*/
+

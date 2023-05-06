@@ -7,14 +7,19 @@ import it.polimi.ingsw.model.modelView.CommonGoalView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.network.client.ClientInterface;
+import it.polimi.ingsw.network.client.ClientSocket;
+import it.polimi.ingsw.network.client.handlers.*;
 import it.polimi.ingsw.view.ClientView;
 
 
+import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 //TODO una volta terminati gli handler finire di implementare i metodi
 //TODO branch CLI correggo gli errori e cambio la stampa degli oggetti
+
 public class CLI implements ClientInterface {
     private String nickname;
     private Colors colors=new Colors();
@@ -191,10 +196,9 @@ public class CLI implements ClientInterface {
     }
 
     @Override
-    public void askNickname() {
-
+    public String askNickname() {
+        return null;
     }
-
 
 
     public void printFreeShelves(int[] freeShelves) {
@@ -229,4 +233,24 @@ public class CLI implements ClientInterface {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
+    public void start() throws IOException {
+        //TODO verra aggiunto l'inserimento della porta...e il nickname
+        System.out.print("PROVA: ");
+        Scanner input = new Scanner(System.in);
+        while (true) {
+            System.out.print("Inserisci un numero: ");
+            int num = input.nextInt();
+
+            if (num == 1) {
+                break;
+            }
+        }
+//TODO creare client socket con la porta ...
+        ClientSocket socket=new ClientSocket("username", "ip", 3, "token",this);
+        socket.setHandlerUpdater(new HandlerUpdater(socket,this));
+        socket.startConnection();
+
+    }
 }
+
+

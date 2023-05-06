@@ -1,5 +1,5 @@
 package it.polimi.ingsw.network.client.handlers;
-
+/*
 import it.polimi.ingsw.network.server.ErrorType;
 import it.polimi.ingsw.messages.MessageFromServer;
 import it.polimi.ingsw.model.PersonalGoalCard;
