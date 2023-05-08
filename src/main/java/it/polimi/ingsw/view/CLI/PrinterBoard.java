@@ -153,7 +153,7 @@ public class PrinterBoard {
         ArrayList<Integer> coordinatesSelected=clientView.getCoordinatesSelected();
         BoardBoxView[][] boardView=clientView.getBoardView();
         int numSelectedType=0;
-        if(valuesType< Type.values().length){
+        if(valuesType<Type.values().length){
             for (int k = 0;k < coordinatesSelected.size(); k += 2) {
                 Type type=boardView[coordinatesSelected.get(k)][coordinatesSelected.get(k + 1)].getType();
                 if(type.equals(Type.values()[valuesType])){
@@ -163,10 +163,16 @@ public class PrinterBoard {
             Colors.printTypeWithTypeColor(Type.values()[valuesType],size);
             System.out.printf(Colors.printTiles(Type.values()[valuesType++],sizeTile));
             Colors.colorize(Colors.RED_CODE," "+numSelectedType);
-            //System.out.print(String.format("%-"+sizeNumSelection+"s",Colors.colorizeString(Colors.RED_CODE," "+numSelectedType+" ")));
-            ;
             printFreeSpaces(freeSpaces);
-        }else printFreeSpaces(size+freeSpaces+2+sizeTile);
+            return valuesType;
+        }else if(valuesType==Type.values().length){
+            Colors.printTypeWithTypeColor("SELECTED",size);
+            System.out.printf(Colors.printTiles("SELECTED",sizeTile));
+            Colors.colorize(Colors.RED_CODE,"  ");
+            valuesType++;
+            printFreeSpaces(freeSpaces);
+        }
+        else printFreeSpaces(size+freeSpaces+2+sizeTile);
         return valuesType;
     }
     public void upperBoard(String color, int column, BoardBoxView[][] board,int lineLength ) {

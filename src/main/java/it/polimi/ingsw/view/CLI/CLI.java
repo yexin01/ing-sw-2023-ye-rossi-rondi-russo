@@ -19,7 +19,7 @@ import java.util.Scanner;
 
 public class CLI extends ClientInterface {
     private String nickname;
-    private Colors colors=new Colors();
+
     private Scanner scanner;
     private PrinterBoard printerBoard;
 
