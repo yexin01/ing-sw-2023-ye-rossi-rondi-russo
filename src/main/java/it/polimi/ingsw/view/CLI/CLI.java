@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.CLI;
 
 import it.polimi.ingsw.model.PersonalGoalBox;
 import it.polimi.ingsw.model.PersonalGoalCard;
+import it.polimi.ingsw.model.Type;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.CommonGoalView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
@@ -13,7 +14,6 @@ import it.polimi.ingsw.view.ClientView;
 
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -21,41 +21,58 @@ public class CLI extends ClientInterface {
     private String nickname;
     private Colors colors=new Colors();
     private Scanner scanner;
+    private PrinterBoard printerBoard;
 
 
     public CLI(){
         this.scanner= new Scanner(System.in);
         setClientView(new ClientView());
+        printerBoard=new PrinterBoard();
     }
-
-
 
     @Override
     public int[] askCoordinates() {
         getClientView().setCoordinatesSelected(new ArrayList<>());
-        printMatrixBoard();
+        printerBoard.printMatrixBoard(getClientView());
         //TODO aggiungere attributo che indica il numero di tile massimo
+        Scanner scanner=new Scanner(System.in);
         for (int i = 0; i < 3; i++) {
-            System.out.println("If you want to reset your selection write -2 before inserting row");
-            System.out.println("If you want to select less than 3 tiles insert -1 after you last tile\nInsert row:");
-            int row=scanner.nextInt();
-            if(row==-1){
-                break;
+            int row;
+            int column;
+            Colors.colorize(Colors.GAME_INSTRUCTION, "Insert row and column, of the tile you want to select ('x,y'): ");
+            //System.out.print("Insert row and column, of the tile you want to select ('x,y'): ");
+            String input = scanner.nextLine();
+
+            String[] numeri = input.split(",");
+            if (numeri.length == 2) {
+                try {
+                    row = Integer.parseInt(numeri[0].trim());
+                    column = Integer.parseInt(numeri[1].trim());
+
+                    System.out.println();
+                    getClientView().getCoordinatesSelected().add(row);
+                    getClientView().getCoordinatesSelected().add(column);
+
+                } catch (NumberFormatException e) {
+                    System.err.println("Invalid input. Make sure you enter two whole numbers separated by a comma.");
+                    askCoordinates();
+                }
+            } else {
+                System.err.println("Invalid input. Make sure you enter two whole numbers separated by a comma.");
             }
-            if(row==-2){
+
+            Colors.colorize(Colors.GAME_INSTRUCTION, "Write:\n•1 -> RESET your selection \n•2 -> CONFIRM the choice\n");
+            row = scanner.nextInt();
+            scanner.nextLine();
+            if (row == 1) {
                 getClientView().setCoordinatesSelected(new ArrayList<>());
-                printMatrixBoard();
-                i=-1;
+                printerBoard.printMatrixBoard(getClientView());
+                i = -1;
                 continue;
             }
-            getClientView().getCoordinatesSelected().add(row);
-            System.out.println("Insert column:");
-            getClientView().getCoordinatesSelected().add(scanner.nextInt());
-            printMatrixBoard();
-        }
-        System.out.println("You selected your tiles, if you want to confirm the choice write -1,otherwise -2");
-        if(scanner.nextInt()==-2){
-            askCoordinates();
+            if (row == 2) {
+                printerBoard.printMatrixBoard(getClientView());
+            }
         }
         return getClientView().getCoordinatesSelected().stream().mapToInt(Integer::intValue).toArray();
     }
@@ -63,7 +80,7 @@ public class CLI extends ClientInterface {
     @Override
     public int[] askOrder() {
         System.out.println("Insert numbers from 0 to max selected tiles-1.\nFor example, if you have selected 2 tiles and want to insert the second selected first, just insert: 1,then 0.");
-        printItemTilesSelected();
+        //printItemTilesSelected();
         ItemTileView[] tileSelected= getClientView().getTilesSelected();
         int[] orderTiles = new int[tileSelected.length];
         for (int i = 0; i < tileSelected.length; i++) {
@@ -77,13 +94,52 @@ public class CLI extends ClientInterface {
     public int[] askColumn() {
         System.out.println("These are the free shelves, to select a column write a number from 0 to 4");
         computeFreeShelves();
-        printMatrixBookshelf();
+        //printMatrixBookshelf();
         int[] column =new int[]{scanner.nextInt()};
         return column;
     }
 
+
+    /*
     public void printMatrixBoard(){
         System.out.println("BOARD");
+        BoardBoxView[][] matrix = getClientView().getBoardView();
+        ArrayList<Integer> coordinates=getClientView().getCoordinatesSelected();
+        Colors.upperBoard(Colors.OCHRE_YELLOW_CODE);
+        Colors.mediumBoard(Colors.OCHRE_YELLOW_CODE);
+
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j].getItemTileView().getTypeView()!=null) {
+                    //System.out.printf("%-6s","("+i+","+j+")");
+                    boolean selected=false;
+                    for (int k = 0;coordinates.size()>0&& k < coordinates.size(); k += 2) {
+                        if (coordinates.get(k).equals(i) && coordinates.get(k + 1).equals(j)) {
+                           // colors.colorize(Colors.RED_CODE,"SELECTED");
+                            colors.colorize(Colors.RED_CODE,"SELE");
+                            selected=true;
+                            break;
+                        }
+                    }
+                    if(!selected){
+                        Colors.printTiles(matrix[i][j].getItemTileView().getTypeView());
+                        //colors.printTypeWithTypeColor(matrix[i][j].getItemTileView().getTypeView());
+                    }
+                } else {
+                    if(matrix[i][j].isOccupiable()){
+                        //System.out.printf("%-6s","("+i+","+j+")");
+                        colors.colorize(Colors.RED_CODE,"SELE");
+                    }else colors.colorize(Colors.RED_CODE,"SELE");
+                }
+            }
+            Colors.lowerBoard(Colors.OCHRE_YELLOW_CODE);
+            System.out.println("");
+        }
+
+     */
+
+
+        /*
         BoardBoxView[][] matrix = getClientView().getBoardView();
         ArrayList<Integer> coordinates=getClientView().getCoordinatesSelected();
         for (int i = 0; i < matrix.length; i++) {
@@ -110,12 +166,15 @@ public class CLI extends ClientInterface {
             }
             System.out.println("");
         }
-    }
+
+         */
+
 
 
 
 
     public void printMatrixBookshelf(){
+        /*
         ItemTileView[][] bookshelfView= getClientView().getBookshelfView();
         System.out.println("BOOKSHELF "+nickname);
         computeFreeShelves();
@@ -129,17 +188,31 @@ public class CLI extends ClientInterface {
             }
             System.out.println("");
         }
+
+         */
     }
     public void printItemTilesSelected(){
+        /*
+        System.out.printf("These are the tiles you have selected: ");
         int j=0;
-        for(ItemTileView t: getClientView().getTilesSelected()){
+        ItemTileView[] tilesSelected=new ItemTileView[3];
+        tilesSelected[0]=new ItemTileView(Type.CAT,0);
+        tilesSelected[1]=new ItemTileView(Type.CAT,0);
+        tilesSelected[2]=new ItemTileView(Type.CAT,0);
+        for(ItemTileView t: tilesSelected){
+        //for(ItemTileView t: getClientView().getTilesSelected()){
+        //for(int i=0;i<3;i++){
             System.out.printf("%-2s",(j++));
-            colors.printTypeWithTypeColor(t.getTypeView());
-            System.out.printf("%-2s",(j++));
+            //colors.printTypeWithTypeColor(t.getTypeView());
+            Colors.printTiles(t.getTypeView());
+            System.out.printf("%-2s","");
         }
         System.out.println("");
+
+         */
     }
     public void printPersonalGoal() {
+        /*
         ItemTileView[][] bookshelfView=getClientView().getBookshelfView();
         PersonalGoalCard personalGoalCard=getClientView().getPlayerPersonalGoal();
         System.out.println("PERSONAL GOAL "+nickname);
@@ -160,6 +233,8 @@ public class CLI extends ClientInterface {
             }
             System.out.println("");
         }
+
+         */
     }
 
     public void printCommonGoalPoints(){
