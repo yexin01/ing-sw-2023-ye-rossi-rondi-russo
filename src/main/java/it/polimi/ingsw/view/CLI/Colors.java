@@ -21,7 +21,9 @@ public class Colors {
     public final static String ORANGE_CODE = "\u001B[38;2;255;165;0m";
     public final static String BLUE_CODE = "\u001B[38;2;133;163;220m";
     public final static String PINK_CODE = "\u001B[38;2;255;192;203m";
+    public final static String BEIGE_CODE = "\u001B[38;2;210;180;140m";
     public final static String RESET_CODE = "\u001B[0m";
+    public final static String ERROR_MESSAGE = "\u001B[38;2;255;20;147m";
 
     private static final Map<Object, String> TYPE_COLORS = new HashMap<>();
 
@@ -70,6 +72,24 @@ public class Colors {
         String square = TYPE_COLORS.get(type) + "█";
         String coloredSquares = square.repeat(size);
         return coloredSquares;
+    }
+    public static void printFreeSpaces(int count) {
+        for (int i = 0; i < count; i++) {
+            System.out.print(" ");
+        }
+
+
+    }
+    public static String getColor(Object type) {
+        if (TYPE_COLORS.containsKey(type)) {
+            return TYPE_COLORS.get(type);
+
+        }
+        return null;
+    }
+    public static void printCharacter(String character, int size, String colorCode) {
+        String coloredCharacter = colorCode + character.repeat(size) + "\u001B[0m";
+        System.out.print(coloredCharacter);
     }
 
 }

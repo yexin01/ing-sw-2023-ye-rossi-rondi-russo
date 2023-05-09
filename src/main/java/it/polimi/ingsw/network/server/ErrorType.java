@@ -18,7 +18,11 @@ public enum ErrorType {
     TOO_MANY_PLAYERS("Max number of player reached!"),
     GAME_STARTED("Game already started! Cannot join!"),
     NOT_RECEIVED_TILES("Problem with receiving tiles"),
-    DISCONNECTION("Disconnection from the server");
+    DISCONNECTION("Disconnection from the server"),
+
+    NOT_SAME_ROW_OR_COLUMN("Tiles are not on the same row or column, tiles must be all adjacent"),
+
+    NOT_ENOUGH_FREE_EDGES("The selected tile has no free edges");
 
     private final String errorMessage;
 
@@ -34,6 +38,5 @@ public enum ErrorType {
    /* public String getSecondErrorMessage(ErrorType e) {
         return e.errorMessage;
     }
-
     */
 }

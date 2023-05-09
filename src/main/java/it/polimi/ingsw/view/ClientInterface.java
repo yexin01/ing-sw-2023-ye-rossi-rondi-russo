@@ -59,6 +59,14 @@ public abstract class ClientInterface extends JPanel {
 
         return false;
     }
+    public ErrorType checkCoordinates(int x, int y) {
+        BoardBoxView[][] board= clientView.getBoardView();
+        if (x < 0 || y<0 || x> board.length-1 || y> board[0].length-1 || !board[x][y].isOccupiable() ) {
+            return ErrorType.INVALID_COORDINATES;
+            //throw new Error(ErrorType.INVALID_COORDINATES);
+        }
+        return null;
+    }
 
     /**
      * adjacent, in the same row or column and adjacent
@@ -70,13 +78,14 @@ public abstract class ClientInterface extends JPanel {
         //TODO AGGIUNGERE 3 COME PARAMETRO
         //TODO ricontrollare ill metodo
         ArrayList<Integer> coordinatesSelected =clientView.getCoordinatesSelected();
+
         int selectedCount=coordinatesSelected.size()/2;
         if (selectedCount >= (3)) {
             return ErrorType.TOO_MANY_TILES;
         }
         BoardBoxView boardBox = clientView.getBoardView()[x][y];
         if ((boardBox.getFreeEdges() <= 0)) {
-            return ErrorType.NOT_SELECTABLE_TILE;
+            return ErrorType.NOT_ENOUGH_FREE_EDGES;
         }
         coordinatesSelected.add(x);
         coordinatesSelected.add(y);
@@ -87,7 +96,7 @@ public abstract class ClientInterface extends JPanel {
         if (!allAdjacent(coordinatesSelected,selectedCount) || !allSameRowOrSameColumn(coordinatesSelected,selectedCount)) {
             coordinatesSelected.remove(coordinatesSelected.size() - 1);
             coordinatesSelected.remove(coordinatesSelected.size() - 1);
-            return ErrorType.NOT_SELECTABLE_TILE;
+            return ErrorType.NOT_SAME_ROW_OR_COLUMN;
         }
         return null;
     }
