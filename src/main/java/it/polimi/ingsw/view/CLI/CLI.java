@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.CLI;
 
+import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.model.modelView.CommonGoalView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
@@ -18,30 +19,71 @@ public class CLI extends ClientInterface {
 
     private Scanner scanner;
     private PrinterBoard printerBoard;
+    private PrinterBookshelfAndPersonal printerBookshelfAndPersonal;
+
 
 
     public CLI(){
         this.scanner= new Scanner(System.in);
         setClientView(new ClientView());
         printerBoard=new PrinterBoard();
+        printerBookshelfAndPersonal=new PrinterBookshelfAndPersonal();
     }
     private static final int MAX_TESSERE_SELEZIONABILI = 3;
+    public void printCommands(int phase) throws Exception {
+        String[] commandsPhase=new String[]{"select_from_board","order_tiles","column","print" };
+        String option="Select a command: ";
+        System.out.println();
+        int i=0;
+        for (Commands command : Commands.values()) {
+            String commandString = command.toString();
+            while(!commandString.toLowerCase().startsWith(commandsPhase[i%commandsPhase.length])){
+                String noCommands=" ";
+                Colors.colorizeSize(Colors.GAME_INSTRUCTION,noCommands, 30+5);
+                Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
+                i++;
+            }
+            if (commandString.toLowerCase().startsWith(commandsPhase[phase]) || commandString.toLowerCase().startsWith(commandsPhase[commandsPhase.length-1])) {
+                Colors.colorizeSize(Colors.GAME_INSTRUCTION, "•["+command.ordinal()+"]",5);
+                Colors.colorizeSize(Colors.GAME_INSTRUCTION,command.getCommand(), 30);
+            }else{
+                Colors.colorizeSize(Colors.BLACK_CODE, "•["+command.ordinal()+"]",5);
+                Colors.colorizeSize(Colors.BLACK_CODE,command.getCommand(), 30);
+            }
+
+            i++;
+            Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
+            if(commandString.toLowerCase().startsWith(commandsPhase[commandsPhase.length-1])){
+                System.out.println();
+            }
+        }
+
+    }
     @Override
-    public int[] askCoordinates() {
+    public int[] askCoordinates() throws Exception {
+        printCommands(2);
         getClientView().setCoordinatesSelected(new ArrayList<>());
         printerBoard.printMatrixBoard(getClientView());
         //TODO aggiungere attributo che indica il numero di tile massimo
         Scanner scanner=new Scanner(System.in);
+        printerBookshelfAndPersonal.printMatrixBookshelf(getClientView().getBookshelfView(), 5,2,20,false);
+
         boolean continua = true;
         int command;
         while (continua) {
             //printerBoard.printMatrixBoard(getClientView());
-            Colors.colorize(Colors.GAME_INSTRUCTION, "Select an option:");
-            Colors.colorize(Colors.GAME_INSTRUCTION, " [1] SELECT a tile ");
-            Colors.colorize(Colors.GAME_INSTRUCTION, "[2] RESET the LAST choice ");
-            Colors.colorize(Colors.GAME_INSTRUCTION, "[3] RESET ALL choices ");
-            Colors.colorize(Colors.GAME_INSTRUCTION, "[4] CONFIRM all choices ");
-            Colors.colorize(Colors.GAME_INSTRUCTION, "[5] PRINT board: ");
+            String option="Select a command: ";
+            Colors.colorize(Colors.GAME_INSTRUCTION,option );
+            Colors.colorize(Colors.GAME_INSTRUCTION, "•[1] SELECT a tile         │•[5]PRINT board\n");
+            Colors.printFreeSpaces(option.length());
+            Colors.colorize(Colors.GAME_INSTRUCTION, "•[2] RESET the LAST choice │•[6]PRINT bookshelf\n");
+            Colors.printFreeSpaces(option.length());
+            Colors.colorize(Colors.GAME_INSTRUCTION, "•[3] RESET ALL choices     │•[7]PRINT Common Goal Cards\n");
+            Colors.printFreeSpaces(option.length());
+            Colors.colorize(Colors.GAME_INSTRUCTION, "•[4] CONFIRM all choices   │•[8]PRINT Personal Goal\n");
+            //Colors.printFreeSpaces(option.length());
+            //Colors.colorize(Colors.GAME_INSTRUCTION, "•[5] PRINT board\n");
+            Colors.colorize(Colors.GAME_INSTRUCTION, "Insert command: ");
             try {
                 command = scanner.nextInt();
                 scanner.nextLine();
@@ -96,7 +138,7 @@ public class CLI extends ClientInterface {
                 System.out.println();
             }
         }
-
+        askOrder();
         return getClientView().getCoordinatesSelected().stream().mapToInt(Integer::intValue).toArray();
     }
     private void selectTile(Scanner scanner) {
@@ -164,26 +206,65 @@ public class CLI extends ClientInterface {
     }
 
      */
-
+    private int sizetile=3;
+    private int sizeLenghtFromBordChoiceItem = 20;
+    private int distanceBetweenTilesChoice = 4;
     @Override
-    public int[] askOrder() {
-        System.out.println("Insert numbers from 0 to max selected tiles-1.\nFor example, if you have selected 2 tiles and want to insert the second selected first, just insert: 1,then 0.");
-        //printItemTilesSelected();
-        ItemTileView[] tileSelected= getClientView().getTilesSelected();
-        int[] orderTiles = new int[tileSelected.length];
-        for (int i = 0; i < tileSelected.length; i++) {
-            System.out.println("Insert number:");
-            orderTiles[i] = scanner.nextInt();
+    public int[] askOrder() throws Exception {
+        createItemTileView();
+        //insertTiles(2);
+        Colors.colorize(Colors.GAME_INSTRUCTION,"ORDER TILES " );
+        printerBookshelfAndPersonal.printMatrixBookshelf(getClientView().getBookshelfView(), 3,2,40,true);
+        Colors.colorize(Colors.GAME_INSTRUCTION, "Insert numbers from 0 to "+(getClientView().getCoordinatesSelected().size()/2-1)+"\n");
+        System.out.println();
+        Colors.colorize(Colors.GAME_INSTRUCTION,"THIS IS YOUR BOOKSHELF now " );
+        System.out.println();
+        //Colors.colorize(Colors.GAME_INSTRUCTION, "For example, if you have selected 2 tiles and want to insert the second selected first,\n just insert: 1,then 0.\n");
+        Colors.colorize(Colors.GAME_INSTRUCTION,"These are the tiles selected by YOU: " );
+        ErrorType error=ErrorType.INVALID_ORDER_TILE_NUMBER;
+        int[] orderTiles = new int[getClientView().getCoordinatesSelected().size()/2];
+        while(error!=null){
+            int j=0;
+            for (ItemTileView t:getClientView().getTilesSelected()) {
+                Colors.colorize(Colors.RED_CODE,Integer.toString(j++)+" ");
+                System.out.print(Colors.printTiles(t.getTypeView(),sizetile));
+                Colors.colorize(Colors.GAME_INSTRUCTION,"; ");
+            }
+            System.out.println();
+            for (int i = 0; i < getClientView().getCoordinatesSelected().size()/2; i++) {
+                Colors.colorize(Colors.GAME_INSTRUCTION,"Insert number: " );
+                orderTiles[i] = scanner.nextInt();
+            }
+            error=checkPermuteSelection(orderTiles);
+            if(error!=null){
+                Colors.colorize(Colors.ERROR_MESSAGE,error.getErrorMessage());
+                System.out.println();
+            }
         }
+        getClientView().setOrderTiles(orderTiles);
+        permuteSelection();
+        askColumn();
         return orderTiles;
     }
 
     @Override
     public int[] askColumn() {
-        System.out.println("These are the free shelves, to select a column write a number from 0 to 4");
-        computeFreeShelves();
-        //printMatrixBookshelf();
-        int[] column =new int[]{scanner.nextInt()};
+        ErrorType error=ErrorType.INVALID_COLUMN;
+        int[] column = new int[1];
+        while(error!=null){
+            System.out.println("These are the free shelves, to select a column write a number from 0 to "+(getClientView().getBookshelfView()[0].length-1));
+            column[0] =scanner.nextInt();
+            error=checkBookshelf(column[0]);
+            if(error!=null){
+                Colors.colorize(Colors.ERROR_MESSAGE,error.getErrorMessage());
+            }
+        }
+        insertTiles(column[0]);
+        try {
+            printerBookshelfAndPersonal.printMatrixBookshelf(getClientView().getBookshelfView(), sizetile,2,20,true);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return column;
     }
 
@@ -345,6 +426,9 @@ public class CLI extends ClientInterface {
     @Override
     public String getNickname() {
         return null;
+    }
+    public PrinterBookshelfAndPersonal getPrinterBookshelfAndPersonal() {
+        return printerBookshelfAndPersonal;
     }
 
 

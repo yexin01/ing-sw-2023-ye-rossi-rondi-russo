@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public class ClientView {
     private BoardBoxView[][] boardView;
+    private int[] orderTiles;
     private ArrayList<Integer> coordinatesSelected;
     private CommonGoalView[] commonGoalViews;
     private int[] commonGoalPoints;
@@ -105,5 +106,13 @@ public class ClientView {
 
     public void setCoordinatesSelected(ArrayList<Integer> coordinatesSelected) {
         this.coordinatesSelected = coordinatesSelected;
+    }
+
+    public int[] getOrderTiles() {
+        return orderTiles;
+    }
+
+    public void setOrderTiles(int[] orderTiles) {
+        this.orderTiles = orderTiles;
     }
 }
