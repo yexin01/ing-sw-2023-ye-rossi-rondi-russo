@@ -9,34 +9,31 @@ import java.util.ArrayList;
 public class PrinterBoard {
 
     private boolean waitingForFirst;
-
+    private int freeSpacesFromTableTypesSelected=20;
+    private int sizeCoordinates=3;
+    private int sizeTile =3;
+    private int sizeWordType=8;
+    private int spaceBetweenTiles=2;
     public void printMatrixBoard(ClientView clientView) {
         System.out.println("BOARD");
-        int sizeWordType=8;
 
-        int freeSpacesFromTableTypesSelected=20;
-        int sizeCoordinates=3;
-        int sizetile=3;
-        int spaceBetweenTiles=3;
-
-
-        int lineLength=sizetile+2*spaceBetweenTiles;
+        int lineLength= sizeTile +2*spaceBetweenTiles;
 
         BoardBoxView[][] boardView = clientView.getBoardView();
         ArrayList<Integer> coordinates = clientView.getCoordinatesSelected();
         //Colors.upperOneBoard(Colors.WHITE_CODE);
-        Colors.printFreeSpaces(2+sizetile+sizeWordType+freeSpacesFromTableTypesSelected+sizeCoordinates);
+        Colors.printFreeSpaces(2+ sizeTile +sizeWordType+freeSpacesFromTableTypesSelected+sizeCoordinates);
         for (int i=0;i<boardView[0].length;i++){
-            Colors.printFreeSpaces(spaceBetweenTiles+sizetile/2);
+            Colors.printFreeSpaces(spaceBetweenTiles+ sizeTile /2);
             System.out.print(i);
-            if(sizetile%2==0){
-                Colors.printFreeSpaces(spaceBetweenTiles+sizetile/2);
-            }else Colors.printFreeSpaces(spaceBetweenTiles+sizetile/2+1);
+            if(sizeTile %2==0){
+                Colors.printFreeSpaces(spaceBetweenTiles+ sizeTile /2);
+            }else Colors.printFreeSpaces(spaceBetweenTiles+ sizeTile /2+1);
 
 
         }
         System.out.println();
-        Colors.printFreeSpaces(2+sizetile+sizeWordType+freeSpacesFromTableTypesSelected+sizeCoordinates);
+        Colors.printFreeSpaces(2+ sizeTile +sizeWordType+freeSpacesFromTableTypesSelected+sizeCoordinates);
         finishLine=false;
         waitingForFirst=true;
         for(int i=0;i<boardView[0].length;i++){
@@ -51,7 +48,7 @@ public class PrinterBoard {
         int valuesType=0;
         for (int i = 0; i < boardView.length; i++) {
             finishLine=false;
-            valuesType=printValues(valuesType,sizeWordType,freeSpacesFromTableTypesSelected,sizetile,clientView);
+            valuesType=printValues(valuesType,clientView);
             /*
             if(valuesType<Type.values().length){
                 Colors.printTypeWithTypeColor(Type.values()[valuesType]);
@@ -71,7 +68,7 @@ public class PrinterBoard {
                             // colors.colorize(Colors.RED_CODE,"SELECTED");
                             Colors.colorize(Colors.WHITE_CODE,"║");
                             Colors.printFreeSpaces(spaceBetweenTiles);
-                            Colors.colorize(Colors.RED_CODE, "█".repeat(sizetile));
+                            Colors.colorize(Colors.RED_CODE, "█".repeat(sizeTile));
                             Colors.printFreeSpaces(spaceBetweenTiles);
                             selected = true;
                             break;
@@ -80,7 +77,7 @@ public class PrinterBoard {
                     if (!selected) {
                         Colors.colorize(Colors.WHITE_CODE,"║");
                         Colors.printFreeSpaces(spaceBetweenTiles);
-                        System.out.print(Colors.printTiles(boardView[i][j].getItemTileView().getTypeView(),sizetile));
+                        System.out.print(Colors.printTiles(boardView[i][j].getItemTileView().getTypeView(), sizeTile));
                         Colors.printFreeSpaces(spaceBetweenTiles);
 
                         //colors.printTypeWithTypeColor(matrix[i][j].getItemTileView().getTypeView());
@@ -107,7 +104,7 @@ public class PrinterBoard {
             }
             //Colors.colorize(Colors.WHITE_CODE,"║ ");
             System.out.println("");
-            valuesType=printValues(valuesType,sizeWordType,freeSpacesFromTableTypesSelected,sizetile,clientView);
+            valuesType=printValues(valuesType,clientView);
 
 /*                if(valuesType<Type.values().length){
                     Colors.printTypeWithTypeColor(Type.values()[valuesType]);
@@ -149,7 +146,7 @@ public class PrinterBoard {
 */
         //askCoordinates();
     }
-    public int printValues(int valuesType,int size,int freeSpaces,int sizeTile,ClientView clientView){
+    public int printValues(int valuesType,ClientView clientView){
         ArrayList<Integer> coordinatesSelected=clientView.getCoordinatesSelected();
         BoardBoxView[][] boardView=clientView.getBoardView();
         int numSelectedType=0;
@@ -160,19 +157,19 @@ public class PrinterBoard {
                     numSelectedType++;
                 }
             }
-            Colors.printTypeWithTypeColor(Type.values()[valuesType],size);
+            Colors.printTypeWithTypeColor(Type.values()[valuesType],sizeWordType);
             System.out.printf(Colors.printTiles(Type.values()[valuesType++],sizeTile));
             Colors.colorize(Colors.RED_CODE," "+numSelectedType);
-            Colors.printFreeSpaces(freeSpaces);
+            Colors.printFreeSpaces(freeSpacesFromTableTypesSelected);
             return valuesType;
         }else if(valuesType==Type.values().length){
-            Colors.printTypeWithTypeColor("SELECTED",size);
+            Colors.printTypeWithTypeColor("SELECTED",sizeWordType);
             System.out.printf(Colors.printTiles("SELECTED",sizeTile));
             Colors.colorize(Colors.RED_CODE,"  ");
             valuesType++;
-            Colors.printFreeSpaces(freeSpaces);
+            Colors.printFreeSpaces(freeSpacesFromTableTypesSelected);
         }
-        else Colors.printFreeSpaces(size+freeSpaces+2+sizeTile);
+        else Colors.printFreeSpaces(sizeWordType+freeSpacesFromTableTypesSelected+2+sizeTile);
         return valuesType;
     }
     public void upperBoard(String color, int column, BoardBoxView[][] board,int lineLength ) {

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.CLI;
 
-import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.model.modelView.CommonGoalView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
@@ -11,7 +10,6 @@ import it.polimi.ingsw.view.ClientView;
 
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class CLI extends ClientInterface {
@@ -29,10 +27,12 @@ public class CLI extends ClientInterface {
         printerBoard=new PrinterBoard();
         printerBookshelfAndPersonal=new PrinterBookshelfAndPersonal();
     }
-    private static final int MAX_TESSERE_SELEZIONABILI = 3;
-    public void printCommands(int phase) throws Exception {
+    private static final int MAX_SELECTABLE_TILES = 3;
+    public void allCommands(int phase) throws Exception {
+        System.out.println();
         String[] commandsPhase=new String[]{"select_from_board","order_tiles","column","print" };
         String option="Select a command: ";
+        Colors.colorize(Colors.GAME_INSTRUCTION,option );
         System.out.println();
         int i=0;
         for (Commands command : Commands.values()) {
@@ -44,82 +44,75 @@ public class CLI extends ClientInterface {
                 i++;
             }
             if (commandString.toLowerCase().startsWith(commandsPhase[phase]) || commandString.toLowerCase().startsWith(commandsPhase[commandsPhase.length-1])) {
-                Colors.colorizeSize(Colors.GAME_INSTRUCTION, "•["+command.ordinal()+"]",5);
+                Colors.colorizeSize(Colors.GAME_INSTRUCTION, "•["+(command.ordinal()+1)+"]",5);
                 Colors.colorizeSize(Colors.GAME_INSTRUCTION,command.getCommand(), 30);
             }else{
-                Colors.colorizeSize(Colors.BLACK_CODE, "•["+command.ordinal()+"]",5);
+                Colors.colorizeSize(Colors.BLACK_CODE, "•["+(command.ordinal()+1)+"]",5);
                 Colors.colorizeSize(Colors.BLACK_CODE,command.getCommand(), 30);
             }
-
             i++;
             Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
             if(commandString.toLowerCase().startsWith(commandsPhase[commandsPhase.length-1])){
                 System.out.println();
             }
         }
+        Colors.colorize(Colors.GAME_INSTRUCTION,"Insert command: ");
 
     }
     @Override
     public int[] askCoordinates() throws Exception {
-        printCommands(2);
+
         getClientView().setCoordinatesSelected(new ArrayList<>());
         printerBoard.printMatrixBoard(getClientView());
+
         //TODO aggiungere attributo che indica il numero di tile massimo
         Scanner scanner=new Scanner(System.in);
-        printerBookshelfAndPersonal.printMatrixBookshelf(getClientView().getBookshelfView(), 5,2,20,false);
+        //printerBookshelfAndPersonal.printMatrixBookshelf(getClientView().getBookshelfView(), 5,2,20,false);
+        boolean continueToAsk = true;
+        int input;
+        Commands commands;
 
-        boolean continua = true;
-        int command;
-        while (continua) {
-            //printerBoard.printMatrixBoard(getClientView());
-            String option="Select a command: ";
-            Colors.colorize(Colors.GAME_INSTRUCTION,option );
-            Colors.colorize(Colors.GAME_INSTRUCTION, "•[1] SELECT a tile         │•[5]PRINT board\n");
-            Colors.printFreeSpaces(option.length());
-            Colors.colorize(Colors.GAME_INSTRUCTION, "•[2] RESET the LAST choice │•[6]PRINT bookshelf\n");
-            Colors.printFreeSpaces(option.length());
-            Colors.colorize(Colors.GAME_INSTRUCTION, "•[3] RESET ALL choices     │•[7]PRINT Common Goal Cards\n");
-            Colors.printFreeSpaces(option.length());
-            Colors.colorize(Colors.GAME_INSTRUCTION, "•[4] CONFIRM all choices   │•[8]PRINT Personal Goal\n");
-            //Colors.printFreeSpaces(option.length());
-            //Colors.colorize(Colors.GAME_INSTRUCTION, "•[5] PRINT board\n");
-            Colors.colorize(Colors.GAME_INSTRUCTION, "Insert command: ");
-            try {
-                command = scanner.nextInt();
-                scanner.nextLine();
-            } catch (InputMismatchException e) {
-                Colors.colorize(Colors.ERROR_MESSAGE, "INVALID INPUT");
-                scanner.nextLine();
-                continue;
-            }
-            switch (command) {
-                case 1:
-                    selectTile(scanner);
-                    break;
-                case 2:
-                    resetLastChoice();
-                    break;
-                case 3:
-                    resetAllChoice();
-                    break;
-                case 4:
-                    if (getClientView().getCoordinatesSelected().isEmpty()) {
-                        //printerBoard.printMatrixBoard(getClientView());
-                        Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_TILES_SELECTED.getErrorMessage());
-                        System.out.println();
-                        continue;
-                    } else {
-                        Colors.colorize(Colors.GAME_INSTRUCTION, "Confirmation successful.");
-                        continua = false;
-                    }
-                    break;
-                case 5:
-                    printerBoard.printMatrixBoard(getClientView());
-                    break;
-                default:
-                    Colors.colorize(Colors.ERROR_MESSAGE, "INVALID INPUT");
+        while (continueToAsk) {
+
+            allCommands(0);
+            input = scanner.nextInt();
+            input--;
+            scanner.nextLine();
+
+          if(!(input >= 0 && input < Commands.values().length)){
+              Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.INVALID_INPUT.getErrorMessage());
+              continue;
+          }
+          System.out.println();
+          commands=Commands.values()[input];
+
+          switch (commands) {
+              case SELECT_FROM_BOARD1:
+                  selectTile(scanner);
+                  break;
+              case SELECT_FROM_BOARD2:
+                  resetLastChoice();
+                  break;
+              case SELECT_FROM_BOARD3:
+                  resetAllChoice();
+                  break;
+              case SELECT_FROM_BOARD4:
+                 if (getClientView().getCoordinatesSelected().isEmpty()) {
+                 //printerBoard.printMatrixBoard(getClientView());
+                    Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_TILES_SELECTED.getErrorMessage());
                     System.out.println();
                     continue;
+                 } else {
+                    Colors.colorize(Colors.GAME_INSTRUCTION, "Confirmation successful.");
+                    continueToAsk = false;
+                 }
+                 break;
+              default:
+                String commandString = commands.toString();
+                if (commandString.toLowerCase().startsWith("print")){
+                   printCommands(commands);
+                }else Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.ILLEGAL_PHASE.getErrorMessage());
+                continue;
             }
 
             if (getClientView().getCoordinatesSelected().isEmpty()) {
@@ -141,16 +134,28 @@ public class CLI extends ClientInterface {
         askOrder();
         return getClientView().getCoordinatesSelected().stream().mapToInt(Integer::intValue).toArray();
     }
+
+    private void printCommands(Commands commands) throws Exception {
+        switch (commands){
+            case PRINT1 -> printerBoard.printMatrixBoard(getClientView());
+            case PRINT2 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView().getBookshelfView(), 4,1,40,true);
+            case PRINT3 -> printerBookshelfAndPersonal.printPersonal(getClientView().getBookshelfView(),2,40);
+            //TODO qua vanno inserite anche le common e i punti
+        }
+    }
+
     private void selectTile(Scanner scanner) {
         int x, y;
 
-        if (getClientView().getCoordinatesSelected().size() >= MAX_TESSERE_SELEZIONABILI *2) {
+        if (getClientView().getCoordinatesSelected().size() >= MAX_SELECTABLE_TILES *2) {
             Colors.colorize(Colors.ERROR_MESSAGE,ErrorType.TOO_MANY_TILES.getErrorMessage());
             System.out.println();
         }else{
-            Colors.colorize(Colors.GAME_INSTRUCTION, "Enter row (x): ");
+            Colors.colorizeSize(Colors.GAME_INSTRUCTION, "Insert row",16);
+            Colors.colorize(Colors.GAME_INSTRUCTION, "(x): ");
             x = scanner.nextInt();
-            Colors.colorize(Colors.GAME_INSTRUCTION, "Enter column (y): ");
+            Colors.colorizeSize(Colors.GAME_INSTRUCTION, "Insert column",16);
+            Colors.colorize(Colors.GAME_INSTRUCTION, "(y): ");
             y = scanner.nextInt();
             scanner.nextLine();
             ErrorType error= checkCoordinates(x, y);
