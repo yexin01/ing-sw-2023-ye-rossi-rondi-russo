@@ -10,16 +10,16 @@ public enum Commands {
     SELECT_FROM_BOARD2("RESET the LAST choice"),
     ORDER_TILES2("RESET order tiles"),
     COLUMN2("RESET column"),
-    PRINT13("PersonalGoal"),
-    PRINT24("Compare "+(PRINT2.ordinal()+1)+"-"+(PRINT13.ordinal()+1)),
+    PRINT3("PersonalGoal"),
+    PRINT4("Compare "+(PRINT2.ordinal()+1)+"-"+(PRINT3.ordinal()+1)),
     SELECT_FROM_BOARD3("RESET ALL choices"),
     ORDER_TILES3("CONFIRM order tiles"),
     COLUMN3("CONFIRM column"),
-    PRINT15("Points"),
-    PRINT26("CommonGoals"),
+    PRINT5("Points"),
+    PRINT6("CommonGoals"),
     SELECT_FROM_BOARD4("CONFIRM all choices"),
 
-    PRINT17("HELP");
+    PRINT7("HELP");
 
 
 

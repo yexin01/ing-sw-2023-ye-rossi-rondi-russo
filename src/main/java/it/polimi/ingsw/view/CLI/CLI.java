@@ -27,7 +27,7 @@ public class CLI extends ClientInterface {
         printerStartAndEndTurn =new PrinterStartAndEndTurn();
         printerCommonGoalAndPoints=new PrinterCommonGoalAndPoints();
     }
-    private static final int MAX_SELECTABLE_TILES = 3;
+    private static int MAX_SELECTABLE_TILES = 3;
     public void allCommands(int phase) throws Exception {
         boolean firstPrint=false;
         System.out.println();
@@ -72,10 +72,7 @@ public class CLI extends ClientInterface {
                     Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
                     System.out.println();
                     typeCommand=0;
-
-
                 }
-
             }else{
                 if (commandString.toLowerCase().startsWith(commandsPhase[phase])/* || commandString.toLowerCase().startsWith(commandsPhase[commandsPhase.length-1])*/) {
                     Colors.colorizeSize(Colors.GAME_INSTRUCTION, "•["+(command.ordinal()+1)+"]",5);
@@ -87,10 +84,7 @@ public class CLI extends ClientInterface {
                 i++;
                 typeCommand++;
                 Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
-
             }
-
-
         }
         Colors.colorize(Colors.GAME_INSTRUCTION,"Insert command: ");
 
@@ -115,6 +109,7 @@ public class CLI extends ClientInterface {
         System.out.println();
         Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: SELECT FROM BOARD");
         System.out.println();
+        MAX_SELECTABLE_TILES=numSelectableTiles();
         getClientView().setCoordinatesSelected(new ArrayList<>());
         printerBoard.printMatrixBoard(getClientView());
         //TODO aggiungere attributo che indica il numero di tile massimo
@@ -145,7 +140,6 @@ public class CLI extends ClientInterface {
                     System.out.println();
                     continue;
                  } else {
-
                     Colors.colorize(Colors.GAME_INSTRUCTION, "Confirmation successful.");
                     continueToAsk = false;
                  }
@@ -182,11 +176,11 @@ public class CLI extends ClientInterface {
         switch (commands){
             case PRINT1 -> printerBoard.printMatrixBoard(getClientView());
             case PRINT2 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3,1,60,false,false,0);
-            case PRINT13 -> printerBookshelfAndPersonal.printPersonal(getClientView(),2,35);
-            case PRINT24 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,1,60,true,false,0);
-            case PRINT15 -> printerCommonGoalAndPoints.printPoints(getClientView());
-            case PRINT26 -> printerCommonGoalAndPoints.printCommonGoalCards(getClientView());
-            case PRINT17 -> printerStartAndEndTurn.rulesGame();
+            case PRINT3 -> printerBookshelfAndPersonal.printPersonal(getClientView(),2,35);
+            case PRINT4 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,1,60,true,false,0);
+            case PRINT5 -> printerCommonGoalAndPoints.printPoints(getClientView());
+            case PRINT6 -> printerCommonGoalAndPoints.printCommonGoalCards(getClientView());
+            case PRINT7 -> printerStartAndEndTurn.rulesGame();
             //TODO qua vanno inserite anche le common e i punti
         }
     }
@@ -261,15 +255,16 @@ public class CLI extends ClientInterface {
                     Colors.colorize(Colors.GAME_INSTRUCTION, "Insert numbers from 0 to " + (getClientView().getCoordinatesSelected().size() / 2 - 1) + "\n");
                     System.out.println();
                     Colors.colorize(Colors.GAME_INSTRUCTION, "These are the tiles selected by YOU: ");
+                    int j = 0;
+                    for (ItemTileView t : getClientView().getTilesSelected()) {
+                        Colors.colorize(Colors.RED_CODE, Integer.toString(j++) + " ");
+                        System.out.print(Colors.printTiles(t.getTypeView(), sizetile));
+                        Colors.colorize(Colors.GAME_INSTRUCTION, "; ");
+                    }
+                    System.out.println();
 
                     while (error != null) {
-                        int j = 0;
-                        for (ItemTileView t : getClientView().getTilesSelected()) {
-                            Colors.colorize(Colors.RED_CODE, Integer.toString(j++) + " ");
-                            System.out.print(Colors.printTiles(t.getTypeView(), sizetile));
-                            Colors.colorize(Colors.GAME_INSTRUCTION, "; ");
-                        }
-                        System.out.println();
+
                         for (int i = 0; i < getClientView().getCoordinatesSelected().size() / 2; i++) {
                             Colors.colorize(Colors.GAME_INSTRUCTION, "Insert number: ");
                             orderTiles[i] = scanner.nextInt();

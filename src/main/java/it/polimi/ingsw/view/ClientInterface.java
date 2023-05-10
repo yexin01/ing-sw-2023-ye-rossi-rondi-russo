@@ -20,6 +20,7 @@ public abstract class ClientInterface extends JPanel {
     private ClientView clientView;
 
     public abstract String getNickname();
+    private int[] freeShelves;
 
    // String askNickname();
 
@@ -138,23 +139,26 @@ public abstract class ClientInterface extends JPanel {
         return clientView;
     }
     public ErrorType checkBookshelf(int column) throws Error {
-        int numSelectedTiles=clientView.getCoordinatesSelected().size()/2;
+        //int numSelectedTiles=clientView.getCoordinatesSelected().size()/2;
+        int numSelectedTiles=clientView.getTilesSelected().length;
         if (column < 0 || column > clientView.getBookshelfView()[0].length-1 ) {
             return ErrorType.INVALID_COLUMN;
         }
-        if(!(numSelectedTiles <= numSelectableTiles())){
+        computeFreeShelves();
+        if(!(numSelectedTiles <= freeShelves[column])){
             return ErrorType.NOT_ENOUGH_FREE_CELLS_COLUMN;
         }
         return null;
     }
     public int numSelectableTiles() {
+        computeFreeShelves();
         //TODO importare 3 come parametro attraverso gamerules
-        int max = maxFreeShelves(computeFreeShelves());
+        int max = maxFreeShelves();
         return (max > 3) ? 3 : max;
     }
     public int[] computeFreeShelves() {
         ItemTileView[][] matrix= clientView.getBookshelfView();
-        int[] freeShelves=new int[matrix[0].length];
+        freeShelves=new int[matrix[0].length];
         for (int j = 0; j < matrix[0].length; j++) {
             freeShelves[j] = 0;
             for (int i = 0; i < matrix.length && matrix[i][j].getTileID() == -1; i++) {
@@ -163,14 +167,13 @@ public abstract class ClientInterface extends JPanel {
         }
         return freeShelves;
     }
-    private int maxFreeShelves(int[] freeShelves) {
+    private int maxFreeShelves() {
         int max = 0;
         for (int i = 0; i < freeShelves.length; i++) {
             if (freeShelves[i] > max) {
                 max = freeShelves[i];
             }
         }
-        System.out.println(max);
         return max;
     }
 
@@ -192,4 +195,11 @@ public abstract class ClientInterface extends JPanel {
         return null;
     }
 
+    public int[] getFreeshelves() {
+        return freeShelves;
+    }
+
+    public void setFreeshelves(int[] freeshelves) {
+        this.freeShelves = freeshelves;
+    }
 }
