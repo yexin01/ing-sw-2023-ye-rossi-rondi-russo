@@ -1,18 +1,20 @@
 package it.polimi.ingsw.network.server;
 
-//TODO molti non verranno piu ulizzati
+
 public enum ErrorType {
     DUPLICATE_NAME("This nickname is already taken"),
     WRONG_PHASE("You can't do this action now."),
     ILLEGAL_TURN("it isn't your turn"),
-    ILLEGAL_PHASE("this isn't the phase"),
+    ILLEGAL_PHASE("This isn't the phase"),
     INVALID_COLUMN("Invalid Column"),
+    INVALID_INPUT("Invalid Input"),
     NOT_ENOUGH_FREE_CELLS_COLUMN("You don't have enough cells free in this column"),
     NOT_SELECTABLE_TILE("Not selectable tile"),
     TOO_MANY_TILES("You selected too many tile"),
-    INVALID_ORDER_TILE("Invalid order tile "),
+    INVALID_ORDER_TILE_REPETITION("You cannot enter the same number twice "),
+    INVALID_ORDER_TILE_NUMBER("You have entered a number outside the permitted range "),
     NOT_PLAYER_FOUND("Not player with this nickname found "),
-    NOT_TILES_SELECTED("You haven't selected any tile "),
+    NOT_VALUE_SELECTED("You have not selected anything"),
 
     INVALID_COORDINATES("COORDINATES of the tile are invalid"),
     TOO_MANY_PLAYERS("Max number of player reached!"),

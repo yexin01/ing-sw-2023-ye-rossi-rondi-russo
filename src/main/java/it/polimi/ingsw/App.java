@@ -1,9 +1,15 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.controller.GameController;
+
+import it.polimi.ingsw.model.Bookshelf;
+import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Type;
+import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.network.server.GameLobby;
 import it.polimi.ingsw.view.CLI.Colors;
+import it.polimi.ingsw.view.CLI.PrinterBookshelfAndPersonal;
+import it.polimi.ingsw.view.ClientView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,29 +17,49 @@ import java.util.List;
 public class App{
         public static void main(String[] args) throws Exception {
 
-            //CLI cli=new CLI();
-            //cli.printItemTilesSelected();
-/*
-            //String s="\u001B[38;2;197;225;247m" + "\u2588" + "\u001B[0m";
-            String s=Colors.printTiles(Type.CAT);
-            //System.out.println(s);
-            Colors.upperBoard(Colors.OCHRE_YELLOW_CODE);
-            Colors.mediumBoard(Colors.OCHRE_YELLOW_CODE);
-            Colors.lowerBoard(Colors.OCHRE_YELLOW_CODE);
-            Colors.colorize(Colors.OCHRE_YELLOW_CODE,"╔══════╦══════╦══════╦══════╦══════╦══════╦══════╦══════╦══════╗");
-            System.out.println("╔══════╦══════╦══════╦══════╦══════╦══════╦══════╦══════╦══════╗\n" +
-                                "║ "+s+" ║ "+s+" ║ "+s+" ║ "+s+" ║ "+s+" ║ "+s+" ║ "+s+" ║ "+s+" ║ "+s+" ║ \n" +
-                                "╠══════╬══════╬══════╬══════╬══════╬══════╬══════╬══════╬══════╣ \n" +
-                                "║ "+s+" ║ "+s+" ║ "+s+" ║ "+s+" ║ "+s+" ║ "+s+" ║ "+s+" ║ "+s+" ║ "+s+" ║ \n" +
-                                "╚══════╩══════╩══════╩══════╩══════╩══════╩══════╩══════╩══════╝");
 
- */
+            Bookshelf bo=new Bookshelf(6,5,3);
+            bo.setTile(new ItemTile(Type.CAT,9),5,0);
+            bo.setTile(new ItemTile(Type.PLANT,9),4,0);
+            bo.setTile(new ItemTile(Type.PLANT,9),3,0);
+            bo.setTile(new ItemTile(Type.TROPHY,9),3,1);
+            bo.setTile(new ItemTile(Type.PLANT,9),3,2);
+            bo.setTile(new ItemTile(Type.PLANT,9),4,4);
+            ItemTileView[][] b;
+            b=new ItemTileView[6][5];
+            b=bo.cloneBookshelf();
+            PrinterBookshelfAndPersonal p=new PrinterBookshelfAndPersonal();
+            ClientView c=new ClientView();
+            c.setIndexPersonal(2);
+            c.setBookshelfView(b);
 
+            p.printMatrixBookshelf(c,3,1,60,false,false,0);
+            p.printMatrixBookshelf(c,3,2,60,false,false,1);
+            p.printMatrixBookshelf(c,3,1,50,true,true,1);
 
-
+        p.printMatrixBookshelf(c,3,2,40,true,true,0);
+            p.printMatrixBookshelf(c,3,1,80,true,true,1);
+            p.printMatrixBookshelf(c,3,2,40,true,false,0);
+            p.printMatrixBookshelf(c,3,1,90,true,false,1);
+            p.printMatrixBookshelf(c,3,2,40,false,true,0);
+            p.printMatrixBookshelf(c,3,1,50,false,true,1);
+            for(Type t:Type.values()){
+                System.out.print(Colors.printTiles(t, 3).length());
+                System.out.print(Colors.printTiles(t, 3));
+            }
+            System.out.println();
+            for(Type t:Type.values()){
+                System.out.print(Colors.printTiles(t, 3).length());
+                Colors.colorizeSize(Colors.WHITE_CODE,"ooo",3);
+            }
             GameLobby gameLobby =new GameLobby();
             ArrayList<String> playerNames = new ArrayList<>(List.of("TIZIO", "CAIO", "SEMPRONIO","PIPPO"));
             GameController gameController=new GameController(gameLobby, playerNames);
+
+
+
+
+
             /*
             gameController.setServerView(serverView);
             HashMap<String, ClientView> playerMap = new HashMap<String, ClientView>();
@@ -44,10 +70,12 @@ public class App{
 
 
 
+
 /*
 
             for (int i = 0; i < playerNames.size(); i++) {
-                String playerName = playerNames.get(i);
+                String playerName = play1
+                12erNames.get(i);
                 ClientView clientView = new ClientView(playerName, gameController, serverView, new Client(clientView, playerName));
                 playerMap.put(playerName, clientView);
                 playersId.put(playerName, i);

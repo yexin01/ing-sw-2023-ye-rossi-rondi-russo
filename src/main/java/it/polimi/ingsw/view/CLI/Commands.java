@@ -15,7 +15,8 @@ public enum Commands {
     COLUMN3("CONFIRM column"),
     PRINT3("PRINT personalGoalCard"),
     SELECT_FROM_BOARD4("CONFIRM all choices"),
-    PRINT4("PRINT Points");
+    PRINT4("PRINT Points"),
+    PRINT5("Bookshelf and personalGoal");
 
 
 

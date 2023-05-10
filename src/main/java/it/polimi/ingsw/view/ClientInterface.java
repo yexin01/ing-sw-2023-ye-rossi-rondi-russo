@@ -4,9 +4,11 @@ import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.listeners.EventListener;
 import it.polimi.ingsw.messages.EventType;
 import it.polimi.ingsw.messages.MessageFromServer;
+import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.network.server.ErrorType;
+import it.polimi.ingsw.view.CLI.Colors;
 import it.polimi.ingsw.view.ClientView;
 
 import javax.swing.*;
@@ -21,10 +23,38 @@ public abstract class ClientInterface extends JPanel {
 
    // String askNickname();
 
-    public abstract int[] askCoordinates();
-    public abstract int[] askOrder();
-    public abstract int[] askColumn();
-
+    public abstract int[] askCoordinates() throws Exception;
+    public abstract int[] askOrder() throws Exception;
+    public abstract int[] askColumn() throws Exception;
+    public void createItemTileView() throws Error {
+        ItemTileView[] itemTileViews=new ItemTileView[getClientView().getCoordinatesSelected().size()/2];
+        BoardBoxView[][] boardView= getClientView().getBoardView();
+        int j=0;
+        for (int i = 0; i < getClientView().getCoordinatesSelected().size(); i += 2) {
+            int x = getClientView().getCoordinatesSelected().get(i);
+            int y = getClientView().getCoordinatesSelected().get(i + 1);
+            itemTileViews[j++]=new ItemTileView(boardView[x][y].getType(),boardView[x][y].getId());
+        }
+        getClientView().setTilesSelected(itemTileViews);
+    }
+    public void insertTiles(int columnSelected) throws Error {
+        ItemTileView[][] bookshelf=clientView.getBookshelfView();
+        ItemTileView[] selectedItemTiles= clientView.getTilesSelected();
+        int j = 0;
+        for (int i = bookshelf.length - 1; j < selectedItemTiles.length; i--) {
+            if (bookshelf[i][columnSelected].getTileID() == -1) {
+                bookshelf[i][columnSelected] = new ItemTileView(selectedItemTiles[j].getTypeView(), selectedItemTiles[j++].getTileID());
+            }
+        }
+    }
+    public void permuteSelection(){
+        ItemTileView[] temp = new ItemTileView[clientView.getTilesSelected().length];
+        int j=0;
+        for(int i : clientView.getOrderTiles()){
+            temp[j++]=clientView.getTilesSelected()[i];
+        }
+        clientView.setTilesSelected(temp) ;
+    }
     /**
      * @return check that each ItemTile of selectedBoard is adjacent to the previous one
      */
@@ -142,6 +172,24 @@ public abstract class ClientInterface extends JPanel {
         }
         System.out.println(max);
         return max;
+    }
+
+    public ErrorType checkPermuteSelection(int[] order) throws Error {
+        int maxIndex = clientView.getCoordinatesSelected().size()/2 - 1;
+        for (int i = 0; i < order.length; i++) {
+            int curIndex = order[i];
+            if (curIndex > maxIndex || curIndex < 0) {
+                return ErrorType.INVALID_ORDER_TILE_NUMBER;
+                //throw new Error(ErrorType.INVALID_ORDER_TILE);
+            }
+            for (int j = i + 1; j < order.length; j++) {
+                if (order[j] == curIndex) {
+                    return ErrorType.INVALID_ORDER_TILE_REPETITION;
+                    // throw new Error(ErrorType.INVALID_ORDER_TILE);
+                }
+            }
+        }
+        return null;
     }
 
 }

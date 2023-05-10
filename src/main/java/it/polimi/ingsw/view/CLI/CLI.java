@@ -11,7 +11,7 @@ import it.polimi.ingsw.view.ClientView;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-
+//TODO molti comandi scritti qua li sposterò sugli handler li ho utilizzati per vedere come venivano stampate le varie fasi del turno
 public class CLI extends ClientInterface {
     private String nickname;
 
@@ -59,33 +59,35 @@ public class CLI extends ClientInterface {
         Colors.colorize(Colors.GAME_INSTRUCTION,"Insert command: ");
 
     }
-    @Override
-    public int[] askCoordinates() throws Exception {
-
-        getClientView().setCoordinatesSelected(new ArrayList<>());
-        printerBoard.printMatrixBoard(getClientView());
-
-        //TODO aggiungere attributo che indica il numero di tile massimo
-        Scanner scanner=new Scanner(System.in);
-        //printerBookshelfAndPersonal.printMatrixBookshelf(getClientView().getBookshelfView(), 5,2,20,false);
-        boolean continueToAsk = true;
+    public Commands checkCommand(int phase) throws Exception {
         int input;
         Commands commands;
+        allCommands(phase);
+        input = scanner.nextInt();
+        input--;
+        scanner.nextLine();
+
+        if(!(input >= 0 && input < Commands.values().length)){
+            Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.INVALID_INPUT.getErrorMessage());
+            return null;
+        }
+        System.out.println();
+        return Commands.values()[input];
+    }
+    @Override
+    public int[] askCoordinates() throws Exception {
+        Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: SELECT FROM BOARD");
+        getClientView().setCoordinatesSelected(new ArrayList<>());
+        printerBoard.printMatrixBoard(getClientView());
+        //TODO aggiungere attributo che indica il numero di tile massimo
+        Scanner scanner=new Scanner(System.in);
+        boolean continueToAsk = true;
 
         while (continueToAsk) {
-
-            allCommands(0);
-            input = scanner.nextInt();
-            input--;
-            scanner.nextLine();
-
-          if(!(input >= 0 && input < Commands.values().length)){
-              Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.INVALID_INPUT.getErrorMessage());
-              continue;
+          Commands commands=checkCommand(0);
+          if(commands==null){
+            continue;
           }
-          System.out.println();
-          commands=Commands.values()[input];
-
           switch (commands) {
               case SELECT_FROM_BOARD1:
                   selectTile(scanner);
@@ -99,7 +101,7 @@ public class CLI extends ClientInterface {
               case SELECT_FROM_BOARD4:
                  if (getClientView().getCoordinatesSelected().isEmpty()) {
                  //printerBoard.printMatrixBoard(getClientView());
-                    Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_TILES_SELECTED.getErrorMessage());
+                    Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
                     System.out.println();
                     continue;
                  } else {
@@ -117,7 +119,7 @@ public class CLI extends ClientInterface {
 
             if (getClientView().getCoordinatesSelected().isEmpty()) {
                 //printerBoard.printMatrixBoard(getClientView());
-                Colors.colorize(Colors.ERROR_MESSAGE,ErrorType.NOT_TILES_SELECTED.getErrorMessage());
+                Colors.colorize(Colors.ERROR_MESSAGE,ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
             } else {
                 //printerBoard.printMatrixBoard(getClientView());
                 Colors.colorize(Colors.GAME_INSTRUCTION,"Your current selections: ");
@@ -138,8 +140,9 @@ public class CLI extends ClientInterface {
     private void printCommands(Commands commands) throws Exception {
         switch (commands){
             case PRINT1 -> printerBoard.printMatrixBoard(getClientView());
-            case PRINT2 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView().getBookshelfView(), 4,1,40,true);
-            case PRINT3 -> printerBookshelfAndPersonal.printPersonal(getClientView().getBookshelfView(),2,40);
+            case PRINT2 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3,2,40,false,false,0);
+            case PRINT3 -> printerBookshelfAndPersonal.printPersonal(getClientView(),2,40);
+            case PRINT5 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,2,40,true,false,0);
             //TODO qua vanno inserite anche le common e i punti
         }
     }
@@ -216,59 +219,124 @@ public class CLI extends ClientInterface {
     private int distanceBetweenTilesChoice = 4;
     @Override
     public int[] askOrder() throws Exception {
+        Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: ORDER TILES");
         createItemTileView();
         //insertTiles(2);
-        Colors.colorize(Colors.GAME_INSTRUCTION,"ORDER TILES " );
-        printerBookshelfAndPersonal.printMatrixBookshelf(getClientView().getBookshelfView(), 3,2,40,true);
-        Colors.colorize(Colors.GAME_INSTRUCTION, "Insert numbers from 0 to "+(getClientView().getCoordinatesSelected().size()/2-1)+"\n");
-        System.out.println();
-        Colors.colorize(Colors.GAME_INSTRUCTION,"THIS IS YOUR BOOKSHELF now " );
-        System.out.println();
-        //Colors.colorize(Colors.GAME_INSTRUCTION, "For example, if you have selected 2 tiles and want to insert the second selected first,\n just insert: 1,then 0.\n");
-        Colors.colorize(Colors.GAME_INSTRUCTION,"These are the tiles selected by YOU: " );
-        ErrorType error=ErrorType.INVALID_ORDER_TILE_NUMBER;
-        int[] orderTiles = new int[getClientView().getCoordinatesSelected().size()/2];
-        while(error!=null){
-            int j=0;
-            for (ItemTileView t:getClientView().getTilesSelected()) {
-                Colors.colorize(Colors.RED_CODE,Integer.toString(j++)+" ");
-                System.out.print(Colors.printTiles(t.getTypeView(),sizetile));
-                Colors.colorize(Colors.GAME_INSTRUCTION,"; ");
+        //Colors.colorize(Colors.GAME_INSTRUCTION,"ORDER TILES " );
+        boolean continueToAsk = true;
+        int[] orderTiles = new int[getClientView().getCoordinatesSelected().size() / 2];
+        orderTiles[0]=-1;
+        ErrorType error = ErrorType.INVALID_ORDER_TILE_NUMBER;
+        while (continueToAsk) {
+            Commands commands = checkCommand(1);
+            if (commands == null) {
+                continue;
             }
-            System.out.println();
-            for (int i = 0; i < getClientView().getCoordinatesSelected().size()/2; i++) {
-                Colors.colorize(Colors.GAME_INSTRUCTION,"Insert number: " );
-                orderTiles[i] = scanner.nextInt();
+            switch (commands) {
+                case ORDER_TILES1:
+                    printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 2, 40, true, false, 0);
+
+                    Colors.colorize(Colors.GAME_INSTRUCTION, "Insert numbers from 0 to " + (getClientView().getCoordinatesSelected().size() / 2 - 1) + "\n");
+                    System.out.println();
+                    Colors.colorize(Colors.GAME_INSTRUCTION, "These are the tiles selected by YOU: ");
+
+                    while (error != null) {
+                        int j = 0;
+                        for (ItemTileView t : getClientView().getTilesSelected()) {
+                            Colors.colorize(Colors.RED_CODE, Integer.toString(j++) + " ");
+                            System.out.print(Colors.printTiles(t.getTypeView(), sizetile));
+                            Colors.colorize(Colors.GAME_INSTRUCTION, "; ");
+                        }
+                        System.out.println();
+                        for (int i = 0; i < getClientView().getCoordinatesSelected().size() / 2; i++) {
+                            Colors.colorize(Colors.GAME_INSTRUCTION, "Insert number: ");
+                            orderTiles[i] = scanner.nextInt();
+                        }
+                        error = checkPermuteSelection(orderTiles);
+                        if (error != null) {
+                            Colors.colorize(Colors.ERROR_MESSAGE, error.getErrorMessage());
+                            System.out.println();
+                        }
+                    }
+
+                    continue;
+                case ORDER_TILES2:
+                    if(error!=null){
+                        Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
+                    }
+                    error = ErrorType.INVALID_ORDER_TILE_NUMBER;
+                    continue;
+                case ORDER_TILES3:
+                    if(error!=null){
+                        Colors.colorize(Colors.ERROR_MESSAGE,ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
+                        continue;
+                    }
+                    continueToAsk=false;
+                    getClientView().setOrderTiles(orderTiles);
+                    permuteSelection();
+                    break;
+                default:
+                    String commandString = commands.toString();
+                    if (commandString.toLowerCase().startsWith("print")) {
+                        printCommands(commands);
+                    } else Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.ILLEGAL_PHASE.getErrorMessage());
+                    continue;
             }
-            error=checkPermuteSelection(orderTiles);
-            if(error!=null){
-                Colors.colorize(Colors.ERROR_MESSAGE,error.getErrorMessage());
-                System.out.println();
-            }
+
+            askColumn();
         }
-        getClientView().setOrderTiles(orderTiles);
-        permuteSelection();
-        askColumn();
         return orderTiles;
     }
 
     @Override
-    public int[] askColumn() {
-        ErrorType error=ErrorType.INVALID_COLUMN;
+    public int[] askColumn() throws Exception {
+        Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: COLUMN");
+        ErrorType error = ErrorType.INVALID_COLUMN;
         int[] column = new int[1];
-        while(error!=null){
-            System.out.println("These are the free shelves, to select a column write a number from 0 to "+(getClientView().getBookshelfView()[0].length-1));
-            column[0] =scanner.nextInt();
-            error=checkBookshelf(column[0]);
-            if(error!=null){
-                Colors.colorize(Colors.ERROR_MESSAGE,error.getErrorMessage());
+        boolean continueToAsk = true;
+        while (continueToAsk) {
+            Commands commands = checkCommand(2);
+            if (commands == null) {
+                continue;
             }
-        }
-        insertTiles(column[0]);
-        try {
-            printerBookshelfAndPersonal.printMatrixBookshelf(getClientView().getBookshelfView(), sizetile,2,20,true);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            switch (commands) {
+                case COLUMN1:
+                    //printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 2, 40, false, true, 50);
+                    printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 2, 40, false, true, 50);
+                    Colors.colorize(Colors.GAME_INSTRUCTION, "To select a column write a number from 0 to " + (getClientView().getBookshelfView()[0].length - 1) + ": ");
+                    while (error != null) {
+                       column[0] = scanner.nextInt();
+                        error = checkBookshelf(column[0]);
+                        if (error != null) {
+                            Colors.colorize(Colors.ERROR_MESSAGE, error.getErrorMessage());
+                            error=ErrorType.INVALID_COLUMN;
+                        }
+                    }
+                    continue;
+                case COLUMN2:
+                    if (error!=null) {
+                        Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
+                        continue;
+                    }
+                    error=ErrorType.INVALID_COLUMN;
+                    continue;
+                case COLUMN3:
+                    if (error!=null) {
+                        Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
+                        continue;
+                    }
+                    //continueToAsk = false;
+                    getClientView().setColumn(column[0]);
+                    permuteSelection();
+                    insertTiles(column[0]);
+                    continue;
+                default:
+                    String commandString = commands.toString();
+                    if (commandString.toLowerCase().startsWith("print")) {
+                        printCommands(commands);
+                    } else Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.ILLEGAL_PHASE.getErrorMessage());
+                    break;
+            }
         }
         return column;
     }

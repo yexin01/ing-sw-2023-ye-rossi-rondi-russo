@@ -15,7 +15,7 @@ public class PrinterBoard {
     private int sizeWordType=8;
     private int spaceBetweenTiles=2;
     public void printMatrixBoard(ClientView clientView) {
-        System.out.println("BOARD");
+        //System.out.println("BOARD");
 
         int lineLength= sizeTile +2*spaceBetweenTiles;
 

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.TurnPhase;
+import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.*;
 
@@ -20,7 +21,9 @@ public class ClientView {
     private ItemTileView[] tilesSelected;
     private PlayerPointsView playerPoints;
     private PersonalGoalCard playerPersonalGoal;
+    private int indexPersonal;
     private String nickname;
+    private int column;
 
     public ClientView(){
         turnPhase=TurnPhase.SELECT_FROM_BOARD;
@@ -114,5 +117,23 @@ public class ClientView {
 
     public void setOrderTiles(int[] orderTiles) {
         this.orderTiles = orderTiles;
+    }
+
+    public int getIndexPersonal() {
+        return indexPersonal;
+    }
+
+    public void setIndexPersonal(int indexPersonal) throws Exception {
+        GameRules gameRules=new GameRules();
+        playerPersonalGoal=gameRules.getPersonalGoalCard(indexPersonal);
+        this.indexPersonal = indexPersonal;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
     }
 }
