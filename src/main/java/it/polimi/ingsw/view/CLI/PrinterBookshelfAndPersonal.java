@@ -215,6 +215,7 @@ public class PrinterBookshelfAndPersonal {
         int personalLine=0;
         int rowCoordinates=0;
         for(int i=0;i<bookshelfView.length+1;i++){
+            //in base a come vogliamo che sia visualizzata
             //se si vuole stampare la personal goal senza frame cancellare le prime due righe é mettere falso al flag
             printPersonalGoalWithOrWithoutFrame(personalLine,clientView,spaceBetweenTiles,true,0,sizeLengthFromBord);
             //rowCoordinates= printTextRight(rowCoordinates,q);
