@@ -350,6 +350,17 @@ public class CLI extends ClientInterface {
     }
 
     @Override
+    public boolean endGame() {
+        printerStartAndEndTurn.endGame(getClientView());
+        return false;
+    }
+
+    @Override
+    public void Setup() {
+        printerStartAndEndTurn.initialLobby();
+    }
+
+    @Override
     public String getNickname() {
         return null;
     }

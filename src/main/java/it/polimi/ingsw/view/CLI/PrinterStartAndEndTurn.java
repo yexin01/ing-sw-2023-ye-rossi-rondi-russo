@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.CLI;
 
 import it.polimi.ingsw.messages.MessageFromServer;
+import it.polimi.ingsw.view.ClientView;
 
 import java.util.Scanner;
 
@@ -29,7 +30,7 @@ public class PrinterStartAndEndTurn {
          */
 
     }
-    public void endGame(MessageFromServer mes){
+    public void endGame(ClientView clientView){
         //TODO stampare la classifica e nel caso aggiugo altri dati che servono nel messaggio
 
 
