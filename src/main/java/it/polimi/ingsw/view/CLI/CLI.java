@@ -1,8 +1,6 @@
 package it.polimi.ingsw.view.CLI;
 
-import it.polimi.ingsw.model.modelView.CommonGoalView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
-import it.polimi.ingsw.model.modelView.PlayerPointsView;
 
 import it.polimi.ingsw.network.server.ErrorType;
 import it.polimi.ingsw.view.ClientInterface;
@@ -18,21 +16,33 @@ public class CLI extends ClientInterface {
     private Scanner scanner;
     private PrinterBoard printerBoard;
     private PrinterBookshelfAndPersonal printerBookshelfAndPersonal;
-
-
+    private PrinterStartAndEndTurn printerStartAndEndTurn;
+    private PrinterCommonGoalAndPoints printerCommonGoalAndPoints;
 
     public CLI(){
         this.scanner= new Scanner(System.in);
         setClientView(new ClientView());
         printerBoard=new PrinterBoard();
         printerBookshelfAndPersonal=new PrinterBookshelfAndPersonal();
+        printerStartAndEndTurn =new PrinterStartAndEndTurn();
+        printerCommonGoalAndPoints=new PrinterCommonGoalAndPoints();
     }
     private static final int MAX_SELECTABLE_TILES = 3;
     public void allCommands(int phase) throws Exception {
+
         System.out.println();
         String[] commandsPhase=new String[]{"select_from_board","order_tiles","column","print" };
+        String[] titlePhase=new String[]{"BOARD","ORDER","COLUMN","INFO PLAYER" };
         String option="Select a command: ";
         Colors.colorize(Colors.GAME_INSTRUCTION,option );
+        System.out.println();
+        for(int i=0;i<titlePhase.length;i++){
+            if(phase==i || i==commandsPhase.length-1){
+                Colors.colorizeSize(Colors.ERROR_MESSAGE,titlePhase[i], 30+5);
+            }else Colors.colorizeSize(Colors.BLACK_CODE,titlePhase[i], 30+5);
+            Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
+
+        }
         System.out.println();
         int i=0;
         for (Commands command : Commands.values()) {
@@ -140,9 +150,12 @@ public class CLI extends ClientInterface {
     private void printCommands(Commands commands) throws Exception {
         switch (commands){
             case PRINT1 -> printerBoard.printMatrixBoard(getClientView());
-            case PRINT2 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3,2,40,false,false,0);
+            case PRINT2 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3,2,50,false,false,0);
             case PRINT3 -> printerBookshelfAndPersonal.printPersonal(getClientView(),2,40);
-            case PRINT5 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,2,40,true,false,0);
+            case PRINT4 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,2,50,true,false,0);
+            case PRINT5 -> printerCommonGoalAndPoints.printPoints(getClientView());
+            case PRINT6 -> printerCommonGoalAndPoints.printCommonGoalCards(getClientView());
+            case PRINT7 -> printerStartAndEndTurn.rulesGame();
             //TODO qua vanno inserite anche le common e i punti
         }
     }
@@ -187,33 +200,9 @@ public class CLI extends ClientInterface {
             printerBoard.printMatrixBoard(getClientView());
             Colors.colorize(Colors.GAME_INSTRUCTION, "Last choice has been reset. ");
 
-        }/* else {
-            printerBoard.printMatrixBoard(getClientView());
-            Colors.colorize(Colors.ERROR_MESSAGE, "There are no choices to reset.");
-        }
-        */
-
-    }
-    /*
-    private void confirmChoice() {
-        if (!getClientView().getCoordinatesSelected().isEmpty()) {
-            printerBoard.printMatrixBoard(getClientView());
-            Colors.colorize(Colors.GAME_INSTRUCTION, "You have confirmed the following choices:");
-            for (int i = 0; i < getClientView().getCoordinatesSelected().size(); i += 2) {
-                int x = getClientView().getCoordinatesSelected().get(i);
-                int y = getClientView().getCoordinatesSelected().get(i + 1);
-                System.out.println("(" + x + ", " + y + ")");
-            }
-            Colors.colorize(Colors.GAME_INSTRUCTION, "Confirmation successful.");
-            System.out.println();
-        } else {
-            printerBoard.printMatrixBoard(getClientView());
-            Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_RECEIVED_TILES.getErrorMessage());
-            System.out.println();
         }
     }
 
-     */
     private int sizetile=3;
     private int sizeLenghtFromBordChoiceItem = 20;
     private int distanceBetweenTilesChoice = 4;
@@ -234,7 +223,7 @@ public class CLI extends ClientInterface {
             }
             switch (commands) {
                 case ORDER_TILES1:
-                    printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 2, 40, true, false, 0);
+                    printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 2, 50, true, false, 0);
 
                     Colors.colorize(Colors.GAME_INSTRUCTION, "Insert numbers from 0 to " + (getClientView().getCoordinatesSelected().size() / 2 - 1) + "\n");
                     System.out.println();
@@ -301,14 +290,16 @@ public class CLI extends ClientInterface {
             }
             switch (commands) {
                 case COLUMN1:
+
                     //printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 2, 40, false, true, 50);
-                    printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 2, 40, false, true, 50);
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "To select a column write a number from 0 to " + (getClientView().getBookshelfView()[0].length - 1) + ": ");
+                    printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 2, 50, false, true, 50);
                     while (error != null) {
-                       column[0] = scanner.nextInt();
+                        Colors.colorize(Colors.GAME_INSTRUCTION, "To select a column write a number from 0 to " + (getClientView().getBookshelfView()[0].length - 1) + ": ");
+                        column[0] = scanner.nextInt();
                         error = checkBookshelf(column[0]);
                         if (error != null) {
                             Colors.colorize(Colors.ERROR_MESSAGE, error.getErrorMessage());
+                            System.out.println();
                             error=ErrorType.INVALID_COLUMN;
                         }
                     }
@@ -341,161 +332,6 @@ public class CLI extends ClientInterface {
         return column;
     }
 
-
-    /*
-    public void printMatrixBoard(){
-        System.out.println("BOARD");
-        BoardBoxView[][] matrix = getClientView().getBoardView();
-        ArrayList<Integer> coordinates=getClientView().getCoordinatesSelected();
-        Colors.upperBoard(Colors.OCHRE_YELLOW_CODE);
-        Colors.mediumBoard(Colors.OCHRE_YELLOW_CODE);
-
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                if (matrix[i][j].getItemTileView().getTypeView()!=null) {
-                    //System.out.printf("%-6s","("+i+","+j+")");
-                    boolean selected=false;
-                    for (int k = 0;coordinates.size()>0&& k < coordinates.size(); k += 2) {
-                        if (coordinates.get(k).equals(i) && coordinates.get(k + 1).equals(j)) {
-                           // colors.colorize(Colors.RED_CODE,"SELECTED");
-                            colors.colorize(Colors.RED_CODE,"SELE");
-                            selected=true;
-                            break;
-                        }
-                    }
-                    if(!selected){
-                        Colors.printTiles(matrix[i][j].getItemTileView().getTypeView());
-                        //colors.printTypeWithTypeColor(matrix[i][j].getItemTileView().getTypeView());
-                    }
-                } else {
-                    if(matrix[i][j].isOccupiable()){
-                        //System.out.printf("%-6s","("+i+","+j+")");
-                        colors.colorize(Colors.RED_CODE,"SELE");
-                    }else colors.colorize(Colors.RED_CODE,"SELE");
-                }
-            }
-            Colors.lowerBoard(Colors.OCHRE_YELLOW_CODE);
-            System.out.println("");
-        }
-
-     */
-
-
-        /*
-        BoardBoxView[][] matrix = getClientView().getBoardView();
-        ArrayList<Integer> coordinates=getClientView().getCoordinatesSelected();
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                if (matrix[i][j].getItemTileView().getTypeView()!=null) {
-                    System.out.printf("%-6s","("+i+","+j+")");
-                    boolean selected=false;
-                    for (int k = 0;coordinates.size()>0&& k < coordinates.size(); k += 2) {
-                        if (coordinates.get(k).equals(i) && coordinates.get(k + 1).equals(j)) {
-                            colors.colorize(Colors.RED_CODE,"SELECTED");
-                            selected=true;
-                            break;
-                        }
-                    }
-                    if(!selected){
-                        colors.printTypeWithTypeColor(matrix[i][j].getItemTileView().getTypeView());
-                    }
-                } else {
-                    if(matrix[i][j].isOccupiable()){
-                        System.out.printf("%-6s","("+i+","+j+")");
-                        colors.colorize(Colors.RED_CODE,"SELECTED");
-                    }else System.out.printf("%-14s","");
-                }
-            }
-            System.out.println("");
-        }
-
-         */
-
-
-
-
-
-    public void printMatrixBookshelf(){
-        /*
-        ItemTileView[][] bookshelfView= getClientView().getBookshelfView();
-        System.out.println("BOOKSHELF "+nickname);
-        computeFreeShelves();
-        for (int i = 0; i < bookshelfView.length; i++) {
-            for (int j = 0; j < bookshelfView[i].length; j++) {
-                if (bookshelfView[i][j].getTileID() != -1) {
-                    colors.printTypeWithTypeColor(bookshelfView[i][j].getTypeView());
-                } else {
-                    colors.colorize(Colors.BLACK_CODE,"EMPTY");
-                }
-            }
-            System.out.println("");
-        }
-
-         */
-    }
-    public void printItemTilesSelected(){
-        /*
-        System.out.printf("These are the tiles you have selected: ");
-        int j=0;
-        ItemTileView[] tilesSelected=new ItemTileView[3];
-        tilesSelected[0]=new ItemTileView(Type.CAT,0);
-        tilesSelected[1]=new ItemTileView(Type.CAT,0);
-        tilesSelected[2]=new ItemTileView(Type.CAT,0);
-        for(ItemTileView t: tilesSelected){
-        //for(ItemTileView t: getClientView().getTilesSelected()){
-        //for(int i=0;i<3;i++){
-            System.out.printf("%-2s",(j++));
-            //colors.printTypeWithTypeColor(t.getTypeView());
-            Colors.printTiles(t.getTypeView());
-            System.out.printf("%-2s","");
-        }
-        System.out.println("");
-
-         */
-    }
-    public void printPersonalGoal() {
-        /*
-        ItemTileView[][] bookshelfView=getClientView().getBookshelfView();
-        PersonalGoalCard personalGoalCard=getClientView().getPlayerPersonalGoal();
-        System.out.println("PERSONAL GOAL "+nickname);
-        for (int i = 0; i < bookshelfView.length; i++) {
-            for (int j = 0; j < bookshelfView[0].length; j++) {
-                System.out.printf("%-6s","("+i+","+j+")");
-                boolean found = false;
-                for (PersonalGoalBox p : personalGoalCard.getCells()) {
-                    if (p.getX() == i && p.getY() == j) {
-                        colors.printTypeWithTypeColor(p.getTypePersonal());
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    colors.colorize(Colors.BLACK_CODE,"EMPTY");
-                }
-            }
-            System.out.println("");
-        }
-
-         */
-    }
-
-    public void printCommonGoalPoints(){
-      String whoChange;
-        CommonGoalView[] commonGoalViews= getClientView().getCommonGoalViews();
-        for(CommonGoalView commonGoalp:commonGoalViews){
-            if(commonGoalp.getWhoWonLastToken()==null){
-                whoChange="NO ONE HAS WON A TOKEN";
-            }else whoChange=commonGoalp.getWhoWonLastToken()+" ONE HAS WON A TOKEN";
-            System.out.println(commonGoalp.getLastPointsLeft()+" This are TOKEN points that remain,"+whoChange);
-        }
-    }
-    public void printPlayerPoints(){
-        PlayerPointsView playerPoints=getClientView().getPlayerPoints();
-        System.out.println("POINTS "+nickname);
-        System.out.println("AdjacentPoint "+playerPoints.getAdjacentPoints()+" How many token you have:"+playerPoints.getHowManyTokenYouHave()+" PersonalGoalPoint "+playerPoints.getPersonalGoalPoints());
-        System.out.println("END TURN "+this.nickname);
-    }
-
     @Override
     public String getNickname() {
         return null;
@@ -504,42 +340,14 @@ public class CLI extends ClientInterface {
         return printerBookshelfAndPersonal;
     }
 
-
-
-
-    public void printFreeShelves(int[] freeShelves) {
-        System.out.println("these are the free cells for each column ");
-        for (int i = 0; i < freeShelves.length; i++) {
-            System.out.printf("%-8d", freeShelves[i]);
-        }
-        System.out.println("");
-    }
-
-
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
-    /*
-    public void start() throws IOException {
-        //TODO verra aggiunto l'inserimento della porta...e il nickname
-        System.out.print("PROVA: ");
-        Scanner input = new Scanner(System.in);
-        while (true) {
-            System.out.print("Inserisci un numero: ");
-            int num = input.nextInt();
 
-            if (num == 1) {
-                break;
-            }
-        }
-//TODO creare client socket con la porta ...
-        ClientSocket socket=new ClientSocket("username", "ip", 3, "token",this);
-        socket.setHandlerUpdater(new HandlerUpdater(socket,this));
-        socket.startConnection();
-
+    public void start()  {
+        printerStartAndEndTurn.initialLobby();
     }
 
-     */
 }
 
 

@@ -11,7 +11,7 @@ public class Colors {
     //public final static String GREEN_CODE = "\u001B[38;2;0;255;0m";
     //public final static String BLUE_CODE = "\u001B[38;2;0;0;255m";
     public final static String YELLOW_CODE = "\u001B[38;2;255;255;0m";
-    public final static String GAME_INSTRUCTION = "\u001B[38;2;180;180;0m";
+    public final static String GAME_INSTRUCTION = "\033[38;2;255;255;0m";
     public final static String BLACK_CODE = "\u001B[38;2;0;0;0m";
     public final static String WHITE_CODE = "\u001B[38;2;255;255;255m";
     public final static String GREEN_CODE = "\u001B[38;2;0;128;0m";
