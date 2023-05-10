@@ -357,6 +357,7 @@ public class CLI extends ClientInterface {
                     getClientView().setColumn(column[0]);
                     permuteSelection();
                     insertTiles(column[0]);
+                    printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 1, 60, false, false, 0);
                     continue;
                 default:
                     String commandString = commands.toString();
