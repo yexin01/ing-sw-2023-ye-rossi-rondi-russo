@@ -65,7 +65,7 @@ public class Board{
 
     public ErrorType checkFinishChoice() {
         if (selectedBoard.size()==0) {
-            return ErrorType.NOT_TILES_SELECTED;
+            return ErrorType.NOT_VALUE_SELECTED;
             //throw new Error(ErrorType.INVALID_COORDINATES);
         }
         return null;

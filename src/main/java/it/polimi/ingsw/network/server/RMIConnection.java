@@ -39,7 +39,7 @@ public class RMIConnection extends Connection {
      */
     @Override
     public void sendMessage(MessageFromServer message) throws RemoteException {
-        clientSession.messageToClient(message);
+        //clientSession.messageToClient(message);
     }
 
     @Override

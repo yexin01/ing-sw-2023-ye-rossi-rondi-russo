@@ -42,7 +42,7 @@ public class Server implements Runnable {
         }
 
         startServers();
-        gameController = new GameController();
+        //gameController = new GameController();
         gamePhaseController =new PhaseController<>(PhaseGame.GAME_SETUP);
         GameRules gameRules=new GameRules();
         maxPlayers=gameRules.getMaxPlayers();
@@ -96,7 +96,7 @@ public class Server implements Runnable {
                 if (clients.containsKey(username)) {
                     knownPlayerLogin(username, connection);
                 } else {
-                    newPlayerLogin(username, connection);
+                    //newPlayerLogin(username, connection);
                 }
             }
         } catch (IOException e) {
@@ -112,7 +112,7 @@ public class Server implements Runnable {
      * @throws IOException when send message fails
      */
     private void knownPlayerLogin(String username, Connection connection) throws IOException {
-
+/*
         if (clients.get(username) == null || !clients.get(username).isConnected()) { // Player Reconnection
             clients.replace(username, connection);
 
@@ -129,7 +129,7 @@ public class Server implements Runnable {
                 ServerMessageHeader header = new ServerMessageHeader(MessageFromServerType.CONNECTION_RESPONSE, connection);
                 connection.sendMessage(new MessageFromServer(header, payload));
 
-                 */
+
             } else { // Game started
                 //TODO conviene scrivere un metodo di invio di messaggio e chiamare sempre quello
                 // (inserendo come parametro la stringa da stampare)
@@ -156,7 +156,7 @@ public class Server implements Runnable {
 
             connection.sendMessage(new MessageFromServer(header,payload));
             connection.disconnect();
-        }
+        }*/
     }
 
     /**
@@ -195,6 +195,7 @@ public class Server implements Runnable {
      * @param message message sent to server
      */
     void onMessage(MessageFromClient message) throws IOException {
+        /*
         if (message != null && message.getNicknameSender() != null) {
 
             String msgToken = message.getToken();
@@ -217,12 +218,15 @@ public class Server implements Runnable {
                 sendMessage(message.getSenderUsername(), response);
             }
         }
+
+         */
     }
 
     /**
      * Updates the timer state
      */
     private void updateTimer() {
+        /*
         if (Game.getInstance().isGameStarted()) {
             Connection conn;
 
@@ -236,6 +240,8 @@ public class Server implements Runnable {
 
             LOGGER.log(Level.INFO, "Move timer reset for user {0}, {1} seconds left", new Object[]{gameController.getTurnOwnerUsername(), moveTime / 1000});
         }
+
+         */
     }
 
     /**
@@ -244,6 +250,7 @@ public class Server implements Runnable {
      * @param playerConnection connection of the player that just disconnected
      */
     void onDisconnect(Connection playerConnection) {
+        /*
         String username = getUsernameByConnection(playerConnection);
 
         if (username != null) {
@@ -267,6 +274,8 @@ public class Server implements Runnable {
                 sendMessageToAll(new DisconnectionMessage(username));
             }
         }
+
+         */
     }
 
     /**
@@ -285,7 +294,7 @@ public class Server implements Runnable {
                 }
             }
         }
-        LOGGER.log(Level.INFO, "Send to all: {0}", message);
+        //LOGGER.log(Level.INFO, "Send to all: {0}", message);
     }
 
     /**
@@ -299,11 +308,11 @@ public class Server implements Runnable {
                 try {
                     client.getValue().sendMessage(message);
                 } catch (IOException e) {
-                    LOGGER.severe(e.getMessage());
+                    //LOGGER.severe(e.getMessage());
                 }
             }
         }
-        LOGGER.log(Level.INFO, "Send to all except {0}: {1}", new Object[]{username, message});
+        //LOGGER.log(Level.INFO, "Send to all except {0}: {1}", new Object[]{username, message});
     }
 
     /**
@@ -319,14 +328,14 @@ public class Server implements Runnable {
                     try {
                         client.getValue().sendMessage(message);
                     } catch (IOException e) {
-                        LOGGER.severe(e.getMessage());
+                        //LOGGER.severe(e.getMessage());
                     }
                     break;
                 }
             }
         }
 
-        LOGGER.log(Level.INFO, "Send: {0}, {1}", new Object[]{message.getSenderUsername(), message});
+        //LOGGER.log(Level.INFO, "Send: {0}, {1}", new Object[]{message.getSenderUsername(), message});
     }
 
     /**
@@ -368,7 +377,7 @@ public class Server implements Runnable {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                LOGGER.severe(e.getMessage());
+                //LOGGER.severe(e.getMessage());
                 Thread.currentThread().interrupt();
             }
         }

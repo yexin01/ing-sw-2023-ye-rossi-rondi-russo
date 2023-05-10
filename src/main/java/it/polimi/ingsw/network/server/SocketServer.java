@@ -22,7 +22,7 @@ public class SocketServer extends Thread {
             serverSocket = new ServerSocket(port);
             start();
         } catch (IOException e) {
-            Server.LOGGER.severe(e.getMessage());
+            //Server.LOGGER.severe(e.getMessage());
         }
     }
 
@@ -33,7 +33,7 @@ public class SocketServer extends Thread {
                 Socket client = serverSocket.accept();
                 new SocketConnection(this, client);
             } catch (IOException e) {
-                Server.LOGGER.warning(e.getMessage());
+                //Server.LOGGER.warning(e.getMessage());
             }
         }
     }
@@ -43,7 +43,7 @@ public class SocketServer extends Thread {
     }
 
     void onMessage(NetworkMessage message) {
-        server.onMessage(message);
+        //server.onMessage(message);
     }
 
     void onDisconnect(Connection playerConnection) {

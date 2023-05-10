@@ -1,5 +1,5 @@
 package it.polimi.ingsw.view.GUI;
-
+/*
 import it.polimi.ingsw.listeners.EventListener;
 import it.polimi.ingsw.messages.EventType;
 import it.polimi.ingsw.view.ClientView;

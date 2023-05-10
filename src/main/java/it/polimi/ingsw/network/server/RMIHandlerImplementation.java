@@ -35,7 +35,7 @@ public class RMIHandlerImplementation extends UnicastRemoteObject implements RMI
      */
     @Override
     public void onMessage(NetworkMessage message) {
-        server.onMessage(message);
+        //server.onMessage(message);
     }
 
     @Override

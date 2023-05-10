@@ -1,8 +1,10 @@
 package it.polimi.ingsw.network.client;
 
+import it.polimi.ingsw.messages.MessageFromClient;
 import it.polimi.ingsw.messages.MessageFromServer;
 import it.polimi.ingsw.network.networkmessages.NetworkMessage;
 import it.polimi.ingsw.network.server.RMIHandler;
+import it.polimi.ingsw.view.ClientInterface;
 
 import java.io.Serial;
 import java.rmi.NotBoundException;
@@ -20,6 +22,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
     private static final long serialVersionUID = 1259827311643177219L;
 
     private transient RMIHandler server;
+    private MessageFromClient message;
 
     /**
      * This constructor creates a ClientRMI
@@ -29,7 +32,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
      * @param token is the token of the client
      * @throws RemoteException if there are connection problems
      */
-    public ClientRMI (String username, String ip, int port, String token, DisconnectionListener disconnectionListener) throws RemoteException {
+    public ClientRMI (String username, String ip, int port, String token, ClientInterface disconnectionListener) throws RemoteException {
         super(username, ip, port, token, disconnectionListener);
     }
 
@@ -67,7 +70,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
         if (server == null) {
             throw new RemoteException();
         }
-        server.onMessage(message);
+        //server.onMessage(message);
     }
 
     //TODO: this is receiveMessageFromServer
@@ -79,7 +82,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
     @Override
     public void messageToClient(NetworkMessage message) throws RemoteException {
         synchronized (getMessageQueue()) {
-            getMessageQueue().add(message);
+            //getMessageQueue().add(message);
         }
     }
 
@@ -91,7 +94,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
     public void ping() throws RemoteException {
         super.pingTimer.cancel();
         super.pingTimer = new Timer();
-        super.pingTimer.schedule(new TimerDisconnect(super.disconnectionListener), Client.DISCONNECTION_TIME); //if the server doesn't respond in 1.5 seconds, disconnect calling the disconnectionListener
+        //super.pingTimer.schedule(new TimerDisconnect(super.disconnectionListener), Client.DISCONNECTION_TIME); //if the server doesn't respond in 1.5 seconds, disconnect calling the disconnectionListener
     }
 
     /**

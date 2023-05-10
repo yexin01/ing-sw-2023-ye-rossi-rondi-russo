@@ -2,7 +2,7 @@ package it.polimi.ingsw.view.GUI;
 
 
 import it.polimi.ingsw.view.ClientView;
-
+ /*
 import javax.swing.*;
 import java.awt.*;
 //TODO creare classe atratta da cui si eredita la creazione di bottoni con immagine
@@ -83,7 +83,7 @@ public class ChoicePanel extends JPanel {
             });
         }
     }
-    /*
+
         public void enlargePanel() {
             setLayout(new BorderLayout());
             int newWidth = getWidth() * 2;
@@ -100,7 +100,9 @@ public class ChoicePanel extends JPanel {
             revalidate();
         }
 
-     */
+
+
+
     public void enlargePanel() {
         int newWidth = (int) (getWidth() * 2);
         int newHeight = (int) (getHeight() * 2);
@@ -188,7 +190,6 @@ public void enlargePanel() {
         revalidate();
     }
 
-     */
 
 
     public void setButtonIcon(String imagePath, int index) {
@@ -204,11 +205,11 @@ public void enlargePanel() {
             }
         }
 
-         */
+
     }
 
 
-}/*
+}*//*
         Dimension buttonDimension = new Dimension(BUTTON_SIZE, BUTTON_SIZE);
         for (JButton button : itemButtons) {
             button.setPreferredSize(buttonDimension);

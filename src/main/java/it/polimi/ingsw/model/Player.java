@@ -106,12 +106,12 @@ public class Player {
         for (int i = 0; i < order.length; i++) {
             int curIndex = order[i];
             if (curIndex > maxIndex || curIndex < 0) {
-                return ErrorType.INVALID_ORDER_TILE;
+                return ErrorType.INVALID_ORDER_TILE_NUMBER;
                 //throw new Error(ErrorType.INVALID_ORDER_TILE);
             }
             for (int j = i + 1; j < order.length; j++) {
                 if (order[j] == curIndex) {
-                    return ErrorType.INVALID_ORDER_TILE;
+                    return ErrorType.INVALID_ORDER_TILE_REPETITION;
                    // throw new Error(ErrorType.INVALID_ORDER_TILE);
                 }
             }

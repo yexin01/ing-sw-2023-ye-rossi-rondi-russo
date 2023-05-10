@@ -1,5 +1,5 @@
 package it.polimi.ingsw.view.GUI;
-
+/*
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.network.server.ErrorType;
 import it.polimi.ingsw.view.ClientInterface;
@@ -263,7 +263,7 @@ public class BoardBoxPanel extends ClientInterface {
 }
 
  */
-}
+
 
 
 

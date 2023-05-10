@@ -208,7 +208,7 @@ public class CLI extends ClientInterface {
         ErrorType error=resetChoiceBoard(lastOrAll);
         if (error==null) {
             printerBoard.printMatrixBoard(getClientView());
-            Colors.colorize(Colors.GAME_INSTRUCTION, "Reset successful");
+            Colors.colorize(Colors.GAME_INSTRUCTION, "Reset successful\n");
         }
     }
     public void handleInvalidPhase(Commands commands) throws Exception {

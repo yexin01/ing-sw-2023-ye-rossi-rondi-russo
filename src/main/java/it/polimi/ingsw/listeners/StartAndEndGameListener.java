@@ -3,6 +3,8 @@ package it.polimi.ingsw.listeners;
 import it.polimi.ingsw.messages.EventType;
 import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.network.server.GameLobby;
+import it.polimi.ingsw.view.CLI.CLI;
+import it.polimi.ingsw.view.ClientView;
 
 public class StartAndEndGameListener extends EventListener{
     public StartAndEndGameListener(GameLobby gameLobby) {
@@ -14,6 +16,18 @@ public class StartAndEndGameListener extends EventListener{
         switch(event){
             case START_GAME ->{
                 getGameLobby().setModelView((ModelView) newValue);
+                ClientView clientView=new ClientView();
+                CLI cl=new CLI();
+                clientView.setBoardView(((ModelView) newValue).getBoardView());
+                clientView.setBookshelfView(((ModelView) newValue).getBookshelfView("TIZIO"));
+                clientView.setPlayerPersonalGoal(((ModelView) newValue).getPlayerPersonalGoal("TIZIO"));
+                cl.setClientView(clientView);
+                try {
+                    cl.askCoordinates();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
                 //TODO decidere se fare funzione o no
                 //getServerView().sendInfo(null);
             }

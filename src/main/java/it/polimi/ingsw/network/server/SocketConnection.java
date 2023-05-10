@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.server;
 
+import it.polimi.ingsw.messages.MessageFromServer;
 import it.polimi.ingsw.network.networkmessages.NetworkMessage;
 
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class SocketConnection extends Connection implements Runnable {
                 this.out = new ObjectOutputStream(socket.getOutputStream());
             }
         } catch (IOException e) {
-            Server.LOGGER.severe(e.toString());
+            //Server.LOGGER.severe(e.toString());
         }
 
         listener = new Thread(this);
@@ -58,13 +59,14 @@ public class SocketConnection extends Connection implements Runnable {
      */
     @Override
     public void run() {
+        /*
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 synchronized (inLock) {
                     NetworkMessage message = (NetworkMessage) in.readObject();
 
                     if (message != null) {
-                        if (message.getContent() == MessageContent.CONNECTION) {
+                        //if (message.getContent() == MessageContent.CONNECTION) {
                             socketServer.login(message.getSenderUsername(), this);
                         } else {
                             socketServer.onMessage(message);
@@ -74,9 +76,11 @@ public class SocketConnection extends Connection implements Runnable {
             } catch (IOException e) {
                 disconnect();
             } catch (ClassNotFoundException e) {
-                Server.LOGGER.severe(e.getMessage());
+                //Server.LOGGER.severe(e.getMessage());
             }
         }
+
+         */
     }
 
     @Override
@@ -84,12 +88,17 @@ public class SocketConnection extends Connection implements Runnable {
         return connected;
     }
 
+    @Override
+    public void sendMessage(MessageFromServer message) throws IOException {
+
+    }
+
     /**
      * Sends a message to the client
      *
      * @param message to send to the client
      */
-    @Override
+
     public void sendMessage(NetworkMessage message) {
         if (connected) {
             try {
@@ -98,7 +107,7 @@ public class SocketConnection extends Connection implements Runnable {
                     out.reset();
                 }
             } catch (IOException e) {
-                Server.LOGGER.severe(e.getMessage());
+                //Server.LOGGER.severe(e.getMessage());
                 disconnect();
             }
         }
@@ -112,7 +121,7 @@ public class SocketConnection extends Connection implements Runnable {
                     socket.close();
                 }
             } catch (IOException e) {
-                Server.LOGGER.severe(e.getMessage());
+                //Server.LOGGER.severe(e.getMessage());
             }
 
             listener.interrupt(); // Interrupts the thread
@@ -127,6 +136,6 @@ public class SocketConnection extends Connection implements Runnable {
      */
     @Override
     public void ping() {
-        sendMessage(new PingMessage());
+        //sendMessage(new PingMessage());
     }
 }
