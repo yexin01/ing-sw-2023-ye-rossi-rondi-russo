@@ -10,7 +10,7 @@ public enum ErrorType {
     INVALID_INPUT("Invalid Input"),
     NOT_ENOUGH_FREE_CELLS_COLUMN("You don't have enough cells free in this column"),
     NOT_SELECTABLE_TILE("Not selectable tile"),
-    TOO_MANY_TILES("You selected too many tile"),
+    TOO_MANY_TILES("You cannot select another tile:\n1)you have reached the maximum number of selectable, or \n2)bookshelf has a maximum number of free cells lower than the maximum number."),
     INVALID_ORDER_TILE_REPETITION("You cannot enter the same number twice "),
     INVALID_ORDER_TILE_NUMBER("You have entered a number outside the permitted range "),
     NOT_PLAYER_FOUND("Not player with this nickname found "),

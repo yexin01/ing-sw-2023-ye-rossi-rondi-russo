@@ -27,7 +27,7 @@ public class CLI extends ClientInterface {
         printerStartAndEndTurn =new PrinterStartAndEndTurn();
         printerCommonGoalAndPoints=new PrinterCommonGoalAndPoints();
     }
-    private static int MAX_SELECTABLE_TILES = 3;
+
     public void allCommands(int phase) throws Exception {
         boolean firstPrint=false;
         System.out.println();
@@ -104,12 +104,13 @@ public class CLI extends ClientInterface {
         System.out.println();
         return Commands.values()[input];
     }
+
+
     @Override
     public int[] askCoordinates() throws Exception {
         System.out.println();
         Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: SELECT FROM BOARD");
         System.out.println();
-        MAX_SELECTABLE_TILES=numSelectableTiles();
         getClientView().setCoordinatesSelected(new ArrayList<>());
         printerBoard.printMatrixBoard(getClientView());
         //TODO aggiungere attributo che indica il numero di tile massimo
@@ -123,32 +124,22 @@ public class CLI extends ClientInterface {
           }
           switch (commands) {
               case SELECT_FROM_BOARD1:
-                  selectTile(scanner);
+                  selectTile();
                   break;
               case SELECT_FROM_BOARD2:
-                  resetLastChoice();
-                  //Colors.colorize(Colors.ERROR_MESSAGE, "Choice has been reset");
+                  resetChoice(0);
                   break;
               case SELECT_FROM_BOARD3:
-                  resetAllChoice();
-                  //Colors.colorize(Colors.ERROR_MESSAGE, "Choice has been reset");
+                  resetChoice(1);
                   break;
               case SELECT_FROM_BOARD4:
-                 if (getClientView().getCoordinatesSelected().isEmpty()) {
-                 //printerBoard.printMatrixBoard(getClientView());
-                    Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
-                    System.out.println();
-                    continue;
-                 } else {
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "Confirmation successful.");
-                    continueToAsk = false;
-                 }
+                  if(!getClientView().getCoordinatesSelected().isEmpty()){
+                      Colors.colorize(Colors.GAME_INSTRUCTION, "Confirmation successful.");
+                      continueToAsk = false;
+                  }
                  break;
               default:
-                String commandString = commands.toString();
-                if (commandString.toLowerCase().startsWith("print")){
-                   printCommands(commands);
-                }else Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.ILLEGAL_PHASE.getErrorMessage());
+                  handleInvalidPhase(commands);
                 continue;
             }
 
@@ -185,10 +176,10 @@ public class CLI extends ClientInterface {
         }
     }
 
-    private void selectTile(Scanner scanner) {
+    private void selectTile() {
         int x, y;
-
-        if (getClientView().getCoordinatesSelected().size() >= MAX_SELECTABLE_TILES *2) {
+        ErrorType error=checkNumTilesSelectedBoard();
+        if (error!=null) {
             Colors.colorize(Colors.ERROR_MESSAGE,ErrorType.TOO_MANY_TILES.getErrorMessage());
             System.out.println();
         }else{
@@ -199,7 +190,7 @@ public class CLI extends ClientInterface {
             Colors.colorize(Colors.GAME_INSTRUCTION, "(y): ");
             y = scanner.nextInt();
             scanner.nextLine();
-            ErrorType error= checkCoordinates(x, y);
+            error= checkCoordinates(x, y);
             if(error==null){
                 error= checkSelectable(x, y);
             }
@@ -212,20 +203,19 @@ public class CLI extends ClientInterface {
             }
         }
     }
-    private  void resetAllChoice() {
-        getClientView().getCoordinatesSelected().clear();
-        printerBoard.printMatrixBoard(getClientView());
-        Colors.colorize(Colors.GAME_INSTRUCTION, "All choices have been reset. ");
-    }
-    private void resetLastChoice() {
-        if (!getClientView().getCoordinatesSelected().isEmpty()) {
-            int lastIndex = getClientView().getCoordinatesSelected().size() - 1;
-            getClientView().getCoordinatesSelected().remove(lastIndex);
-            getClientView().getCoordinatesSelected().remove(lastIndex - 1);
-            printerBoard.printMatrixBoard(getClientView());
-            Colors.colorize(Colors.GAME_INSTRUCTION, "Last choice has been reset. ");
 
+    private void resetChoice(int lastOrAll) {
+        ErrorType error=resetChoiceBoard(lastOrAll);
+        if (error==null) {
+            printerBoard.printMatrixBoard(getClientView());
+            Colors.colorize(Colors.GAME_INSTRUCTION, "Reset successful");
         }
+    }
+    public void handleInvalidPhase(Commands commands) throws Exception {
+        String commandString = commands.toString();
+        if (commandString.toLowerCase().startsWith("print")) {
+            printCommands(commands);
+        } else Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.ILLEGAL_PHASE.getErrorMessage());
     }
 
     private int sizetile=3;
@@ -294,10 +284,7 @@ public class CLI extends ClientInterface {
                     permuteSelection();
                     break;
                 default:
-                    String commandString = commands.toString();
-                    if (commandString.toLowerCase().startsWith("print")) {
-                        printCommands(commands);
-                    } else Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.ILLEGAL_PHASE.getErrorMessage());
+                    handleInvalidPhase(commands);
                     continue;
             }
 
@@ -355,10 +342,7 @@ public class CLI extends ClientInterface {
                     printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 1, 60, false, false, 0);
                     continue;
                 default:
-                    String commandString = commands.toString();
-                    if (commandString.toLowerCase().startsWith("print")) {
-                        printCommands(commands);
-                    } else Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.ILLEGAL_PHASE.getErrorMessage());
+                    handleInvalidPhase(commands);
                     break;
             }
         }

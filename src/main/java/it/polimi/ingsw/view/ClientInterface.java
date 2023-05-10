@@ -27,6 +27,7 @@ public abstract class ClientInterface extends JPanel {
     public abstract int[] askCoordinates() throws Exception;
     public abstract int[] askOrder() throws Exception;
     public abstract int[] askColumn() throws Exception;
+
     public void createItemTileView() throws Error {
         ItemTileView[] itemTileViews=new ItemTileView[getClientView().getCoordinatesSelected().size()/2];
         BoardBoxView[][] boardView= getClientView().getBoardView();
@@ -131,6 +132,23 @@ public abstract class ClientInterface extends JPanel {
         }
         return null;
     }
+    public ErrorType checkNumTilesSelectedBoard(){
+        if (getClientView().getCoordinatesSelected().size() >= numSelectableTiles()*2) {
+            return ErrorType.TOO_MANY_TILES;
+        }else return null;
+    }
+    public ErrorType resetChoiceBoard(int lastOrAll) throws Error{
+        if (!getClientView().getCoordinatesSelected().isEmpty()) {
+            if(lastOrAll==0){
+                int lastIndex = getClientView().getCoordinatesSelected().size() - 1;
+                getClientView().getCoordinatesSelected().remove(lastIndex);
+                getClientView().getCoordinatesSelected().remove(lastIndex - 1);
+            }else getClientView().getCoordinatesSelected().clear();
+            return null;
+        }
+        return ErrorType.NOT_VALUE_SELECTED;
+    }
+
 
     public void setClientView(ClientView clientView) {
         this.clientView = clientView;
