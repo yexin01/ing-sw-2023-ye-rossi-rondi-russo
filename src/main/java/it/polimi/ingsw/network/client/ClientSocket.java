@@ -1,146 +1,115 @@
 package it.polimi.ingsw.network.client;
 
-import it.polimi.ingsw.messages.EventType;
-import it.polimi.ingsw.messages.MessageFromClient;
-
-import it.polimi.ingsw.messages.MessageFromServer;
-import it.polimi.ingsw.network.client.handlers.HandlerUpdater;
-import it.polimi.ingsw.view.ClientInterface;
+import it.polimi.ingsw.messages.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serial;
 import java.net.Socket;
-import java.rmi.RemoteException;
+import java.util.Timer;
+import java.util.logging.Logger;
 
-/**
- * This class represents a Socket connection with a server as a client
- */
-
-public class ClientSocket extends Client implements Runnable{
+public class ClientSocket extends Client implements Runnable {
 
     @Serial
-    private static final long serialVersionUID = -6118099010326718532L;
+    private static final long serialVersionUID = -5234333747123834779L;
 
     private transient Socket socket;
 
-    private HandlerUpdater handlerUpdater;
     private transient ObjectInputStream in;
     private transient ObjectOutputStream out;
 
     private transient Thread messageReceiver;
 
-
-
-    /**
-     * Constructs a connection over the socket with the server as a client with the given username and token and ip and port of the server to connect to
-     * @param username is the username of the client
-     * @param ip is the ip of the server to connect to
-     * @param port is the port of the server to connect to
-     * @param token is the token of the client
-     * @throws RemoteException if there are connection problems
-**/
-    public ClientSocket(String username, String ip, int port, String token, ClientInterface clientInterface) throws RemoteException {
-        super(username,ip,port,token,clientInterface);
+    public ClientSocket(String nickname, String address, int port) throws IOException {
+        super(nickname, address, port);
     }
 
-
-
-    /**
-     * This method starts the connection with the server as a client over the socket and starts the message receiver thread to receive messages from the server
-     * @throws IOException if there are connection problems
-     **/
     @Override
     public void startConnection() throws IOException {
         socket = new Socket(getIp(), getPort());
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
 
-        //TODO ask to giuliaR how to set it
-        MessageFromClient message=new MessageFromClient(EventType.CONNECT,getUsername(),null);
-        sendMessage(message);
+        ClientMessageHeader header = new ClientMessageHeader(EventType.CONNECTION_REQUEST, getNickname());
+        MessagePayload payload = new MessagePayload("");
+        MessageFromClient message = new MessageFromClient(header, payload);
+
+        sendMessageToServer(message);
 
         messageReceiver = new Thread(this);
         messageReceiver.start();
     }
 
-    /**
-     * This method disconnects the client from the server by closing the connection and interrupting the message receiver thread with the method closeConnection
-     * @throws RemoteException if there are connection problems
-     **/
-    //TODO questo verrà tolto lo farà l handler disconnectionHandler
     @Override
-    public void disconnectMe() throws RemoteException {
-        try {
-            closeConnection();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error while closing connection");
-        }
-    }
-
-    /**
-     * This method sends a message to the server over the socket connection using the writeObject method of the ObjectOutputStream
-     * @param message is the message to send
-     * @throws RemoteException if there are connection problems
-     **/
-    @Override
-    public void sendMessage(MessageFromClient message) throws RemoteException {
+    public void sendMessageToServer(MessageFromClient message) throws IOException {
         if (out != null) {
-            try {
-                out.writeObject(message);
-                out.reset();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            out.writeObject(message);
+            out.reset();
         }
     }
 
-    /**
-     * This method closes the connection with the server by closing the socket and setting the ObjectInputStream and the ObjectOutputStream to null and interrupting the message receiver thread
-     * @throws RemoteException if there are connection problems
-     **/
-    @Override
-    public void closeConnection() throws RemoteException {
-        try {
-            if (!socket.isClosed()) {
-                socket.close();
-            }
-            messageReceiver.interrupt();
-            in = null;
-            out = null;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    /**
-     * This method receives messages from the server over the socket connection using the readObject method of the ObjectInputStream and adds them to the message queue of the client to be processed by the client itself
-     **/
     @Override
     public void run() {
-        //TODO to adapt
-        while (!socket.isClosed()) {
+        while (!Thread.currentThread().isInterrupted()) {
             try {
                 MessageFromServer message = (MessageFromServer) in.readObject();
-                synchronized (messageQueue) {
-                    messageQueue.add(message);
+
+                if (message != null && message.getHeader().getMessageType() != EventType.PING) {
+                    receiveMessageFromServer(message);
+                } else if (message != null && message.getHeader().getMessageType() == EventType.PING) {
+                    receiveMessageFromServer(message);
+                    super.pingTimer.cancel();
+                    super.pingTimer = new Timer();
+                    super.pingTimer.schedule(new PingTimerTask(this), DISCONNECTION_TIME);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (IOException e) {
+                disconnect();
+            } catch (ClassNotFoundException e) {
+                try {
+                    out.writeObject("error");
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         }
     }
 
-
-
-    public HandlerUpdater getHandlerUpdater() {
-        return handlerUpdater;
+    private void disconnect() {
+        try {
+            closeConnection();
+        } catch (IOException e) {
+            Logger.getLogger("client").severe(e.getMessage());
+        }
     }
 
-    public void setHandlerUpdater(HandlerUpdater handlerUpdater) {
-        this.handlerUpdater = handlerUpdater;
+    @Override
+    public void closeConnection() throws IOException {
+        if (!socket.isClosed()) {
+            socket.close();
+        }
+        messageReceiver.interrupt();
+
+        in = null;
+        out = null;
     }
+
+    @Override
+    public void receiveMessageFromServer(MessageFromServer message) {
+        if(message.getHeader().getMessageType().equals(EventType.PING)){
+            //System.out.println("Ping received on socket");
+        } else {
+            System.out.println("sono il client... ho ricevuto il messaggio: " +message.toString() +" dal server!-------");
+            addMessage(message); //to the queue
+        }
+    }
+
+    //TODO: CONTROLLA SE ARRIVA ALL'HANDLER
+    public synchronized void addMessage(MessageFromServer message) {
+        messageQueue.add(message);
+        // Notifica il thread in attesa che è stato aggiunto un nuovo messaggio
+        notify();
+    }
+
 }

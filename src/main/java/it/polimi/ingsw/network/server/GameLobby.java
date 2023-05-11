@@ -1,155 +1,98 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.messages.*;
+import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.messages.EventType;
+import it.polimi.ingsw.messages.MessageFromServer;
+import it.polimi.ingsw.messages.MessagePayload;
+import it.polimi.ingsw.messages.ServerMessageHeader;
 
+import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
 
-import it.polimi.ingsw.model.modelView.ModelView;
+// La gameLobby della singola partita.
+// Il client viene inserito appena decide di creare questa partita
+// Ci mette anche coloro che vogliono partecipare ad una partita in attesa di utenti
 
-
-import java.util.HashMap;
-
-//TODO cambiare enumerazione dei messaggi dal server una volta terminata la parte di rete
 public class GameLobby {
-    //TODO Client entity will change once the network part is finished
-    private HashMap<String, Connection> playerMap;
-    private ModelView modelView;
+    private final int idGameLobby; //id della partita
+    private final int wantedPlayers;
+    private GameController gameController;
+
+    private ConcurrentHashMap<String, Connection> players; //mappa di tutti i giocatori attivi in partita
+    private ConcurrentHashMap<String, Connection> playersDisconnected; //mappa di tutti i giocatori disconnessi
+
+    //TODO: da aggiungere il controller della partita e tutti i listeners o quello che serve per gestire la partita
+    //io per ora metto solo quello che mi serve per gestire la mappa
+    //lavoro principalmente sui nickname dei giocatori
+
+    public GameLobby(int idGameLobby, int wantedPlayers){
 
 
+        this.idGameLobby= idGameLobby; //gli è dato in input il primo idGameLobby disponibile
+        this.wantedPlayers = wantedPlayers;
 
-    public void sendMessage(MessagePayload payload,EventType messageType, String playerNickname){
-        ServerMessageHeader header=new ServerMessageHeader(messageType,playerNickname);
-        MessageFromServer message=new MessageFromServer(header,payload);
-        //System.out.println(playerNickname+" RECEIVE");
-        //System.out.println(playerNickname+" RECEIVE"+message.getMessagePayload().getEvent());
-        //TODO gestire invio messaggio
-        // playerMap.get(playerNickname).receiveMessageFromServer(playerNickname,message);
+
+        players = new ConcurrentHashMap<>();
+        playersDisconnected = new ConcurrentHashMap<>();
     }
+    public void createGame(){
 
-    //TODO se il nickname é uguale a null significa che é il gioco é cominciato e quindi va inviato a tutti
-    public void sendInfo(String playerNickname){
-        ServerMessageHeader header=new ServerMessageHeader(EventType.ALL_INFO,playerNickname);
-        MessagePayload payload=new MessagePayload();
-        payload.put(KeyPayload.NEW_BOARD, modelView.getBoardView());
-        payload.put(KeyPayload.NEW_BOOKSHELF, modelView.getBookshelfView(playerNickname));
-        payload.put(KeyPayload.POINTS,modelView.getPlayerPoints(playerNickname));
-        payload.put(KeyPayload.TOKEN,modelView.getCommonGoalViews());
-        payload.put(KeyPayload.PERSONAL_GOAL_CARD,modelView.getPlayerPersonal(playerNickname));
-        //payload.put(PayloadKeyServer.TOKEN,modelView.getCommonGoalViews());
-        //TODO gestire invio messaggio (quando viene inizializzato il gioco viene inviato questo messaggio)
-        //sendMessage(payload,MessageFromServerType.DATA,playerNickname);
-    }
-
-    //TODO questi verranno cambiati
-/*
-    public void sendAllMessage(MessagePayload payload, MessageFromServerType messageType) {
-        for (Map.Entry<String, ClientView> entry : playerMap.entrySet()) {
-            String nickname = entry.getKey();
-            ClientView listener = entry.getValue();
-                sendMessage(payload, messageType, nickname);
-
-        }
-    }
-
-    public void sendMessage(MessagePayload payload, MessageFromServerType messageType, String playerNickname){
-        ServerMessageHeader header=new ServerMessageHeader(messageType,playerNickname, connection);
-        MessageFromServer message=new MessageFromServer(header,payload);
-        //System.out.println(playerNickname+" RECEIVE");
-        //System.out.println(playerNickname+" RECEIVE"+message.getMessagePayload().getEvent());
-        //TODO gestire invio messaggio
-       // playerMap.get(playerNickname).receiveMessageFromServer(playerNickname,message);
-    }
-
- */
+        //this.gameController=new GameController();
 
 
-
-    public void removeClient(String nickname) {
-        playerMap.remove(nickname);
     }
 
 
-    public ModelView getModelView() {
-        return modelView;
+    public int getIdGameLobby(){
+        return idGameLobby;
     }
 
-    public void setModelView(ModelView modelView) {
-        this.modelView = modelView;
+    public int getWantedPlayers(){
+        return wantedPlayers;
     }
 
-    public void setPlayerMap(HashMap<String, Connection> playerMap) {
-        this.playerMap = playerMap;
+    public ConcurrentHashMap<String, Connection> getPlayersInGameLobby(){
+        return players;
     }
 
-
-    /*
-   //se e true lo invia a tutti se e false a tutti eccetto il giocatore con quel nickname
-    public void sendAllMessage(MessagePayload payload, MessageFromServerType messageType, boolean sendToAll, String playerNickname) {
-        for (Map.Entry<String, ClientView> entry : playerMap.entrySet()) {
-            String nickname = entry.getKey();
-            ClientView listener = entry.getValue();
-            if (sendToAll || !nickname.equals(playerNickname)) {
-                sendMessage(payload, messageType, nickname);
-            }
-        }
+    public ConcurrentHashMap<String, Connection> getPlayersDisconnectedInGameLobby(){
+        return playersDisconnected;
     }
 
-    public void sendMessage(MessagePayload payload, MessageFromServerType messageType, String playerNickname){
-        ServerMessageHeader header=new ServerMessageHeader(messageType,playerNickname);
-        MessageFromServer message=new MessageFromServer(header,payload);
-        //System.out.println(playerNickname+" RECEIVE");
-        //System.out.println(playerNickname+" RECEIVE"+message.getMessagePayload().getEvent());
-        playerMap.get(playerNickname).receiveMessageFromServer(playerNickname,message);
-    }
-
-
-     */
-
-    /*
-
-
- */
-
-
-
-
-
-
-/*
-    public ClientUI getClient(String nickname) {
+    public void addPlayerToGame(String nickname, Connection connection) throws IOException {
         try{
-            if (nickname == null) {
-                throw new NullPointerException("Nickname cannot be null");
-            }
-            ClientUI player = playerMap.get(nickname);
-            if (player == null) {
-                throw new IllegalArgumentException("No client found for nickname: " + nickname);
-            }
-            return player;
-        }catch(Exception e){
-
-        }
-        return null;
-    }
-
- */
-
-
- /*
-    public void sendAll(MessagePayload payload, MessageFromServerType messageType){
-        Collection<ClientUI> clients = playerMap.values();
-        for(ClientUI client : clients) {
-            sendMessage(client.getNickname(),payload,messageType);
-        }
-    }
-    public void sendAllExcept(String nickname,MessagePayload payload, MessageFromServerType messageType){
-        Collection<ClientUI> clients = playerMap.values();
-        for(ClientUI client : clients) {
-            if(!(client.getNickname().equals(nickname))){
-                sendMessage(client.getNickname(),payload,messageType);
-            }
+            players.put(nickname,connection);
+            ServerMessageHeader header = new ServerMessageHeader(EventType.JOINED_GAME_LOBBY, nickname);
+            MessagePayload payload = new MessagePayload("\nWelcome to Game Lobby "+ idGameLobby + "! -> waiting for "+ wantedPlayers +" players...\nGame will be starting soon...");
+            connection.sendMessageToClient(new MessageFromServer(header,payload));
+        } catch (IOException e){
+            ServerMessageHeader header = new ServerMessageHeader(EventType.ERR_JOINING_GAME_LOBBY, nickname);
+            MessagePayload payload = new MessagePayload("\nERROR: Failed in joining the Game Lobby!\n");
+            connection.sendMessageToClient(new MessageFromServer(header,payload));
         }
     }
 
-  */
+    //TODO: quando è isFull è vera allora crea il Game e tutto
+    public boolean isFull(){
+        return players.size() == wantedPlayers;
+    }
+
+    public boolean containsPlayerInThisGame(String nickname){
+        return players.containsKey(nickname);
+    }
+
+    public boolean containsPlayerDisconnectedInThisGame(String nickname){
+        return playersDisconnected.containsKey(nickname);
+    }
+
+    public void changePlayerInActive(String nickname){
+        players.put(nickname,playersDisconnected.get(nickname));
+        playersDisconnected.remove(nickname);
+    }
+
+    public void changePlayerInDisconnected(String nickname){
+        playersDisconnected.put(nickname,players.get(nickname));
+        players.remove(nickname);
+    }
 
 }

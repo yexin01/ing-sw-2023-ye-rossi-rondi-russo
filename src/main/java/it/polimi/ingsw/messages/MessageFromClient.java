@@ -3,26 +3,34 @@ package it.polimi.ingsw.messages;
 import java.io.Serializable;
 
 public class MessageFromClient implements Serializable {
-    private final EventType event;
-    private final String nicknameSender;
-    private final int[] value;
+    private ClientMessageHeader header;
+    private MessagePayload payload;
 
-    public MessageFromClient(EventType event,String nicknameSender, int[] value) {
-        this.event=event;
-        this.nicknameSender = nicknameSender;
-        this.value = value;
+    public MessageFromClient(ClientMessageHeader header) {
+        this.header = header;
+        this.payload = new MessagePayload(null);
     }
 
-    public String getNicknameSender() {
-        return nicknameSender;
+    public MessageFromClient(ClientMessageHeader header, MessagePayload payload) {
+        this.header = header;
+        this.payload = payload;
     }
 
-    public int[] getValue() {
-        return value;
+    public ClientMessageHeader getHeader() {
+        return header;
     }
 
-    public EventType getEvent() {
-        return event;
+    public MessagePayload getPayload() {
+        return payload;
     }
+
+    @Override
+    public String toString() {
+        return "Message from Client {" +
+                "sender '" + header.getNicknameSender() + '\'' +
+                ", type= " + header.getMessageType() +
+                ", content= \"" + payload.getContent() +"\""+
+                '}';
+    }
+
 }
-

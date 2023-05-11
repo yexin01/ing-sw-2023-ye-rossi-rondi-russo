@@ -1,10 +1,11 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.network.networkmessages.NetworkMessage;
+import it.polimi.ingsw.messages.MessageFromClient;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.rmi.RemoteException;
 
 public class SocketServer extends Thread {
     private final Server server;
@@ -22,7 +23,7 @@ public class SocketServer extends Thread {
             serverSocket = new ServerSocket(port);
             start();
         } catch (IOException e) {
-            //Server.LOGGER.severe(e.getMessage());
+            System.out.println("Server socket already created with port " + port);
         }
     }
 
@@ -33,20 +34,22 @@ public class SocketServer extends Thread {
                 Socket client = serverSocket.accept();
                 new SocketConnection(this, client);
             } catch (IOException e) {
-                //Server.LOGGER.warning(e.getMessage());
+                System.out.println("Server socket closed");
+                Thread.currentThread().interrupt();
             }
         }
     }
 
-    void login(String username, Connection connection) {
-        server.login(username, connection);
+    public void login(String nickname, Connection connection) throws Exception {
+        server.loginToServer(nickname, connection);
     }
 
-    void onMessage(NetworkMessage message) {
-        //server.onMessage(message);
+    public void receiveMessageFromClient(MessageFromClient message) throws IOException {
+        server.receiveMessageFromClient(message);
     }
 
-    void onDisconnect(Connection playerConnection) {
+    public void onDisconnect(Connection playerConnection) throws RemoteException {
         server.onDisconnect(playerConnection);
     }
+
 }

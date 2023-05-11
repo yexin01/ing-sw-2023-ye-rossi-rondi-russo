@@ -1,36 +1,24 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.messages.MessageFromServer;
-import it.polimi.ingsw.network.networkmessages.NetworkMessage;
 
 import java.io.IOException;
 
-/**
- * This interface that represents a connection with a client
- */
 public abstract class Connection {
     private boolean connected = true;
     private String token;
+
+    private transient ClientPinger clientPinger;
 
     public boolean isConnected() {
         return connected;
     }
 
-    /**
-     * Sends a message to the client
-     *
-     * @param message message to send to the client
-     * @throws IOException in case of problems with communication with client
-     */
-    public abstract void sendMessage(MessageFromServer message) throws IOException;
+    public abstract void sendMessageToClient(MessageFromServer message) throws IOException;
 
-    /**
-     * Disconnects from the client
-     */
-    public abstract void disconnect();
+    public abstract void ping() throws Exception;
 
-    public abstract void ping();
-
+    public abstract void disconnect() throws Exception;
 
     public String getToken() {
         return token;
@@ -38,5 +26,13 @@ public abstract class Connection {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public void setClientPinger(ClientPinger clientPinger) {
+        this.clientPinger = clientPinger;
+    }
+
+    public ClientPinger getClientPinger() {
+        return clientPinger;
     }
 }

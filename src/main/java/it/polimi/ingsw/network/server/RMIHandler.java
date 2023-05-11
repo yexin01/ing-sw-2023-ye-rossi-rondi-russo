@@ -1,24 +1,18 @@
 package it.polimi.ingsw.network.server;
 
+import it.polimi.ingsw.messages.MessageFromClient;
 import it.polimi.ingsw.network.client.RMIClientConnection;
-import it.polimi.ingsw.network.networkmessages.NetworkMessage;
 
+import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-/**
- * This interface is the one sent to the RMI client enabling him to send messages to server
- */
 public interface RMIHandler extends Remote {
 
-    void login(String username, RMIClientConnection client) throws RemoteException;
+    public void receiveMessageFromClient(MessageFromClient message) throws IOException;
 
-    /**
-     * Sends a message to the server
-     *
-     * @param message message sent to server
-     */
-    void onMessage(NetworkMessage message) throws RemoteException;
+    public void login(String username, RMIClientConnection client) throws Exception;
 
-    void disconnectMe() throws RemoteException;
+    public void disconnectMe() throws RemoteException;
+
 }

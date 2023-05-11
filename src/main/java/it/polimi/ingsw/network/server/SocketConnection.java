@@ -1,16 +1,16 @@
 package it.polimi.ingsw.network.server;
 
+import it.polimi.ingsw.messages.EventType;
+import it.polimi.ingsw.messages.MessageFromClient;
 import it.polimi.ingsw.messages.MessageFromServer;
-import it.polimi.ingsw.network.networkmessages.NetworkMessage;
+import it.polimi.ingsw.messages.ServerMessageHeader;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.rmi.RemoteException;
 
-/**
- * This class represents a Socket connection with a client
- */
 public class SocketConnection extends Connection implements Runnable {
     private final SocketServer socketServer;
     private final Socket socket;
@@ -25,13 +25,7 @@ public class SocketConnection extends Connection implements Runnable {
 
     private Thread listener;
 
-    /**
-     * Constructs a connection over the socket with the socket server
-     *
-     * @param socketServer socket server
-     * @param socket       socket of the client
-     */
-    SocketConnection(SocketServer socketServer, Socket socket) {
+    SocketConnection(SocketServer socketServer, Socket socket) throws RemoteException {
         this.socketServer = socketServer;
         this.socket = socket;
 
@@ -41,46 +35,45 @@ public class SocketConnection extends Connection implements Runnable {
             synchronized (inLock) {
                 this.in = new ObjectInputStream(socket.getInputStream());
             }
-
             synchronized (outLock) {
                 this.out = new ObjectOutputStream(socket.getOutputStream());
             }
         } catch (IOException e) {
-            //Server.LOGGER.severe(e.toString());
+            System.out.println("Error while creating input/output streams");
+            disconnect();
         }
-
         listener = new Thread(this);
         listener.start();
     }
 
-    /**
-     * Process that continues to listen the input stream and send the messages to
-     * server in case of message
-     */
     @Override
     public void run() {
-        /*
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 synchronized (inLock) {
-                    NetworkMessage message = (NetworkMessage) in.readObject();
+                    MessageFromClient message = (MessageFromClient) in.readObject();
 
                     if (message != null) {
-                        //if (message.getContent() == MessageContent.CONNECTION) {
-                            socketServer.login(message.getSenderUsername(), this);
+                        if (message.getHeader().getMessageType() == EventType.CONNECTION_REQUEST) {
+                            socketServer.login(message.getHeader().getNicknameSender(), this);
                         } else {
-                            socketServer.onMessage(message);
+                            socketServer.receiveMessageFromClient(message);
                         }
                     }
                 }
-            } catch (IOException e) {
-                disconnect();
-            } catch (ClassNotFoundException e) {
-                //Server.LOGGER.severe(e.getMessage());
+            } catch (IOException | ClassNotFoundException e) {
+                System.out.println("\nclient: "+ super.getClientPinger().getNickname() +" disconnected on his own");
+                try {
+                    disconnect();
+                } catch (RemoteException ex) {
+                    System.out.println("Error while disconnecting client");
+                    throw new RuntimeException(ex);
+                }
+            } catch (Exception e) {
+                System.out.println("Error while reading message from client");
+                throw new RuntimeException(e);
             }
         }
-
-         */
     }
 
     @Override
@@ -89,17 +82,7 @@ public class SocketConnection extends Connection implements Runnable {
     }
 
     @Override
-    public void sendMessage(MessageFromServer message) throws IOException {
-
-    }
-
-    /**
-     * Sends a message to the client
-     *
-     * @param message to send to the client
-     */
-
-    public void sendMessage(NetworkMessage message) {
+    public void sendMessageToClient(MessageFromServer message) throws RemoteException {
         if (connected) {
             try {
                 synchronized (outLock) {
@@ -107,21 +90,21 @@ public class SocketConnection extends Connection implements Runnable {
                     out.reset();
                 }
             } catch (IOException e) {
-                //Server.LOGGER.severe(e.getMessage());
+                System.out.println("Error while sending message to client");
                 disconnect();
             }
         }
     }
 
     @Override
-    public void disconnect() {
+    public void disconnect() throws RemoteException {
         if (connected) {
             try {
                 if (!socket.isClosed()) {
                     socket.close();
                 }
             } catch (IOException e) {
-                //Server.LOGGER.severe(e.getMessage());
+                System.out.println("Error while closing socket");
             }
 
             listener.interrupt(); // Interrupts the thread
@@ -131,11 +114,11 @@ public class SocketConnection extends Connection implements Runnable {
         }
     }
 
-    /**
-     * Sends a ping message to client
-     */
     @Override
-    public void ping() {
-        //sendMessage(new PingMessage());
+    public void ping() throws RemoteException {
+        ServerMessageHeader header = new ServerMessageHeader(EventType.PING, super.getClientPinger().getNickname());
+        MessageFromServer message = new MessageFromServer(header);
+
+        sendMessageToClient(message);
     }
 }

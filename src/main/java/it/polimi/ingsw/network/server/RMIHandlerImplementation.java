@@ -1,63 +1,41 @@
 package it.polimi.ingsw.network.server;
 
+import it.polimi.ingsw.messages.MessageFromClient;
 import it.polimi.ingsw.network.client.RMIClientConnection;
-import it.polimi.ingsw.network.networkmessages.NetworkMessage;
 
+import java.io.IOException;
 import java.io.Serial;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-/**
- * This class is the implementation of the interface RMIHandler
- */
 public class RMIHandlerImplementation extends UnicastRemoteObject implements RMIHandler {
+
     @Serial
-    private static final long serialVersionUID = 3776047796084380457L;
+    private static final long serialVersionUID = 1401929399999030519L;
 
     private final transient Server server;
     private transient RMIConnection rmiSession;
 
-    RMIHandlerImplementation(Server server) throws RemoteException {
+    public RMIHandlerImplementation(Server server) throws RemoteException {
         this.server = server;
     }
 
+    public void receiveMessageFromClient(MessageFromClient message) throws IOException {
+        server.receiveMessageFromClient(message);
+    }
 
     @Override
-    public void login(String username, RMIClientConnection client) {
+    public void login(String nickname, RMIClientConnection client) throws Exception {
         rmiSession = new RMIConnection(server, client);
-        server.login(username, rmiSession);
-    }
-
-    /**
-     * Sends a message to the server
-     *
-     * @param message message sent to server
-     */
-    @Override
-    public void onMessage(NetworkMessage message) {
-        //server.onMessage(message);
+        System.out.println("chiamo login sul server quello vero...");
+        server.loginToServer(nickname, rmiSession);
     }
 
     @Override
-    public void disconnectMe() {
+    public void disconnectMe() throws RemoteException{
         rmiSession.disconnect();
     }
 
-/*
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        RMIHandlerImplementation that = (RMIHandlerImplementation) o;
-        return Objects.equals(server, that.server) &&
-                Objects.equals(rmiSession, that.rmiSession);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), server, rmiSession);
-    }
-
- */
 }
+
+

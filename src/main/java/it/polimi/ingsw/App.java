@@ -1,5 +1,5 @@
 package it.polimi.ingsw;
-
+/*
 import it.polimi.ingsw.controller.GameController;
 
 import it.polimi.ingsw.model.Bookshelf;
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class App{
+
         public static void main(String[] args) throws Exception {
 
 
@@ -86,9 +87,9 @@ public class App{
 
 
             //gameController.startGame(playerNames,0);
-            gameController.getModel().setNextPlayer();
             //gameController.getModel().setNextPlayer();
-            gameController.removePlayer("CAIO");
+            //gameController.getModel().setNextPlayer();
+            //gameController.removePlayer("CAIO");
 /*
             while(true){
                 playerMap.get(gameController.getModel().getTurnPlayer().getNickname()).askClient();
@@ -151,7 +152,7 @@ public class App{
             game.setNextPlayer();
             game.updatePointsCommonGoals();
 
- */
 
         }
 }
+*/
