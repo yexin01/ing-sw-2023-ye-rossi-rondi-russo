@@ -32,9 +32,9 @@ public class ClientSocket extends Client implements Runnable {
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
 
-        ClientMessageHeader header = new ClientMessageHeader(EventType.CONNECTION_REQUEST, getNickname());
-        MessagePayload payload = new MessagePayload("");
-        MessageFromClient message = new MessageFromClient(header, payload);
+        ClientMessageHeader2 header = new ClientMessageHeader2(EventType.CONNECTION_REQUEST, getNickname());
+        MessagePayload2 payload = new MessagePayload2("");
+        MessageFromClient2 message = new MessageFromClient2(header, payload);
 
         sendMessageToServer(message);
 
@@ -43,7 +43,7 @@ public class ClientSocket extends Client implements Runnable {
     }
 
     @Override
-    public void sendMessageToServer(MessageFromClient message) throws IOException {
+    public void sendMessageToServer(MessageFromClient2 message) throws IOException {
         if (out != null) {
             out.writeObject(message);
             out.reset();
@@ -54,11 +54,11 @@ public class ClientSocket extends Client implements Runnable {
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                MessageFromServer message = (MessageFromServer) in.readObject();
+                MessageFromServer2 message = (MessageFromServer2) in.readObject();
 
-                if (message != null && message.getHeader().getMessageType() != EventType.PING) {
+                if (message != null && message.getServerMessageHeader().getMessageType() != EventType.PING) {
                     receiveMessageFromServer(message);
-                } else if (message != null && message.getHeader().getMessageType() == EventType.PING) {
+                } else if (message != null && message.getServerMessageHeader().getMessageType() == EventType.PING) {
                     receiveMessageFromServer(message);
                     super.pingTimer.cancel();
                     super.pingTimer = new Timer();
@@ -96,8 +96,8 @@ public class ClientSocket extends Client implements Runnable {
     }
 
     @Override
-    public void receiveMessageFromServer(MessageFromServer message) {
-        if(message.getHeader().getMessageType().equals(EventType.PING)){
+    public void receiveMessageFromServer(MessageFromServer2 message) {
+        if(message.getServerMessageHeader().getMessageType().equals(EventType.PING)){
             //System.out.println("Ping received on socket");
         } else {
             System.out.println("sono il client... ho ricevuto il messaggio: " +message.toString() +" dal server!-------");
@@ -106,7 +106,7 @@ public class ClientSocket extends Client implements Runnable {
     }
 
     //TODO: CONTROLLA SE ARRIVA ALL'HANDLER
-    public synchronized void addMessage(MessageFromServer message) {
+    public synchronized void addMessage(MessageFromServer2 message) {
         messageQueue.add(message);
         // Notifica il thread in attesa che è stato aggiunto un nuovo messaggio
         notify();

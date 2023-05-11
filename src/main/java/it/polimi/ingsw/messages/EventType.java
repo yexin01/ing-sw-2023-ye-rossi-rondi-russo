@@ -1,6 +1,7 @@
 package it.polimi.ingsw.messages;
 
 public enum EventType {
+    START_GAME,END_GAME,
     SETUP,ALL_INFO,
     START_TURN,BOARD_SELECTION,ORDER_TILES,COLUMN,END_TURN,
 

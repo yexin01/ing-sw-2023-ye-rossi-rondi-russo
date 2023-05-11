@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.network.server.GameLobby;
 import it.polimi.ingsw.view.CLI.CLI;
 import it.polimi.ingsw.view.ClientView;
-/*
+
 public class StartAndEndGameListener extends EventListener{
     public StartAndEndGameListener(GameLobby gameLobby) {
         super(gameLobby);
@@ -40,4 +40,4 @@ public class StartAndEndGameListener extends EventListener{
     }
 }
 
- */
+

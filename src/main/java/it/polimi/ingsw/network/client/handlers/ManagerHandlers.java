@@ -1,5 +1,5 @@
 package it.polimi.ingsw.network.client.handlers;
-
+/*
 import it.polimi.ingsw.messages.EventType;
 import it.polimi.ingsw.messages.MessageFromServer;
 import it.polimi.ingsw.network.client.ClientSocket;
@@ -29,4 +29,6 @@ public class ManagerHandlers {
     }
 
 }
+
+ */
 

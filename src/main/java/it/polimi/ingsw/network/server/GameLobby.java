@@ -2,9 +2,10 @@ package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.messages.EventType;
-import it.polimi.ingsw.messages.MessageFromServer;
-import it.polimi.ingsw.messages.MessagePayload;
-import it.polimi.ingsw.messages.ServerMessageHeader;
+import it.polimi.ingsw.messages.MessageFromServer2;
+import it.polimi.ingsw.messages.MessagePayload2;
+import it.polimi.ingsw.messages.ServerMessageHeader2;
+import it.polimi.ingsw.model.modelView.ModelView;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,6 +18,7 @@ public class GameLobby {
     private final int idGameLobby; //id della partita
     private final int wantedPlayers;
     private GameController gameController;
+    private ModelView modelView;
 
     private ConcurrentHashMap<String, Connection> players; //mappa di tutti i giocatori attivi in partita
     private ConcurrentHashMap<String, Connection> playersDisconnected; //mappa di tutti i giocatori disconnessi
@@ -62,13 +64,13 @@ public class GameLobby {
     public void addPlayerToGame(String nickname, Connection connection) throws IOException {
         try{
             players.put(nickname,connection);
-            ServerMessageHeader header = new ServerMessageHeader(EventType.JOINED_GAME_LOBBY, nickname);
-            MessagePayload payload = new MessagePayload("\nWelcome to Game Lobby "+ idGameLobby + "! -> waiting for "+ wantedPlayers +" players...\nGame will be starting soon...");
-            connection.sendMessageToClient(new MessageFromServer(header,payload));
+            ServerMessageHeader2 header = new ServerMessageHeader2(EventType.JOINED_GAME_LOBBY, nickname);
+            MessagePayload2 payload = new MessagePayload2("\nWelcome to Game Lobby "+ idGameLobby + "! -> waiting for "+ wantedPlayers +" players...\nGame will be starting soon...");
+            connection.sendMessageToClient(new MessageFromServer2(header,payload));
         } catch (IOException e){
-            ServerMessageHeader header = new ServerMessageHeader(EventType.ERR_JOINING_GAME_LOBBY, nickname);
-            MessagePayload payload = new MessagePayload("\nERROR: Failed in joining the Game Lobby!\n");
-            connection.sendMessageToClient(new MessageFromServer(header,payload));
+            ServerMessageHeader2 header = new ServerMessageHeader2(EventType.ERR_JOINING_GAME_LOBBY, nickname);
+            MessagePayload2 payload = new MessagePayload2("\nERROR: Failed in joining the Game Lobby!\n");
+            connection.sendMessageToClient(new MessageFromServer2(header,payload));
         }
     }
 
@@ -95,4 +97,19 @@ public class GameLobby {
         players.remove(nickname);
     }
 
+    public ModelView getModelView() {
+        return modelView;
+    }
+
+    public void setModelView(ModelView modelView) {
+        this.modelView = modelView;
+    }
+
+    public GameController getGameController() {
+        return gameController;
+    }
+
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
+    }
 }

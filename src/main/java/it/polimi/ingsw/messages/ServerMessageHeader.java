@@ -3,21 +3,30 @@ package it.polimi.ingsw.messages;
 import java.io.Serializable;
 
 public class ServerMessageHeader implements Serializable {
+    private final EventType messageFromServer;
 
-    private final EventType messageType;
     private final String nicknameAddressee;
 
-    public ServerMessageHeader(EventType messageType, String nicknameAddressee) {
-        this.messageType = messageType;
+    public ServerMessageHeader(EventType messageFromServer, String nicknameAddressee) {
+        this.messageFromServer = messageFromServer;
         this.nicknameAddressee = nicknameAddressee;
+
     }
 
-    public EventType getMessageType() {
-        return messageType;
+    public EventType getMessageFromServer() {
+        return messageFromServer;
     }
+
+    /*public Connection getConnection() {
+        return connection;
+    }
+
+     */
+
 
     public String getNicknameAddressee() {
         return nicknameAddressee;
     }
+
 
 }

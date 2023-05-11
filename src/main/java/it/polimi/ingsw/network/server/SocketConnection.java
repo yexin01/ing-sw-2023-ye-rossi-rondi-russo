@@ -1,9 +1,9 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.messages.EventType;
-import it.polimi.ingsw.messages.MessageFromClient;
-import it.polimi.ingsw.messages.MessageFromServer;
-import it.polimi.ingsw.messages.ServerMessageHeader;
+import it.polimi.ingsw.messages.MessageFromClient2;
+import it.polimi.ingsw.messages.MessageFromServer2;
+import it.polimi.ingsw.messages.ServerMessageHeader2;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -51,7 +51,7 @@ public class SocketConnection extends Connection implements Runnable {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 synchronized (inLock) {
-                    MessageFromClient message = (MessageFromClient) in.readObject();
+                    MessageFromClient2 message = (MessageFromClient2) in.readObject();
 
                     if (message != null) {
                         if (message.getHeader().getMessageType() == EventType.CONNECTION_REQUEST) {
@@ -82,7 +82,7 @@ public class SocketConnection extends Connection implements Runnable {
     }
 
     @Override
-    public void sendMessageToClient(MessageFromServer message) throws RemoteException {
+    public void sendMessageToClient(MessageFromServer2 message) throws RemoteException {
         if (connected) {
             try {
                 synchronized (outLock) {
@@ -116,8 +116,8 @@ public class SocketConnection extends Connection implements Runnable {
 
     @Override
     public void ping() throws RemoteException {
-        ServerMessageHeader header = new ServerMessageHeader(EventType.PING, super.getClientPinger().getNickname());
-        MessageFromServer message = new MessageFromServer(header);
+        ServerMessageHeader2 header = new ServerMessageHeader2(EventType.PING, super.getClientPinger().getNickname());
+        MessageFromServer2 message = new MessageFromServer2(header);
 
         sendMessageToClient(message);
     }

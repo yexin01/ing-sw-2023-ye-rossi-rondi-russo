@@ -1,15 +1,8 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.controller.TurnPhase;
-import it.polimi.ingsw.listeners.EventListener;
-import it.polimi.ingsw.messages.EventType;
-import it.polimi.ingsw.messages.MessageFromServer;
-import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.network.server.ErrorType;
-import it.polimi.ingsw.view.CLI.Colors;
-import it.polimi.ingsw.view.ClientView;
 
 import javax.swing.*;
 import java.util.ArrayList;

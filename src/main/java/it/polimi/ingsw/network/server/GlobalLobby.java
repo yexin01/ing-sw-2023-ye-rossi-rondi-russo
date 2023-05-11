@@ -1,9 +1,9 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.messages.EventType;
-import it.polimi.ingsw.messages.MessageFromServer;
-import it.polimi.ingsw.messages.MessagePayload;
-import it.polimi.ingsw.messages.ServerMessageHeader;
+import it.polimi.ingsw.messages.MessageFromServer2;
+import it.polimi.ingsw.messages.MessagePayload2;
+import it.polimi.ingsw.messages.ServerMessageHeader2;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,14 +31,14 @@ public class GlobalLobby {
     public synchronized void addPlayerToWaiting(String nickname, Connection connection) throws IOException {
         try{
             waitingPlayersWithNoGame.put(nickname,connection);
-            ServerMessageHeader header = new ServerMessageHeader(EventType.JOIN_GLOBAL_LOBBY, nickname);
-            MessagePayload payload = new MessagePayload("Welcome to the Global Lobby!");
-            connection.sendMessageToClient(new MessageFromServer(header,payload));
+            ServerMessageHeader2 header = new ServerMessageHeader2(EventType.JOIN_GLOBAL_LOBBY, nickname);
+            MessagePayload2 payload = new MessagePayload2("Welcome to the Global Lobby!");
+            connection.sendMessageToClient(new MessageFromServer2(header,payload));
             System.out.println("Player "+nickname+" added to the waiting list in global lobby!");
         } catch (IOException e){
-            ServerMessageHeader header = new ServerMessageHeader(EventType.ERR_JOIN_GLOBAL_LOBBY, nickname);
-            MessagePayload payload = new MessagePayload("ERROR: Failed in joining the Global Lobby!");
-            connection.sendMessageToClient(new MessageFromServer(header,payload));
+            ServerMessageHeader2 header = new ServerMessageHeader2(EventType.ERR_JOIN_GLOBAL_LOBBY, nickname);
+            MessagePayload2 payload = new MessagePayload2("ERROR: Failed in joining the Global Lobby!");
+            connection.sendMessageToClient(new MessageFromServer2(header,payload));
         }
     }
 
@@ -52,9 +52,9 @@ public class GlobalLobby {
         //aggiungi il giocatore alla lobby di gioco appena creata
         gameLobby.addPlayerToGame(nickname, connection);
 
-        ServerMessageHeader header = new ServerMessageHeader(EventType.CREATED_GAME_LOBBY, nickname);
-        MessagePayload payload = new MessagePayload("Game Lobby created!");
-        connection.sendMessageToClient(new MessageFromServer(header, payload));
+        ServerMessageHeader2 header = new ServerMessageHeader2(EventType.CREATED_GAME_LOBBY, nickname);
+        MessagePayload2 payload = new MessagePayload2("Game Lobby created!");
+        connection.sendMessageToClient(new MessageFromServer2(header, payload));
     }
 
     public synchronized void playerJoinsGameLobbyId(int gameId, String nickname, Connection connection) throws IOException {
@@ -64,9 +64,9 @@ public class GlobalLobby {
 
             waitingPlayersWithNoGame.remove(nickname);
         } else {
-            ServerMessageHeader header = new ServerMessageHeader(EventType.ERR_GAME_FULL, nickname);
-            MessagePayload payload = new MessagePayload("ERROR: Failed in joining this game lobby because is full!\n");
-            connection.sendMessageToClient(new MessageFromServer(header,payload));
+            ServerMessageHeader2 header = new ServerMessageHeader2(EventType.ERR_GAME_FULL, nickname);
+            MessagePayload2 payload = new MessagePayload2("ERROR: Failed in joining this game lobby because is full!\n");
+            connection.sendMessageToClient(new MessageFromServer2(header,payload));
         }
     }
 
@@ -79,9 +79,9 @@ public class GlobalLobby {
             }
         }
         if(!done){
-            ServerMessageHeader header = new ServerMessageHeader(EventType.ERR_NO_FREE_SPOTS, nickname);
-            MessagePayload payload = new MessagePayload("ERROR: Failed in joining a random game lobby because all games are full!\nCreating a new Game Lobby for min num players...\n");
-            connection.sendMessageToClient(new MessageFromServer(header,payload));
+            ServerMessageHeader2 header = new ServerMessageHeader2(EventType.ERR_NO_FREE_SPOTS, nickname);
+            MessagePayload2 payload = new MessagePayload2("ERROR: Failed in joining a random game lobby because all games are full!\nCreating a new Game Lobby for min num players...\n");
+            connection.sendMessageToClient(new MessageFromServer2(header,payload));
 
             // Se non c'è spazio in nessuna partita esistente, crea una nuova partita con min_players
             GameLobby gameLobby = new GameLobby(getFirstFreeGameLobbyId(), MIN_PLAYERS);
@@ -98,15 +98,15 @@ public class GlobalLobby {
 
                 waitingPlayersWithNoGame.remove(nickname);
 
-                ServerMessageHeader header = new ServerMessageHeader(EventType.RECONNECT_TO_GAME_LOBBY, nickname);
-                MessagePayload payload = new MessagePayload("You have been reconnected to your previous game lobby!");
-                connection.sendMessageToClient(new MessageFromServer(header, payload));
+                ServerMessageHeader2 header = new ServerMessageHeader2(EventType.RECONNECT_TO_GAME_LOBBY, nickname);
+                MessagePayload2 payload = new MessagePayload2("You have been reconnected to your previous game lobby!");
+                connection.sendMessageToClient(new MessageFromServer2(header, payload));
                 return;
             }
         }
-        ServerMessageHeader header = new ServerMessageHeader(EventType.ERR_RECONNECT_TO_GAME_LOBBY, nickname);
-        MessagePayload payload = new MessagePayload("ERROR: Failed to reconnect to previous game lobby!");
-        connection.sendMessageToClient(new MessageFromServer(header, payload));
+        ServerMessageHeader2 header = new ServerMessageHeader2(EventType.ERR_RECONNECT_TO_GAME_LOBBY, nickname);
+        MessagePayload2 payload = new MessagePayload2("ERROR: Failed to reconnect to previous game lobby!");
+        connection.sendMessageToClient(new MessageFromServer2(header, payload));
     }
 
     public synchronized void disconnectPlayerFromGlobalLobby(String nickname) {

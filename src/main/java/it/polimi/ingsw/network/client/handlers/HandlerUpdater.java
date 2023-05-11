@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.client.handlers;
 
-
+/*
 import it.polimi.ingsw.messages.EventType;
 import it.polimi.ingsw.messages.MessageFromServer;
 import it.polimi.ingsw.network.client.ClientSocket;
@@ -23,10 +23,10 @@ public class HandlerUpdater implements Runnable {
         managerHandlers.registerEventHandler(EventType.COLUMN,new DataHandler());
         managerHandlers.registerEventHandler(EventType.BOARD_SELECTION,new DataHandler());
         managerHandlers.registerEventHandler(EventType.ORDER_TILES,new DataHandler());
-        managerHandlers.registerEventHandler(EventType.DISCONNECT,new DisconnectionHandler());
+       // managerHandlers.registerEventHandler(EventType.DISCONNECT,new DisconnectionHandler());
         managerHandlers.registerEventHandler(EventType.SETUP,new HandlerSetup());
-        managerHandlers.registerEventHandler(EventType.START_GAME,new StartAndEndGameHandler());
-        managerHandlers.registerEventHandler(EventType.END_GAME,new StartAndEndGameHandler());
+       // managerHandlers.registerEventHandler(EventType.START_GAME,new StartAndEndGameHandler());
+       // managerHandlers.registerEventHandler(EventType.END_GAME,new StartAndEndGameHandler());
 
         this.thread = new Thread(this);
         this.thread.start();
@@ -85,3 +85,5 @@ public class HandlerUpdater implements Runnable {
         }
     }
 }
+
+ */

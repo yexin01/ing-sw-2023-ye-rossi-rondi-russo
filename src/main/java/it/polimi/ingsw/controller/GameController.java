@@ -1,7 +1,11 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.listeners.*;
-import it.polimi.ingsw.messages.*;
+
+import it.polimi.ingsw.messages.EventType;
+import it.polimi.ingsw.messages.KeyPayload;
+import it.polimi.ingsw.messages.MessageFromClient;
+import it.polimi.ingsw.messages.MessagePayload;
 import it.polimi.ingsw.network.server.ErrorType;
 
 import it.polimi.ingsw.json.GameRules;
@@ -57,6 +61,7 @@ public class GameController {
 
 
     public void receiveMessageFromClient(MessageFromClient message){
+
         String nicknamePlayer= message.getNicknameSender();
         try{
             if (!nicknamePlayer.equals(game.getTurnPlayer().getNickname())) {
@@ -64,6 +69,7 @@ public class GameController {
                 //serverView.sendError(ErrorType.ILLEGAL_TURN,nicknamePlayer);
                 //throw new Error(ErrorType.ILLEGAL_TURN);
             }
+
             switch (message.getEvent()) {
                 case BOARD_SELECTION ->  checkAndInsertBoardBox(message);
                 //case FINISH_SELECTION->associatePlayerTiles();

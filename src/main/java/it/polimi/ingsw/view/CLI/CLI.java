@@ -373,6 +373,7 @@ public class CLI extends ClientInterface {
     }
 
     public void start()  {
+        Colors.colorize(Colors.YELLOW_CODE,"QUESTA E LA CLI");
         printerStartAndEndTurn.initialLobby();
     }
 

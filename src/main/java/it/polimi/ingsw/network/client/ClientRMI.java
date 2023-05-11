@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.client;
 
-import it.polimi.ingsw.messages.MessageFromClient;
-import it.polimi.ingsw.messages.MessageFromServer;
+import it.polimi.ingsw.messages.MessageFromClient2;
+import it.polimi.ingsw.messages.MessageFromServer2;
 import it.polimi.ingsw.network.server.RMIHandler;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
     }
 
     @Override
-    public void sendMessageToServer(MessageFromClient message) throws IOException {
+    public void sendMessageToServer(MessageFromClient2 message) throws IOException {
         if (server == null) {
             throw new RemoteException();
         }
@@ -39,19 +39,19 @@ public class ClientRMI extends Client implements RMIClientConnection {
     }
 
     @Override
-    public void receiveMessageFromServer(MessageFromServer message) {
+    public void receiveMessageFromServer(MessageFromServer2 message) {
         System.out.println("sono il client... ho ricevuto il messaggio: " +message.toString() +" dal server!-------");
         addMessage(message); //to the queue
     }
 
-    public synchronized void addMessage(MessageFromServer message) {
+    public synchronized void addMessage(MessageFromServer2 message) {
         messageQueue.add(message);
         // Notifica il thread in attesa che è stato aggiunto un nuovo messaggio
         notify();
     }
 
     @Override
-    public synchronized MessageFromServer getNextMessage() {
+    public synchronized MessageFromServer2 getNextMessage() {
         while (messageQueue.isEmpty()) {
             try {
                 // Il thread si mette in attesa finché non viene aggiunto un nuovo messaggio

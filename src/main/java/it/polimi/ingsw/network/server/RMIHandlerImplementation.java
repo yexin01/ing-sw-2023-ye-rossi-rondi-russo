@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.messages.MessageFromClient;
+import it.polimi.ingsw.messages.MessageFromClient2;
 import it.polimi.ingsw.network.client.RMIClientConnection;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class RMIHandlerImplementation extends UnicastRemoteObject implements RMI
         this.server = server;
     }
 
-    public void receiveMessageFromClient(MessageFromClient message) throws IOException {
+    public void receiveMessageFromClient(MessageFromClient2 message) throws IOException {
         server.receiveMessageFromClient(message);
     }
 
