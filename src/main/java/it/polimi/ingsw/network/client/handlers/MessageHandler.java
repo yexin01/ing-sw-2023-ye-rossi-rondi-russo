@@ -13,17 +13,21 @@ public abstract class  MessageHandler {
 
     protected MessageHandler(ClientInterface clientInterface, Client client) {
         this.clientInterface = clientInterface;
+
         this.client = client;
     }
 
 
-    public abstract void handleMessage(Message mes) throws RemoteException;
+    public abstract void handleMessage(Message mes) throws Exception;
 
     public ClientInterface getClientInterface() {
         return clientInterface;
     }
 
+
     public Client getClient() {
         return client;
     }
+
+
 }

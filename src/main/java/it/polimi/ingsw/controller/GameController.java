@@ -41,8 +41,9 @@ public class GameController {
 
         game.createCommonGoalCard(gameRules);
         game.createPersonalGoalCard(gameRules);
+        //TODO capire come organizzarlo meglio
 
-        modelView.addListener(KeyDataPayload.NEW_BOARD,new FinishSelectionListener(gameLobby));
+        //modelView.addListener(KeyDataPayload.,new FinishSelectionListener(gameLobby));
         modelView.addListener(KeyDataPayload.END_TURN,new EndTurnListener(gameLobby));
         listenerManager.fireEvent(KeyDataPayload.START_GAME,null,game.getModelView());
     }
@@ -56,9 +57,9 @@ public class GameController {
     }
 
 
-    public void receiveMessageFromClient(Message messagec){
+    public void receiveMessageFromClient(Message message){
 
-        String nicknamePlayer= messagec.getHeader().getNickname();
+        String nicknamePlayer= message.getHeader().getNickname();
         try{
             if (!nicknamePlayer.equals(game.getTurnPlayer().getNickname())) {
                 listenerManager.fireEvent(KeyErrorPayload.ERROR_DATA,nicknamePlayer, ErrorType.ILLEGAL_TURN);
@@ -66,12 +67,14 @@ public class GameController {
                 //throw new Error(ErrorType.ILLEGAL_TURN);
             }
 
+
+
             switch (turnPhaseController.getCurrentPhase()) {
-                case SELECT_FROM_BOARD ->  checkAndInsertBoardBox(messagec);
+                case SELECT_FROM_BOARD ->  checkAndInsertBoardBox(message);
                 //case FINISH_SELECTION->associatePlayerTiles();
                 //case RESET_BOARD_CHOICE -> resetBoardChoice();
-                case SELECT_ORDER_TILES-> permutePlayerTiles(messagec);
-                case SELECT_COLUMN->selectingColumn(messagec);
+                case SELECT_ORDER_TILES-> permutePlayerTiles(message);
+                case SELECT_COLUMN->selectingColumn(message);
                 //case INSERT_TILE_AND_POINTS -> insertBookshelf();
                 //case ABANDON_GAME -> removePlayer(message.getNicknameSender());
                 //TODO inviera il messaggio di ILLEGAL PHASE di default
@@ -99,7 +102,7 @@ public class GameController {
 
     public void checkAndInsertBoardBox(Message message) throws Exception {
         illegalPhase(TurnPhase.SELECT_FROM_BOARD);
-        int[] coordinates=(int[]) message.getPayload().getContent(KeyDataPayload.VALUE_CLIENT);
+        int[] coordinates=(int[]) message.getPayload().getContent(Data.VALUE_CLIENT);
         int x=coordinates[0];
         int y=coordinates[1];
         checkError(game.getBoard().checkCoordinates(x,y));
@@ -132,7 +135,7 @@ public class GameController {
     }
     public void permutePlayerTiles(Message message) throws Exception {
         illegalPhase(TurnPhase.SELECT_ORDER_TILES);
-        int[] orderTiles=(int[]) message.getPayload().getContent(KeyDataPayload.VALUE_CLIENT);
+        int[] orderTiles=(int[]) message.getPayload().getContent(Data.VALUE_CLIENT);;
         checkError(game.getTurnPlayer().checkPermuteSelection(orderTiles));
         turnPhaseController.changePhase();
         game.getTurnPlayer().permuteSelection(orderTiles);
@@ -141,7 +144,7 @@ public class GameController {
 
     public void selectingColumn(Message message) throws Exception {
         illegalPhase(TurnPhase.SELECT_COLUMN);
-        int column=(int) message.getPayload().getContent(KeyDataPayload.VALUE_CLIENT);;
+        int column=(int) message.getPayload().getContent(Data.VALUE_CLIENT);;;
         System.out.println("You selected "+column);
         checkError(game.getTurnPlayer().getBookshelf().checkBookshelf(column,game.getTurnPlayer().getSelectedItems().size()));
         turnPhaseController.changePhase();

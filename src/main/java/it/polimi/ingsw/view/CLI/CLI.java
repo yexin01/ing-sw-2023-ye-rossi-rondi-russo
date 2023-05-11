@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.CLI;
 
+import it.polimi.ingsw.message.ErrorType;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 
 import it.polimi.ingsw.view.ClientInterface;
@@ -293,7 +294,7 @@ public class CLI extends ClientInterface {
     }
 
     @Override
-    public int[] askColumn() throws Exception {
+    public int askColumn() throws Exception {
         System.out.println();
         Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: COLUMN");
         System.out.println();
@@ -345,7 +346,13 @@ public class CLI extends ClientInterface {
                     break;
             }
         }
-        return column;
+        return 0;
+    }
+
+    @Override
+    public void askNicknameAndConnection() throws Exception {
+        Colors.colorize(Colors.YELLOW_CODE,"QUESTA E LA TUA NUOVA LA CLI");
+        printerStartAndEndTurn.initialLobby();
     }
 
     @Override
@@ -371,11 +378,7 @@ public class CLI extends ClientInterface {
         this.nickname = nickname;
     }
 
-    @Override
-    public void start()  {
-        Colors.colorize(Colors.YELLOW_CODE,"QUESTA E LA CLI");
-        printerStartAndEndTurn.initialLobby();
-    }
+
 
 }
 

@@ -20,7 +20,6 @@ public class PrinterStartAndEndTurn extends ClientHandler {
        this.out = new PrintStream(System.out,true);
     }
 
-//TODO aggiungere logo
     public void initialLobby(){
         printMyShelfieLogo();
         doConnection();
@@ -47,7 +46,7 @@ public class PrinterStartAndEndTurn extends ClientHandler {
 
         out.println("Server Ip Address: " + ip);
         out.println("Server Port: " + port + "\n");
-
+/*
         try{
             //metodo di Clienthanlder (la cli estende ClientHandler)
             createConnection(connectionType, nickname, ip, port);
@@ -56,6 +55,8 @@ public class PrinterStartAndEndTurn extends ClientHandler {
             out.println("Error in creating connection. Please try again.\n");
             doConnection();
         }
+
+ */
 
     }
 

@@ -1,17 +1,16 @@
 package it.polimi.ingsw.network.client.handlers;
 
 import it.polimi.ingsw.message.Message;
-
-
 import it.polimi.ingsw.network.client.Client;
 
 import it.polimi.ingsw.view.ClientInterface;
 
 import java.rmi.RemoteException;
 
-public class DisconnectionHandler extends MessageHandler {
+public class LobbyHandler extends MessageHandler {
 
-    protected DisconnectionHandler(ClientInterface clientInterface, Client client) {
+
+    public LobbyHandler(ClientInterface clientInterface, Client client) {
         super(clientInterface, client);
     }
 
@@ -22,3 +21,5 @@ public class DisconnectionHandler extends MessageHandler {
 
 
 }
+
+

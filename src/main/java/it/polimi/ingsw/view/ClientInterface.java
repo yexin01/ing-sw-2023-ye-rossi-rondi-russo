@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.message.ErrorType;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 
@@ -13,13 +14,14 @@ public abstract class ClientInterface extends JPanel {
 
     public abstract String getNickname();
     private int[] freeShelves;
-    public abstract void start();
+    //public abstract void start();
 
    // String askNickname();
 
     public abstract int[] askCoordinates() throws Exception;
     public abstract int[] askOrder() throws Exception;
-    public abstract int[] askColumn() throws Exception;
+    public abstract int askColumn() throws Exception;
+    public abstract void askNicknameAndConnection() throws Exception;
     //booleano corrisponde alla partecipazione ad una nuova partita se é true vuole terminare il gioco altrimenti no
     public abstract boolean endGame();
     public abstract void Setup();

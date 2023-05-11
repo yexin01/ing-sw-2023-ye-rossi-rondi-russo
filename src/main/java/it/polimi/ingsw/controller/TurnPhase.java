@@ -5,6 +5,4 @@ public enum TurnPhase {
     SELECT_ORDER_TILES,
     SELECT_COLUMN,
     END_TURN;
-
-
 }

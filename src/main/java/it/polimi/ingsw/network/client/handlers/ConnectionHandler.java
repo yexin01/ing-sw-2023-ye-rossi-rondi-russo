@@ -1,15 +1,17 @@
 package it.polimi.ingsw.network.client.handlers;
 
 import it.polimi.ingsw.message.Message;
+
+
 import it.polimi.ingsw.network.client.Client;
 
 import it.polimi.ingsw.view.ClientInterface;
 
 import java.rmi.RemoteException;
 
-public class DataHandler extends MessageHandler {
+public class ConnectionHandler extends MessageHandler {
 
-    protected DataHandler(ClientInterface clientInterface, Client client) {
+    public ConnectionHandler(ClientInterface clientInterface, Client client) {
         super(clientInterface, client);
     }
 
@@ -17,5 +19,6 @@ public class DataHandler extends MessageHandler {
     public void handleMessage(Message mes) throws RemoteException {
 
     }
+
 
 }

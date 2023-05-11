@@ -16,7 +16,7 @@ public class MessagePayload implements Serializable {
     public MessagePayload( KeyAbstractPayload key) {
         this.data = new HashMap<>();
         this.key=key;
-       /// data.put(keyAbstractPayload,null);
+        /// data.put(keyAbstractPayload,null);
     }
 
     public void put(Data key, Object value) {
@@ -33,12 +33,3 @@ public class MessagePayload implements Serializable {
         return key;
     }
 }
-//header:DATA   payload Start
-
-/*
-    error in header
-    nella mappa p.put(ErrorType.qualcosa,ErrorType.getErrorMessage())
-
-    connection in header
-    connection_response in keyPayload
- */
