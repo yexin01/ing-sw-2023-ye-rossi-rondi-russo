@@ -56,9 +56,9 @@ public class GameController {
     }
 
 
-    public void receiveMessageFromClient(MessageFromClient message){
+    public void receiveMessageFromClient(Message messagec){
 
-        String nicknamePlayer= message.getHeader().getNicknameSender();
+        String nicknamePlayer= messagec.getHeader().getNickname();
         try{
             if (!nicknamePlayer.equals(game.getTurnPlayer().getNickname())) {
                 listenerManager.fireEvent(KeyErrorPayload.ERROR_DATA,nicknamePlayer, ErrorType.ILLEGAL_TURN);
@@ -67,11 +67,11 @@ public class GameController {
             }
 
             switch (turnPhaseController.getCurrentPhase()) {
-                case SELECT_FROM_BOARD ->  checkAndInsertBoardBox(message);
+                case SELECT_FROM_BOARD ->  checkAndInsertBoardBox(messagec);
                 //case FINISH_SELECTION->associatePlayerTiles();
                 //case RESET_BOARD_CHOICE -> resetBoardChoice();
-                case SELECT_ORDER_TILES-> permutePlayerTiles(message);
-                case SELECT_COLUMN->selectingColumn(message);
+                case SELECT_ORDER_TILES-> permutePlayerTiles(messagec);
+                case SELECT_COLUMN->selectingColumn(messagec);
                 //case INSERT_TILE_AND_POINTS -> insertBookshelf();
                 //case ABANDON_GAME -> removePlayer(message.getNicknameSender());
                 //TODO inviera il messaggio di ILLEGAL PHASE di default
@@ -97,9 +97,9 @@ public class GameController {
         //serverView.sendMessage(null, MessageFromServerType.START_TURN,getTurnNickname());
     }
 
-    public void checkAndInsertBoardBox( MessageFromClient message) throws Exception {
+    public void checkAndInsertBoardBox(Message message) throws Exception {
         illegalPhase(TurnPhase.SELECT_FROM_BOARD);
-        int[] coordinates=(int[])message.getPayload().getContent(KeyDataPayload.VALUE_CLIENT);
+        int[] coordinates=(int[]) message.getPayload().getContent(KeyDataPayload.VALUE_CLIENT);
         int x=coordinates[0];
         int y=coordinates[1];
         checkError(game.getBoard().checkCoordinates(x,y));
@@ -130,18 +130,18 @@ public class GameController {
         turnPhaseController.changePhase();
         game.getTurnPlayer().selection(game.getBoard());
     }
-    public void permutePlayerTiles(MessageFromClient message) throws Exception {
+    public void permutePlayerTiles(Message message) throws Exception {
         illegalPhase(TurnPhase.SELECT_ORDER_TILES);
-        int[] orderTiles=(int[])message.getPayload().getContent(KeyDataPayload.VALUE_CLIENT);
+        int[] orderTiles=(int[]) message.getPayload().getContent(KeyDataPayload.VALUE_CLIENT);
         checkError(game.getTurnPlayer().checkPermuteSelection(orderTiles));
         turnPhaseController.changePhase();
         game.getTurnPlayer().permuteSelection(orderTiles);
         //serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
 
-    public void selectingColumn(MessageFromClient message) throws Exception {
+    public void selectingColumn(Message message) throws Exception {
         illegalPhase(TurnPhase.SELECT_COLUMN);
-        int column=(int)message.getPayload().getContent(KeyDataPayload.VALUE_CLIENT);;
+        int column=(int) message.getPayload().getContent(KeyDataPayload.VALUE_CLIENT);;
         System.out.println("You selected "+column);
         checkError(game.getTurnPlayer().getBookshelf().checkBookshelf(column,game.getTurnPlayer().getSelectedItems().size()));
         turnPhaseController.changePhase();

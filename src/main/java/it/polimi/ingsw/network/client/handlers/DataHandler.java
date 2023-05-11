@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.client.handlers;
 
-import it.polimi.ingsw.message.MessageFromServer;
+import it.polimi.ingsw.message.Message;
 import it.polimi.ingsw.network.client.Client;
 
 import it.polimi.ingsw.view.ClientInterface;
@@ -14,7 +14,7 @@ public class DataHandler extends MessageHandler {
     }
 
     @Override
-    public void handleMessage(MessageFromServer mes) throws RemoteException {
+    public void handleMessage(Message mes) throws RemoteException {
 
     }
 

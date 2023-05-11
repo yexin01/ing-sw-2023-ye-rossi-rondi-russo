@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.client.handlers;
 
 import it.polimi.ingsw.message.KeyAbstractPayload;
-import it.polimi.ingsw.message.MessageFromServer;
+import it.polimi.ingsw.message.Message;
 
 import it.polimi.ingsw.message.MessageType;
 
@@ -20,8 +20,8 @@ public class ManagerHandlers {
         this.eventHandlerMap.put(eventType, messageHandler);
     }
 
-    public synchronized void handleMessageFromServer(MessageFromServer message) throws RemoteException {
-        MessageType eventType=message.getServerMessageHeader().getMessageType();
+    public synchronized void handleMessageFromServer(Message message) throws RemoteException {
+        MessageType eventType=message.getHeader().getMessageType();
         MessageHandler messageHandler = this.eventHandlerMap.get(eventType);
         if (messageHandler != null) {
             messageHandler.handleMessage(message);

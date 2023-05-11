@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.client;
 
+import it.polimi.ingsw.message.Message;
 import it.polimi.ingsw.messages.MessageFromClient2;
 import it.polimi.ingsw.messages.MessageFromServer2;
 import it.polimi.ingsw.network.server.RMIHandler;
@@ -51,7 +52,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
     }
 
     @Override
-    public synchronized MessageFromServer2 getNextMessage() {
+    public synchronized Message getNextMessage() {
         while (messageQueue.isEmpty()) {
             try {
                 // Il thread si mette in attesa finché non viene aggiunto un nuovo messaggio
