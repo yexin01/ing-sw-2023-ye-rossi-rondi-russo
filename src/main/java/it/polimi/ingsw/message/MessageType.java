@@ -2,8 +2,9 @@ package it.polimi.ingsw.message;
 
 public enum MessageType {
     ERROR,
-    //se è network metto KeyErrorPayload
-    //se è data
+
+    PING,
+    ACK,
 
     CONNECTION,
     LOBBY,

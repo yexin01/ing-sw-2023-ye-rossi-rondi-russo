@@ -1,9 +1,6 @@
 package it.polimi.ingsw.network.client;
 
-
 import it.polimi.ingsw.message.Message;
-import it.polimi.ingsw.messages.MessageFromClient2;
-import it.polimi.ingsw.messages.MessageFromServer2;
 
 import java.io.IOException;
 import java.io.Serial;
@@ -25,7 +22,7 @@ public abstract class Client extends UnicastRemoteObject {
 
     transient Timer pingTimer;
 
-    final transient Queue<MessageFromServer2> messageQueue;
+    final transient Queue<Message> messageQueue;
 
     public Client(String nickname,String ip, int port) throws RemoteException {
         this.nickname = nickname;
@@ -58,7 +55,7 @@ public abstract class Client extends UnicastRemoteObject {
 
     public abstract void startConnection() throws Exception;
 
-    public abstract void receiveMessageFromServer(MessageFromServer2 message);
+    public abstract void receiveMessageFromServer(Message message);
 
     public synchronized Message getNextMessage() {
         while (messageQueue.isEmpty()) {
@@ -74,7 +71,7 @@ public abstract class Client extends UnicastRemoteObject {
         return messageQueue.poll();
     }
 
-    public abstract void sendMessageToServer(MessageFromClient2 message) throws IOException;
+    public abstract void sendMessageToServer(Message message) throws IOException;
 
     public abstract void closeConnection() throws Exception;
 

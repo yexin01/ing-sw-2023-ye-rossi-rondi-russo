@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class MessageHeader implements Serializable {
 
-    private final MessageType messageType;
+    private final MessageType messageType; //ERROR
     private final String nickname;
 
     public MessageHeader(MessageType messageType, String nickname) {
@@ -20,4 +20,7 @@ public class MessageHeader implements Serializable {
         return nickname;
     }
 
+
 }
+
+

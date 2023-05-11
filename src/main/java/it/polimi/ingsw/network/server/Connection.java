@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.messages.MessageFromServer2;
+import it.polimi.ingsw.message.Message;
 
 import java.io.IOException;
 
@@ -14,7 +14,7 @@ public abstract class Connection {
         return connected;
     }
 
-    public abstract void sendMessageToClient(MessageFromServer2 message) throws IOException;
+    public abstract void sendMessageToClient(Message message) throws IOException;
 
     public abstract void ping() throws Exception;
 

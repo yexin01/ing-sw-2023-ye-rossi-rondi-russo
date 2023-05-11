@@ -10,6 +10,21 @@ public enum ErrorType {
 
 
     //qui lobby (tutte le cose per connettersi alle mappe e prima di creare il game)
+    ERR_NUM_PLAYER_WANTED("You must select a number of players between 2 and 4"), //da rimandare alla globalLobby
+    ERR_JOINING_GAME_LOBBY("Failed in joining the Game Lobby!"),
+    ERR_GAME_FULL("Failed in joining the requested game lobby because is full!"),
+    ERR_GAME_NOT_FOUND("Failed in joining the requested game lobby because it doesn't exist!"),
+
+
+    ERR_NO_FREE_SPOTS("Failed in joining a random game lobby because all games are full!\nCreating a new Game Lobby for min num players..."),//stampare
+
+
+    ERR_RECONNECT_TO_GAME_LOBBY("Failed to reconnect to previous game lobby!"),//da rifare connnesione+Login
+    ERR_JOIN_GLOBAL_LOBBY("Failed in joining the Global Lobby!"),
+
+
+
+
 
 
 
@@ -39,13 +54,11 @@ public enum ErrorType {
 
 
 
+
+
+
     //da dividere
 
-    DUPLICATE_NAME("This nickname is already taken"),
-    NOT_PLAYER_FOUND("Not player with this nickname found "),
-    NICKNAME_TAKEN("CGIA PRESOid"),
-    TOO_MANY_PLAYERS("Max number of player reached!"),
-    GAME_STARTED("Game already started! Cannot join!"),
     //NOT_RECEIVED_TILES("Problem with receiving tiles"),
     DISCONNECTION("Disconnection from the server");
 

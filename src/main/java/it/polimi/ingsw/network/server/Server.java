@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.messages.*;
+import it.polimi.ingsw.message.*;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -24,6 +24,8 @@ public class Server implements Runnable{
     private ConcurrentHashMap<String, Connection> clientsConnected;
     private GlobalLobby globalLobby;
 
+    private final static int MAX_PLAYERS = 4;
+    private final static int MIN_PLAYERS = 2;
 
     private Server (){
         synchronized (clientsLock) {
@@ -95,7 +97,7 @@ public class Server implements Runnable{
         //lavora sulla mappa di clientsConnected poi lo farà entrare nella globalLobby e poi nella gameLobby
         try {
             synchronized (clientsLock) {
-                System.out.println("Sono il server... ho ricevuto la richiesta di login da parte di " + nickname);
+                System.out.println("\nSono il server... ho ricevuto la richiesta di login da parte di " + nickname);
                 if (clientsConnected.containsKey(nickname)) {
                     knownPlayerLogin(nickname, connection);
                 } else {
@@ -108,7 +110,6 @@ public class Server implements Runnable{
         }
     }
 
-    //TODO: da aggiungere che tipo ti risposta se è tutto ok o se è errore
     private synchronized void newPlayerLogin(String nickname, Connection connection) throws Exception {
 
         if (checkNickname(nickname)) { // nickname legit
@@ -117,21 +118,29 @@ public class Server implements Runnable{
             String token = UUID.randomUUID().toString();
             connection.setToken(token);
 
-            ServerMessageHeader2 header = new ServerMessageHeader2(EventType.CONNECTION_RESPONSE, getUsernameByConnection(connection));
-            MessagePayload2 payload = new MessagePayload2("Login effettuato con successo!");
-            MessageFromServer2 message = new MessageFromServer2(header, payload);
-            connection.sendMessageToClient(message);
+            MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
+            MessagePayload payload = new MessagePayload(KeyConnectionPayload.CONNECTION_CREATION);
+            String content = "Login effettuato con successo!";
+            payload.put(Data.CONTENT,content);
+            connection.sendMessageToClient(new Message(header,payload));
 
             System.out.println(nickname + " connected to server!");
 
             this.globalLobby.addPlayerToWaiting(nickname, connection);
 
+            //TODO: poi da togliere
+            int wantedPlayers = 3;
+            this.globalLobby.playerCreatesGameLobby(wantedPlayers, nickname, connection);
+
+            System.out.println("game lobby creata con successo!");
+
+
         } else { // nickname not legit
 
-            ServerMessageHeader2 header = new ServerMessageHeader2(EventType.ERR_NICKNAME_LENGTH, getUsernameByConnection(connection));
-            MessagePayload2 payload = new MessagePayload2("ERROR: Invalid Username");
-            MessageFromServer2 message = new MessageFromServer2(header, payload);
-            connection.sendMessageToClient(message);
+            MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
+            MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_CONNECTION);
+            payload.put(Data.ERROR, ErrorType.ERR_NICKNAME_LENGTH);
+            connection.sendMessageToClient(new Message(header,payload));
 
             connection.disconnect();
             System.out.println("Attention! " + nickname + " tried to connect with invalid name length!");
@@ -143,10 +152,11 @@ public class Server implements Runnable{
         //o nickname già in uso o si era disconnesso
 
         if (clientsConnected.containsKey(nickname)) { // nickname already in use
-            ServerMessageHeader2 header = new ServerMessageHeader2(EventType.ERR_NICKNAME_TAKEN, getUsernameByConnection(connection));
-            MessagePayload2 payload = new MessagePayload2("ERROR: Username already in use");
-            MessageFromServer2 message = new MessageFromServer2(header, payload);
-            connection.sendMessageToClient(message);
+
+            MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
+            MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_CONNECTION);
+            payload.put(Data.ERROR, ErrorType.ERR_NICKNAME_TAKEN);
+            connection.sendMessageToClient(new Message(header,payload));
 
             connection.disconnect();
             System.out.println("Attention! " + nickname + " tried to connect with already used name!");
@@ -157,10 +167,11 @@ public class Server implements Runnable{
             String token = UUID.randomUUID().toString();
             connection.setToken(token);
 
-            ServerMessageHeader2 header = new ServerMessageHeader2(EventType.CONNECTION_RESPONSE, getUsernameByConnection(connection));
-            MessagePayload2 payload = new MessagePayload2("Login effettuato con successo!");
-            MessageFromServer2 message = new MessageFromServer2(header, payload);
-            connection.sendMessageToClient(message);
+            MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
+            MessagePayload payload = new MessagePayload(KeyConnectionPayload.CONNECTION_CREATION);
+            String content = "Login effettuato con successo!";
+            payload.put(Data.CONTENT,content);
+            connection.sendMessageToClient(new Message(header,payload));
 
             System.out.println(nickname + " connected to server!");
 
@@ -170,16 +181,11 @@ public class Server implements Runnable{
 
     private boolean checkNickname(String nickname) {
         int MAX_LENGTH_NICKNAME = 20;
-        if (nickname.length() > MAX_LENGTH_NICKNAME) {
-            return false;
-        }
-        if (clientsConnected.containsKey(nickname)){
-            return false;
-        }
-        return true;
+        int MIN_LENGTH_NICKNAME = 2;
+        return nickname.length() <= MAX_LENGTH_NICKNAME && nickname.length() >= MIN_LENGTH_NICKNAME;
     }
 
-    void onDisconnect(Connection playerConnection) throws RemoteException {
+    public void onDisconnect(Connection playerConnection) throws RemoteException {
         String username = getUsernameByConnection(playerConnection);
 
         if (username != null) {
@@ -189,7 +195,6 @@ public class Server implements Runnable{
                 clientsConnected.remove(username);
             }
         }
-
     }
 
     private String getUsernameByConnection(Connection connection) {
@@ -208,87 +213,71 @@ public class Server implements Runnable{
         }
     }
 
-    public void receiveMessageFromClient(MessageFromClient2 message) throws IOException {
+    public void receiveMessageFromClient(Message message) throws IOException {
         System.out.println("\nSono il server... ho ricevuto il messaggio: "+ message.toString() + "da un client\n");
-        EventType messageType = message.getHeader().getMessageType();
+        MessageType messageType = message.getHeader().getMessageType();
 
         switch (messageType) {
-            //TODO: sarà poi aggiunta tipo un MessageType es. GLOBAL_LOBBY_PHASE oppure ACTION
-            case JOIN_GLOBAL_LOBBY, CREATE_GAME_LOBBY, NUM_PLAYER_WANTED, JOIN_SPECIFIC_GAME_LOBBY, GAME_LOBBY_ID, JOIN_RANDOM_GAME_LOBBY -> handleGlobalLobbyPhase(message);
+            case LOBBY -> handleGlobalLobbyPhase(message);
+
+            default -> throw new IllegalStateException("Unexpected value: " + messageType);
         }
     }
 
-    private void handleGlobalLobbyPhase(MessageFromClient2 message) throws IOException {
-        EventType messageType = message.getHeader().getMessageType();
-        switch (messageType) {
+        private void handleGlobalLobbyPhase(Message message) throws IOException {
+        KeyLobbyPayload keyLobbyPayload = (KeyLobbyPayload) message.getPayload().getKey();
+        switch (keyLobbyPayload) {
             case JOIN_GLOBAL_LOBBY -> handleJoinGlobalLobby(message);
-            case CREATE_GAME_LOBBY, NUM_PLAYER_WANTED -> handleCreateGameLobby(message);
-            case JOIN_SPECIFIC_GAME_LOBBY, GAME_LOBBY_ID -> handleJoinSpecificGameLobby(message);
+            case CREATE_GAME_LOBBY -> handleCreateGameLobby(message);
+            case JOIN_SPECIFIC_GAME_LOBBY -> handleJoinSpecificGameLobby(message);
             case JOIN_RANDOM_GAME_LOBBY -> handleJoinRandomGameLobby(message);
-            default -> throw new IllegalStateException("Unexpected value: " + messageType);
+            default -> throw new IllegalStateException("Unexpected value: " + keyLobbyPayload);
         }
     }
 
-    private void handleJoinGlobalLobby(MessageFromClient2 message) throws IOException {
-        System.out.println("Sono il server... ho ricevuto la richiesta di join global lobby da parte di " + message.getHeader().getNicknameSender());
-        this.globalLobby.addPlayerToWaiting(message.getHeader().getNicknameSender(), clientsConnected.get(message.getHeader().getNicknameSender()));
+    private void handleJoinGlobalLobby(Message message) throws IOException {
+        System.out.println("Sono il server... ho ricevuto la richiesta di join global lobby da parte di " + message.getHeader().getNickname());
+        this.globalLobby.addPlayerToWaiting(message.getHeader().getNickname(), clientsConnected.get(message.getHeader().getNickname()));
 
-        ServerMessageHeader2 header = new ServerMessageHeader2(EventType.ASK_GLOBAL_LOBBY_DECISION, message.getHeader().getNicknameSender());
-        MessagePayload2 payload = new MessagePayload2("Server wants to know what you want to do");
-        MessageFromServer2 messageToClient = new MessageFromServer2(header, payload);
-        clientsConnected.get(message.getHeader().getNicknameSender()).sendMessageToClient(messageToClient);
+        MessageHeader header = new MessageHeader(MessageType.LOBBY, message.getHeader().getNickname());
+        MessagePayload payload = new MessagePayload(KeyLobbyPayload.GLOBAL_LOBBY_DECISION);
+        Message messageToClient = new Message(header, payload);
+
+        clientsConnected.get(message.getHeader().getNickname()).sendMessageToClient(messageToClient);
     }
 
-    private void handleCreateGameLobby(MessageFromClient2 message) throws IOException {
-        EventType messageType = message.getHeader().getMessageType();
-        switch (messageType) {
-            case CREATE_GAME_LOBBY -> {
-                System.out.println("Sono il server... ho ricevuto la richiesta di creare una nuova game lobby da parte di " + message.getHeader().getNicknameSender());
-                System.out.println("devo prima sapere il num di player wanted...");
-                ServerMessageHeader2 header = new ServerMessageHeader2(EventType.ASK_NUM_PLAYER_WANTED, message.getHeader().getNicknameSender());
-                MessagePayload2 payload = new MessagePayload2("Server wants to know how many players you want to play with");
-                MessageFromServer2 messageToClient = new MessageFromServer2(header, payload);
-                clientsConnected.get(message.getHeader().getNicknameSender()).sendMessageToClient(messageToClient);
-            }
-            case NUM_PLAYER_WANTED -> {
-                System.out.println("Sono il server... ho ricevuto il num di player wanted da parte di " + message.getHeader().getNicknameSender());
-                System.out.println("ora devo creare la game lobby...");
-                int wantedPlayers = Integer.parseInt(message.getPayload().getContent());
-                this.globalLobby.playerCreatesGameLobby(wantedPlayers, message.getHeader().getNicknameSender(), clientsConnected.get(message.getHeader().getNicknameSender()));
-                System.out.println("game lobby creata con successo!");
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + messageType);
+    private void handleCreateGameLobby(Message message) throws IOException {
+        int wantedPlayers = (int) message.getPayload().getContent(Data.VALUE_CLIENT);
+        System.out.println("Sono il server... ho ricevuto la richiesta di creare una nuova game lobby da parte di " + message.getHeader().getNickname() + " con " + wantedPlayers + " giocatori");
+
+        if(wantedPlayers < MIN_PLAYERS || wantedPlayers > MAX_PLAYERS){
+            MessageHeader header = new MessageHeader(MessageType.ERROR, message.getHeader().getNickname());
+            MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_CONNECTION);
+            payload.put(Data.ERROR, ErrorType.ERR_NUM_PLAYER_WANTED);
+            Message messageToClient = new Message(header, payload);
+            clientsConnected.get(message.getHeader().getNickname()).sendMessageToClient(messageToClient);
+
+            System.out.println("Attention! " + message.getHeader().getNickname() + " tried to create a game lobby with invalid number of players!");
+            return;
         }
+
+        System.out.println("il numero di giocatori è valido! ora devo creare la game lobby...");
+        this.globalLobby.playerCreatesGameLobby(wantedPlayers, message.getHeader().getNickname(), clientsConnected.get(message.getHeader().getNickname()));
+        System.out.println("game lobby creata con successo!");
     }
 
-    private void handleJoinSpecificGameLobby(MessageFromClient2 message) throws IOException {
-        EventType messageType = message.getHeader().getMessageType();
-        switch (messageType) {
-            case JOIN_SPECIFIC_GAME_LOBBY -> {
-                System.out.println("Sono il server... ho ricevuto la richiesta di join specific game lobby da parte di " + message.getHeader().getNicknameSender());
-                System.out.println("devo prima sapere l'id della game lobby...");
-                ServerMessageHeader2 header = new ServerMessageHeader2(EventType.ASK_GAME_LOBBY_ID, message.getHeader().getNicknameSender());
-                MessagePayload2 payload = new MessagePayload2("Server wants to know the name of the game lobby id you want to join");
-                MessageFromServer2 messageToClient = new MessageFromServer2(header, payload);
-                clientsConnected.get(message.getHeader().getNicknameSender()).sendMessageToClient(messageToClient);
-            }
-            case GAME_LOBBY_ID -> {
-                System.out.println("Sono il server... ho ricevuto l'id della game lobby da parte di " + message.getHeader().getNicknameSender());
-                System.out.println("ora devo aggiungere il player alla game lobby richiesta...");
-                String gameLobbyId = message.getPayload().getContent();
-                this.globalLobby.playerJoinsGameLobbyId(Integer.parseInt(gameLobbyId), message.getHeader().getNicknameSender(), clientsConnected.get(message.getHeader().getNicknameSender()));
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + messageType);
-        }
+    private void handleJoinSpecificGameLobby(Message message) throws IOException {
+        int gameId = (int) message.getPayload().getContent(Data.VALUE_CLIENT);
+        System.out.println("Sono il server... ho ricevuto la richiesta di join specific game lobby da parte di " + message.getHeader().getNickname() + " con id " + gameId);
+
+        this.globalLobby.playerJoinsGameLobbyId(gameId, message.getHeader().getNickname(), clientsConnected.get(message.getHeader().getNickname()));
     }
 
-    private void handleJoinRandomGameLobby(MessageFromClient2 message) throws IOException {
-        System.out.println("Sono il server... ho ricevuto la richiesta di join random game lobby da parte di " + message.getHeader().getNicknameSender());
+    private void handleJoinRandomGameLobby(Message message) throws IOException {
+        System.out.println("Sono il server... ho ricevuto la richiesta di join random game lobby da parte di " + message.getHeader().getNickname());
         System.out.println("ora devo aggiungere il player alla game lobby random con un posto libero...");
 
-        this.globalLobby.playerJoinsFirstFreeSpotInRandomGame(message.getHeader().getNicknameSender(), clientsConnected.get(message.getHeader().getNicknameSender()));
+        this.globalLobby.playerJoinsFirstFreeSpotInRandomGame(message.getHeader().getNickname(), clientsConnected.get(message.getHeader().getNickname()));
     }
-
-
 
 }

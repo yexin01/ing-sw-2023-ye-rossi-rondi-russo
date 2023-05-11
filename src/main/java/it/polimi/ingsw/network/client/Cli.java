@@ -5,7 +5,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-//TODO questo mi sa che lo cambio
+//TODO questo va unito alla CLI
 public class Cli extends ClientHandler {
     private final Scanner in;
     private final PrintStream out;
