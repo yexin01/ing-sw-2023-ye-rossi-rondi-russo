@@ -1,10 +1,13 @@
 package it.polimi.ingsw.message;
 
-public enum ErrorType {
+public enum ErrorType implements KeyAbstractPayload {
 
     //qui connection (nickname, porte, connessioni)
+    PING_NOT_RECEIVED("Ping not received.. disconnection.."),//stampare
+    DISCONNECTION_FORCED("Disconnection from the server"),
 
-
+    ERR_NICKNAME_LENGTH("Invalid username length"),//da rifare connessione+login
+    ERR_NICKNAME_TAKEN("This nickname is already taken"),
 
 
 
@@ -21,13 +24,6 @@ public enum ErrorType {
 
     ERR_RECONNECT_TO_GAME_LOBBY("Failed to reconnect to previous game lobby!"),//da rifare connnesione+Login
     ERR_JOIN_GLOBAL_LOBBY("Failed in joining the Global Lobby!"),
-
-
-
-
-
-
-
 
 
 

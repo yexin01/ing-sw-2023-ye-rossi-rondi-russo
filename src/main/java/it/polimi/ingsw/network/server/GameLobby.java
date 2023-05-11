@@ -28,16 +28,12 @@ public class GameLobby {
         this.idGameLobby= idGameLobby; //gli è dato in input il primo idGameLobby disponibile
         this.wantedPlayers = wantedPlayers;
 
-
         players = new ConcurrentHashMap<>();
         playersDisconnected = new ConcurrentHashMap<>();
     }
     public void createGame(){
         //this.gameController=new GameController();
-
-
     }
-
 
     public int getIdGameLobby(){
         return idGameLobby;
@@ -66,9 +62,10 @@ public class GameLobby {
             connection.sendMessageToClient(new Message(header,payload));
 
         } catch (IOException e){
-            ServerMessageHeader2 header = new ServerMessageHeader2(EventType.ERR_JOINING_GAME_LOBBY, nickname);
-            MessagePayload2 payload = new MessagePayload2("\nERROR: Failed in joining the Game Lobby!\n");
-            connection.sendMessageToClient(new MessageFromServer2(header,payload));
+            MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
+            MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_LOBBY);
+            payload.put(Data.ERROR, ErrorType.ERR_JOINING_GAME_LOBBY);
+            connection.sendMessageToClient(new Message(header,payload));
         }
     }
 

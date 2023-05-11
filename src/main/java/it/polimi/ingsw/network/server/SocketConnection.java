@@ -82,7 +82,7 @@ public class SocketConnection extends Connection implements Runnable {
     }
 
     @Override
-    public void sendMessageToClient(MessageFromServer2 message) throws RemoteException {
+    public void sendMessageToClient(Message message) throws RemoteException {
         if (connected) {
             try {
                 synchronized (outLock) {

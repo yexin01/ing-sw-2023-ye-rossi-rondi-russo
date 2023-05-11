@@ -13,18 +13,27 @@ public class MessagePayload implements Serializable {
     public MessagePayload() {
         this.data = new HashMap<>();
     }
+    public MessagePayload( KeyAbstractPayload key) {
+        this.data = new HashMap<>();
+        this.key=key;
+       /// data.put(keyAbstractPayload,null);
+    }
 
-    public void put(KeyAbstractPayload key, Object value) {
+    public void put(Data key, Object value) {
         data.put(key, value);
     }
 
 
-    public Object getContent(KeyAbstractPayload key) {
+    public Object getContent(Data key) {
         return data.get(key);
     }
 
 
+    public KeyAbstractPayload getKey() {
+        return key;
+    }
 }
+//header:DATA   payload Start
 
 /*
     error in header

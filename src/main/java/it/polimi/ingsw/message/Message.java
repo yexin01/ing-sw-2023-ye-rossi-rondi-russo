@@ -27,7 +27,7 @@ public class Message implements Serializable {
 
 
 
-    public String toString(KeyAbstractPayload key) {
+    public String toString(Data key) {
         return "Message from server {" +
                 "sent to '" + messageHeader.getNickname() + '\'' +
                 ", type= " + messageHeader.getMessageType() +

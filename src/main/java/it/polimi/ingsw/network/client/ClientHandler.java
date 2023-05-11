@@ -12,6 +12,7 @@ public class ClientHandler implements Runnable {
     private Client client;
     private Thread messageHandlerThread;
     private BlockingQueue<Message> queueToHandle = new LinkedBlockingQueue<>();
+    private ManagerHandlers managerHandlers=new ManagerHandlers();
     //serve da buffer tra il thread del clientHandler e il thread che riceve i messaggi dalla connessione di rete (sia essa di tipo RMI o Socket)
 
     private boolean isRMI;
@@ -74,8 +75,9 @@ public class ClientHandler implements Runnable {
         messageHandlerThread.start();
     }
 
-    public void createConnection(int connectionType, String nickname, String ip, int port) throws Exception {
-        if (connectionType == 0) {
+    public void createConnection(boolean isRMI, String nickname, String ip, int port) throws Exception {
+        String connection;
+        if (!isRMI) {
             client = new ClientSocket(nickname, ip, port);
             isRMI = false;
             System.out.println("creato ClientSocket in createConnection()...");
@@ -84,7 +86,9 @@ public class ClientHandler implements Runnable {
             client = new ClientRMI(nickname, ip, port);
             isRMI = true;
             System.out.println("creato ClientRMI in createConnection()...");
+            connection="SOCKET";
         }
+
         createMessageHandlerThread(client);
         System.out.println("creato messageHandlerThread...");
         System.out.println("provo a startare la connection di tipo " + connection + "...");

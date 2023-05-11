@@ -23,21 +23,17 @@ public class Cli extends ClientHandler {
     }
 
     private void doConnection(){
-        int connectionType = -1;
+        boolean connectionType;
 
         String nickname = askNickname();
         out.println("Hi "+ nickname +"!");
 
         connectionType = askConnection();
-        if (connectionType == 0) {
+        if (!connectionType) {
             out.println("You chose Socket connection\n");
-        } else if (connectionType == 1){
-            out.println("You chose RMI connection\n");
         } else {
-            out.println("Invalid connection");
-            doConnection();
+            out.println("You chose RMI connection\n");
         }
-
         String ip = askIp();
         int port = askPort(connectionType);
 
@@ -60,14 +56,14 @@ public class Cli extends ClientHandler {
         return in.nextLine().toLowerCase();
     }
 
-    private int askConnection(){
+    private boolean askConnection(){
         int connectionType = -1;
         do{
             out.println("Enter your connection type: (0 for Socket, 1 for RMI) ");
             connectionType = in.nextInt();
             in.nextLine(); // aggiungo questa riga per consumare il carattere di fine riga rimanente
         } while (connectionType != 0 && connectionType != 1);
-        return connectionType;
+        return connectionType==1;
     }
     //TODO questo i stess come quello sotto poi ci accordiamo su dove metterlo
     private String askIp() {
@@ -96,8 +92,8 @@ public class Cli extends ClientHandler {
         } while (true);
     }
     //TODO poi questa funzione la spostamo sulla CLI ho il metodo che crea la connessione chiede il soprannome, crea gli handler...
-    private int askPort(int connectionType) {
-        int defaultPort = (connectionType == 0 ? 51634 : 51633);
+    private int askPort(boolean connectionType) {
+        int defaultPort = (!connectionType ? 51634 : 51633);
         out.println("Enter the server port (default " + defaultPort + "): (press Enter button to choose default)");
         in.reset();
 
