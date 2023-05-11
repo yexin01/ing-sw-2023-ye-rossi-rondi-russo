@@ -5,10 +5,6 @@ import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.view.ClientView;
 
 public class PrinterCommonGoalAndPoints {
-
-
-
-
     public void printPoints(ClientView clientView){
         //TODO pensavo di inserire una cornice con i vari punteggi e qualche disegno tipo di due tiles vicine se sono gli adjacentPoints...
         PlayerPointsView playerPoints=clientView.getPlayerPoints();

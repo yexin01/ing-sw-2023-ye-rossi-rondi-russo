@@ -16,6 +16,8 @@ public class TurnHandler extends MessageHandler {
 
     @Override
     public void handleMessage(Message mes) throws Exception {
+        System.out.println("SONO TURN HANDLER");
+
         KeyDataPayload data = (KeyDataPayload) mes.getPayload().getKey();
         MessagePayload messagePayload=null;
         switch(data){
@@ -24,31 +26,30 @@ public class TurnHandler extends MessageHandler {
                 messagePayload=new MessagePayload(KeyDataPayload.SELECTION_PHASE);
             }
             case SELECTION_PHASE ->{
+                System.out.println("SONO TURN HANDLER");
               int[] orderTiles=  getClientInterface().askOrder();
               messagePayload=new MessagePayload(KeyDataPayload.ORDER_PHASE);
+
             }
             case ORDER_PHASE -> {
                 int column=getClientInterface().askColumn();
                 messagePayload=new MessagePayload(KeyDataPayload.COLUMN);
             }
             case END_TURN ->{
+                //TODO se il nome e diverso la board cambia altrimenti no vedere come gestire questo caso
                 BoardBoxView[][] boardView= (BoardBoxView[][]) mes.getPayload().getContent(Data.NEW_BOARD);
                 getClientInterface().getClientView().setBoardView(boardView);
-                ItemTileView[][] bookshelfView= (ItemTileView[][]) mes.getPayload().getContent(Data.NEW_BOARD);
+                ItemTileView[][] bookshelfView= (ItemTileView[][]) mes.getPayload().getContent(Data.NEW_BOOKSHELF);
                 PlayerPointsView playerPointsView= (PlayerPointsView) mes.getPayload().getContent(Data.POINTS);
                 messagePayload=new MessagePayload(KeyDataPayload.END_TURN);
             }
-            /*
-            default ->{
-                //TODO vedere cosa potrebbe fare
 
-            }
-
-             */
         }
         MessageHeader header=new MessageHeader(MessageType.DATA,getClientInterface().getNickname());
         Message messageToServer=new Message(header,messagePayload);
         getClient().sendMessageToServer(messageToServer);
+        System.out.println("HA MANDATO IL MESSAGGIO");
+
     }
 
 }

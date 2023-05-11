@@ -1,9 +1,18 @@
 package it.polimi.ingsw.network.server;
 
+import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.message.*;
+import it.polimi.ingsw.model.Board;
+import it.polimi.ingsw.model.Bookshelf;
+import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.Type;
+import it.polimi.ingsw.model.modelView.BoardBoxView;
+import it.polimi.ingsw.model.modelView.ItemTileView;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
@@ -94,6 +103,7 @@ public class Server implements Runnable{
     }
 
     public synchronized void loginToServer(String nickname, Connection connection) throws Exception {
+
         //lavora sulla mappa di clientsConnected poi lo farà entrare nella globalLobby e poi nella gameLobby
         try {
             synchronized (clientsLock) {
@@ -103,6 +113,7 @@ public class Server implements Runnable{
                 } else {
                     newPlayerLogin(nickname, connection);
                 }
+
                 System.out.println("Sono il server.. ora passo alla fase nella globalLobby...");
             }
         } catch (IOException e) {

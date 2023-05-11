@@ -3,6 +3,7 @@ package it.polimi.ingsw.message;
 public enum MessageType {
     ERROR,
 
+
     PING,
     ACK,
 

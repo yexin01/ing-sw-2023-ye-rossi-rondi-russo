@@ -1,7 +1,8 @@
 package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.message.*;
-import it.polimi.ingsw.network.client.handlers.ManagerHandlers;
+import it.polimi.ingsw.network.client.handlers.*;
+import it.polimi.ingsw.view.ClientInterface;
 
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
@@ -10,12 +11,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ClientHandler implements Runnable {
 
     private Client client;
+    private ClientInterface clientInterface;
     private Thread messageHandlerThread;
     private BlockingQueue<Message> queueToHandle = new LinkedBlockingQueue<>();
     private ManagerHandlers managerHandlers=new ManagerHandlers();
     //serve da buffer tra il thread del clientHandler e il thread che riceve i messaggi dalla connessione di rete (sia essa di tipo RMI o Socket)
 
     private boolean isRMI;
+
 
    public void run() {
         while (true) {
@@ -30,7 +33,7 @@ public class ClientHandler implements Runnable {
                 Message message = queueToHandle.poll();
                 try {
                     handleMessageFromServer(message);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -56,7 +59,7 @@ public class ClientHandler implements Runnable {
                     // se il client è un ClientRMI, gestisce il messaggio direttamente
                     try {
                         handleMessageFromServer(message);
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 } else {
@@ -65,7 +68,7 @@ public class ClientHandler implements Runnable {
                         addMessageToQueue(message);
                         try {
                             handleMessageFromServer(message);
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
                     }
@@ -75,35 +78,43 @@ public class ClientHandler implements Runnable {
         messageHandlerThread.start();
     }
 
-    public void createConnection(boolean isRMI, String nickname, String ip, int port) throws Exception {
+    public void createConnection(int isRMI, String nickname, String ip, int port,ClientInterface clientInterface) throws Exception {
         String connection;
-        if (!isRMI) {
+        if (isRMI==0) {
             client = new ClientSocket(nickname, ip, port);
-            isRMI = false;
+            this.isRMI = false;
             System.out.println("creato ClientSocket in createConnection()...");
             connection="RMI";
         } else {
             client = new ClientRMI(nickname, ip, port);
-            isRMI = true;
+            this.isRMI = true;
             System.out.println("creato ClientRMI in createConnection()...");
             connection="SOCKET";
         }
-
+        managerHandlers.registerEventHandler(MessageType.DATA,new TurnHandler(clientInterface,this.client));
+        managerHandlers.registerEventHandler(MessageType.LOBBY,new LobbyHandler(clientInterface,this.client));
+        managerHandlers.registerEventHandler(MessageType.ERROR,new ErrorHandler(clientInterface,this.client));
+        //TODO come collegare l'utimo handler o aggiungo un'altro message type relativo all'inizio e alla fine del game o cambio managerHandler
+        //managerHandlers.registerEventHandler(MessageType.DATA,new StartAndEndGameHandler(clientInterface,this.client));
+        /*
+        Message m=new Message(new MessageHeader(MessageType.DATA,nickname),null);
+        managerHandlers.handleMessageFromServer(m);
+        m=new Message(new MessageHeader(MessageType.LOBBY,nickname),null);
+        managerHandlers.handleMessageFromServer(m);
         createMessageHandlerThread(client);
+
+         */
         System.out.println("creato messageHandlerThread...");
         System.out.println("provo a startare la connection di tipo " + connection + "...");
+        createMessageHandlerThread(client);
         client.startConnection();
 
     }
 
-    public synchronized void handleMessageFromServer(Message message) throws IOException {
-        System.out.println("sono il clientHandler.. " + message.toString());
+    public synchronized void handleMessageFromServer(Message message) throws Exception {
+        //System.out.println("sono il clientHandler.. " + message.toString());
+        managerHandlers.handleMessageFromServer(message);
 
-
-        KeyConnectionPayload key = (KeyConnectionPayload) message.getPayload().getKey();
-        System.out.println(message.getHeader().getMessageType());
-        System.out.println(message.getPayload().getKey());
-        System.out.println(message.getPayload().getContent(Data.CONTENT));
 
         /*
         switch (key){
@@ -142,5 +153,13 @@ public class ClientHandler implements Runnable {
 
         }
          */
+    }
+
+    public ClientInterface getClientInterface() {
+        return clientInterface;
+    }
+
+    public void setClientInterface(ClientInterface clientInterface) {
+        this.clientInterface = clientInterface;
     }
 }

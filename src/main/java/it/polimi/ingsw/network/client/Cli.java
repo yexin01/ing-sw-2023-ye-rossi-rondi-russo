@@ -4,7 +4,7 @@ import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Scanner;
-
+/*
 //TODO questo va unito alla CLI
 public class Cli extends ClientHandler {
     private final Scanner in;
@@ -65,7 +65,7 @@ public class Cli extends ClientHandler {
         } while (connectionType != 0 && connectionType != 1);
         return connectionType==1;
     }
-    //TODO questo i stess come quello sotto poi ci accordiamo su dove metterlo
+
     private String askIp() {
         String defaultIp = "127.0.0.1";
         out.println("Enter the server Ip Address (default " + defaultIp + "): (press Enter button to choose default)");
@@ -145,3 +145,5 @@ public class Cli extends ClientHandler {
     }
 
 }
+
+ */

@@ -18,12 +18,13 @@ import java.rmi.RemoteException;
 public class StartAndEndGameHandler extends MessageHandler {
 
 
-    protected StartAndEndGameHandler(ClientInterface clientInterface, Client client) {
+    public StartAndEndGameHandler(ClientInterface clientInterface, Client client) {
         super(clientInterface, client);
     }
 
     @Override
     public void handleMessage(Message mes) throws IOException {
+        System.out.println("SONO IN START AND GAME HANDLER");
         KeyDataPayload data = (KeyDataPayload) mes.getPayload().getKey();
         MessagePayload messagePayload=null;
         switch(data){
@@ -51,8 +52,6 @@ public class StartAndEndGameHandler extends MessageHandler {
         Message message=new Message(messageHeader, messagePayload);
         getClient().sendMessageToServer(message);
 
-        //TODO se evntTypeStart settare tutta la clientView con gli attributi del messaggio
-        //TODO endGame stampare classifica... chiedere al giocatore se vuole partecipare ad un'altra partita
     }
 }
 /*

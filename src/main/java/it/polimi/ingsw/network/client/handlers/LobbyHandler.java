@@ -19,6 +19,19 @@ public class LobbyHandler extends MessageHandler {
 
     }
 
+    /*
+messaggio message struttura messaggi lobby
+
+        createGame lobbi + numberOfPlayer valueClient
+
+
+        joinspecifi game lobby  value client idgame
+
+
+        joinedRandomGame
+
+     */
+
 
 }
 

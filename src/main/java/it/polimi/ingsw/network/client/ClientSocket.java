@@ -57,6 +57,7 @@ public class ClientSocket extends Client implements Runnable {
 
                 if (message != null && !message.getHeader().getMessageType().equals(MessageType.PING) ) {
                     receiveMessageFromServer(message);
+                    //System.out.println("NELLA RUN");
                 } else if (message != null && message.getHeader().getMessageType().equals(MessageType.PING)) {
                     receiveMessageFromServer(message);
                     super.pingTimer.cancel();
@@ -103,13 +104,14 @@ public class ClientSocket extends Client implements Runnable {
         if(message.getHeader().getMessageType().equals(MessageType.PING)){
             //System.out.println("Ping received on socket");
         } else {
-            System.out.println("sono il client... ho ricevuto il messaggio: " +message.toString() +" dal server!-------");
+           // System.out.println("sono il client... ho ricevuto il messaggio: " +message.toString() +" dal server!-------");
             addMessage(message); //to the queue
         }
     }
 
     public synchronized void addMessage(Message message) {
         messageQueue.add(message);
+       // System.out.println("ARRIVATO MESSAGGIO");
         notify();
     }
 
