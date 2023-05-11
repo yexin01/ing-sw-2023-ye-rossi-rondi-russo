@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 
-import it.polimi.ingsw.network.server.ErrorType;
+import it.polimi.ingsw.message.ErrorType;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 
 

@@ -4,7 +4,6 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.EndTurnListener;
 import it.polimi.ingsw.listeners.FinishSelectionListener;
-import it.polimi.ingsw.messages.EventType;
 import it.polimi.ingsw.model.modelView.CommonGoalView;
 import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;

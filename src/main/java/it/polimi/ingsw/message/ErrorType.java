@@ -1,9 +1,25 @@
-package it.polimi.ingsw.network.server;
-
+package it.polimi.ingsw.message;
 
 public enum ErrorType {
-    DUPLICATE_NAME("This nickname is already taken"),
-    WRONG_PHASE("You can't do this action now."),
+
+    //qui connection (nickname, porte, connessioni)
+
+
+
+
+
+
+    //qui lobby (tutte le cose per connettersi alle mappe e prima di creare il game)
+
+
+
+
+
+
+
+
+
+    //qui data
     ILLEGAL_TURN("it isn't your turn"),
     ILLEGAL_PHASE("This isn't the phase"),
     INVALID_COLUMN("Invalid Column"),
@@ -13,21 +29,31 @@ public enum ErrorType {
     TOO_MANY_TILES("You cannot select another tile:\n1)you have reached the maximum number of selectable, or \n2)bookshelf has a maximum number of free cells lower than the maximum number."),
     INVALID_ORDER_TILE_REPETITION("You cannot enter the same number twice "),
     INVALID_ORDER_TILE_NUMBER("You have entered a number outside the permitted range "),
-    NOT_PLAYER_FOUND("Not player with this nickname found "),
     NOT_VALUE_SELECTED("You have not selected anything"),
-
     INVALID_COORDINATES("COORDINATES of the tile are invalid"),
+    NOT_SAME_ROW_OR_COLUMN("Tiles are not on the same row or column, tiles must be all adjacent"),
+    NOT_ENOUGH_FREE_EDGES("The selected tile has no free edges"),
+    WRONG_PHASE("You can't do this action now."),
+
+
+
+
+
+    //da dividere
+
+    DUPLICATE_NAME("This nickname is already taken"),
+    NOT_PLAYER_FOUND("Not player with this nickname found "),
+    NICKNAME_TAKEN("CGIA PRESOid"),
     TOO_MANY_PLAYERS("Max number of player reached!"),
     GAME_STARTED("Game already started! Cannot join!"),
-    NOT_RECEIVED_TILES("Problem with receiving tiles"),
-    DISCONNECTION("Disconnection from the server"),
+    //NOT_RECEIVED_TILES("Problem with receiving tiles"),
+    DISCONNECTION("Disconnection from the server");
 
-    NOT_SAME_ROW_OR_COLUMN("Tiles are not on the same row or column, tiles must be all adjacent"),
 
-    NOT_ENOUGH_FREE_EDGES("The selected tile has no free edges");
+
+
 
     private final String errorMessage;
-
 
     ErrorType(String errorMessage) {
         this.errorMessage = errorMessage;
@@ -37,8 +63,4 @@ public enum ErrorType {
         return errorMessage;
     }
 
-   /* public String getSecondErrorMessage(ErrorType e) {
-        return e.errorMessage;
-    }
-    */
 }

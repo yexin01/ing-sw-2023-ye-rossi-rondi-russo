@@ -1,5 +1,5 @@
 package it.polimi.ingsw;
-/*
+
 import it.polimi.ingsw.controller.GameController;
 
 import it.polimi.ingsw.model.Bookshelf;
@@ -19,47 +19,46 @@ public class App{
         public static void main(String[] args) throws Exception {
 
 
-            Bookshelf bo=new Bookshelf(6,5,3);
-            bo.setTile(new ItemTile(Type.CAT,9),5,0);
-            bo.setTile(new ItemTile(Type.PLANT,9),4,0);
-            bo.setTile(new ItemTile(Type.PLANT,9),3,0);
-            bo.setTile(new ItemTile(Type.TROPHY,9),3,1);
-            bo.setTile(new ItemTile(Type.PLANT,9),3,2);
-            bo.setTile(new ItemTile(Type.PLANT,9),4,4);
+            Bookshelf bo = new Bookshelf(6, 5, 3);
+            bo.setTile(new ItemTile(Type.CAT, 9), 5, 0);
+            bo.setTile(new ItemTile(Type.PLANT, 9), 4, 0);
+            bo.setTile(new ItemTile(Type.PLANT, 9), 3, 0);
+            bo.setTile(new ItemTile(Type.TROPHY, 9), 3, 1);
+            bo.setTile(new ItemTile(Type.PLANT, 9), 3, 2);
+            bo.setTile(new ItemTile(Type.PLANT, 9), 4, 4);
             ItemTileView[][] b;
-            b=new ItemTileView[6][5];
-            b=bo.cloneBookshelf();
-            PrinterBookshelfAndPersonal p=new PrinterBookshelfAndPersonal();
-            ClientView c=new ClientView();
+            b = new ItemTileView[6][5];
+            b = bo.cloneBookshelf();
+            PrinterBookshelfAndPersonal p = new PrinterBookshelfAndPersonal();
+            ClientView c = new ClientView();
             c.setIndexPersonal(2);
             c.setBookshelfView(b);
 
-            p.printMatrixBookshelf(c,3,1,60,false,false,0);
-            p.printMatrixBookshelf(c,3,2,60,false,false,1);
-            p.printMatrixBookshelf(c,3,1,50,true,true,1);
+            p.printMatrixBookshelf(c, 3, 1, 60, false, false, 0);
+            p.printMatrixBookshelf(c, 3, 2, 60, false, false, 1);
+            p.printMatrixBookshelf(c, 3, 1, 50, true, true, 1);
 
-        p.printMatrixBookshelf(c,3,2,40,true,true,0);
-            p.printMatrixBookshelf(c,3,1,80,true,true,1);
-            p.printMatrixBookshelf(c,3,2,40,true,false,0);
-            p.printMatrixBookshelf(c,3,1,90,true,false,1);
-            p.printMatrixBookshelf(c,3,2,40,false,true,0);
-            p.printMatrixBookshelf(c,3,1,50,false,true,1);
-            for(Type t:Type.values()){
+            p.printMatrixBookshelf(c, 3, 2, 40, true, true, 0);
+            p.printMatrixBookshelf(c, 3, 1, 80, true, true, 1);
+            p.printMatrixBookshelf(c, 3, 2, 40, true, false, 0);
+            p.printMatrixBookshelf(c, 3, 1, 90, true, false, 1);
+            p.printMatrixBookshelf(c, 3, 2, 40, false, true, 0);
+            p.printMatrixBookshelf(c, 3, 1, 50, false, true, 1);
+            for (Type t : Type.values()) {
                 System.out.print(Colors.printTiles(t, 3).length());
                 System.out.print(Colors.printTiles(t, 3));
             }
             System.out.println();
-            for(Type t:Type.values()){
+            for (Type t : Type.values()) {
                 System.out.print(Colors.printTiles(t, 3).length());
-                Colors.colorizeSize(Colors.WHITE_CODE,"ooo",3);
+                Colors.colorizeSize(Colors.WHITE_CODE, "ooo", 3);
             }
-            GameLobby gameLobby =new GameLobby();
-            ArrayList<String> playerNames = new ArrayList<>(List.of("TIZIO", "CAIO", "SEMPRONIO","PIPPO"));
-            GameController gameController=new GameController(gameLobby, playerNames);
+            GameLobby gameLobby = new GameLobby(3, 3);
+            ArrayList<String> playerNames = new ArrayList<>(List.of("TIZIO", "CAIO", "SEMPRONIO", "PIPPO"));
+            GameController gameController = new GameController(gameLobby, playerNames);
 
 
-
-
+        }}
 
             /*
             gameController.setServerView(serverView);

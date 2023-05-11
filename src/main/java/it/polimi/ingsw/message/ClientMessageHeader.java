@@ -1,18 +1,18 @@
-package it.polimi.ingsw.messages;
+package it.polimi.ingsw.message;
 
 import java.io.Serializable;
 
-public class ClientMessageHeader2 implements Serializable {
+public class ClientMessageHeader implements Serializable {
 
-    private final EventType messageType;
+    private final MessageType messageType;
     private final String nicknameSender;
 
-    public ClientMessageHeader2(EventType messageType, String nicknameSender) {
+    public ClientMessageHeader(MessageType messageType, String nicknameSender) {
         this.messageType = messageType;
         this.nicknameSender = nicknameSender;
     }
 
-    public EventType getMessageType() {
+    public MessageType getMessageType() {
         return messageType;
     }
 

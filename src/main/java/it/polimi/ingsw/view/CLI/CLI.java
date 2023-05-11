@@ -2,7 +2,6 @@ package it.polimi.ingsw.view.CLI;
 
 import it.polimi.ingsw.model.modelView.ItemTileView;
 
-import it.polimi.ingsw.network.server.ErrorType;
 import it.polimi.ingsw.view.ClientInterface;
 import it.polimi.ingsw.view.ClientView;
 
@@ -372,6 +371,7 @@ public class CLI extends ClientInterface {
         this.nickname = nickname;
     }
 
+    @Override
     public void start()  {
         Colors.colorize(Colors.YELLOW_CODE,"QUESTA E LA CLI");
         printerStartAndEndTurn.initialLobby();

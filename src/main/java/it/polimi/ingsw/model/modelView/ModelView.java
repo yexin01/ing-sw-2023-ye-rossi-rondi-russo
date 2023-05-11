@@ -4,7 +4,8 @@ import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.EventListener;
 import it.polimi.ingsw.listeners.ListenerManager;
 
-import it.polimi.ingsw.messages.EventType;
+import it.polimi.ingsw.message.KeyAbstractPayload;
+import it.polimi.ingsw.message.KeyDataPayload;
 import it.polimi.ingsw.model.PersonalGoalCard;
 
 import java.lang.reflect.Array;
@@ -100,7 +101,7 @@ public class ModelView {
 
     public void setPlayerPoints(PlayerPointsView playerPersonalGoal, java.lang.String nickname) {
         this.playerPoints[getIntegerValue(nickname)] = playerPersonalGoal;
-        listenerManager.fireEvent(EventType.END_TURN,nickname,this);
+        listenerManager.fireEvent(KeyDataPayload.END_TURN,nickname,this);
     }
 
 
@@ -125,13 +126,13 @@ public class ModelView {
 
     public void setSelectedItems(ItemTileView[] selectedItems, java.lang.String nickname) {
         this.selectedItems = selectedItems;
-        listenerManager.fireEvent(EventType.BOARD_SELECTION,nickname,this);
+        listenerManager.fireEvent(KeyDataPayload.NEW_BOARD,nickname,this);
     }
-    public void addListener(EventType eventType, EventListener listener) {
+    public void addListener(KeyAbstractPayload eventType, EventListener listener) {
         this.listenerManager.addListener(eventType,listener);
     }
 
-    public void removeListener(EventType eventType, EventListener listener) {
+    public void removeListener(KeyAbstractPayload eventType, EventListener listener) {
         this.listenerManager.removeListener(eventType, listener);
     }
 

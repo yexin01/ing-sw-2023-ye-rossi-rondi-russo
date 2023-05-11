@@ -15,6 +15,7 @@ public class PrinterStartAndEndTurn extends ClientHandler {
     private static PrintStream out;
     public PrinterStartAndEndTurn(){
        super();
+
        this.in = new Scanner(System.in);
        this.out = new PrintStream(System.out,true);
     }

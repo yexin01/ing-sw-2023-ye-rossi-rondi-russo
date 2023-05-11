@@ -2,23 +2,23 @@ package it.polimi.ingsw.listeners;
 
 
 
-import it.polimi.ingsw.messages.EventType;
-
+import it.polimi.ingsw.message.KeyAbstractPayload;
+import it.polimi.ingsw.message.KeyDataPayload;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class ListenerManager {
-    private HashMap<EventType, List<EventListener>> listenersMap;
+    private HashMap<KeyAbstractPayload, List<EventListener>> listenersMap;
 
 
 
     public ListenerManager() {
-        listenersMap = new HashMap<EventType, List<EventListener>>();
+        listenersMap = new HashMap<KeyAbstractPayload, List<EventListener>>();
     }
 
-    public void addListener(EventType eventName, EventListener listener) {
+    public void addListener(KeyAbstractPayload eventName, EventListener listener) {
         if (listenersMap.containsKey(eventName)) {
             List<EventListener> listeners = listenersMap.get(eventName);
             if (!listeners.contains(listener)) {
@@ -31,13 +31,13 @@ public class ListenerManager {
         }
     }
 
-    public void removeListener(EventType eventName, EventListener listener) {
+    public void removeListener(KeyAbstractPayload eventName, EventListener listener) {
         if (listenersMap.containsKey(eventName)) {
             List<EventListener> listeners = listenersMap.get(eventName);
             listeners.remove(listener);
         }
     }
-    public void fireEvent(EventType eventName, String playerNickname, Object newValue) {
+    public void fireEvent(KeyAbstractPayload eventName, String playerNickname, Object newValue) {
         if (listenersMap.containsKey(eventName)) {
             List<EventListener> listeners = listenersMap.get(eventName);
             for (EventListener listener : listeners) {

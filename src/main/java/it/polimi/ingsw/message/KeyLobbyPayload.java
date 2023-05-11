@@ -1,0 +1,17 @@
+package it.polimi.ingsw.message;
+
+public enum KeyLobbyPayload implements KeyAbstractPayload  {
+    JOIN_GLOBAL_LOBBY, GLOBAL_LOBBY_DECISION,
+    ASK_GLOBAL_LOBBY_DECISION,
+
+    CREATE_GAME_LOBBY,
+    ASK_NUM_PLAYER_WANTED, NUM_PLAYER_WANTED,
+    CREATED_GAME_LOBBY,
+
+    JOIN_SPECIFIC_GAME_LOBBY,
+    ASK_GAME_LOBBY_ID, GAME_LOBBY_ID,
+
+    JOIN_RANDOM_GAME_LOBBY,
+
+    JOINED_GAME_LOBBY,
+}

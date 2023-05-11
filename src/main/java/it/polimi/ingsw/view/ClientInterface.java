@@ -2,7 +2,6 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
-import it.polimi.ingsw.network.server.ErrorType;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ public abstract class ClientInterface extends JPanel {
 
     public abstract String getNickname();
     private int[] freeShelves;
+    public abstract void start();
 
    // String askNickname();
 

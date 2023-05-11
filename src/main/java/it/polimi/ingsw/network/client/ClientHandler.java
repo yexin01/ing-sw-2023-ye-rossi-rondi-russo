@@ -1,7 +1,8 @@
 package it.polimi.ingsw.network.client;
 
-import it.polimi.ingsw.messages.EventType;
-import it.polimi.ingsw.messages.MessageFromServer2;
+
+
+import it.polimi.ingsw.message.MessageFromServer;
 
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
@@ -10,7 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ClientHandler implements Runnable {
     private Client client;
     private Thread messageHandlerThread;
-    private BlockingQueue<MessageFromServer2> queueToHandle = new LinkedBlockingQueue<>();
+    private BlockingQueue<MessageFromServer> queueToHandle = new LinkedBlockingQueue<>();
     //serve da buffer tra il thread del clientHandler e il thread che riceve i messaggi dalla connessione di rete (sia essa di tipo RMI o Socket)
 
 //TODO l updater handler fa una cosa simile possiamo unire le due funzioni oppure tenere solo questo e l'handler non gestisce le cose con i thread ma in maniera sequenziale
@@ -46,7 +47,7 @@ public class ClientHandler implements Runnable {
                         throw new RuntimeException(e);
                     }
                 }
-                MessageFromServer2 message = queueToHandle.poll();
+                MessageFromServer message = queueToHandle.poll();
                 try {
                     System.out.println("ora gestisco il messaggio...");
                     handleMessageFromServer(message);
@@ -57,7 +58,7 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public synchronized void addMessageToQueue(MessageFromServer2 message) {
+    public synchronized void addMessageToQueue(MessageFromServer message) {
         queueToHandle.add(message);
         System.out.println("aggiunto il messaggio alla coda di messaggi...");
         notify();
@@ -67,7 +68,7 @@ public class ClientHandler implements Runnable {
         // Creazione del thread per la gestione dei messaggi
         messageHandlerThread = new Thread(() -> {
             while (true) {
-                MessageFromServer2 message = null;
+                MessageFromServer message = null;
                 try {
                     message = client.getNextMessage();
                 } catch (Exception e) {
@@ -105,7 +106,7 @@ public class ClientHandler implements Runnable {
         System.out.println("provo a startare la connection di tipo " + connectionType + "...");
     }
 
-    public synchronized void handleMessageFromServer(MessageFromServer2 message) throws IOException {
+    public synchronized void handleMessageFromServer(MessageFromServer message) throws IOException {
         System.out.println("sono il clientHandler.. " + message.toString());
 
         if (message.getServerMessageHeader().getMessageType().equals(EventType.DISCONNECT_REQUEST)) {

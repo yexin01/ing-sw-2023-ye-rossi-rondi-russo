@@ -1,6 +1,7 @@
 package it.polimi.ingsw.listeners;
 
-import it.polimi.ingsw.messages.EventType;
+import it.polimi.ingsw.message.KeyAbstractPayload;
+import it.polimi.ingsw.message.KeyDataPayload;
 import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.network.server.GameLobby;
 import it.polimi.ingsw.view.CLI.CLI;
@@ -12,8 +13,8 @@ public class StartAndEndGameListener extends EventListener{
     }
 
     @Override
-    public void fireEvent(EventType event, String playerNickname, Object newValue) {
-        switch(event){
+    public void fireEvent(KeyAbstractPayload event, String playerNickname, Object newValue) {
+        switch((KeyDataPayload)event){
             case START_GAME ->{
                 getGameLobby().setModelView((ModelView) newValue);
                 ClientView clientView=new ClientView();

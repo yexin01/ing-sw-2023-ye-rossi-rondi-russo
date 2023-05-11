@@ -1,14 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.model.modelView.ModelView;
-import it.polimi.ingsw.network.server.ErrorType;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import static org.junit.jupiter.api.Assertions.*;
 /*
 class PlayerTest {
 
