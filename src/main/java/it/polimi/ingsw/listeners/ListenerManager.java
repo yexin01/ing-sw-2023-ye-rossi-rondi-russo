@@ -5,6 +5,7 @@ package it.polimi.ingsw.listeners;
 import it.polimi.ingsw.message.KeyAbstractPayload;
 import it.polimi.ingsw.message.KeyDataPayload;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +42,11 @@ public class ListenerManager {
         if (listenersMap.containsKey(eventName)) {
             List<EventListener> listeners = listenersMap.get(eventName);
             for (EventListener listener : listeners) {
-                listener.fireEvent(eventName,playerNickname,newValue);
+                try {
+                    listener.fireEvent(eventName,playerNickname,newValue);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

@@ -126,6 +126,18 @@ public class GameController {
             throw new Exception();
         };
     }
+    public void disconnectionPlayer(String nickname){
+        //TODO disconnection
+        if(nickname== getTurnNickname()){
+            turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
+            game.setNextPlayer();
+        }
+
+    }
+    public void reconnectionPlayer(String nickname){
+        //TODO reconnection
+
+    }
 
     public void associatePlayerTiles() throws Exception {
         illegalPhase(TurnPhase.SELECT_FROM_BOARD);

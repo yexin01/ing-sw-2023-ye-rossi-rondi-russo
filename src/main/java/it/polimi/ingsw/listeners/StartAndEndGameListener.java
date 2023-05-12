@@ -45,7 +45,15 @@ public class StartAndEndGameListener extends EventListener{
                         //TODO gestire se non e arrivato
                     }
                 }
+            }
+            case END_GAME ->{
+                //TODO in base a come implementiamo la CLI e la GUI vediamo cosa inserire nel messaggio di endGame
 
+            }
+        }
+
+    }
+}
 
 
 
@@ -64,17 +72,3 @@ public class StartAndEndGameListener extends EventListener{
                 }
 
                  */
-
-                //TODO decidere se fare funzione o no
-                //getServerView().sendInfo(null);
-            }
-            case END_GAME ->{
-                //TODO in base a come implementiamo la CLI e la GUI vediamo cosa inserire nel messaggio di endGame
-
-            }
-        }
-
-    }
-}
-
-

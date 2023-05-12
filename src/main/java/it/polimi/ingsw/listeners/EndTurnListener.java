@@ -1,10 +1,11 @@
 package it.polimi.ingsw.listeners;
 
 
-import it.polimi.ingsw.message.KeyAbstractPayload;
-import it.polimi.ingsw.message.KeyDataPayload;
+import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.modelView.*;
 import it.polimi.ingsw.network.server.GameLobby;
+
+import java.io.IOException;
 
 public class EndTurnListener extends EventListener{
     public EndTurnListener(GameLobby gameLobby) {
@@ -12,20 +13,17 @@ public class EndTurnListener extends EventListener{
     }
 
     @Override
-    public void fireEvent(KeyAbstractPayload event, String playerNickname, Object newValue) {
+    public void fireEvent(KeyAbstractPayload event, String playerNickname, Object newValue) throws IOException {
         ModelView model=(ModelView) newValue;
+        BoardBoxView[][] boardView= model.getBoardView();
         ItemTileView[][] bookshelfView=model.getBookshelfView(playerNickname);
         PlayerPointsView playerPointsView=model.getPlayerPoints(playerNickname);
-        /*
-        MessagePayload payload=new MessagePayload();
-        payload.put(KeyPayload.WHO_CHANGE,playerNickname);
-        payload.put(KeyPayload.NEW_BOOKSHELF,bookshelfView);
-        payload.put(KeyPayload.POINTS, playerPointsView);
-        MessageFromServer messageFromServer=new MessageFromServer(new ServerMessageHeader(EventType.END_TURN,playerNickname),payload);
-        //TODO aggiungere i token
-        //TODO inviarlo a client socket
-        //getServerView().sendMessage(payload, MessageFromServerType.DATA,playerNickname);
+        MessageHeader header=new MessageHeader(MessageType.DATA,playerNickname);
+        MessagePayload payload=new MessagePayload(KeyDataPayload.END_TURN);
+        payload.put(Data.NEW_BOARD,boardView);
+        payload.put(Data.WHO_CHANGE,playerNickname);
+        Message message=new Message(header,payload);
+        getGameLobby().sendMessageToAllPlayers(message);
 
-         */
     }
 }

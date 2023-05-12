@@ -25,6 +25,15 @@ public class StartAndEndGameHandler extends MessageHandler {
     @Override
     public void handleMessage(Message mes) throws IOException {
         System.out.println("SONO IN START AND GAME HANDLER");
+
+        try {
+            Thread.sleep(3000);
+            System.out.println("Il thread si è interrotto dopo 3 secondi.");
+        } catch (InterruptedException e) {
+            System.out.println("Il thread è stato interrotto prematuramente.");
+        }
+
+        /*
         KeyDataPayload data = (KeyDataPayload) mes.getPayload().getKey();
         MessagePayload messagePayload=null;
         switch(data){
@@ -51,6 +60,8 @@ public class StartAndEndGameHandler extends MessageHandler {
         MessageHeader messageHeader=new MessageHeader(MessageType.DATA,getClientInterface().getNickname());
         Message message=new Message(messageHeader, messagePayload);
         getClient().sendMessageToServer(message);
+
+         */
 
     }
 }

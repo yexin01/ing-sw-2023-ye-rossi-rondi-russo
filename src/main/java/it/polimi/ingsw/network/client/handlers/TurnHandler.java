@@ -10,9 +10,11 @@ import it.polimi.ingsw.view.ClientInterface;
 
 public class TurnHandler extends MessageHandler {
 
-    public TurnHandler(ClientInterface clientInterface, Client client) {
+    public TurnHandler(ClientInterface clientInterface, Client client, StartAndEndGameHandler startAndEndGameHandler) {
         super(clientInterface, client);
+        this.startAndEndGameHandler = startAndEndGameHandler;
     }
+    private final StartAndEndGameHandler startAndEndGameHandler;
 
     @Override
     public void handleMessage(Message mes) throws Exception {
@@ -43,6 +45,10 @@ public class TurnHandler extends MessageHandler {
                 PlayerPointsView playerPointsView= (PlayerPointsView) mes.getPayload().getContent(Data.POINTS);
                 messagePayload=new MessagePayload(KeyDataPayload.END_TURN);
             }
+            default -> {
+                startAndEndGameHandler.handleMessage(mes);
+                return;
+            }
 
         }
         MessageHeader header=new MessageHeader(MessageType.DATA,getClientInterface().getNickname());
@@ -51,5 +57,6 @@ public class TurnHandler extends MessageHandler {
         System.out.println("HA MANDATO IL MESSAGGIO");
 
     }
+
 
 }

@@ -1,9 +1,10 @@
 package it.polimi.ingsw.listeners;
 
-import it.polimi.ingsw.message.KeyAbstractPayload;
-import it.polimi.ingsw.message.KeyDataPayload;
+import it.polimi.ingsw.message.*;
 
 import it.polimi.ingsw.network.server.GameLobby;
+
+import java.io.IOException;
 
 public class ErrorListener extends EventListener {
     public ErrorListener(GameLobby gameLobby) {
@@ -11,12 +12,11 @@ public class ErrorListener extends EventListener {
     }
 
     @Override
-    public void fireEvent(KeyAbstractPayload event, String playerNickname, Object newValue) {
-        /*
-        MessagePayload payload=new MessagePayload();
-        payload.put(KeyPayload.MESSAGE_ERROR,(newValue));
-        //getGameLobby().sendMessage(null,EventType.ERROR,playerNickname);
-
-         */
+    public void fireEvent(KeyAbstractPayload event, String playerNickname, Object newValue) throws IOException {
+        MessageHeader header=new MessageHeader(MessageType.ERROR,playerNickname);
+        MessagePayload payload=new MessagePayload(KeyErrorPayload.ERROR_DATA);
+        payload.put(Data.ERROR,newValue);
+        Message message=new Message(header,payload);
+        getGameLobby().sendMessageToSpecificPlayer(message,playerNickname);
     }
 }

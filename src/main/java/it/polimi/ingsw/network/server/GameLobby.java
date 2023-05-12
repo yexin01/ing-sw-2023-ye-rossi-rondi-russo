@@ -92,6 +92,9 @@ public class GameLobby {
     public synchronized void changePlayerInActive(String nickname, Connection connection){
         players.put(nickname,connection);
 
+        //TODO questo si potrebbe anche cancellare, al game controller interessa solo la disconessione
+        gameController.reconnectionPlayer(nickname);
+
         //TODO PER RESILIENZA: bisogna mandarli tutti i dati del game in corso a cui si sta ricollegando
 
         playersDisconnected.remove(nickname);
@@ -102,6 +105,7 @@ public class GameLobby {
     public void changePlayerInDisconnected(String nickname){
         playersDisconnected.add(nickname);
         players.remove(nickname);
+        gameController.disconnectionPlayer(nickname);
         System.out.println("Sono la GameLobby ho cambiato il giocatore "+nickname+" in disconnesso");
     }
 

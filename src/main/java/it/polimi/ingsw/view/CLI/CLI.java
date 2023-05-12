@@ -40,6 +40,9 @@ public class CLI extends ClientInterface {
             Colors.colorizeSize(Colors.GAME_INSTRUCTION, "•["+(commandsLobby.ordinal()+1)+"]",5);
             Colors.colorizeSize(Colors.GAME_INSTRUCTION,commandsLobby.getCommand(), 30);
             Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
+            if((commandsLobby.ordinal()+1)%2==0){
+                out.println();
+            }
             //Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
 
         }
@@ -393,6 +396,7 @@ public class CLI extends ClientInterface {
 
     @Override
     public Message askLobbyDecision() throws Exception {
+        out.println();
         Colors.colorize(Colors.ERROR_MESSAGE,"Welcome to Lobby what do you want to do?\n");
         boolean continueToAsk = true;
         MessageHeader header=new MessageHeader(MessageType.LOBBY, getClientView().getNickname());
@@ -400,33 +404,50 @@ public class CLI extends ClientInterface {
         Message message;
         CommandsLobby commandsLobby = null;
         while (continueToAsk) {
-            commandsLobby= (CommandsLobby) checkCommand(-1);
-            if(commandsLobby==null){
-                Colors.colorize(Colors.ERROR_MESSAGE,ErrorType.INVALID_INPUT.getErrorMessage());
-            }else continueToAsk=false;
-        }
-        Colors.colorize(Colors.GREEN_CODE,"You choose "+commandsLobby.getCommand()+" ");
-        switch (commandsLobby){
-            case CREATE_GAME_LOBBY -> {
-                payload=new MessagePayload(KeyLobbyPayload.CREATE_GAME_LOBBY);
-                Colors.colorize(Colors.GAME_INSTRUCTION,"Insert number of players for the new Lobby: ");
-                int num = in.nextInt();
-                out.printf(String.valueOf(num));
-                payload=new MessagePayload(KeyLobbyPayload.CREATE_GAME_LOBBY);
-                payload.put(Data.VALUE_CLIENT,num);
+            commandsLobby = (CommandsLobby) checkCommand(-1);
+            if (commandsLobby == null) {
+                Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.INVALID_INPUT.getErrorMessage());
+                continue;
+            }
+            Colors.colorize(Colors.BLUE_CODE, "You choose " + commandsLobby.getCommand() + " ");
+            out.println();
+            switch (commandsLobby) {
+                case CREATE_GAME_LOBBY -> {
+                    payload = new MessagePayload(KeyLobbyPayload.CREATE_GAME_LOBBY);
+                    Colors.colorize(Colors.GAME_INSTRUCTION, "Insert number of players for the new Lobby: ");
+                    int num = in.nextInt();
+                    out.printf(String.valueOf(num));
+                    payload = new MessagePayload(KeyLobbyPayload.CREATE_GAME_LOBBY);
+                    payload.put(Data.VALUE_CLIENT, num);
 
-            }
-            case JOIN_SPECIFIC_GAME_LOBBY ->{
-                Colors.colorize(Colors.GAME_INSTRUCTION,"Insert id Lobby you want to join: ");
-                int num = in.nextInt();
-                out.printf(String.valueOf(num));
-                payload=new MessagePayload(KeyLobbyPayload.JOIN_SPECIFIC_GAME_LOBBY);
-                payload.put(Data.VALUE_CLIENT,num);
-            }
-            case JOIN_RANDOM_GAME_LOBBY -> {
-                payload=new MessagePayload(KeyLobbyPayload.JOIN_RANDOM_GAME_LOBBY);
+                }
+                case JOIN_SPECIFIC_GAME_LOBBY -> {
+                    Colors.colorize(Colors.GAME_INSTRUCTION, "Insert id Lobby you want to join: ");
+                    int num = in.nextInt();
+                    out.printf(String.valueOf(num));
+                    payload = new MessagePayload(KeyLobbyPayload.JOIN_SPECIFIC_GAME_LOBBY);
+                    payload.put(Data.VALUE_CLIENT, num);
+                }
+                case JOIN_RANDOM_GAME_LOBBY -> {
+                    payload = new MessagePayload(KeyLobbyPayload.JOIN_RANDOM_GAME_LOBBY);
+                }
+                case RESET_CHOICE ->{
+                    if(payload == null){
+                        Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
+                    }else{
+                        payload=null;
+                        Colors.colorize(Colors.BLUE_CODE,"Your choice has been reset");
+                    }
+                }
+                case CONFIRM_CHOICE -> {
+                    if (payload == null) {
+                        Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
+                    } else continueToAsk = false;
+                }
             }
         }
+
+
         message=new Message(header,payload);
         return message;
     }
@@ -478,6 +499,7 @@ public class CLI extends ClientInterface {
             out.println("Invalid connection");
             doConnection();
         }
+
 
         String ip = askIp();
         int port = askPort(connectionType);

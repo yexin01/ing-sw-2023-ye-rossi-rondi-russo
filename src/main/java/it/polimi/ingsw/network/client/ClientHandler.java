@@ -4,7 +4,6 @@ import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.network.client.handlers.*;
 import it.polimi.ingsw.view.ClientInterface;
 
-import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -91,9 +90,10 @@ public class ClientHandler implements Runnable {
             System.out.println("creato ClientRMI in createConnection()...");
             connection="SOCKET";
         }
-        managerHandlers.registerEventHandler(MessageType.DATA,new TurnHandler(clientInterface,this.client));
+        managerHandlers.registerEventHandler(MessageType.DATA,new TurnHandler(clientInterface,this.client,new StartAndEndGameHandler(clientInterface,this.client)));
         managerHandlers.registerEventHandler(MessageType.LOBBY,new LobbyHandler(clientInterface,this.client));
         managerHandlers.registerEventHandler(MessageType.ERROR,new ErrorHandler(clientInterface,this.client));
+
         //TODO come collegare l'utimo handler o aggiungo un'altro message type relativo all'inizio e alla fine del game o cambio managerHandler
         //managerHandlers.registerEventHandler(MessageType.DATA,new StartAndEndGameHandler(clientInterface,this.client));
         /*
