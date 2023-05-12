@@ -30,7 +30,7 @@ public class Server implements Runnable{
 
     private ExecutorService executor;
 
-    private ConcurrentHashMap<String, Connection> clientsConnected;
+    private ConcurrentHashMap<String, Connection> clientsConnected; //mappa di tutti i client con una connessione attiva, per quelli disconnessi c'è la lista dei disconnessi nelle gameLobby
     private GlobalLobby globalLobby;
 
     private final static int MAX_PLAYERS = 4;
@@ -135,8 +135,8 @@ public class Server implements Runnable{
             String token = UUID.randomUUID().toString();
             connection.setToken(token);
 
-            MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
-            MessagePayload payload = new MessagePayload(KeyConnectionPayload.CONNECTION_CREATION);
+            MessageHeader header = new MessageHeader(MessageType.LOBBY, nickname);
+            MessagePayload payload = new MessagePayload(KeyLobbyPayload.GLOBAL_LOBBY_DECISION);
             String content = "Login effettuato con successo!";
             payload.put(Data.CONTENT,content);
             connection.sendMessageToClient(new Message(header,payload));
@@ -163,7 +163,6 @@ public class Server implements Runnable{
         //o si era disconnesso o nickname già in uso
 
         if (globalLobby.isPlayerDisconnectedInAnyGameLobby(nickname)) { // player was disconnected
-            //se era un clientDisconnesso in una gameLobby, lo riconnetto senza passare dalla globalLobby waitingList
             System.out.println("Sono il server... " + nickname + " era disconnesso in una gameLobby. Ora lo riconnetto...");
 
             clientsConnected.put(nickname, connection);
@@ -190,7 +189,7 @@ public class Server implements Runnable{
             connection.sendMessageToClient(new Message(header,payload));
 
             connection.disconnect();
-            System.out.println("Attention! " + nickname + " tried to connect with already used name!");
+            System.out.println("Attention! " + nickname + " tried to connect with a nickname already taken!");
 
         }
 
@@ -209,7 +208,9 @@ public class Server implements Runnable{
             synchronized (clientsLock) {
                 System.out.println(username + " disconnected from server!");
                 this.globalLobby.disconnectPlayerFromGlobalLobby(username);
+                System.out.println("Sono il server... ho disconnesso " + username + " dalla globalLobby");
                 clientsConnected.remove(username);
+                System.out.println("Sono il server... ho disconnesso " + username + " dalla lista di clientsConnected del server");
             }
         }
     }
@@ -242,25 +243,15 @@ public class Server implements Runnable{
     }
 
     private synchronized void handleGlobalLobbyPhase(Message message) throws IOException {
+        System.out.println("Sono il server... ho ricevuto la richiesta di join global lobby da parte di " + message.getHeader().getNickname());
+
         KeyLobbyPayload keyLobbyPayload = (KeyLobbyPayload) message.getPayload().getKey();
         switch (keyLobbyPayload) {
-            case JOIN_GLOBAL_LOBBY -> handleJoinGlobalLobby(message);
             case CREATE_GAME_LOBBY -> handleCreateGameLobby(message);
             case JOIN_SPECIFIC_GAME_LOBBY -> handleJoinSpecificGameLobby(message);
             case JOIN_RANDOM_GAME_LOBBY -> handleJoinRandomGameLobby(message);
             default -> throw new IllegalStateException("Unexpected value: " + keyLobbyPayload);
         }
-    }
-
-    private synchronized void handleJoinGlobalLobby(Message message) throws IOException {
-        System.out.println("Sono il server... ho ricevuto la richiesta di join global lobby da parte di " + message.getHeader().getNickname());
-        this.globalLobby.addPlayerToWaiting(message.getHeader().getNickname(), clientsConnected.get(message.getHeader().getNickname()));
-
-        MessageHeader header = new MessageHeader(MessageType.LOBBY, message.getHeader().getNickname());
-        MessagePayload payload = new MessagePayload(KeyLobbyPayload.GLOBAL_LOBBY_DECISION);
-        Message messageToClient = new Message(header, payload);
-
-        clientsConnected.get(message.getHeader().getNickname()).sendMessageToClient(messageToClient);
     }
 
     private synchronized void handleCreateGameLobby(Message message) throws IOException {

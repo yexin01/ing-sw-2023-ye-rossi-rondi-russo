@@ -23,13 +23,16 @@ public class MessagePayload implements Serializable {
         data.put(key, value);
     }
 
+    public KeyAbstractPayload getKey() {
+        return key;
+    }
+
+    public Map<Data, Object> getData() {
+        return data;
+    }
 
     public Object getContent(Data key) {
         return data.get(key);
     }
 
-
-    public KeyAbstractPayload getKey() {
-        return key;
-    }
 }

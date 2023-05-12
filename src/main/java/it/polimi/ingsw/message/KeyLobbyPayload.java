@@ -1,7 +1,6 @@
 package it.polimi.ingsw.message;
 
 public enum KeyLobbyPayload implements KeyAbstractPayload  {
-    JOIN_GLOBAL_LOBBY,
 
     GLOBAL_LOBBY_DECISION,
 

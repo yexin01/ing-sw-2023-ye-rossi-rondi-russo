@@ -46,6 +46,7 @@ public class RMIConnection extends Connection {
                 System.out.println("\nclient: "+clientPinger.getNickname()+" disconnected on his own");
             }
             server.onDisconnect(this);
+            System.out.println("Disconnection completed!");
         }
     }
 

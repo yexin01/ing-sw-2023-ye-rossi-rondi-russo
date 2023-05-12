@@ -75,7 +75,7 @@ public class GameLobby {
         return players.size() == wantedPlayers;
     }
 
-    public boolean containsPlayerInThisGame(String nickname){
+    public boolean isPlayerActiveInThisGame(String nickname){
         return players.containsKey(nickname);
     }
 
@@ -89,11 +89,14 @@ public class GameLobby {
         //TODO PER RESILIENZA: bisogna mandarli tutti i dati del game in corso a cui si sta ricollegando
 
         playersDisconnected.remove(nickname);
+
+        System.out.println("Sono la GameLobby ho cambiato il giocatore "+nickname+" in attivo");
     }
 
     public void changePlayerInDisconnected(String nickname){
         playersDisconnected.add(nickname);
         players.remove(nickname);
+        System.out.println("Sono la GameLobby ho cambiato il giocatore "+nickname+" in disconnesso");
     }
 
     public ModelView getModelView() {
@@ -111,4 +114,38 @@ public class GameLobby {
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
     }
+
+    public void sendMessageToAllPlayers(Message message) throws IOException {
+        for (Connection connection : players.values()) {
+            connection.sendMessageToClient(message);
+        }
+    }
+
+    public void sendMessageToAllPlayersExceptOne(Message message, String nickname) throws IOException {
+        for (String player : players.keySet()) {
+            if (!player.equals(nickname)) {
+                players.get(player).sendMessageToClient(message);
+            }
+        }
+    }
+
+    public void sendMessageToAllPlayersExceptSome(Message message, String[] nicknames) throws IOException {
+        for (String player : players.keySet()) {
+            boolean found = false;
+            for (String nickname : nicknames) {
+                if (player.equals(nickname)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                players.get(player).sendMessageToClient(message);
+            }
+        }
+    }
+
+    public void sendMessageToSpecificPlayer(Message message, String nickname) throws IOException {
+        players.get(nickname).sendMessageToClient(message);
+    }
+
 }

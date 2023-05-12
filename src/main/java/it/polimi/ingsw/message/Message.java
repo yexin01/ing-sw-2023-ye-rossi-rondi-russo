@@ -1,6 +1,7 @@
 package it.polimi.ingsw.message;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class Message implements Serializable {
 
@@ -25,14 +26,25 @@ public class Message implements Serializable {
         return messagePayload;
     }
 
-
-
-    public String toString(Data key) {
-        return "Message from server {" +
-                "sent to '" + messageHeader.getNickname() + '\'' +
-                ", type= " + messageHeader.getMessageType() +
-                ", content= \"" + messagePayload.getContent(key) +"\""+
-                '}';
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Message [Header: ")
+                .append(messageHeader.getMessageType())
+                .append(", Nickname='")
+                .append(messageHeader.getNickname())
+                .append("', Payload: Key='")
+                .append(messagePayload.getKey())
+                .append("', Data=");
+        for (Map.Entry<Data, Object> entry : messagePayload.getData().entrySet()) {
+            sb.append("{")
+                    .append(entry.getKey())
+                    .append("=")
+                    .append(entry.getValue())
+                    .append("}");
+        }
+        sb.append("]");
+        return sb.toString();
     }
 
 }

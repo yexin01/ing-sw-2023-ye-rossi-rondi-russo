@@ -26,25 +26,9 @@ public class GlobalLobby {
     }
 
     public synchronized void addPlayerToWaiting(String nickname, Connection connection) throws IOException {
-        try{
-            waitingPlayersWithNoGame.put(nickname,connection);
-
-            MessageHeader header = new MessageHeader(MessageType.LOBBY, nickname);
-            MessagePayload payload = new MessagePayload(KeyLobbyPayload.JOIN_GLOBAL_LOBBY);
-            String content = "Welcome to the Global Lobby!";
-            payload.put(Data.CONTENT,content);
-            connection.sendMessageToClient(new Message(header,payload));
-
-            System.out.println("Player "+nickname+" added to the waiting list in global lobby!");
-
-        } catch (IOException e){
-
-            MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
-            MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_LOBBY);
-            payload.put(Data.ERROR, ErrorType.ERR_JOINING_GAME_LOBBY);
-            connection.sendMessageToClient(new Message(header,payload));
-
-        }
+        System.out.println("Player "+nickname+" added to server's global lobby!");
+        waitingPlayersWithNoGame.put(nickname,connection);
+        System.out.println("Player "+nickname+" added to the waiting list in global lobby!");
     }
 
     public synchronized void playerCreatesGameLobby(int wantedPlayers, String nickname,Connection connection) throws IOException {
@@ -166,7 +150,7 @@ public class GlobalLobby {
             waitingPlayersWithNoGame.remove(nickname);
         } else {
             for (GameLobby gameLobby : gameLobbies.values()) {
-                if (gameLobby.containsPlayerInThisGame(nickname)) {
+                if (gameLobby.isPlayerActiveInThisGame(nickname)) {
                     gameLobby.changePlayerInDisconnected(nickname);
                     return;
                 }

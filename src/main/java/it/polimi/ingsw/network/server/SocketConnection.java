@@ -111,6 +111,7 @@ public class SocketConnection extends Connection implements Runnable {
             connected = false;
 
             socketServer.onDisconnect(this);
+            System.out.println("Disconnection completed!");
         }
     }
 
