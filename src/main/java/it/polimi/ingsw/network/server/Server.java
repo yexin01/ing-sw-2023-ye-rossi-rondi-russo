@@ -254,7 +254,7 @@ public class Server implements Runnable{
 
         if(wantedPlayers < MIN_PLAYERS || wantedPlayers > MAX_PLAYERS){
             MessageHeader header = new MessageHeader(MessageType.ERROR, message.getHeader().getNickname());
-            MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_CONNECTION);
+            MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_LOBBY);
             payload.put(Data.ERROR, ErrorType.ERR_NUM_PLAYER_WANTED);
             Message messageToClient = new Message(header, payload);
             clientsConnected.get(message.getHeader().getNickname()).sendMessageToClient(messageToClient);

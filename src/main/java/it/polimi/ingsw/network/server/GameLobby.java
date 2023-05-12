@@ -68,11 +68,17 @@ public class GameLobby {
             payload.put(Data.CONTENT,content);
             connection.sendMessageToClient(new Message(header,payload));
 
+            if(isFull()){
+                createGame();
+            }
+
         } catch (IOException e){
             MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
             MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_LOBBY);
             payload.put(Data.ERROR, ErrorType.ERR_JOINING_GAME_LOBBY);
             connection.sendMessageToClient(new Message(header,payload));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -105,7 +111,9 @@ public class GameLobby {
     public void changePlayerInDisconnected(String nickname){
         playersDisconnected.add(nickname);
         players.remove(nickname);
-        gameController.disconnectionPlayer(nickname);
+        if(gameController!=null){
+            gameController.disconnectionPlayer(nickname);
+        }
         System.out.println("Sono la GameLobby ho cambiato il giocatore "+nickname+" in disconnesso");
     }
 

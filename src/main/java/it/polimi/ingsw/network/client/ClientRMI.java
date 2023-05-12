@@ -30,7 +30,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
     }
 
     @Override
-    public void sendMessageToServer(Message message) throws IOException {
+    public void sendMessageToServer(Message message) throws Exception {
         if (server == null) {
             throw new RemoteException();
         }

@@ -104,6 +104,7 @@ public class GlobalLobby {
         }
         if(!done){
 
+            //TODO: è un error o un lobby?
             MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
             MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_LOBBY);
             payload.put(Data.ERROR, ErrorType.ERR_NO_FREE_SPOTS);

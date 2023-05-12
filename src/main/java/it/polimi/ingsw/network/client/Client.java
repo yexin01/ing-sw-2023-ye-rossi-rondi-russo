@@ -71,7 +71,7 @@ public abstract class Client extends UnicastRemoteObject {
         return messageQueue.poll();
     }
 
-    public abstract void sendMessageToServer(Message message) throws IOException;
+    public abstract void sendMessageToServer(Message message) throws Exception;
 
     public abstract void closeConnection() throws Exception;
 
