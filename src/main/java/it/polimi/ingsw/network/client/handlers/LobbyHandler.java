@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.client.handlers;
 
-import it.polimi.ingsw.message.Message;
+import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.network.client.Client;
 
 import it.polimi.ingsw.view.ClientInterface;
@@ -15,24 +15,24 @@ public class LobbyHandler extends MessageHandler {
     }
 
     @Override
-    public void handleMessage(Message mes) throws RemoteException {
+    public void handleMessage(Message mes) throws Exception {
+        KeyLobbyPayload key= (KeyLobbyPayload) mes.getPayload().getKey();
+        System.out.println(mes.getPayload().getContent(Data.CONTENT));
+        switch(key){
+            case GLOBAL_LOBBY_DECISION -> {
+                KeyLobbyPayload data = (KeyLobbyPayload) mes.getPayload().getKey();
+                MessagePayload messagePayload=null;
+                Message message=getClientInterface().askLobbyDecision();
+                getClient().sendMessageToServer(message);
+            }
+            case CREATE_GAME_LOBBY-> {
+                //System.out.println("NELLA LOBBY");
+                System.out.println(mes.getPayload().getContent(Data.CONTENT));
+            }
+
+        }
 
     }
-
-    /*
-messaggio message struttura messaggi lobby
-
-        createGame lobbi + numberOfPlayer valueClient
-
-
-        joinspecifi game lobby  value client idgame
-
-
-        joinedRandomGame
-
-     */
-
-
 }
 
 

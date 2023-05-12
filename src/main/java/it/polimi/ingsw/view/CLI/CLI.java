@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.CLI;
 
-import it.polimi.ingsw.message.ErrorType;
+import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 
 import it.polimi.ingsw.network.client.ClientHandler;
@@ -34,6 +34,18 @@ public class CLI extends ClientInterface {
         printerStartAndEndTurn =new PrinterStartAndEndTurn();
         printerCommonGoalAndPoints=new PrinterCommonGoalAndPoints();
     }
+    public void printLobbyCommands() throws Exception {
+        out.println();
+        for(CommandsLobby commandsLobby:CommandsLobby.values()){
+            Colors.colorizeSize(Colors.GAME_INSTRUCTION, "•["+(commandsLobby.ordinal()+1)+"]",5);
+            Colors.colorizeSize(Colors.GAME_INSTRUCTION,commandsLobby.getCommand(), 30);
+            Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
+            //Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
+
+        }
+        out.println();
+        Colors.colorize(Colors.GAME_INSTRUCTION,"Insert command: ");
+    }
 
     public void allCommands(int phase) throws Exception {
         boolean firstPrint=false;
@@ -54,7 +66,7 @@ public class CLI extends ClientInterface {
         out.println();
         int i=0;
         int typeCommand=0;
-        for (Commands command : Commands.values()) {
+        for (CommandsTurn command : CommandsTurn.values()) {
             String commandString = command.toString();
             while(!commandString.toLowerCase().startsWith(commandsPhase[typeCommand%(commandsPhase.length+1)])){
                 String noCommands=" ";
@@ -71,7 +83,7 @@ public class CLI extends ClientInterface {
                 if(!firstPrint){
                     firstPrint=true;
                     Colors.colorize(Colors.GAME_INSTRUCTION, "  ");
-                    if(command.equals(Commands.values()[Commands.values().length-1])){
+                    if(command.equals(CommandsTurn.values()[CommandsTurn.values().length-1])){
                         out.println();
                     }
                 }else {
@@ -99,17 +111,26 @@ public class CLI extends ClientInterface {
     public Commands checkCommand(int phase) throws Exception {
         int input;
         Commands commands;
-        allCommands(phase);
+        int enumSize=-1;
+        if(phase==-1){
+            printLobbyCommands();
+            enumSize=CommandsLobby.values().length;
+        }else{
+            allCommands(phase);
+            enumSize=CommandsTurn.values().length;
+        }
         input = scanner.nextInt();
         input--;
         scanner.nextLine();
 
-        if(!(input >= 0 && input < Commands.values().length)){
+        if(!(input >= 0 && input < enumSize)){
             Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.INVALID_INPUT.getErrorMessage());
             return null;
         }
         out.println();
-        return Commands.values()[input];
+        if(phase==-1){
+            return CommandsLobby.values()[input];
+        }else return CommandsTurn.values()[input];
     }
 
 
@@ -125,11 +146,11 @@ public class CLI extends ClientInterface {
         boolean continueToAsk = true;
 
         while (continueToAsk) {
-          Commands commands=checkCommand(0);
-          if(commands==null){
+          CommandsTurn commandsTurn =(CommandsTurn) checkCommand(0);
+          if(commandsTurn ==null){
             continue;
           }
-          switch (commands) {
+          switch (commandsTurn) {
               case SELECT_FROM_BOARD1:
                   selectTile();
                   break;
@@ -146,7 +167,7 @@ public class CLI extends ClientInterface {
                   }
                  break;
               default:
-                  handleInvalidPhase(commands);
+                  handleInvalidPhase(commandsTurn);
                 continue;
             }
 
@@ -170,8 +191,8 @@ public class CLI extends ClientInterface {
         return getClientView().getCoordinatesSelected().stream().mapToInt(Integer::intValue).toArray();
     }
 
-    private void printCommands(Commands commands) throws Exception {
-        switch (commands){
+    private void printCommands(CommandsTurn commandsTurn) throws Exception {
+        switch (commandsTurn){
             case PRINT1 -> printerBoard.printMatrixBoard(getClientView());
             case PRINT2 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3,1,60,false,false,0);
             case PRINT3 -> printerBookshelfAndPersonal.printPersonal(getClientView(),2,35);
@@ -218,10 +239,10 @@ public class CLI extends ClientInterface {
             Colors.colorize(Colors.GAME_INSTRUCTION, "Reset successful\n");
         }
     }
-    public void handleInvalidPhase(Commands commands) throws Exception {
-        String commandString = commands.toString();
+    public void handleInvalidPhase(CommandsTurn commandsTurn) throws Exception {
+        String commandString = commandsTurn.toString();
         if (commandString.toLowerCase().startsWith("print")) {
-            printCommands(commands);
+            printCommands(commandsTurn);
         } else Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.ILLEGAL_PHASE.getErrorMessage());
     }
 
@@ -241,11 +262,11 @@ public class CLI extends ClientInterface {
         orderTiles[0]=-1;
         ErrorType error = ErrorType.INVALID_ORDER_TILE_NUMBER;
         while (continueToAsk) {
-            Commands commands = checkCommand(1);
-            if (commands == null) {
+            CommandsTurn commandsTurn =(CommandsTurn) checkCommand(1);
+            if (commandsTurn == null) {
                 continue;
             }
-            switch (commands) {
+            switch (commandsTurn) {
                 case ORDER_TILES1:
                     printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 1, 60, true, false, 0);
 
@@ -291,7 +312,7 @@ public class CLI extends ClientInterface {
                     permuteSelection();
                     break;
                 default:
-                    handleInvalidPhase(commands);
+                    handleInvalidPhase(commandsTurn);
                     continue;
             }
 
@@ -309,11 +330,11 @@ public class CLI extends ClientInterface {
         int column=-1;
         boolean continueToAsk = true;
         while (continueToAsk) {
-            Commands commands = checkCommand(2);
-            if (commands == null) {
+            CommandsTurn commandsTurn = (CommandsTurn)checkCommand(2);
+            if (commandsTurn == null) {
                 continue;
             }
-            switch (commands) {
+            switch (commandsTurn) {
                 case COLUMN1:
 
                     //printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 2, 40, false, true, 50);
@@ -349,11 +370,17 @@ public class CLI extends ClientInterface {
                     printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 1, 60, false, false, 0);
                     continue;
                 default:
-                    handleInvalidPhase(commands);
+                    handleInvalidPhase(commandsTurn);
                     break;
             }
         }
         return column;
+    }
+
+    @Override
+    public void displayError(String error) {
+        Colors.colorize(Colors.ERROR_MESSAGE, error);
+        out.println();
     }
 
 
@@ -361,6 +388,47 @@ public class CLI extends ClientInterface {
     public void askNicknameAndConnection() throws Exception {
         Colors.colorize(Colors.YELLOW_CODE,"QUESTA E LA TUA NUOVA LA CLI");
         initialLobby();
+    }
+
+
+    @Override
+    public Message askLobbyDecision() throws Exception {
+        Colors.colorize(Colors.ERROR_MESSAGE,"Welcome to Lobby what do you want to do?\n");
+        boolean continueToAsk = true;
+        MessageHeader header=new MessageHeader(MessageType.LOBBY, getClientView().getNickname());
+        MessagePayload payload = null;
+        Message message;
+        CommandsLobby commandsLobby = null;
+        while (continueToAsk) {
+            commandsLobby= (CommandsLobby) checkCommand(-1);
+            if(commandsLobby==null){
+                Colors.colorize(Colors.ERROR_MESSAGE,ErrorType.INVALID_INPUT.getErrorMessage());
+            }else continueToAsk=false;
+        }
+        Colors.colorize(Colors.GREEN_CODE,"You choose "+commandsLobby.getCommand()+" ");
+        switch (commandsLobby){
+            case CREATE_GAME_LOBBY -> {
+                payload=new MessagePayload(KeyLobbyPayload.CREATE_GAME_LOBBY);
+                Colors.colorize(Colors.GAME_INSTRUCTION,"Insert number of players for the new Lobby: ");
+                int num = in.nextInt();
+                out.printf(String.valueOf(num));
+                payload=new MessagePayload(KeyLobbyPayload.CREATE_GAME_LOBBY);
+                payload.put(Data.VALUE_CLIENT,num);
+
+            }
+            case JOIN_SPECIFIC_GAME_LOBBY ->{
+                Colors.colorize(Colors.GAME_INSTRUCTION,"Insert id Lobby you want to join: ");
+                int num = in.nextInt();
+                out.printf(String.valueOf(num));
+                payload=new MessagePayload(KeyLobbyPayload.JOIN_SPECIFIC_GAME_LOBBY);
+                payload.put(Data.VALUE_CLIENT,num);
+            }
+            case JOIN_RANDOM_GAME_LOBBY -> {
+                payload=new MessagePayload(KeyLobbyPayload.JOIN_RANDOM_GAME_LOBBY);
+            }
+        }
+        message=new Message(header,payload);
+        return message;
     }
 
     @Override
@@ -398,6 +466,7 @@ public class CLI extends ClientInterface {
         int connectionType = -1;
 
         String nickname = askNickname();
+        getClientView().setNickname(nickname);
         out.println("Hi "+ nickname +"!");
 
         connectionType = askConnection();

@@ -5,6 +5,7 @@ import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.modelView.ModelView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -32,9 +33,14 @@ public class GameLobby {
         players = new ConcurrentHashMap<>();
         playersDisconnected = new CopyOnWriteArrayList<>();
     }
-    public void createGame(){
-        //this.gameController=new GameController();
+    public void createGame() throws Exception {
+        ArrayList<String> playersGame=new ArrayList<>();
+        for (String player : players.keySet()) {
+            playersGame.add(player);
+        }
+        this.gameController=new GameController(this,playersGame);
     }
+
 
     public int getIdGameLobby(){
         return idGameLobby;

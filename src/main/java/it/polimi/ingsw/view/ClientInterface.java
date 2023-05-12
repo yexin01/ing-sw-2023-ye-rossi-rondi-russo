@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.message.ErrorType;
+import it.polimi.ingsw.message.Message;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 
@@ -12,7 +13,10 @@ import java.util.ArrayList;
 public abstract class ClientInterface extends JPanel {
     private ClientView clientView;
 
-    public abstract String getNickname();
+
+    public String getNickname(){
+        return getClientView().getNickname();
+    }
     private int[] freeShelves;
     //public abstract void start();
 
@@ -21,8 +25,10 @@ public abstract class ClientInterface extends JPanel {
     public abstract int[] askCoordinates() throws Exception;
     public abstract int[] askOrder() throws Exception;
     public abstract int askColumn() throws Exception;
+    public abstract void displayError(String error);
 
     public abstract void askNicknameAndConnection() throws Exception;
+    public abstract Message askLobbyDecision() throws Exception;
     //booleano corrisponde alla partecipazione ad una nuova partita se é true vuole terminare il gioco altrimenti no
     public abstract boolean endGame();
     public abstract void Setup();
@@ -219,4 +225,6 @@ public abstract class ClientInterface extends JPanel {
     public void setFreeshelves(int[] freeshelves) {
         this.freeShelves = freeshelves;
     }
+
+
 }
