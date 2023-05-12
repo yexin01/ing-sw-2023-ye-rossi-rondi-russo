@@ -20,7 +20,7 @@ public class RMIHandlerImplementation extends UnicastRemoteObject implements RMI
         this.server = server;
     }
 
-    public void receiveMessageFromClient(Message message) throws IOException {
+    public void receiveMessageFromClient(Message message) throws Exception {
         server.receiveMessageFromClient(message);
     }
 

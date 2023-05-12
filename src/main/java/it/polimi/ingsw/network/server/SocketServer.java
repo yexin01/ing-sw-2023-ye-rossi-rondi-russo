@@ -44,7 +44,7 @@ public class SocketServer extends Thread {
         server.loginToServer(nickname, connection);
     }
 
-    public void receiveMessageFromClient(Message message) throws IOException {
+    public void receiveMessageFromClient(Message message) throws Exception {
         server.receiveMessageFromClient(message);
     }
 

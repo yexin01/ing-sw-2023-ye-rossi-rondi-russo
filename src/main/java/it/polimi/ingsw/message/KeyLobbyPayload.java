@@ -7,6 +7,7 @@ public enum KeyLobbyPayload implements KeyAbstractPayload  {
     CREATE_GAME_LOBBY,
     JOIN_SPECIFIC_GAME_LOBBY,
     JOIN_RANDOM_GAME_LOBBY,
+    QUIT_SERVER,
 
     RECONNECT_TO_GAME_LOBBY,
 

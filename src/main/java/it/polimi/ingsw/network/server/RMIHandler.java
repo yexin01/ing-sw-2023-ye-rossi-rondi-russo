@@ -9,7 +9,7 @@ import java.rmi.RemoteException;
 
 public interface RMIHandler extends Remote {
 
-    public void receiveMessageFromClient(Message message) throws IOException;
+    public void receiveMessageFromClient(Message message) throws Exception;
 
     public void login(String username, RMIClientConnection client) throws Exception;
 
