@@ -25,11 +25,6 @@ public enum ErrorType implements KeyAbstractPayload {
     ERR_RECONNECT_TO_GAME_LOBBY("Failed to reconnect to previous game lobby! \n Disconnection.."),//da rifare connnesione+Login lato client
     ERR_JOIN_GLOBAL_LOBBY("Failed in joining the Global Lobby! \n Disconnection.."),
 
-
-
-
-
-
     //qui data
     ILLEGAL_TURN("it isn't your turn"),
     ILLEGAL_PHASE("This isn't the phase"),

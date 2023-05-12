@@ -10,7 +10,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ClientHandler implements Runnable {
 
     private Client client;
-    private ClientInterface clientInterface;
+
     private Thread messageHandlerThread;
     private BlockingQueue<Message> queueToHandle = new LinkedBlockingQueue<>();
     private ManagerHandlers managerHandlers=new ManagerHandlers();
@@ -77,8 +77,10 @@ public class ClientHandler implements Runnable {
         messageHandlerThread.start();
     }
 
-    public void createConnection(int isRMI, String nickname, String ip, int port,ClientInterface clientInterface) throws Exception {
+    public void createConnection(int isRMI,String ip, int port,ClientInterface clientInterface) throws Exception {
         String connection;
+        String nickname=clientInterface.getClientView().getNickname();
+        System.out.println(clientInterface.getClientView().getNickname()+"NEL CLIENT HANDLER");
         if (isRMI==0) {
             client = new ClientSocket(nickname, ip, port);
             this.isRMI = false;
@@ -90,9 +92,9 @@ public class ClientHandler implements Runnable {
             System.out.println("creato ClientRMI in createConnection()...");
             connection="SOCKET";
         }
-        managerHandlers.registerEventHandler(MessageType.DATA,new TurnHandler(clientInterface,this.client,new StartAndEndGameHandler(clientInterface,this.client)));
-        managerHandlers.registerEventHandler(MessageType.LOBBY,new LobbyHandler(clientInterface,this.client));
-        managerHandlers.registerEventHandler(MessageType.ERROR,new ErrorHandler(clientInterface,this.client));
+        managerHandlers.registerEventHandler(MessageType.DATA,new TurnHandler(clientInterface,client,new StartAndEndGameHandler(clientInterface,this.client)));
+        managerHandlers.registerEventHandler(MessageType.LOBBY,new LobbyHandler(clientInterface,client));
+        managerHandlers.registerEventHandler(MessageType.ERROR,new ErrorHandler(clientInterface,client));
 
         //TODO come collegare l'utimo handler o aggiungo un'altro message type relativo all'inizio e alla fine del game o cambio managerHandler
         //managerHandlers.registerEventHandler(MessageType.DATA,new StartAndEndGameHandler(clientInterface,this.client));
@@ -155,11 +157,4 @@ public class ClientHandler implements Runnable {
          */
     }
 
-    public ClientInterface getClientInterface() {
-        return clientInterface;
-    }
-
-    public void setClientInterface(ClientInterface clientInterface) {
-        this.clientInterface = clientInterface;
-    }
 }

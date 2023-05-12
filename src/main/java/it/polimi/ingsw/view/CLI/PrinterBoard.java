@@ -18,9 +18,13 @@ public class PrinterBoard {
         //System.out.println("BOARD");
 
         int lineLength= sizeTile +2*spaceBetweenTiles;
-
+        int valuesType=0;
+        ArrayList<Integer> coordinates=new ArrayList<>();
         BoardBoxView[][] boardView = clientView.getBoardView();
-        ArrayList<Integer> coordinates = clientView.getCoordinatesSelected();
+        if(clientView.getCoordinatesSelected()==null){
+            valuesType=Type.values().length+1;
+        }else coordinates = clientView.getCoordinatesSelected();
+
         //Colors.upperOneBoard(Colors.WHITE_CODE);
         Colors.printFreeSpaces(2+ sizeTile +sizeWordType+freeSpacesFromTableTypesSelected+sizeCoordinates);
         for (int i=0;i<boardView[0].length;i++){
@@ -45,7 +49,7 @@ public class PrinterBoard {
         }
         System.out.println();
         //Colors.mediumBoard(Colors.OCHRE_YELLOW_CODE);
-        int valuesType=0;
+
         for (int i = 0; i < boardView.length; i++) {
             finishLine=false;
             valuesType=printValues(valuesType,clientView);
@@ -88,16 +92,28 @@ public class PrinterBoard {
                         break;
                     }
                 } else {
+
                     //TODO finire
                     //printFreeSpaces(2);
                     //System.out.print("  ");
                     //Colors.colorize(Colors.WHITE_CODE,"║ ");
+
                     if (boardView[i][j].isOccupiable()) {
                         //System.out.printf("%-6s","("+i+","+j+")");
-
-                        Colors.colorize(Colors.RESET_CODE, " ".repeat(lineLength+1));
+                        Colors.colorize(Colors.WHITE_CODE,"║");
+                        Colors.printFreeSpaces(spaceBetweenTiles);
+                        Colors.printFreeSpaces(sizeTile);
+                        Colors.printFreeSpaces(spaceBetweenTiles);
+                        if(j==boardView[0].length-1 || !boardView[i][j+1].isOccupiable()){
+                            Colors.colorize(Colors.WHITE_CODE,"║");
+                            Colors.printFreeSpaces(spaceBetweenTiles);
+                            break;
+                        }
+                        //Colors.colorize(Colors.RESET_CODE, " ".repeat(lineLength+1));
                     } else Colors.colorize(Colors.RESET_CODE, " ".repeat(lineLength+1));
                     //Colors.colorize(Colors.WHITE_CODE,"║ ");
+
+
                 }
 
 

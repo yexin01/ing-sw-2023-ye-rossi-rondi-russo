@@ -17,7 +17,7 @@ import static java.lang.System.out;
 
 //TODO molti comandi scritti qua li sposterò sugli handler li ho utilizzati per vedere come venivano stampate le varie fasi del turno
 public class CLI extends ClientInterface {
-    private String nickname;
+
     private Scanner in = new Scanner(System.in);
 
     private Scanner scanner;
@@ -25,6 +25,7 @@ public class CLI extends ClientInterface {
     private PrinterBookshelfAndPersonal printerBookshelfAndPersonal;
     private PrinterStartAndEndTurn printerStartAndEndTurn;
     private PrinterCommonGoalAndPoints printerCommonGoalAndPoints;
+    private PrinterLogo printerLogo;
 
     public CLI(){
         this.scanner= new Scanner(System.in);
@@ -33,6 +34,7 @@ public class CLI extends ClientInterface {
         printerBookshelfAndPersonal=new PrinterBookshelfAndPersonal();
         printerStartAndEndTurn =new PrinterStartAndEndTurn();
         printerCommonGoalAndPoints=new PrinterCommonGoalAndPoints();
+        printerLogo=new PrinterLogo();
     }
     public void printLobbyCommands() throws Exception {
         out.println();
@@ -140,7 +142,8 @@ public class CLI extends ClientInterface {
     @Override
     public int[] askCoordinates() throws Exception {
         out.println();
-        Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: SELECT FROM BOARD");
+        //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: SELECT FROM BOARD");
+        PrinterLogo.printBoardPhase();
         out.println();
         getClientView().setCoordinatesSelected(new ArrayList<>());
         printerBoard.printMatrixBoard(getClientView());
@@ -254,7 +257,8 @@ public class CLI extends ClientInterface {
     @Override
     public int[] askOrder() throws Exception {
         out.println();
-        Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: ORDER TILES");
+        //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: ORDER TILES");
+        PrinterLogo.printOrderPhase();
         out.println();
         createItemTileView();
         //insertTiles(2);
@@ -325,7 +329,8 @@ public class CLI extends ClientInterface {
     @Override
     public int askColumn() throws Exception {
         out.println();
-        Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: COLUMN");
+        //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: COLUMN");
+        PrinterLogo.printColumnPhase();
         out.println();
         ErrorType error = ErrorType.INVALID_COLUMN;
         int column=-1;
@@ -368,6 +373,7 @@ public class CLI extends ClientInterface {
                     getClientView().setColumn(column);
                     permuteSelection();
                     insertTiles(column);
+                    continueToAsk=false;
                     printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 1, 60, false, false, 0);
                     continue;
                 default:
@@ -384,10 +390,21 @@ public class CLI extends ClientInterface {
         out.println();
     }
 
+    @Override
+    public void endTurn() throws Exception {
+        printerBoard.printMatrixBoard(getClientView());
+        //Colors.colorize(Colors.ERROR_MESSAGE, "FINE TURNO");
+        PrinterLogo.printWaitingTurnPhase();
+        allCommands(3);
+
+
+    }
+
 
     @Override
     public void askNicknameAndConnection() throws Exception {
-        Colors.colorize(Colors.YELLOW_CODE,"QUESTA E LA TUA NUOVA LA CLI");
+        //Colors.colorize(Colors.YELLOW_CODE,"QUESTA E LA TUA NUOVA LA CLI");
+        PrinterLogo.printMyShelfieLogo();
         initialLobby();
     }
 
@@ -472,9 +489,7 @@ public class CLI extends ClientInterface {
         return printerBookshelfAndPersonal;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
+
 
     public void initialLobby(){
         //printMyShelfieLogo();
@@ -485,7 +500,6 @@ public class CLI extends ClientInterface {
         int connectionType = -1;
 
         String nickname = askNickname();
-        getClientView().setNickname(nickname);
         out.println("Hi "+ nickname +"!");
 
         connectionType = askConnection();
@@ -507,7 +521,7 @@ public class CLI extends ClientInterface {
         ClientHandler clientHandler=new ClientHandler();
         try{
             //metodo di Clienthanlder (la cli estende ClientHandler)
-            clientHandler.createConnection(connectionType, nickname, ip, port,this);
+            clientHandler.createConnection(connectionType, ip, port,this);
             out.println("Connection created");
         } catch (Exception e){
             out.println("Error in creating connection. Please try again.\n");
@@ -518,8 +532,11 @@ public class CLI extends ClientInterface {
     }
 
     private String askNickname(){
-        Colors.colorize(Colors.RED_CODE,"Enter your username: ");
-        return in.nextLine().toLowerCase();
+        //Colors.colorize(Colors.RED_CODE,"Enter your username: ");
+        Colors.colorize(Colors.WHITE_CODE,"Enter your username: ");
+        String nickname=in.nextLine().toLowerCase();
+        getClientView().setNickname(nickname);
+        return nickname;
     }
 
     private int askConnection(){

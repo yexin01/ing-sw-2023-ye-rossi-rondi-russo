@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.client.handlers;
 
+import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
@@ -20,12 +21,58 @@ public class TurnHandler extends MessageHandler {
     public void handleMessage(Message mes) throws Exception {
         System.out.println("SONO TURN HANDLER");
 
-        KeyDataPayload data = (KeyDataPayload) mes.getPayload().getKey();
+        //KeyDataPayload data = (KeyDataPayload) mes.getPayload().getKey();
         MessagePayload messagePayload=null;
+        TurnPhase turnPhase=(TurnPhase) mes.getPayload().getKey();
+        switch(turnPhase){
+            /*
+            case SELECT_FROM_BOARD -> {
+                int[] selectionBoard=getClientInterface().askCoordinates();
+                messagePayload=new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
+                messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
+            }
+
+             */
+            case SELECT_ORDER_TILES -> {
+                int[] orderTiles=  getClientInterface().askOrder();
+                messagePayload=new MessagePayload(TurnPhase.SELECT_ORDER_TILES);
+                messagePayload.put(Data.VALUE_CLIENT,orderTiles);
+            }
+            case SELECT_COLUMN -> {
+                int column=getClientInterface().askColumn();
+                messagePayload=new MessagePayload(TurnPhase.SELECT_COLUMN);
+                messagePayload.put(Data.VALUE_CLIENT,column);
+            }
+            case END_TURN -> {
+                System.out.println("END TURN CLIENT");
+               BoardBoxView[][] boardBoxViews= (BoardBoxView[][]) mes.getPayload().getContent(Data.NEW_BOARD);
+               getClientInterface().getClientView().setBoardView(boardBoxViews);
+               String player= (String) mes.getPayload().getContent(Data.PLAYERS);
+               getClientInterface().endTurn();
+                if(player.equals(getClientInterface().getClientView().getNickname())){
+                    int[] selectionBoard=getClientInterface().askCoordinates();
+                    messagePayload=new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
+                    messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
+                }
+            }
+            default -> {
+                startAndEndGameHandler.handleMessage(mes);
+                return;
+            }
+        }
+        MessageHeader header=new MessageHeader(MessageType.DATA,getClientInterface().getClientView().getNickname());
+        Message messageToServer=new Message(header,messagePayload);
+        getClient().sendMessageToServer(messageToServer);
+        System.out.println("HA MANDATO IL MESSAGGIO");
+    }
+}
+ /*
+
         switch(data){
             case START_TURN->{
                 int[] selectionBoard=getClientInterface().askCoordinates();
                 messagePayload=new MessagePayload(KeyDataPayload.SELECTION_PHASE);
+                messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
             }
             case SELECTION_PHASE ->{
                 System.out.println("SONO TURN HANDLER");
@@ -51,12 +98,5 @@ public class TurnHandler extends MessageHandler {
             }
 
         }
-        MessageHeader header=new MessageHeader(MessageType.DATA,getClientInterface().getNickname());
-        Message messageToServer=new Message(header,messagePayload);
-        getClient().sendMessageToServer(messageToServer);
-        System.out.println("HA MANDATO IL MESSAGGIO");
 
-    }
-
-
-}
+         */

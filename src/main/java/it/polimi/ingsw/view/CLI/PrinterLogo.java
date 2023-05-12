@@ -4,7 +4,7 @@ import static java.lang.System.out;
 
 public class PrinterLogo {
 
-    private static void printMyShelfieLogo() {
+    public static void printMyShelfieLogo() {
         String myShelfieLogo = """
                                                                                                                                           
                           ███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
@@ -60,7 +60,7 @@ public class PrinterLogo {
 
 
     //titoli per le info
-    private static void printBoardLogo() {
+    public static void printBoardLogo() {
         String boardLogo = """
 
                 ╔╦╗╦ ╦╔═╗  ╔╗ ╔═╗╔═╗╦═╗╔╦╗
@@ -71,7 +71,7 @@ public class PrinterLogo {
         out.println(boardLogo);
     }
 
-    private static void printBookshelfLogo() {
+    public static void printBookshelfLogo() {
         String myBookshelfLogo = """
 
                 ╔╦╗╦ ╦  ╔╗ ╔═╗╔═╗╦╔═╔═╗╦ ╦╔═╗╦  ╔═╗
@@ -85,7 +85,7 @@ public class PrinterLogo {
 
 
     //titoli per le fasi
-    private static void printGlobalLobbyPhase() {
+    public static void printGlobalLobbyPhase() {
         String globalLobbyPhaseLogo = """
                 
                 ╔═╗╦  ╔═╗╔╗ ╔═╗╦    ╦  ╔═╗╔╗ ╔╗ ╦ ╦
@@ -96,7 +96,7 @@ public class PrinterLogo {
         out.println(globalLobbyPhaseLogo);
     }
 
-    private static void printGameLobbyPhase() {
+    public static void printGameLobbyPhase() {
         String gameLobbyPhaseLogo = """
                 
                 ╔═╗╔═╗╔╦╗╔═╗  ╦  ╔═╗╔╗ ╔╗ ╦ ╦
@@ -107,7 +107,7 @@ public class PrinterLogo {
         out.println(gameLobbyPhaseLogo);
     }
 
-    private static void printYourTurnPhase() {
+    public static void printYourTurnPhase() {
         String yourTurnPhaseLogo = """
                 
                 ╦ ╦╔═╗╦ ╦╦═╗  ╔╦╗╦ ╦╦═╗╔╗╔
@@ -118,7 +118,7 @@ public class PrinterLogo {
         out.println(yourTurnPhaseLogo);
     }
 
-    private static void printWaitingTurnPhase() {
+    public static void printWaitingTurnPhase() {
         String waitingTurnPhaseLogo = """
                 
                 ╦ ╦╔═╗╦╔╦╗╦╔╗╔╔═╗  ╦ ╦╔═╗╦ ╦╦═╗  ╔╦╗╦ ╦╦═╗╔╗╔
@@ -129,7 +129,7 @@ public class PrinterLogo {
         out.println(waitingTurnPhaseLogo);
     } //+ printWaitingLogo
 
-    private static void printBoardPhase() {
+    public static void printBoardPhase() {
         String boardPhaseLogo = """
                 
                 ╔╗ ╔═╗╔═╗╦═╗╔╦╗  ╔═╗╦ ╦╔═╗╔═╗╔═╗
@@ -140,7 +140,7 @@ public class PrinterLogo {
         out.println(boardPhaseLogo);
     }
 
-    private static void printOrderPhase() {
+    public static void printOrderPhase() {
         String orderPhaseLogo = """
                 
                 ╔═╗╦═╗╔╦╗╔═╗╦═╗  ╔═╗╦ ╦╔═╗╔═╗╔═╗
@@ -151,7 +151,7 @@ public class PrinterLogo {
         out.println(orderPhaseLogo);
     }
 
-    private static void printColumnPhase() {
+    public static void printColumnPhase() {
         String columnPhaseLogo = """
                 
                 ╔═╗╔═╗╦  ╦ ╦╔╦╗╔╗╔  ╔═╗╦ ╦╔═╗╔═╗╔═╗
@@ -162,7 +162,7 @@ public class PrinterLogo {
         out.println(columnPhaseLogo);
     }
 
-    private static void printFinalRankingPhase() {
+    public static void printFinalRankingPhase() {
         String finalRankingPhaseLogo = """
                 
                 ╔═╗╦╔╗╔╔═╗╦    ╦═╗╔═╗╔╗╔╦╔═╦╔╗╔╔═╗
@@ -176,7 +176,7 @@ public class PrinterLogo {
 
 
     //disegnini
-    private static void printWinnerLogo() {
+    public static void printWinnerLogo() {
         String winnerLogo = """
 
 
@@ -224,7 +224,7 @@ public class PrinterLogo {
         out.println(disconnectionForcedLogo);
     }
 
-    private static void printLostConnectionLogo() {
+    public static void printLostConnectionLogo() {
         String lostConnectionLogo = """
 
                 ──▄────▄▄▄▄▄▄▄────▄───
@@ -237,7 +237,7 @@ public class PrinterLogo {
         out.println(lostConnectionLogo);
     }
 
-    private static void printErrorLogo() {
+    public static void printErrorLogo() {
         String errorLogo = """
 
                 ░░░░░░░▄▄▄▄▄▄░░░░░░░░░░░░░░░░░░░
@@ -270,7 +270,7 @@ public class PrinterLogo {
         out.println(errorLogo);
     }
 
-    private static void printErrorLogo2() {
+    public static void printErrorLogo2() {
         String errorLogo = """
 
 ▄██████████████▄▐█▄▄▄▄█▌
@@ -282,7 +282,7 @@ public class PrinterLogo {
         out.println(errorLogo);
     }
 
-    private static void printWaitingLogo() {
+    public static void printWaitingLogo() {
         String waitingLogo = """
                 ───▄▄▄
                 ─▄▀░▄░▀▄

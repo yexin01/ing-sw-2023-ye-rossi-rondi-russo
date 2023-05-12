@@ -30,6 +30,8 @@ public class GameController {
         turnPhaseController =new PhaseController<>(TurnPhase.SELECT_FROM_BOARD);
         listenerManager.addListener(KeyErrorPayload.ERROR_DATA,new ErrorListener(gameLobby));
         listenerManager.addListener(KeyDataPayload.START_GAME,new StartAndEndGameListener(gameLobby));
+        listenerManager.addListener(TurnPhase.END_TURN,new EndTurnListener(gameLobby));
+        listenerManager.addListener(KeyDataPayload.PHASE,new TurnListener(gameLobby));
         GameRules gameRules=new GameRules();
         ModelView modelView=new ModelView(nicknames.size(), gameRules,listenerManager);
 
@@ -43,8 +45,8 @@ public class GameController {
         game.createPersonalGoalCard(gameRules);
         //TODO capire come organizzarlo meglio
 
-        //modelView.addListener(KeyDataPayload.,new FinishSelectionListener(gameLobby));
-        modelView.addListener(KeyDataPayload.END_TURN,new EndTurnListener(gameLobby));
+        //modelView.addListener(KeyDataPayload.VALUE_CLIENT,new TurnListener(gameLobby));
+        //modelView.addListener(KeyDataPayload.END_TURN,new EndTurnListener(gameLobby));
         listenerManager.fireEvent(KeyDataPayload.START_GAME,null,game.getModelView());
     }
 
@@ -58,24 +60,20 @@ public class GameController {
 
 
     public void receiveMessageFromClient(Message message){
-
+        System.out.println("SONO NEL GAME CONTROLLER");
+        System.out.println(message.getHeader().getNickname());
+        System.out.println(message.getPayload().getKey());
         String nicknamePlayer= message.getHeader().getNickname();
         try{
             if (!nicknamePlayer.equals(game.getTurnPlayer().getNickname())) {
                 listenerManager.fireEvent(KeyErrorPayload.ERROR_DATA,nicknamePlayer, ErrorType.ILLEGAL_TURN);
-                //serverView.sendError(ErrorType.ILLEGAL_TURN,nicknamePlayer);
-                //throw new Error(ErrorType.ILLEGAL_TURN);
+
             }
-
-
-
+            illegalPhase((TurnPhase) message.getPayload().getKey());
             switch (turnPhaseController.getCurrentPhase()) {
                 case SELECT_FROM_BOARD ->  checkAndInsertBoardBox(message);
-                //case FINISH_SELECTION->associatePlayerTiles();
-                //case RESET_BOARD_CHOICE -> resetBoardChoice();
                 case SELECT_ORDER_TILES-> permutePlayerTiles(message);
                 case SELECT_COLUMN->selectingColumn(message);
-                //case INSERT_TILE_AND_POINTS -> insertBookshelf();
                 //case ABANDON_GAME -> removePlayer(message.getNicknameSender());
                 //TODO inviera il messaggio di ILLEGAL PHASE di default
                 //default -> ;
@@ -93,38 +91,50 @@ public class GameController {
                 return;
             }
         }
-        //TODO cancellare dalle connessioni
-        //serverView.removeClient(nicknameSender);
-
-        //TODO inviare mes
-        //serverView.sendMessage(null, MessageFromServerType.START_TURN,getTurnNickname());
     }
 
     public void checkAndInsertBoardBox(Message message) throws Exception {
-        illegalPhase(TurnPhase.SELECT_FROM_BOARD);
         int[] coordinates=(int[]) message.getPayload().getContent(Data.VALUE_CLIENT);
-        int x=coordinates[0];
-        int y=coordinates[1];
-        checkError(game.getBoard().checkCoordinates(x,y));
-        System.out.println("You selected "+x+","+y);
-        BoardBox boardBox=game.getBoard().getBoardBox(x,y);
+        int x;
+        int y;
+        //TODO il controllo verra cambiato rendendolo piu veloce
+        ErrorType errorType=null;
         int maxPlayerSelectableTiles=game.getTurnPlayer().getBookshelf().numSelectableTiles();
-        checkError(game.getBoard().checkSelectable(boardBox,maxPlayerSelectableTiles));
-        //serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
+        for (int i = 0; i <coordinates.length; i = i + 2) {
+            x=coordinates[i];
+            y=coordinates[i+1];
+            errorType=game.getBoard().checkCoordinates(x,y);
+            if(errorType!=null) {
+                checkError(errorType);
+                break;
+            }
+            System.out.println("You selected "+x+","+y);
+            BoardBox boardBox=game.getBoard().getBoardBox(x,y);
+            errorType=game.getBoard().checkSelectable(boardBox,maxPlayerSelectableTiles);
+            System.out.println(coordinates.length);
+            System.out.println(i);
+            if(errorType!=null) {
+                checkError(errorType);
+                break;
+            }
+        }
+        if(errorType==null){
+            System.out.println("Le asocia");
+            associatePlayerTiles();
+        };
+
     }
     public void resetBoardChoice() throws Exception {
-        illegalPhase(TurnPhase.SELECT_FROM_BOARD);
         game.getBoard().resetBoardChoice();
         //TODO inviare mes
         //serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
 
     public void checkError(ErrorType possibleInvalidArgoment) throws Exception {
-        if(possibleInvalidArgoment!=null){
-            listenerManager.fireEvent(KeyErrorPayload.ERROR_DATA,getTurnNickname(),possibleInvalidArgoment);
-            //serverView.sendError(possibleInvalidArgoment,getTurnNickname());
-            throw new Exception();
-        };
+        System.out.println("ERRORE DATA CLIENT");
+        System.out.println(possibleInvalidArgoment.getErrorMessage());
+        listenerManager.fireEvent(KeyErrorPayload.ERROR_DATA,getTurnNickname(),possibleInvalidArgoment);
+
     }
     public void disconnectionPlayer(String nickname){
         //TODO disconnection
@@ -140,50 +150,74 @@ public class GameController {
     }
 
     public void associatePlayerTiles() throws Exception {
-        illegalPhase(TurnPhase.SELECT_FROM_BOARD);
-        checkError(game.getBoard().checkFinishChoice());
-        turnPhaseController.changePhase();
-        game.getTurnPlayer().selection(game.getBoard());
+
+        ErrorType errorType=game.getBoard().checkFinishChoice();
+        if(errorType!=null){
+            checkError(errorType);
+        }else{
+            game.getTurnPlayer().selection(game.getBoard());
+            //game.getBoard().resetBoard();
+            turnPhaseController.setCurrentPhase(TurnPhase.SELECT_ORDER_TILES);
+            System.out.println("CAMBIA FASE");
+            listenerManager.fireEvent(KeyDataPayload.PHASE,getTurnNickname(),TurnPhase.SELECT_ORDER_TILES);
+        }
+
     }
     public void permutePlayerTiles(Message message) throws Exception {
-        illegalPhase(TurnPhase.SELECT_ORDER_TILES);
-        int[] orderTiles=(int[]) message.getPayload().getContent(Data.VALUE_CLIENT);;
-        checkError(game.getTurnPlayer().checkPermuteSelection(orderTiles));
-        turnPhaseController.changePhase();
-        game.getTurnPlayer().permuteSelection(orderTiles);
-        //serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
+        int[] orderTiles=(int[]) message.getPayload().getContent(Data.VALUE_CLIENT);
+        ErrorType errorType=game.getTurnPlayer().checkPermuteSelection(orderTiles);
+        if(errorType!=null){
+            checkError(errorType);
+        }else {
+            game.getTurnPlayer().permuteSelection(orderTiles);
+            turnPhaseController.setCurrentPhase(TurnPhase.SELECT_COLUMN);
+            System.out.println("CAMBIA FASE");
+            listenerManager.fireEvent(KeyDataPayload.PHASE,getTurnNickname(),TurnPhase.SELECT_COLUMN);
+        }
+
+
+
     }
 
     public void selectingColumn(Message message) throws Exception {
-        illegalPhase(TurnPhase.SELECT_COLUMN);
-        int column=(int) message.getPayload().getContent(Data.VALUE_CLIENT);;;
+        int column=(int) message.getPayload().getContent(Data.VALUE_CLIENT);
         System.out.println("You selected "+column);
-        checkError(game.getTurnPlayer().getBookshelf().checkBookshelf(column,game.getTurnPlayer().getSelectedItems().size()));
-        turnPhaseController.changePhase();
-        game.getTurnPlayer().getBookshelf().setColumnSelected(column);
-        //serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
+        ErrorType errorType=game.getTurnPlayer().getBookshelf().checkBookshelf(column,game.getTurnPlayer().getSelectedItems().size());
+        if(errorType!=null){
+            checkError(errorType);
+        }else{
+            game.getTurnPlayer().getBookshelf().setColumnSelected(column);
+            insertBookshelf();
+        }
     }
 
     public void insertBookshelf() throws Exception {
-        illegalPhase(TurnPhase.END_TURN);
         turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
         game.getTurnPlayer().insertBookshelf();
+        System.out.println("finish1");
         if(game.getTurnPlayer().getBookshelf().isFull()){
             game.setEndGame(true);
         }
+        System.out.println("finish2");
         game.updateAllPoints();
         finishTurn();
     }
     public void finishTurn() {
         //TODO da finire
+        game.getBoard().resetBoard();
+        System.out.println("finish3");
         if(game.isEndGame() && game.getTurnPlayer().equals(game.getLastPlayer())){
             endGame();
             return ;
+        }else{
+            if(game.getBoard().checkRefill()){
+                game.getBoard().refill();
+            }
+            game.setNextPlayer();
+            System.out.println("finish4");
+            listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
         }
-        if(game.getBoard().checkRefill()){
-            game.getBoard().refill();
-        }
-        game.setNextPlayer();
+
         //serverView.sendMessage(null,MessageFromServerType.START_TURN,getTurnNickname());
     }
 
@@ -203,25 +237,13 @@ public class GameController {
     public void illegalPhase(TurnPhase phase) throws Exception {
         if(!turnPhaseController.getCurrentPhase().equals(phase)){
             listenerManager.fireEvent(KeyErrorPayload.ERROR_DATA,getTurnNickname(),ErrorType.ILLEGAL_PHASE);
-            //serverView.sendError(ErrorType.ILLEGAL_PHASE,getTurnNickname());
             throw new Exception();
-            //throw new Error(ErrorType.ILLEGAL_PHASE);
         }
         return;
     }
     public String getTurnNickname() {
         return game.getTurnPlayer().getNickname();
     }
-/*
-    public ServerView getServerView() {
-        return serverView;
-    }
-
-    public void setServerView(ServerView serverView) {
-        this.serverView = serverView;
-    }
-
- */
 
     public ListenerManager getListenerManager() {
         return listenerManager;

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.listeners;
 
+import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.*;
@@ -22,9 +23,8 @@ public class StartAndEndGameListener extends EventListener{
                 ModelView modelView=(ModelView) newValue;
                 getGameLobby().setModelView(modelView);
                 MessageHeader header;
-                MessagePayload payload=new MessagePayload(KeyDataPayload.START_GAME);
+                MessagePayload payload=new MessagePayload(TurnPhase.START_GAME);
                 BoardBoxView[][] boardView= modelView.getBoardView();
-
                 ArrayList<String> nicknames=modelView.getPlayersOrder();
                 for(String nickname:nicknames){
                     header=new MessageHeader(MessageType.DATA,nickname);
@@ -39,11 +39,19 @@ public class StartAndEndGameListener extends EventListener{
                     payload.put(Data.COMMON_GOAL_CARD,commonGoalViews);
                     payload.put(Data.PLAYERS,nicknames.toArray(new String[nicknames.size()]));
                     Message m=new Message(header,payload);
+/*
                     try {
-                        getGameLobby().sendMessageToSpecificPlayer(m,nickname);
+                       getGameLobby().sendMessageToSpecificPlayer(m,nickname);
                     } catch (IOException e) {
                         //TODO gestire se non e arrivato
                     }
+
+ */
+
+
+
+
+
                 }
             }
             case END_GAME ->{

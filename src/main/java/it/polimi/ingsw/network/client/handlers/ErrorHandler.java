@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.client.handlers;
 
+import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.listeners.StartAndEndGameListener;
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.network.client.Client;
@@ -19,8 +20,17 @@ public class ErrorHandler extends MessageHandler {
         getClientInterface().displayError(error.getErrorMessage());
         switch(key){
             case ERROR_DATA -> {
+                if(error.equals(ErrorType.WRONG_PHASE)){
+                    //TODO nel contenuto ci sara la fase e chiama quella se e indietro gli manda i dati fino a quel momento
+                }
+                if(!error.equals(ErrorType.ILLEGAL_TURN)){
+                    switch(getClientInterface().getTurnPhase()){
+                        case SELECT_FROM_BOARD -> getClientInterface().askCoordinates();
+                        case SELECT_ORDER_TILES -> getClientInterface().askOrder();
+                        case SELECT_COLUMN -> getClientInterface().askColumn();
+                    }
 
-
+                }
             }
             case ERROR_CONNECTION -> {
                 if(error.equals(ErrorType.PING_NOT_RECEIVED)){
@@ -44,4 +54,6 @@ public class ErrorHandler extends MessageHandler {
 
         System.out.println("SONO L'ERROR HANDLER");
     }
+
+
 }

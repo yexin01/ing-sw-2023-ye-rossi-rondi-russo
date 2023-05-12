@@ -124,9 +124,9 @@ public class ModelView {
         return selectedItems;
     }
 
-    public void setSelectedItems(ItemTileView[] selectedItems, java.lang.String nickname) {
+    public void setSelectedItems(ItemTileView[] selectedItems, String nickname) {
         this.selectedItems = selectedItems;
-        listenerManager.fireEvent(KeyDataPayload.VALUE_CLIENT,nickname,this);
+        //listenerManager.fireEvent(KeyDataPayload.VALUE_CLIENT,nickname,this);
     }
     public void addListener(KeyAbstractPayload eventType, EventListener listener) {
         this.listenerManager.addListener(eventType,listener);

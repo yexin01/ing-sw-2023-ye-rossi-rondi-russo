@@ -246,20 +246,14 @@ public class Board{
      * adjacent, in the same row or column and adjacent
      * @return
      */
-    //TODO depends on how we implement the controller: this method checks the tile after each selection,
-    // if we change the controller by checking the cards when the user has selected them all this method
-    // must be changed by adding an arraylist to the board, checking at the end
-    //TODO pass it the maximum of the player's selectable tile cells as a parameter
-    //TODO avoid reading the json file and having to reduce the controller by one check
+
     public ErrorType checkSelectable(BoardBox boardBox, int numSelectableTiles) throws Error {
         if(selectedBoard.size() > (numSelectableTiles+1)){
             return ErrorType.TOO_MANY_TILES;
-            //throw new Error(ErrorType.TOO_MANY_TILES);
         }
 
         if ((boardBox.getFreeEdges() <= 0)) {
             return ErrorType.NOT_SELECTABLE_TILE;
-            //throw new Error(ErrorType.NOT_SELECTABLE_TILE);
         }
         selectedBoard.add(boardBox);
         if (selectedBoard.size() == 1) {
@@ -268,15 +262,14 @@ public class Board{
         if (!allAdjacent() || !allSameRowOrSameColumn()) {
             selectedBoard.remove(selectedBoard.size() - 1);
             return ErrorType.NOT_SELECTABLE_TILE;
-            //throw new Error(ErrorType.NOT_SELECTABLE_TILE);
         }
         return null;
     }
-
+/*
     /**
      *
      * @return itemTiles of the arraylist selected Board
-     */
+
     public ArrayList<ItemTile> selected(){
         ArrayList<ItemTile>  selectedItems= new ArrayList<ItemTile>();
         for(int i = 0; i< selectedBoard.size(); i++ ){
@@ -290,6 +283,32 @@ public class Board{
         return selectedItems;
     }
 
+ */
+public ArrayList<ItemTile> selected(){
+    ArrayList<ItemTile>  selectedItems= new ArrayList<ItemTile>();
+    for(int i = 0; i< selectedBoard.size(); i++ ){
+        selectedItems.add(selectedBoard.get(i).getTile());
+        /*
+
+        increaseNear(selectedBoard.get(i).getX(), selectedBoard.get(i).getY());
+        matrix[selectedBoard.get(i).getX()][selectedBoard.get(i).getY()].setTile(null);
+        matrix[selectedBoard.get(i).getX()][selectedBoard.get(i).getY()].setFreeEdges(0);
+
+         */
+
+    }
+    //resetBoardChoice();
+    return selectedItems;
+}
+    public void resetBoard(){
+        for(int i = 0; i< selectedBoard.size(); i++ ){
+            increaseNear(selectedBoard.get(i).getX(), selectedBoard.get(i).getY());
+            matrix[selectedBoard.get(i).getX()][selectedBoard.get(i).getY()].setTile(null);
+            matrix[selectedBoard.get(i).getX()][selectedBoard.get(i).getY()].setFreeEdges(0);
+        }
+        resetBoardChoice();
+        modelView.setBoardView(cloneBoard());
+    }
     public void resetBoardChoice(){
         selectedBoard=new ArrayList<>();
         return;

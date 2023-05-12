@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.client.handlers;
 
 
-import com.sun.net.httpserver.Headers;
+import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
@@ -11,9 +11,6 @@ import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.network.client.Client;
 
 import it.polimi.ingsw.view.ClientInterface;
-
-import java.io.IOException;
-import java.rmi.RemoteException;
 
 public class StartAndEndGameHandler extends MessageHandler {
 
@@ -26,8 +23,11 @@ public class StartAndEndGameHandler extends MessageHandler {
     public void handleMessage(Message mes) throws Exception {
         System.out.println("SONO IN START AND GAME HANDLER");
 
-        KeyDataPayload data = (KeyDataPayload) mes.getPayload().getKey();
+        TurnPhase data = (TurnPhase) mes.getPayload().getKey();
         MessagePayload messagePayload=null;
+        System.out.println(getClientInterface().getClientView().getNickname());
+        String[] p=((String[])mes.getPayload().getContent(Data.PLAYERS));
+        System.out.println(p[0]);
         switch(data){
             case START_GAME->{
                 BoardBoxView[][] boardView= (BoardBoxView[][]) mes.getPayload().getContent(Data.NEW_BOARD);
@@ -43,12 +43,19 @@ public class StartAndEndGameHandler extends MessageHandler {
                 PlayerPointsView playerPointsView=((PlayerPointsView)mes.getPayload().getContent(Data.POINTS));
                 getClientInterface().getClientView().setPlayerPoints(playerPointsView);
                 messagePayload=new MessagePayload(KeyDataPayload.START_GAME);
-                if(players[0].equals(getClientInterface().getNickname())){
-                    getClientInterface().askCoordinates();
+                if(players[0].equals(getClientInterface().getClientView().getNickname())){
+                    MessageHeader header=new MessageHeader(MessageType.DATA,getClientInterface().getClientView().getNickname());
+                    int[] selectionBoard=getClientInterface().askCoordinates();
+                    messagePayload=new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
+                    messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
+                    getClient().sendMessageToServer(new Message(header,messagePayload));
                 }
+                /*
                 MessageHeader messageHeader=new MessageHeader(MessageType.DATA,getClientInterface().getNickname());
                 Message message=new Message(messageHeader, messagePayload);
                 getClient().sendMessageToServer(message);
+
+                 */
                 //
             }
             case END_GAME ->{

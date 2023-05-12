@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.message.ErrorType;
 import it.polimi.ingsw.message.Message;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
@@ -12,10 +13,10 @@ import java.util.ArrayList;
 
 public abstract class ClientInterface extends JPanel {
     private ClientView clientView;
-
+    private TurnPhase turnPhase;
 
     public String getNickname(){
-        return getClientView().getNickname();
+        return clientView.getNickname();
     }
     private int[] freeShelves;
     //public abstract void start();
@@ -26,6 +27,7 @@ public abstract class ClientInterface extends JPanel {
     public abstract int[] askOrder() throws Exception;
     public abstract int askColumn() throws Exception;
     public abstract void displayError(String error);
+    public abstract void endTurn() throws Exception;
 
     public abstract void askNicknameAndConnection() throws Exception;
     public abstract Message askLobbyDecision() throws Exception;
@@ -58,6 +60,7 @@ public abstract class ClientInterface extends JPanel {
         ItemTileView[] temp = new ItemTileView[clientView.getTilesSelected().length];
         int j=0;
         for(int i : clientView.getOrderTiles()){
+            System.out.println(i);
             temp[j++]=clientView.getTilesSelected()[i];
         }
         clientView.setTilesSelected(temp) ;
@@ -100,7 +103,7 @@ public abstract class ClientInterface extends JPanel {
         BoardBoxView[][] board= clientView.getBoardView();
         if (x < 0 || y<0 || x> board.length-1 || y> board[0].length-1 || !board[x][y].isOccupiable() ) {
             return ErrorType.INVALID_COORDINATES;
-            //throw new Error(ErrorType.INVALID_COORDINATES);
+
         }
         return null;
     }
@@ -227,4 +230,11 @@ public abstract class ClientInterface extends JPanel {
     }
 
 
+    public TurnPhase getTurnPhase() {
+        return turnPhase;
+    }
+
+    public void setTurnPhase(TurnPhase turnPhase) {
+        this.turnPhase = turnPhase;
+    }
 }

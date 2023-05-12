@@ -85,7 +85,7 @@ public class Player {
         for(ItemTile i:selectedItems){
             selectedItem[j++]=new ItemTileView(i.getType(), i.getTileID());
         }
-        modelView.setBoardView((board.cloneBoard()));
+       // modelView.setBoardView((board.cloneBoard()));
         modelView.setSelectedItems(selectedItem,nickname);
 
         //serverView.firePlayer(payload,MessageFromServerType.DATA,nickname);
