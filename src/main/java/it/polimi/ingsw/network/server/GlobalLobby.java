@@ -29,6 +29,12 @@ public class GlobalLobby {
         System.out.println("Player "+nickname+" added to server's global lobby!");
         waitingPlayersWithNoGame.put(nickname,connection);
         System.out.println("Player "+nickname+" added to the waiting list in global lobby!");
+
+        MessageHeader header = new MessageHeader(MessageType.LOBBY, nickname);
+        MessagePayload payload = new MessagePayload(KeyLobbyPayload.GLOBAL_LOBBY_DECISION);
+        String content = "Welcome to the Global Lobby!";
+        payload.put(Data.CONTENT,content);
+        connection.sendMessageToClient(new Message(header,payload));
     }
 
     public synchronized void playerCreatesGameLobby(int wantedPlayers, String nickname,Connection connection) throws IOException {
@@ -48,7 +54,6 @@ public class GlobalLobby {
         connection.sendMessageToClient(new Message(header,payload));
 
         System.out.println("\nCreated a new game lobby with id: "+gameId+" and added player "+nickname+" to it!\n");
-
     }
 
     public synchronized void playerJoinsGameLobbyId(int gameId, String nickname, Connection connection) throws IOException {
@@ -173,6 +178,20 @@ public class GlobalLobby {
 
     private GameLobby findGameLobbyById(int gameId) {
         return gameLobbies.get(gameId);
+    }
+
+    public synchronized void endGameLobbyFromGlobalLobby(int gameId) throws IOException {
+        System.out.println("sono la globalLobby -- Ending game lobby "+gameId+" from global lobby!");
+
+        GameLobby gameLobby = findGameLobbyById(gameId);
+        ConcurrentHashMap<String, Connection> players = gameLobby.getPlayersInGameLobby();
+        for (String nickname : players.keySet()) {
+            addPlayerToWaiting(nickname,players.get(nickname));
+        }
+
+        System.out.println("All players in game lobby "+gameId+" have been moved to waitingList in the global lobby!");
+        gameLobbies.remove(gameId);
+        System.out.println("Game lobby "+gameId+" has ended and been removed from the global lobby!");
     }
 
 }

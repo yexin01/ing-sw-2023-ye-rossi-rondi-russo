@@ -135,12 +135,6 @@ public class Server implements Runnable{
             String token = UUID.randomUUID().toString();
             connection.setToken(token);
 
-            MessageHeader header = new MessageHeader(MessageType.LOBBY, nickname);
-            MessagePayload payload = new MessagePayload(KeyLobbyPayload.GLOBAL_LOBBY_DECISION);
-            String content = "Login effettuato con successo!";
-            payload.put(Data.CONTENT,content);
-            connection.sendMessageToClient(new Message(header,payload));
-
             System.out.println(nickname + " connected to server!");
             System.out.println("Sono il server.. ora passo alla fase nella globalLobby...");
 
@@ -231,18 +225,17 @@ public class Server implements Runnable{
         }
     }
 
-    public synchronized void receiveMessageFromClient(Message message) throws IOException {
+    public synchronized void receiveMessageFromClient(Message message) throws Exception {
         System.out.println("\nSono il server... ho ricevuto il messaggio: "+ message.toString() + "da un client\n");
         MessageType messageType = message.getHeader().getMessageType();
 
         switch (messageType) {
             case LOBBY -> handleGlobalLobbyPhase(message);
-
             default -> throw new IllegalStateException("Unexpected value: " + messageType);
         }
     }
 
-    private synchronized void handleGlobalLobbyPhase(Message message) throws IOException {
+    private synchronized void handleGlobalLobbyPhase(Message message) throws Exception {
         System.out.println("Sono il server... ho ricevuto la richiesta di join global lobby da parte di " + message.getHeader().getNickname());
 
         KeyLobbyPayload keyLobbyPayload = (KeyLobbyPayload) message.getPayload().getKey();
@@ -250,6 +243,7 @@ public class Server implements Runnable{
             case CREATE_GAME_LOBBY -> handleCreateGameLobby(message);
             case JOIN_SPECIFIC_GAME_LOBBY -> handleJoinSpecificGameLobby(message);
             case JOIN_RANDOM_GAME_LOBBY -> handleJoinRandomGameLobby(message);
+            case QUIT_SERVER -> handleQuitServer(message);
             default -> throw new IllegalStateException("Unexpected value: " + keyLobbyPayload);
         }
     }
@@ -286,6 +280,25 @@ public class Server implements Runnable{
         System.out.println("ora devo aggiungere il player alla game lobby random con un posto libero...");
 
         this.globalLobby.playerJoinsFirstFreeSpotInRandomGame(message.getHeader().getNickname(), clientsConnected.get(message.getHeader().getNickname()));
+    }
+
+    private synchronized void handleQuitServer(Message message) throws Exception {
+        System.out.println("Sono il server... ho ricevuto la richiesta di quit server da parte di " + message.getHeader().getNickname());
+        System.out.println("ora devo disconnettere il player dalla global lobby...");
+
+        this.globalLobby.disconnectPlayerFromGlobalLobby(message.getHeader().getNickname());
+        System.out.println("Sono il server... ho disconnesso " + message.getHeader().getNickname() + " dalla globalLobby");
+        this.clientsConnected.remove(message.getHeader().getNickname());
+        System.out.println("Sono il server... ho disconnesso " + message.getHeader().getNickname() + " dalla lista di clientsConnected del server");
+        clientsConnected.get(message.getHeader().getNickname()).disconnect();
+        System.out.println("Sono il server... ho disconnesso " + message.getHeader().getNickname() + " dalla connessione con il server");
+    }
+
+    private synchronized void handleEndGamePhase(int gameId) throws IOException {
+        System.out.println("Sono il server... ho ricevuto la richiesta di terminare la game lobby con id " + gameId + "perché è stata completata la partita!");
+        System.out.println("ora devo terminare la game lobby...");
+
+        this.globalLobby.endGameLobbyFromGlobalLobby(gameId);
     }
 
 }
