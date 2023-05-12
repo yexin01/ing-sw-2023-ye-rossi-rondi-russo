@@ -33,7 +33,7 @@ public class GameLobby {
         players = new ConcurrentHashMap<>();
         playersDisconnected = new CopyOnWriteArrayList<>();
     }
-    public void createGame() throws Exception {
+    public synchronized void createGame() throws Exception {
         ArrayList<String> playersGame=new ArrayList<>();
         for (String player : players.keySet()) {
             playersGame.add(player);
@@ -95,14 +95,19 @@ public class GameLobby {
     public boolean containsPlayerDisconnectedInThisGame(String nickname) {
         return playersDisconnected.contains(nickname);
     }
-    public void handleTurn(Message message){
+    public synchronized void handleTurn(Message message){
         if(message.getHeader().getMessageType().equals(MessageType.DATA)){
             gameController.receiveMessageFromClient(message);
         }
 
     }
 
-    //TODO public void handleErrorFromClient()
+    public synchronized void handleErrorFromClient(Message message){
+        if(message.getHeader().getMessageType().equals(MessageType.ERROR)){
+            gameController.receiveMessageFromClient(message);
+        }
+        //TODO: rimandare tipo l'ultimo messaggio che ha mandato il giocatore o azione ecc
+    }
 
     public synchronized void changePlayerInActive(String nickname, Connection connection){
         players.put(nickname,connection);
@@ -117,7 +122,7 @@ public class GameLobby {
         System.out.println("Sono la GameLobby ho cambiato il giocatore "+nickname+" in attivo");
     }
 
-    public void changePlayerInDisconnected(String nickname){
+    public synchronized void changePlayerInDisconnected(String nickname){
         playersDisconnected.add(nickname);
         players.remove(nickname);
         if(gameController!=null){
@@ -142,13 +147,13 @@ public class GameLobby {
         this.gameController = gameController;
     }
 
-    public void sendMessageToAllPlayers(Message message) throws IOException {
+    public synchronized void sendMessageToAllPlayers(Message message) throws IOException {
         for (Connection connection : players.values()) {
             connection.sendMessageToClient(message);
         }
     }
 
-    public void sendMessageToAllPlayersExceptOne(Message message, String nickname) throws IOException {
+    public synchronized void sendMessageToAllPlayersExceptOne(Message message, String nickname) throws IOException {
         for (String player : players.keySet()) {
             if (!player.equals(nickname)) {
                 players.get(player).sendMessageToClient(message);
@@ -156,7 +161,7 @@ public class GameLobby {
         }
     }
 
-    public void sendMessageToAllPlayersExceptSome(Message message, String[] nicknames) throws IOException {
+    public synchronized void sendMessageToAllPlayersExceptSome(Message message, String[] nicknames) throws IOException {
         for (String player : players.keySet()) {
             boolean found = false;
             for (String nickname : nicknames) {
@@ -171,7 +176,7 @@ public class GameLobby {
         }
     }
 
-    public void sendMessageToSpecificPlayer(Message message, String nickname) throws IOException {
+    public synchronized void sendMessageToSpecificPlayer(Message message, String nickname) throws IOException {
         players.get(nickname).sendMessageToClient(message);
     }
 

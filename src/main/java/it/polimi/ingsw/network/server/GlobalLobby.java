@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.message.*;
+import it.polimi.ingsw.model.Game;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -150,6 +151,16 @@ public class GlobalLobby {
         return false;
     }
 
+    public synchronized boolean isPlayerActiveInAnyGameLobby(String nickname) {
+        for (GameLobby gameLobby : gameLobbies.values()) {
+            if (gameLobby.isPlayerActiveInThisGame(nickname)) {
+                System.out.println("Found Player "+nickname+" is active in game lobby "+gameLobby.getIdGameLobby());
+                return true;
+            }
+        }
+        return false;
+    }
+
     public synchronized void disconnectPlayerFromGlobalLobby(String nickname) {
         //o lo trova nella waitingPlayersWithNoGame o lo trova in una gameLobby
         if(waitingPlayersWithNoGame.containsKey(nickname)){
@@ -193,6 +204,15 @@ public class GlobalLobby {
         System.out.println("All players in game lobby "+gameId+" have been moved to waitingList in the global lobby!");
         gameLobbies.remove(gameId);
         System.out.println("Game lobby "+gameId+" has ended and been removed from the global lobby!");
+    }
+
+    public GameLobby findGameLobbyByNickname(String nickname) {
+        for (GameLobby gameLobby : gameLobbies.values()) {
+            if (gameLobby.isPlayerActiveInThisGame(nickname)) {
+                return gameLobby;
+            }
+        }
+        return null;
     }
 
 }

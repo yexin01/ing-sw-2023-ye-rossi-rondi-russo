@@ -243,10 +243,8 @@ public class Server implements Runnable{
 
         switch (messageType) {
             case LOBBY -> handleGlobalLobbyPhase(message);
-            //case DATA->
-                //case DATA -> //questo msg controlli che il giocatore abbia un gameLobby associata poi chiama metodo handleTurn di game lobby
-            //turn della gameLobby del giocatore
-            //case ERROR_FROM_CLIENT
+            case DATA-> handleData(message);
+            case ERROR -> handleErrorFromClient(message);
             default -> throw new IllegalStateException("Unexpected value: " + messageType);
         }
     }
@@ -315,6 +313,50 @@ public class Server implements Runnable{
         System.out.println("ora devo terminare la game lobby...");
 
         this.globalLobby.endGameLobbyFromGlobalLobby(gameId);
+    }
+
+    private synchronized void handleData(Message message) throws IOException {
+        String nickname = message.getHeader().getNickname();
+
+        if(globalLobby.isPlayerActiveInAnyGameLobby(nickname)){
+            System.out.println("Sono il server... ho ricevuto un messaggio di tipo DATA da parte di " + nickname);
+            System.out.println("ora devo inoltrare il messaggio alla game lobby del giocatore al metodo handledata...");
+
+            GameLobby gameLobby = this.globalLobby.findGameLobbyByNickname(nickname);
+            gameLobby.handleTurn(message);
+
+        } else {
+            System.out.println("Sono il server... ho ricevuto un messaggio di tipo DATA da parte di " + nickname);
+            System.out.println("ma il giocatore non è attivo in nessuna game lobby, quindi non posso inoltrare il messaggio");
+
+            MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
+            MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_LOBBY);
+            payload.put(Data.ERROR, ErrorType.ERR_GAME_NOT_FOUND);
+            Message messageToClient = new Message(header, payload);
+            clientsConnected.get(nickname).sendMessageToClient(messageToClient);
+        }
+    }
+
+    private synchronized void handleErrorFromClient(Message message) throws IOException {
+        String nickname = message.getHeader().getNickname();
+
+        if (globalLobby.isPlayerActiveInAnyGameLobby(nickname)) {
+            System.out.println("Sono il server... ho ricevuto un messaggio di tipo ERROR da parte di " + nickname);
+            System.out.println("ora devo inoltrare il messaggio alla game lobby del giocatore al metodo handleError...");
+
+            GameLobby gameLobby = this.globalLobby.findGameLobbyByNickname(nickname);
+            gameLobby.handleErrorFromClient(message);
+
+        } else {
+            System.out.println("Sono il server... ho ricevuto un messaggio di tipo ERROR da parte di " + nickname);
+            System.out.println("ma il giocatore non è attivo in nessuna game lobby, quindi non posso inoltrare il messaggio");
+
+            MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
+            MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_LOBBY);
+            payload.put(Data.ERROR, ErrorType.ERR_GAME_NOT_FOUND);
+            Message messageToClient = new Message(header, payload);
+            clientsConnected.get(nickname).sendMessageToClient(messageToClient);
+        }
     }
 
 }
