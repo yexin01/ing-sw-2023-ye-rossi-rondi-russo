@@ -80,7 +80,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
     }
 
     @Override
-    public void closeConnection() throws RemoteException {
+    public void closeConnection() throws IOException {
         server.disconnectMe();
         server = null;
     }

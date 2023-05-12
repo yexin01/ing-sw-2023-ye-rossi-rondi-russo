@@ -13,6 +13,6 @@ public interface RMIHandler extends Remote {
 
     public void login(String username, RMIClientConnection client) throws Exception;
 
-    public void disconnectMe() throws RemoteException;
+    public void disconnectMe() throws IOException;
 
 }

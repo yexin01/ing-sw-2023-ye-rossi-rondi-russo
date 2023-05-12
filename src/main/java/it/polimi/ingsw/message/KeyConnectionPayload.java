@@ -8,5 +8,6 @@ public enum KeyConnectionPayload implements KeyAbstractPayload {
 
 
     DISCONNECTION_FORCED,//chiesto dal server
-    RECONNECTTION
+
+    BROADCAST //solo da stampare
 }

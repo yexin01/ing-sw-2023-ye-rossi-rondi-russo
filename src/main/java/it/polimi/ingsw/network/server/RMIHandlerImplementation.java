@@ -32,7 +32,7 @@ public class RMIHandlerImplementation extends UnicastRemoteObject implements RMI
     }
 
     @Override
-    public void disconnectMe() throws RemoteException{
+    public void disconnectMe() throws IOException {
         rmiSession.disconnect();
     }
 

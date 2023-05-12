@@ -3,6 +3,7 @@ package it.polimi.ingsw.network.server;
 import it.polimi.ingsw.message.Message;
 import it.polimi.ingsw.network.client.RMIClientConnection;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 public class RMIConnection extends Connection {
@@ -28,7 +29,7 @@ public class RMIConnection extends Connection {
     }
 
     @Override
-    public void ping() throws RemoteException {
+    public void ping() throws IOException {
         try {
             clientSession.ping();
         } catch (RemoteException e) {
@@ -37,7 +38,7 @@ public class RMIConnection extends Connection {
     }
 
     @Override
-    public void disconnect() throws RemoteException {
+    public void disconnect() throws IOException {
         if (connected) {
             connected = false;
             try {

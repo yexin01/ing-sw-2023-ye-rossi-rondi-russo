@@ -207,7 +207,7 @@ public class Server implements Runnable{
         return nickname.length() <= MAX_LENGTH_NICKNAME && nickname.length() >= MIN_LENGTH_NICKNAME;
     }
 
-    public synchronized void onDisconnect(Connection playerConnection) throws RemoteException {
+    public synchronized void onDisconnect(Connection playerConnection) throws IOException {
         String username = getUsernameByConnection(playerConnection);
 
         if (username != null) {

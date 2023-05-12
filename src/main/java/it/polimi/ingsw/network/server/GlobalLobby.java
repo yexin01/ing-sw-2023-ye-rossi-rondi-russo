@@ -161,7 +161,7 @@ public class GlobalLobby {
         return false;
     }
 
-    public synchronized void disconnectPlayerFromGlobalLobby(String nickname) {
+    public synchronized void disconnectPlayerFromGlobalLobby(String nickname) throws IOException {
         //o lo trova nella waitingPlayersWithNoGame o lo trova in una gameLobby
         if(waitingPlayersWithNoGame.containsKey(nickname)){
             waitingPlayersWithNoGame.remove(nickname);
@@ -169,6 +169,13 @@ public class GlobalLobby {
             for (GameLobby gameLobby : gameLobbies.values()) {
                 if (gameLobby.isPlayerActiveInThisGame(nickname)) {
                     gameLobby.changePlayerInDisconnected(nickname);
+
+                    MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
+                    MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
+                    String content = "Player "+nickname+" disconnected from Game Lobby "+ gameLobby.getIdGameLobby()+ "!";
+                    payload.put(Data.CONTENT,content);
+                    Message message = new Message(header,payload);
+                    gameLobby.sendMessageToAllPlayersExceptOne(message, nickname);
                     return;
                 }
             }

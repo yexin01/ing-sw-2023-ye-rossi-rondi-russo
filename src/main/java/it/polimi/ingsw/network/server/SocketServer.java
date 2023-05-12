@@ -48,7 +48,7 @@ public class SocketServer extends Thread {
         server.receiveMessageFromClient(message);
     }
 
-    public void onDisconnect(Connection playerConnection) throws RemoteException {
+    public void onDisconnect(Connection playerConnection) throws IOException {
         server.onDisconnect(playerConnection);
     }
 

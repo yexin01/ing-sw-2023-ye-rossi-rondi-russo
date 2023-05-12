@@ -25,7 +25,7 @@ public class SocketConnection extends Connection implements Runnable {
 
     private Thread listener;
 
-    SocketConnection(SocketServer socketServer, Socket socket) throws RemoteException {
+    SocketConnection(SocketServer socketServer, Socket socket) throws IOException {
         this.socketServer = socketServer;
         this.socket = socket;
 
@@ -68,6 +68,8 @@ public class SocketConnection extends Connection implements Runnable {
                 } catch (RemoteException ex) {
                     System.out.println("Error while disconnecting client");
                     throw new RuntimeException(ex);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
             } catch (Exception e) {
                 System.out.println("Error while reading message from client");
@@ -82,7 +84,7 @@ public class SocketConnection extends Connection implements Runnable {
     }
 
     @Override
-    public void sendMessageToClient(Message message) throws RemoteException {
+    public void sendMessageToClient(Message message) throws IOException {
         if (connected) {
             try {
                 synchronized (outLock) {
@@ -97,7 +99,7 @@ public class SocketConnection extends Connection implements Runnable {
     }
 
     @Override
-    public void disconnect() throws RemoteException {
+    public void disconnect() throws IOException {
         if (connected) {
             try {
                 if (!socket.isClosed()) {
@@ -116,7 +118,7 @@ public class SocketConnection extends Connection implements Runnable {
     }
 
     @Override
-    public void ping() throws RemoteException {
+    public void ping() throws IOException {
         MessageHeader header = new MessageHeader(MessageType.PING, super.getClientPinger().getNickname());
         Message message = new Message(header);
 

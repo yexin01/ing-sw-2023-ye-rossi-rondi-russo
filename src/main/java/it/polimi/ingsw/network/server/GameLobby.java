@@ -109,10 +109,18 @@ public class GameLobby {
         //TODO: rimandare tipo l'ultimo messaggio che ha mandato il giocatore o azione ecc
     }
 
-    public synchronized void changePlayerInActive(String nickname, Connection connection){
+    public synchronized void changePlayerInActive(String nickname, Connection connection) throws IOException {
         players.put(nickname,connection);
 
+        MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
+        MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
+        String content = "Player "+nickname+" reconnected to Game Lobby "+ idGameLobby + "!";
+        payload.put(Data.CONTENT,content);
+        Message message = new Message(header,payload);
+        sendMessageToAllPlayersExceptOne(message, nickname);
+
         //TODO questo si potrebbe anche cancellare, al game controller interessa solo la disconessione
+        //sse il gameController punta alle liste del gameLobby, deve solo stampare il broadcast e non fare altro
         gameController.reconnectionPlayer(nickname);
 
         //TODO PER RESILIENZA: bisogna mandarli tutti i dati del game in corso a cui si sta ricollegando
