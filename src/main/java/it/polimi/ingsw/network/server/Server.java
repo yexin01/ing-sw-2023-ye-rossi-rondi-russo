@@ -109,6 +109,18 @@ public class Server implements Runnable{
             synchronized (clientsLock) {
                 System.out.println("\nSono il server... ho ricevuto la richiesta di login da parte di " + nickname);
 
+/*
+                //TODO: da cancellare
+                MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
+                MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_CONNECTION);
+                payload.put(Data.ERROR, ErrorType.PING_NOT_RECEIVED);
+                connection.sendMessageToClient(new Message(header,payload));
+
+ */
+
+
+
+
                 if (globalLobby.isPlayerDisconnectedInAnyGameLobby(nickname) || clientsConnected.containsKey(nickname)) {
                     knownPlayerLogin(nickname, connection);
                 } else {
@@ -231,6 +243,10 @@ public class Server implements Runnable{
 
         switch (messageType) {
             case LOBBY -> handleGlobalLobbyPhase(message);
+            //case DATA->
+                //case DATA -> //questo msg controlli che il giocatore abbia un gameLobby associata poi chiama metodo handleTurn di game lobby
+            //turn della gameLobby del giocatore
+            //case ERROR_FROM_CLIENT
             default -> throw new IllegalStateException("Unexpected value: " + messageType);
         }
     }

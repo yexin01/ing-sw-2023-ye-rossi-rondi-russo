@@ -71,6 +71,7 @@ public class GameLobby {
             if(isFull()){
                 createGame();
             }
+            System.out.println("creato un game\n");
 
         } catch (IOException e){
             MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
@@ -94,6 +95,14 @@ public class GameLobby {
     public boolean containsPlayerDisconnectedInThisGame(String nickname) {
         return playersDisconnected.contains(nickname);
     }
+    public void handleTurn(Message message){
+        if(message.getHeader().getMessageType().equals(MessageType.DATA)){
+            gameController.receiveMessageFromClient(message);
+        }
+
+    }
+
+    //TODO public void handleErrorFromClient()
 
     public synchronized void changePlayerInActive(String nickname, Connection connection){
         players.put(nickname,connection);

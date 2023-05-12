@@ -23,6 +23,9 @@ public class ErrorHandler extends MessageHandler {
 
             }
             case ERROR_CONNECTION -> {
+                if(error.equals(ErrorType.PING_NOT_RECEIVED)){
+                    System.out.println(error.getErrorMessage());
+                }
                 if(error.equals(ErrorType.ERR_NICKNAME_LENGTH) || error.equals(ErrorType.ERR_NICKNAME_TAKEN)){
                     getClientInterface().askNicknameAndConnection();
                 }

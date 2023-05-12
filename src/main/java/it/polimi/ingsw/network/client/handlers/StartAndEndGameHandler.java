@@ -23,17 +23,9 @@ public class StartAndEndGameHandler extends MessageHandler {
     }
 
     @Override
-    public void handleMessage(Message mes) throws IOException {
+    public void handleMessage(Message mes) throws Exception {
         System.out.println("SONO IN START AND GAME HANDLER");
 
-        try {
-            Thread.sleep(3000);
-            System.out.println("Il thread si è interrotto dopo 3 secondi.");
-        } catch (InterruptedException e) {
-            System.out.println("Il thread è stato interrotto prematuramente.");
-        }
-
-        /*
         KeyDataPayload data = (KeyDataPayload) mes.getPayload().getKey();
         MessagePayload messagePayload=null;
         switch(data){
@@ -51,17 +43,22 @@ public class StartAndEndGameHandler extends MessageHandler {
                 PlayerPointsView playerPointsView=((PlayerPointsView)mes.getPayload().getContent(Data.POINTS));
                 getClientInterface().getClientView().setPlayerPoints(playerPointsView);
                 messagePayload=new MessagePayload(KeyDataPayload.START_GAME);
+                if(players[0].equals(getClientInterface().getNickname())){
+                    getClientInterface().askCoordinates();
+                }
+                MessageHeader messageHeader=new MessageHeader(MessageType.DATA,getClientInterface().getNickname());
+                Message message=new Message(messageHeader, messagePayload);
+                getClient().sendMessageToServer(message);
+                //
             }
             case END_GAME ->{
                 String[] ranking=(String[]) mes.getPayload().getContent(Data.RANKING);
                 messagePayload=new MessagePayload(KeyDataPayload.END_GAME);
             }
         }
-        MessageHeader messageHeader=new MessageHeader(MessageType.DATA,getClientInterface().getNickname());
-        Message message=new Message(messageHeader, messagePayload);
-        getClient().sendMessageToServer(message);
 
-         */
+
+
 
     }
 }

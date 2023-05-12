@@ -190,7 +190,6 @@ public class CLI extends ClientInterface {
                 out.println();
             }
         }
-        askOrder();
         return getClientView().getCoordinatesSelected().stream().mapToInt(Integer::intValue).toArray();
     }
 
@@ -319,7 +318,6 @@ public class CLI extends ClientInterface {
                     continue;
             }
 
-            askColumn();
         }
         return orderTiles;
     }
