@@ -132,9 +132,7 @@ public class GlobalLobby {
 
         for (GameLobby gameLobby : gameLobbies.values()) {
             if (gameLobby.containsPlayerDisconnectedInThisGame(nickname)) {
-                gameLobby.addPlayerToGame(nickname, connection);
-
-                waitingPlayersWithNoGame.remove(nickname);
+                gameLobby.changePlayerInActive(nickname, connection);
 
                 MessageHeader header = new MessageHeader(MessageType.LOBBY, nickname);
                 MessagePayload payload = new MessagePayload(KeyLobbyPayload.RECONNECT_TO_GAME_LOBBY);
@@ -150,6 +148,16 @@ public class GlobalLobby {
         payload.put(Data.ERROR, ErrorType.ERR_RECONNECT_TO_GAME_LOBBY);
         connection.sendMessageToClient(new Message(header,payload));
 
+    }
+
+    public synchronized boolean isPlayerDisconnectedInAnyGameLobby(String nickname) {
+        for (GameLobby gameLobby : gameLobbies.values()) {
+            if (gameLobby.containsPlayerDisconnectedInThisGame(nickname)) {
+                System.out.println("Found Player "+nickname+" is disconnected in game lobby "+gameLobby.getIdGameLobby());
+                return true;
+            }
+        }
+        return false;
     }
 
     public synchronized void disconnectPlayerFromGlobalLobby(String nickname) {

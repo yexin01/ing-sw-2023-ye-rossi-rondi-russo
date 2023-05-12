@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.modelView.ModelView;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 // La gameLobby della singola partita.
 // Il client viene inserito appena decide di creare questa partita
@@ -18,7 +19,7 @@ public class GameLobby {
     private ModelView modelView;
 
     private ConcurrentHashMap<String, Connection> players; //mappa di tutti i giocatori attivi in partita
-    private ConcurrentHashMap<String, Connection> playersDisconnected; //mappa di tutti i giocatori disconnessi
+    private CopyOnWriteArrayList<String> playersDisconnected; //mappa di tutti i giocatori disconnessi della partita
 
     //TODO: da aggiungere il controller della partita e tutti i listeners o quello che serve per gestire la partita
     //io per ora metto solo quello che mi serve per gestire la mappa
@@ -29,7 +30,7 @@ public class GameLobby {
         this.wantedPlayers = wantedPlayers;
 
         players = new ConcurrentHashMap<>();
-        playersDisconnected = new ConcurrentHashMap<>();
+        playersDisconnected = new CopyOnWriteArrayList<>();
     }
     public void createGame(){
         //this.gameController=new GameController();
@@ -47,11 +48,11 @@ public class GameLobby {
         return players;
     }
 
-    public ConcurrentHashMap<String, Connection> getPlayersDisconnectedInGameLobby(){
+    public CopyOnWriteArrayList<String> getPlayersDisconnectedInGameLobby(){
         return playersDisconnected;
     }
 
-    public void addPlayerToGame(String nickname, Connection connection) throws IOException {
+    public synchronized void addPlayerToGame(String nickname, Connection connection) throws IOException {
         try{
             players.put(nickname,connection);
 
@@ -78,17 +79,20 @@ public class GameLobby {
         return players.containsKey(nickname);
     }
 
-    public boolean containsPlayerDisconnectedInThisGame(String nickname){
-        return playersDisconnected.containsKey(nickname);
+    public boolean containsPlayerDisconnectedInThisGame(String nickname) {
+        return playersDisconnected.contains(nickname);
     }
 
-    public void changePlayerInActive(String nickname){
-        players.put(nickname,playersDisconnected.get(nickname));
+    public synchronized void changePlayerInActive(String nickname, Connection connection){
+        players.put(nickname,connection);
+
+        //TODO PER RESILIENZA: bisogna mandarli tutti i dati del game in corso a cui si sta ricollegando
+
         playersDisconnected.remove(nickname);
     }
 
     public void changePlayerInDisconnected(String nickname){
-        playersDisconnected.put(nickname,players.get(nickname));
+        playersDisconnected.add(nickname);
         players.remove(nickname);
     }
 

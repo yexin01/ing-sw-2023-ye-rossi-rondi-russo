@@ -3,27 +3,27 @@ package it.polimi.ingsw.message;
 public enum ErrorType implements KeyAbstractPayload {
 
     //qui connection (nickname, porte, connessioni)
-    PING_NOT_RECEIVED("Ping not received.. disconnection.."),//stampare
-    DISCONNECTION_FORCED("Disconnection from the server"),
+    PING_NOT_RECEIVED("Ping not received.\n Disconnection started.."),//stampare
+    DISCONNECTION_FORCED("Something went wrong during login. Connection refused! \n Disconnection started.."),
 
-    ERR_NICKNAME_LENGTH("Invalid username length"),//da rifare connessione+login
-    ERR_NICKNAME_TAKEN("This nickname is already taken"),
+    ERR_NICKNAME_LENGTH("Invalid username length.\n Disconnection.."),//da rifare connessione+login lato client
+    ERR_NICKNAME_TAKEN("This nickname is already taken \n Disconnection.."),
 
 
 
 
     //qui lobby (tutte le cose per connettersi alle mappe e prima di creare il game)
-    ERR_NUM_PLAYER_WANTED("You must select a number of players between 2 and 4"), //da rimandare alla globalLobby
-    ERR_JOINING_GAME_LOBBY("Failed in joining the Game Lobby!"),
-    ERR_GAME_FULL("Failed in joining the requested game lobby because is full!"),
-    ERR_GAME_NOT_FOUND("Failed in joining the requested game lobby because it doesn't exist!"),
+    ERR_NUM_PLAYER_WANTED("You must select a number of players between 2 and 4. \n You will be sent back to GlobalLobby.."), //da rimandare alla globalLobby
+    ERR_JOINING_GAME_LOBBY("Failed in joining the Game Lobby!\n You will be sent back to GlobalLobby.."),
+    ERR_GAME_FULL("Failed in joining the requested game lobby because is full!\n You will be sent back to GlobalLobby.."),
+    ERR_GAME_NOT_FOUND("Failed in joining the requested game lobby because it doesn't exist!\n You will be sent back to GlobalLobby.."),
 
 
     ERR_NO_FREE_SPOTS("Failed in joining a random game lobby because all games are full!\nCreating a new Game Lobby for min num players..."),//stampare
 
 
-    ERR_RECONNECT_TO_GAME_LOBBY("Failed to reconnect to previous game lobby!"),//da rifare connnesione+Login
-    ERR_JOIN_GLOBAL_LOBBY("Failed in joining the Global Lobby!"),
+    ERR_RECONNECT_TO_GAME_LOBBY("Failed to reconnect to previous game lobby! \n Disconnection.."),//da rifare connnesione+Login lato client
+    ERR_JOIN_GLOBAL_LOBBY("Failed in joining the Global Lobby! \n Disconnection.."),
 
 
 
