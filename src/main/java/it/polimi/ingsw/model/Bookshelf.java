@@ -12,7 +12,6 @@ public class Bookshelf {
     private ItemTile[][] matrix;
     private int[] freeShelves; //freeShelves[i] = # celle libere nell'i-esima colonna
     private final int maxSelectableTiles;
-    private int columnSelected;
 
 
     public Bookshelf(int rows, int columns, int maxSelectableTiles) {
@@ -121,22 +120,21 @@ public class Bookshelf {
         return true;
     }
 
-    public void insertTiles(ArrayList<ItemTile> selectedItemTiles) throws Error {
+    public void insertTiles(ArrayList<ItemTile> selectedItemTiles,int columnSelected) throws Error {
         int j = 0;
         for (int i = getMatrix().length - 1; j < selectedItemTiles.size(); i--) {
             if (getMatrix()[i][columnSelected].getTileID() == -1) {
                 setTile(selectedItemTiles.get(j++), i,columnSelected);
             }
         }
-
     }
 
-    public ErrorType checkBookshelf(int column, int numSelectedTiles) throws Error {
+    public ErrorType checkBookshelf(int column,int numSelectedTiles) throws Error {
         if (column < 0 || column > getMatrix()[0].length-1 ) {
             return ErrorType.INVALID_COLUMN;
            // throw new Error();
         }
-        if(!(numSelectedTiles <= getMaxTilesColumn(column))){
+        if(numSelectedTiles > getMaxTilesColumn(column)){
             return ErrorType.NOT_ENOUGH_FREE_CELLS_COLUMN;
             //throw new Error();
         }
@@ -208,10 +206,7 @@ public class Bookshelf {
         return size;
     }
 
-    public int getColumnSelected() {
-        return columnSelected;
-    }
-
+ /*
     public void setColumnSelected(int column) {
         try {
             //TODO CHANGE COLUMN EXCEPTION
@@ -223,6 +218,8 @@ public class Bookshelf {
             System.err.println("Invalid Column" + e.getMessage());
         }
     }
+
+  */
 
 
 

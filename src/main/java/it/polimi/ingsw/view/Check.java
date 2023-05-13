@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.modelView.ItemTileView;
 import java.util.ArrayList;
 
 public class Check {
+
     public static ItemTileView[] createItemTileView(ArrayList<Integer> coordinates,BoardBoxView[][] boardBoxViews) throws Error {
         if(coordinates!=null){
             ItemTileView[] itemTileViews=new ItemTileView[coordinates.size()/2];
@@ -45,9 +46,13 @@ public class Check {
     /**
      * @return check that each ItemTile of selectedBoard is adjacent to the previous one
      */
-    public static boolean allAdjacent(ArrayList<Integer> coordinatesSelected, int selectedCount) {
-        for (int i = 2; i <= selectedCount * 2; i = i + 2) {
-            if (Math.abs(coordinatesSelected.get(i) - coordinatesSelected.get(i - 2)) != 1 && Math.abs(coordinatesSelected.get(i + 1) - coordinatesSelected.get(i - 1)) != 1) {
+    public static boolean allAdjacent(ArrayList<Integer> coordinatesSelected) {
+        int dx;
+        int dy;
+        for (int i = 2; i <= coordinatesSelected.size()/2; i = i + 2) {
+            dx=Math.abs(coordinatesSelected.get(i) - coordinatesSelected.get(i - 2));
+            dy=Math.abs(coordinatesSelected.get(i + 1) - coordinatesSelected.get(i - 1));
+            if (!((dx == 1 && dy == 0) || (dx == 0 && dy == 1))) {
                 return false;
             }
         }
@@ -57,12 +62,12 @@ public class Check {
     /**
      * @return check that all the ItemTiles in the selectedBoard array are on the same row or column
      */
-    public static boolean allSameRowOrSameColumn(ArrayList<Integer> coordinatesSelected,int selectedCount) {
+    public static boolean allSameRowOrSameColumn(ArrayList<Integer> coordinatesSelected) {
         int firstX = coordinatesSelected.get(0);
         int firstY = coordinatesSelected.get(1);
         boolean allSameRow = true;
         boolean allSameColumn = true;
-        for (int i = 2; i <= selectedCount * 2; i = i + 2) {
+        for (int i = 2; i < coordinatesSelected.size(); i = i + 2) {
             if (coordinatesSelected.get(i) != firstX) {
                 allSameRow = false;
             }
@@ -78,7 +83,7 @@ public class Check {
     }
     public static ErrorType checkCoordinates(int x, int y,BoardBoxView[][] board) {
         //BoardBoxView[][] board= clientView.getBoardView();
-        if (x < 0 || y<0 || x> board.length-1 || y> board[0].length-1 || !board[x][y].isOccupiable() ) {
+        if (x < 0 || y<0 || x> board.length-1 || y> board[0].length-1 || board[x][y].getItemTileView().getTileID()==-1) {
             return ErrorType.INVALID_COORDINATES;
         }
         return null;
@@ -90,35 +95,31 @@ public class Check {
      * @return
      */
 
-    public static ErrorType checkSelectable(int x, int y,ArrayList<Integer> selection,BoardBoxView[][] board) throws Error {
+    public static ErrorType checkSelectable(ArrayList<Integer> selection,BoardBoxView[][] board) throws Error {
         //TODO AGGIUNGERE 3 COME PARAMETRO
         //TODO ricontrollare ill metodo
-        ArrayList<Integer> coordinatesSelected =selection;
 
-        int selectedCount=coordinatesSelected.size()/2;
-        if (selectedCount >= (3)) {
-            return ErrorType.TOO_MANY_TILES;
-        }
+        int x=selection.get(selection.size()-2);
+        int y=selection.get(selection.size()-1);
         BoardBoxView boardBox = board[x][y];
         if ((boardBox.getFreeEdges() <= 0)) {
             return ErrorType.NOT_ENOUGH_FREE_EDGES;
         }
-        coordinatesSelected.add(x);
-        coordinatesSelected.add(y);
-
-        if (selectedCount == 0) {
+        //coordinatesSelected.add(x);
+        //coordinatesSelected.add(y);
+        //TODO vedere se conviene
+        if ( selection.size()/2 == 1) {
             return null;
         }
-        if (!allAdjacent(coordinatesSelected,selectedCount) || !allSameRowOrSameColumn(coordinatesSelected,selectedCount)) {
-            coordinatesSelected.remove(coordinatesSelected.size() - 1);
-            coordinatesSelected.remove(coordinatesSelected.size() - 1);
+        if (!allAdjacent( selection) || !allSameRowOrSameColumn( selection)) {
             return ErrorType.NOT_SAME_ROW_OR_COLUMN;
         }
         return null;
     }
 
     public static ErrorType checkNumTilesSelectedBoard(ArrayList<Integer> coordinatesSelected,ItemTileView[][] bookshelf){
-        if(coordinatesSelected!=null){
+        if(coordinatesSelected.size()>0){
+            int num=numSelectableTiles(bookshelf);
             if (coordinatesSelected.size() >= numSelectableTiles(bookshelf)*2) {
                 return ErrorType.TOO_MANY_TILES;
             }else return null;

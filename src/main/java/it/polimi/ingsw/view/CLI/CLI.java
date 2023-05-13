@@ -150,7 +150,7 @@ public class CLI implements ClientInterface {
         out.println();
         ArrayList<Integer> selection=new ArrayList<>();
         //getClientView().setCoordinatesSelected(new ArrayList<>());
-       // printerBoard.printMatrixBoard(getClientView());
+       printerBoard.printMatrixBoard(getClientView().getBoardView(),null);
         //TODO aggiungere attributo che indica il numero di tile massimo
         Scanner scanner=new Scanner(System.in);
         boolean continueToAsk = true;
@@ -162,7 +162,7 @@ public class CLI implements ClientInterface {
           }
           switch (commandsTurn) {
               case SELECT_FROM_BOARD1:
-                  selectTile(selection );
+                  selection=selectTile(selection );
                   break;
               case SELECT_FROM_BOARD2:
                   resetChoice(0,selection);
@@ -181,28 +181,32 @@ public class CLI implements ClientInterface {
                   handleInvalidPhase(commandsTurn);
                 continue;
             }
-
+/*
             if (selection.isEmpty()) {
-                //printerBoard.printMatrixBoard(getClientView());
+                printerBoard.printMatrixBoard(getClientView().getBoardView(),selection);
                 Colors.colorize(Colors.ERROR_MESSAGE,ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
             } else {
-                //printerBoard.printMatrixBoard(getClientView());
-                Colors.colorize(Colors.GAME_INSTRUCTION,"Your current selections: ");
+
+ */         if (!selection.isEmpty()) {
+                //printerBoard.printMatrixBoard(getClientView().getBoardView(),selection);
+                Colors.colorize(Colors.GAME_INSTRUCTION, "Your current selections: ");
                 for (int i = 0; i < selection.size(); i += 2) {
                     int x = selection.get(i);
                     int y = selection.get(i + 1);
-                    Colors.colorize(Colors.GAME_INSTRUCTION,"(" + x + ", " + y + ") ");
-                    out.print(Colors.printTiles(getClientView().getBoardView()[x][y].getType(),3));
-                    Colors.colorize(Colors.GAME_INSTRUCTION,"; ");
+                    Colors.colorize(Colors.GAME_INSTRUCTION, "(" + x + ", " + y + ") ");
+                    out.print(Colors.printTiles(getClientView().getBoardView()[x][y].getType(), 3));
+                    Colors.colorize(Colors.GAME_INSTRUCTION, "; ");
+                    // }
+                    out.println();
                 }
-                out.println();
             }
         }
+        askOrder();
     }
 
     private void printCommands(CommandsTurn commandsTurn) throws Exception {
         switch (commandsTurn){
-            //case PRINT1 -> //printerBoard.printMatrixBoard(getClientView());
+            case PRINT1 -> printerBoard.printMatrixBoard(getClientView().getBoardView(),null);
             case PRINT2 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3,1,60,false,false,0);
             case PRINT3 -> printerBookshelfAndPersonal.printPersonal(getClientView(),2,35);
             case PRINT4 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,1,60,true,false,0);
@@ -213,7 +217,7 @@ public class CLI implements ClientInterface {
         }
     }
 
-    private void selectTile(ArrayList<Integer> selection) {
+    private ArrayList<Integer> selectTile(ArrayList<Integer> selection) {
         int x, y;
         ErrorType error= Check.checkNumTilesSelectedBoard(selection,clientView.getBookshelfView());
         if (error!=null) {
@@ -228,23 +232,30 @@ public class CLI implements ClientInterface {
             y = scanner.nextInt();
             scanner.nextLine();
             error= Check.checkCoordinates(x, y, clientView.getBoardView());
-            if(error==null){
-                error= Check.checkSelectable(x, y,selection, getClientView().getBoardView());
-            }
-            if (error!=null) {
-                //printerBoard.printMatrixBoard(getClientView());
+            if(error!=null){
                 Colors.colorize(Colors.ERROR_MESSAGE, error.getErrorMessage());
-                out.println();
+                return selection;
+            }
+            selection.add(x);
+            selection.add(y);
+            error= Check.checkSelectable(selection, getClientView().getBoardView());
+            if (error!=null) {
+               //printerBoard.printMatrixBoard(getClientView().getBoardView(),selection);
+               Colors.colorize(Colors.ERROR_MESSAGE, error.getErrorMessage());
+               selection.remove(selection.size()-1);
+               selection.remove(selection.size()-1);
+               out.println();
             }else {
-               // printerBoard.printMatrixBoard(getClientView());
+               printerBoard.printMatrixBoard(getClientView().getBoardView(),selection);
             }
         }
+        return selection;
     }
 
     private void resetChoice(int lastOrAll,ArrayList<Integer> coordinatesSelected) {
         ErrorType error=Check.resetChoiceBoard(lastOrAll,coordinatesSelected);
         if (error==null) {
-           // printerBoard.printMatrixBoard(getClientView());
+           printerBoard.printMatrixBoard(getClientView().getBoardView(),coordinatesSelected);
             Colors.colorize(Colors.GAME_INSTRUCTION, "Reset successful\n");
         }
     }
@@ -327,6 +338,7 @@ public class CLI implements ClientInterface {
             }
 
         }
+        askColumn();
     }
 
     @Override
@@ -404,7 +416,7 @@ public class CLI implements ClientInterface {
 
 
     @Override
-    public Message askLobbyDecision() throws Exception {
+    public void askLobbyDecision() throws Exception {
         PrinterLogo.printGlobalLobbyPhase();
         out.println();
        // Colors.colorize(Colors.ERROR_MESSAGE,"Welcome to Lobby what do you want to do?\n");
@@ -423,24 +435,36 @@ public class CLI implements ClientInterface {
             out.println();
             switch (commandsLobby) {
                 case CREATE_GAME_LOBBY -> {
+
                     payload = new MessagePayload(KeyLobbyPayload.CREATE_GAME_LOBBY);
                     Colors.colorize(Colors.GAME_INSTRUCTION, "Insert number of players for the new Lobby: ");
                     int num = in.nextInt();
-                    out.printf(String.valueOf(num));
+                    clientView.lobby(KeyLobbyPayload.CREATE_GAME_LOBBY,num);
+                    //out.printf(String.valueOf(num));
+                    /*
                     payload = new MessagePayload(KeyLobbyPayload.CREATE_GAME_LOBBY);
                     payload.put(Data.VALUE_CLIENT, num);
+
+                     */
+                continueToAsk=false;
+
 
                 }
                 case JOIN_SPECIFIC_GAME_LOBBY -> {
                     Colors.colorize(Colors.GAME_INSTRUCTION, "Insert id Lobby you want to join: ");
                     int num = in.nextInt();
-                    out.printf(String.valueOf(num));
-                    payload = new MessagePayload(KeyLobbyPayload.JOIN_SPECIFIC_GAME_LOBBY);
-                    payload.put(Data.VALUE_CLIENT, num);
+                    clientView.lobby(KeyLobbyPayload.JOIN_SPECIFIC_GAME_LOBBY,num);
+                    continueToAsk=false;
+                    //out.printf(String.valueOf(num));
+                    //payload = new MessagePayload(KeyLobbyPayload.JOIN_SPECIFIC_GAME_LOBBY);
+                    //payload.put(Data.VALUE_CLIENT, num);
                 }
                 case JOIN_RANDOM_GAME_LOBBY -> {
-                    payload = new MessagePayload(KeyLobbyPayload.JOIN_RANDOM_GAME_LOBBY);
+                    clientView.lobby(KeyLobbyPayload.JOIN_RANDOM_GAME_LOBBY,-1);
+                    continueToAsk=false;
+                    //payload = new MessagePayload(KeyLobbyPayload.JOIN_RANDOM_GAME_LOBBY);
                 }
+                /*
                 case RESET_CHOICE ->{
                     if(payload == null){
                         Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
@@ -454,12 +478,15 @@ public class CLI implements ClientInterface {
                         Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
                     } else continueToAsk = false;
                 }
+
+                 */
             }
         }
+        //clientView.setLobbyDecision(new Message(header,payload));
 
 
         message=new Message(header,payload);
-        return message;
+        //return message;
     }
 
     @Override
@@ -522,7 +549,6 @@ public class CLI implements ClientInterface {
     }
 
     private String askNickname(){
-        //Colors.colorize(Colors.RED_CODE,"Enter your username: ");
         Colors.colorize(Colors.WHITE_CODE,"Enter your username: ");
         String nickname=in.nextLine().toLowerCase();
         getClientView().setNickname(nickname);
@@ -619,6 +645,7 @@ public class CLI implements ClientInterface {
     @Override
     public void start() throws Exception {
         PrinterLogo.printWaitingTurnPhase();
+        /*
         while (true) {
             CommandsTurn commandsTurn = (CommandsTurn)checkCommand(3);
             if (commandsTurn == null) {
@@ -629,6 +656,8 @@ public class CLI implements ClientInterface {
                 break;
             }
         }
+
+         */
 
     }
     @Override

@@ -21,34 +21,69 @@ import java.util.List;
 public class App{
 
         public static void main(String[] args) throws Exception {
+
+
+
+
+
+
+
             GameLobby gameLobby = new GameLobby(3, 3);
             ArrayList<String> playerNames = new ArrayList<>(List.of("TIZIO", "CAIO"/*, "SEMPRONIO", "PIPPO"*/));
             GameController gameController = new GameController(gameLobby, playerNames);
-            MessageHeader header=new MessageHeader(MessageType.DATA,"TIZIO");
+          /*   MessageHeader header=new MessageHeader(MessageType.DATA,"TIZIO");
             int[] selectionBoard=new int[]{7,3,7,4,7,5};
             MessagePayload messagePayload=new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
             messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
             Message m=new Message(header,messagePayload);
-            gameController.checkAndInsertBoardBox(m);
+            gameController.receiveMessageFromClient(m);
+           // gameController.checkAndInsertBoardBox(m);
             int[] orderTiles=new int[]{1,0,2};
 
             messagePayload =new MessagePayload(TurnPhase.SELECT_ORDER_TILES);
             messagePayload.put(Data.VALUE_CLIENT,orderTiles);
             m=new Message(header,messagePayload);
-            gameController.permutePlayerTiles(m);
+            gameController.receiveMessageFromClient(m);
+            //gameController.permutePlayerTiles(m);
             messagePayload=new MessagePayload(TurnPhase.SELECT_COLUMN);
             messagePayload.put(Data.VALUE_CLIENT,0);
             m=new Message(header,messagePayload);
-            gameController.selectingColumn(m);
-gameController.getModel().getBoard().resetBoard();
+            gameController.receiveMessageFromClient(m);
+            header=new MessageHeader(MessageType.DATA,"TIZIO");
+            selectionBoard=new int[]{6,3,6,4};
+            messagePayload=new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
+            messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
+            m=new Message(header,messagePayload);
+            gameController.receiveMessageFromClient(m);
+            // gameController.checkAndInsertBoardBox(m);
+            orderTiles=new int[]{1,0};
+
+            messagePayload =new MessagePayload(TurnPhase.SELECT_ORDER_TILES);
+            messagePayload.put(Data.VALUE_CLIENT,orderTiles);
+            m=new Message(header,messagePayload);
+            gameController.receiveMessageFromClient(m);
+            //gameController.permutePlayerTiles(m);
+            messagePayload=new MessagePayload(TurnPhase.SELECT_COLUMN);
+            messagePayload.put(Data.VALUE_CLIENT,0);
+            m=new Message(header,messagePayload);
+            gameController.receiveMessageFromClient(m);
+            //gameController.selectingColumn(m);
+//gameController.getModel().getBoard().resetBoard();
+*/
 
             CLI cl=new CLI();
+
             cl.setClientView(new ClientView());
             cl.getClientView().setBoardView(gameController.getModel().getModelView().getBoardView());
+            cl.getClientView().setBookshelfView(gameController.getModel().getModelView().getBookshelfView("TIZIO"));
+            cl.getClientView().setPlayerPersonalGoal(gameController.getModel().getModelView().getPlayerPersonalGoal("TIZIO"));
+            cl.askCoordinates();
             PrinterBoard puu=new PrinterBoard();
-            puu.printMatrixBoard(cl.getClientView());
+            puu.printMatrixBoard(cl.getClientView().getBoardView(),new ArrayList<>(List.of(7, 3, 7, 4,7, 5)));
+            puu.printMatrixBoard(cl.getClientView().getBoardView(),new ArrayList<>(List.of(7, 3,6,3)));
+            puu.printMatrixBoard(cl.getClientView().getBoardView(),null);
             cl.getClientView().setCoordinatesSelected( new ArrayList<>(List.of(7, 3, 7, 4,7, 5)));
-            puu.printMatrixBoard(cl.getClientView());
+           // puu.printMatrixBoard(cl.getClientView());
             //cl.askLobbyDecision();
 
             Bookshelf bo = new Bookshelf(6, 5, 3);
@@ -85,6 +120,8 @@ gameController.getModel().getBoard().resetBoard();
                 System.out.print(Colors.printTiles(t, 3).length());
                 Colors.colorizeSize(Colors.WHITE_CODE, "ooo", 3);
             }
+
+
 
 
 

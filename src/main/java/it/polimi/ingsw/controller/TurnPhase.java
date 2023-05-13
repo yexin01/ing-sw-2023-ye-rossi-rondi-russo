@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.message.KeyAbstractPayload;
 
 public enum TurnPhase implements KeyAbstractPayload {
+    LOBBY,
     START_GAME,
     SELECT_FROM_BOARD,
     SELECT_ORDER_TILES,

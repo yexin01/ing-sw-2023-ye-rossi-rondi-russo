@@ -1,15 +1,17 @@
 package it.polimi.ingsw.network.client.handlers;
 
-import it.polimi.ingsw.controller.TurnPhase;
-import it.polimi.ingsw.listeners.StartAndEndGameListener;
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.network.client.ClientMain;
 import it.polimi.ingsw.view.ClientInterface;
 
 public class ErrorHandler extends MessageHandler {
-    public ErrorHandler(ClientInterface clientInterface, Client client) {
+    private final LobbyHandler lobbyHandler;
+    public ErrorHandler(ClientInterface clientInterface, Client client, LobbyHandler lobbyHandler) {
         super(clientInterface, client);
+        this.lobbyHandler = lobbyHandler;
     }
+
 
 
     @Override
@@ -41,12 +43,11 @@ public class ErrorHandler extends MessageHandler {
 
             }
             case ERROR_LOBBY -> {
-                if(error.equals(ErrorType.ERR_NO_FREE_SPOTS)){
-             //TODO
-                }else if(error.equals(ErrorType.ERR_RECONNECT_TO_GAME_LOBBY) || error.equals(ErrorType.ERR_JOIN_GLOBAL_LOBBY)){
-                    getClientInterface().askNicknameAndConnection();
-                }else getClientInterface().askLobbyDecision();
-
+            if(error.equals(ErrorType.ERR_RECONNECT_TO_GAME_LOBBY) || error.equals(ErrorType.ERR_JOIN_GLOBAL_LOBBY)){
+                    //new ClientMain();
+                }else {
+                    getClientInterface().askLobbyDecision();
+            }
             }
 
 

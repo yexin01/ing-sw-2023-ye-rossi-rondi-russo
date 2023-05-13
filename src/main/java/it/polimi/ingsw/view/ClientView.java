@@ -2,17 +2,21 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.json.GameRules;
+import it.polimi.ingsw.message.KeyLobbyPayload;
+import it.polimi.ingsw.message.Message;
+import it.polimi.ingsw.message.MessageType;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.*;
 import it.polimi.ingsw.network.client.Client;
-import it.polimi.ingsw.network.client.handlers.MessageToserverHandler;
+import it.polimi.ingsw.network.client.handlers.MessageToserverHandlerTurn;
 
 import java.util.ArrayList;
 
 
 public class ClientView {
 
-    private MessageToserverHandler messageToserverHandler;
+
+    private MessageToserverHandlerTurn messageToserverHandlerTurn;
     private BoardBoxView[][] boardView;
     private int[] orderTiles;
     private ArrayList<Integer> coordinatesSelected;
@@ -116,7 +120,7 @@ public class ClientView {
     public void setCoordinatesSelected(ArrayList<Integer> coordinatesSelected) throws Exception {
         this.coordinatesSelected = coordinatesSelected;
         turnPhase=TurnPhase.SELECT_FROM_BOARD;
-        messageToserverHandler.handleMessageToServer(coordinatesSelected.stream().mapToInt(Integer::intValue).toArray(),TurnPhase.SELECT_FROM_BOARD,nickname);
+        messageToserverHandlerTurn.handleMessageToServer(coordinatesSelected.stream().mapToInt(Integer::intValue).toArray(),TurnPhase.SELECT_FROM_BOARD,nickname, MessageType.DATA);
     }
 
     public int[] getOrderTiles() {
@@ -126,7 +130,7 @@ public class ClientView {
     public void setOrderTiles(int[] orderTiles) throws Exception {
         this.orderTiles = orderTiles;
         turnPhase=TurnPhase.SELECT_ORDER_TILES;
-        messageToserverHandler.handleMessageToServer(orderTiles,TurnPhase.SELECT_ORDER_TILES,nickname);
+        messageToserverHandlerTurn.handleMessageToServer(orderTiles,TurnPhase.SELECT_ORDER_TILES,nickname,MessageType.DATA);
     }
 
     public int getIndexPersonal() {
@@ -146,16 +150,16 @@ public class ClientView {
     public void setColumn(int column) throws Exception {
         this.column = column;
         turnPhase=TurnPhase.SELECT_COLUMN;
-        messageToserverHandler.handleMessageToServer(column,TurnPhase.SELECT_COLUMN,nickname);
+        messageToserverHandlerTurn.handleMessageToServer(column,TurnPhase.SELECT_COLUMN,nickname,MessageType.DATA);
     }
 
 
-    public MessageToserverHandler getMessageToserverHandler(ClientInterface clientInterface, Client client) {
-        return messageToserverHandler;
+    public MessageToserverHandlerTurn getMessageToserverHandler(ClientInterface clientInterface, Client client) {
+        return messageToserverHandlerTurn;
     }
 
-    public void setMessageToserverHandler(MessageToserverHandler messageToserverHandler) {
-        this.messageToserverHandler = messageToserverHandler;
+    public void setMessageToserverHandler(MessageToserverHandlerTurn messageToserverHandlerTurn) {
+        this.messageToserverHandlerTurn = messageToserverHandlerTurn;
     }
 
     public TurnPhase getTurnPhase() {
@@ -164,5 +168,10 @@ public class ClientView {
 
     public void setTurnPhase(TurnPhase turnPhase) {
         this.turnPhase = turnPhase;
+    }
+
+
+    public void lobby(KeyLobbyPayload keyLobbyPayload,int value) throws Exception {
+        messageToserverHandlerTurn.handleMessageToServer(value,keyLobbyPayload,nickname,MessageType.LOBBY);
     }
 }

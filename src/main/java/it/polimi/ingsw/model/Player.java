@@ -138,19 +138,6 @@ public class Player {
         modelView.setBookshelfView(bookshelf.cloneBookshelf(),nickname);
         PlayerPointsView playerPointsView =new PlayerPointsView(playerPoints,commonGoalPoints,personalGoalPoints,adjacentPoints);
         modelView.setPlayerPoints(playerPointsView,nickname);
-        /*
-
-
-        MessagePayload payload=new MessagePayload(EventType.END_TURN);
-        payload.put(PayloadKeyServer.WHO_CHANGE,nickname);
-        payload.put(PayloadKeyServer.NEWBOOKSHELF,bookshelfView);
-        payload.put(PayloadKeyServer.POINTS, playerPointsView);
-        serverView.firePlayer(payload, MessageFromServerType.DATA,nickname);
-        //listenerManager.fireEvent(EventType.END_TURN, payload,nickname);
-         */
-        //modelView.setBookshelfView(bookshelfView, serverView.getPlayerByNickname(nickname));
-        //modelView.setPlayerPoints(playerPointsView,serverView.getPlayerByNickname(nickname));
-
     }
     //PERSONALGOAL
     private int personalGoalPoints;
@@ -176,9 +163,8 @@ public class Player {
         this.bookshelf = bookshelf;
     }
 
-    public void insertBookshelf() throws Error {
-        bookshelf.insertTiles(selectedItems);
-        //listenerManager.fireEvent(EventType.BOOKSHELF_INSERTION_AND_POINTS, bookshelf,nickname);
+    public void insertBookshelf(int column) throws Error {
+        bookshelf.insertTiles(selectedItems,column);
     }
     private int adjacentPoints;
     public int getAdjacentPoints() {
