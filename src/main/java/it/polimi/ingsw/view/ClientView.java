@@ -18,8 +18,7 @@ public class ClientView {
     private ArrayList<Integer> coordinatesSelected;
     private CommonGoalView[] commonGoalViews;
     private int[] commonGoalPoints;
-    //TODO initialization will be inserted in the method related to the start of the game
-    //TODO per il momento non la uso, quando finisco l'errorHandler potrebbe essere utile per confrontare la fase del client con quella del server
+
     private TurnPhase turnPhase;
     private String[] players;
     private ItemTileView[][] bookshelfView;
@@ -157,5 +156,13 @@ public class ClientView {
 
     public void setMessageToserverHandler(MessageToserverHandler messageToserverHandler) {
         this.messageToserverHandler = messageToserverHandler;
+    }
+
+    public TurnPhase getTurnPhase() {
+        return turnPhase;
+    }
+
+    public void setTurnPhase(TurnPhase turnPhase) {
+        this.turnPhase = turnPhase;
     }
 }

@@ -1,9 +1,11 @@
 package it.polimi.ingsw.view.CLI;
 
+import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 
 import it.polimi.ingsw.network.client.ClientHandler;
+import it.polimi.ingsw.view.Check;
 import it.polimi.ingsw.view.ClientInterface;
 import it.polimi.ingsw.view.ClientView;
 
@@ -17,25 +19,24 @@ import java.util.concurrent.Semaphore;
 import static java.lang.System.out;
 
 //TODO molti comandi scritti qua li sposterò sugli handler li ho utilizzati per vedere come venivano stampate le varie fasi del turno
-public class CLI extends ClientInterface {
+public class CLI implements ClientInterface {
 
     private Scanner in = new Scanner(System.in);
+    private ClientView clientView;
 
     private Scanner scanner;
     private PrinterBoard printerBoard;
     private PrinterBookshelfAndPersonal printerBookshelfAndPersonal;
     private PrinterStartAndEndTurn printerStartAndEndTurn;
     private PrinterCommonGoalAndPoints printerCommonGoalAndPoints;
-    private PrinterLogo printerLogo;
 
     public CLI(){
         this.scanner= new Scanner(System.in);
-        setClientView(new ClientView());
+        this.clientView=new ClientView();
         printerBoard=new PrinterBoard();
         printerBookshelfAndPersonal=new PrinterBookshelfAndPersonal();
         printerStartAndEndTurn =new PrinterStartAndEndTurn();
         printerCommonGoalAndPoints=new PrinterCommonGoalAndPoints();
-        printerLogo=new PrinterLogo();
     }
     public void printLobbyCommands() throws Exception {
         out.println();
@@ -142,6 +143,7 @@ public class CLI extends ClientInterface {
 
     @Override
     public void askCoordinates() throws Exception {
+        PrinterLogo.printYourTurnPhase();
         out.println();
         //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: SELECT FROM BOARD");
         PrinterLogo.printBoardPhase();
@@ -163,10 +165,10 @@ public class CLI extends ClientInterface {
                   selectTile(selection );
                   break;
               case SELECT_FROM_BOARD2:
-                  resetChoice(0);
+                  resetChoice(0,selection);
                   break;
               case SELECT_FROM_BOARD3:
-                  resetChoice(1);
+                  resetChoice(1,selection);
                   break;
               case SELECT_FROM_BOARD4:
                   if(!selection.isEmpty()){
@@ -213,7 +215,7 @@ public class CLI extends ClientInterface {
 
     private void selectTile(ArrayList<Integer> selection) {
         int x, y;
-        ErrorType error=checkNumTilesSelectedBoard();
+        ErrorType error= Check.checkNumTilesSelectedBoard(selection,clientView.getBookshelfView());
         if (error!=null) {
             Colors.colorize(Colors.ERROR_MESSAGE,ErrorType.TOO_MANY_TILES.getErrorMessage());
             out.println();
@@ -225,9 +227,9 @@ public class CLI extends ClientInterface {
             Colors.colorize(Colors.GAME_INSTRUCTION, "(y): ");
             y = scanner.nextInt();
             scanner.nextLine();
-            error= checkCoordinates(x, y);
+            error= Check.checkCoordinates(x, y, clientView.getBoardView());
             if(error==null){
-                error= checkSelectable(x, y,selection);
+                error= Check.checkSelectable(x, y,selection, getClientView().getBoardView());
             }
             if (error!=null) {
                 //printerBoard.printMatrixBoard(getClientView());
@@ -239,8 +241,8 @@ public class CLI extends ClientInterface {
         }
     }
 
-    private void resetChoice(int lastOrAll) {
-        ErrorType error=resetChoiceBoard(lastOrAll);
+    private void resetChoice(int lastOrAll,ArrayList<Integer> coordinatesSelected) {
+        ErrorType error=Check.resetChoiceBoard(lastOrAll,coordinatesSelected);
         if (error==null) {
            // printerBoard.printMatrixBoard(getClientView());
             Colors.colorize(Colors.GAME_INSTRUCTION, "Reset successful\n");
@@ -262,7 +264,7 @@ public class CLI extends ClientInterface {
         //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: ORDER TILES");
         PrinterLogo.printOrderPhase();
         out.println();
-        createItemTileView();
+        clientView.setTilesSelected(Check.createItemTileView(clientView.getCoordinatesSelected(), clientView.getBoardView()));
         //insertTiles(2);
         //Colors.colorize(Colors.GAME_INSTRUCTION,"ORDER TILES " );
         boolean continueToAsk = true;
@@ -295,7 +297,7 @@ public class CLI extends ClientInterface {
                             Colors.colorize(Colors.GAME_INSTRUCTION, "Insert number: ");
                             orderTiles[i] = scanner.nextInt();
                         }
-                        error = checkPermuteSelection(orderTiles);
+                        error = Check.checkPermuteSelection(orderTiles,clientView.getCoordinatesSelected());
                         if (error != null) {
                             Colors.colorize(Colors.ERROR_MESSAGE, error.getErrorMessage());
                             out.println();
@@ -317,7 +319,7 @@ public class CLI extends ClientInterface {
                     }
                     continueToAsk=false;
                     getClientView().setOrderTiles(orderTiles);
-                    permuteSelection();
+                    clientView.setTilesSelected(Check.permuteSelection(clientView.getTilesSelected(),clientView.getOrderTiles()));
                     break;
                 default:
                     handleInvalidPhase(commandsTurn);
@@ -349,7 +351,7 @@ public class CLI extends ClientInterface {
                     while (error != null) {
                         Colors.colorize(Colors.GAME_INSTRUCTION, "To select a column write a number from 0 to " + (getClientView().getBookshelfView()[0].length - 1) + ": ");
                         column = scanner.nextInt();
-                        error = checkBookshelf(column);
+                        error = Check.checkBookshelf(column,clientView.getBookshelfView(),clientView.getTilesSelected());
                         if (error != null) {
                             Colors.colorize(Colors.ERROR_MESSAGE, error.getErrorMessage());
                             out.println();
@@ -372,8 +374,7 @@ public class CLI extends ClientInterface {
                     }
                     //continueToAsk = false;
                     getClientView().setColumn(column);
-                    permuteSelection();
-                    insertTiles(column);
+                    Check.insertTiles(column,clientView.getBookshelfView(),clientView.getTilesSelected());
                     continueToAsk=false;
                     printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 1, 60, false, false, 0);
                     continue;
@@ -404,8 +405,9 @@ public class CLI extends ClientInterface {
 
     @Override
     public Message askLobbyDecision() throws Exception {
+        PrinterLogo.printGlobalLobbyPhase();
         out.println();
-        Colors.colorize(Colors.ERROR_MESSAGE,"Welcome to Lobby what do you want to do?\n");
+       // Colors.colorize(Colors.ERROR_MESSAGE,"Welcome to Lobby what do you want to do?\n");
         boolean continueToAsk = true;
         MessageHeader header=new MessageHeader(MessageType.LOBBY, getClientView().getNickname());
         MessagePayload payload = null;
@@ -473,11 +475,6 @@ public class CLI extends ClientInterface {
 
 
 
-
-    @Override
-    public String getNickname() {
-        return null;
-    }
     public PrinterBookshelfAndPersonal getPrinterBookshelfAndPersonal() {
         return printerBookshelfAndPersonal;
     }
@@ -615,6 +612,11 @@ public class CLI extends ClientInterface {
  */
 
     @Override
+    public TurnPhase getTurnPhase() {
+        return clientView.getTurnPhase();
+    }
+
+    @Override
     public void start() throws Exception {
         PrinterLogo.printWaitingTurnPhase();
         while (true) {
@@ -634,6 +636,14 @@ public class CLI extends ClientInterface {
         semaphore.release();
     }
     private Semaphore semaphore = new Semaphore(0);
+
+    public ClientView getClientView() {
+        return clientView;
+    }
+
+    public void setClientView(ClientView clientView) {
+        this.clientView = clientView;
+    }
 }
 
 

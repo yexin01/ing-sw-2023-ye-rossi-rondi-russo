@@ -24,7 +24,7 @@ public class LobbyHandler extends MessageHandler {
                 MessagePayload messagePayload=null;
                 Message message=getClientInterface().askLobbyDecision();
                 getClient().sendMessageToServer(message);
-                System.out.println(getClientInterface().getNickname());
+                System.out.println(getClientInterface().getClientView().getNickname());
             }
             case CREATE_GAME_LOBBY-> {
                 //System.out.println("NELLA LOBBY");

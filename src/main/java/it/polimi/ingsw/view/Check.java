@@ -1,72 +1,51 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.message.ErrorType;
-import it.polimi.ingsw.message.Message;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
-//TODO will change
-
-public interface ClientInterface  {
-
-
-    TurnPhase getTurnPhase();
-    ClientView getClientView();
-   void start() throws Exception;
-   void stop() throws Exception;
-    void askCoordinates() throws Exception;
-    void askOrder() throws Exception;
-    void askColumn() throws Exception;
-    void displayError(String error);
-    //public abstract void endTurn(boolean phase) throws Exception;
-
-    void askNicknameAndConnection() throws Exception;
-    Message askLobbyDecision() throws Exception;
-    //booleano corrisponde alla partecipazione ad una nuova partita se é true vuole terminare il gioco altrimenti no
-    boolean endGame();
-    void Setup();
-
-  /*  public void createItemTileView() throws Error {
-        if(getClientView().getCoordinatesSelected()!=null){
-            ItemTileView[] itemTileViews=new ItemTileView[getClientView().getCoordinatesSelected().size()/2];
-            BoardBoxView[][] boardView= getClientView().getBoardView();
+public class Check {
+    public static ItemTileView[] createItemTileView(ArrayList<Integer> coordinates,BoardBoxView[][] boardBoxViews) throws Error {
+        if(coordinates!=null){
+            ItemTileView[] itemTileViews=new ItemTileView[coordinates.size()/2];
+            //BoardBoxView[][] boardView= boardBoxViews.getBoardView();
             int j=0;
-            for (int i = 0; i < getClientView().getCoordinatesSelected().size(); i += 2) {
-                int x = getClientView().getCoordinatesSelected().get(i);
-                int y = getClientView().getCoordinatesSelected().get(i + 1);
-                itemTileViews[j++]=new ItemTileView(boardView[x][y].getType(),boardView[x][y].getId());
+            for (int i = 0; i < coordinates.size(); i += 2) {
+                int x = coordinates.get(i);
+                int y = coordinates.get(i + 1);
+                itemTileViews[j++]=new ItemTileView(boardBoxViews[x][y].getType(),boardBoxViews[x][y].getId());
             }
-            getClientView().setTilesSelected(itemTileViews);
+            return itemTileViews;
         }
-
+        return null;
     }
-    public void insertTiles(int columnSelected) throws Error {
-        ItemTileView[][] bookshelf=clientView.getBookshelfView();
-        ItemTileView[] selectedItemTiles= clientView.getTilesSelected();
+    public static ItemTileView[][] insertTiles(int columnSelected,ItemTileView[][] bookshelf,ItemTileView[] selectedItemTiles) throws Error {
+        //ItemTileView[][] bookshelf=clientView.getBookshelfView();
+        //ItemTileView[] selectedItemTiles= clientView.getTilesSelected();
         int j = 0;
         for (int i = bookshelf.length - 1; j < selectedItemTiles.length; i--) {
             if (bookshelf[i][columnSelected].getTileID() == -1) {
                 bookshelf[i][columnSelected] = new ItemTileView(selectedItemTiles[j].getTypeView(), selectedItemTiles[j++].getTileID());
             }
         }
+        return bookshelf;
     }
-    public void permuteSelection(){
-        ItemTileView[] temp = new ItemTileView[clientView.getTilesSelected().length];
+
+    public static ItemTileView[] permuteSelection(ItemTileView[] tilesSelected,int[] orderSelected){
+        ItemTileView[] temp = new ItemTileView[tilesSelected.length];
         int j=0;
-        for(int i : clientView.getOrderTiles()){
+        for(int i : orderSelected){
             System.out.println(i);
-            temp[j++]=clientView.getTilesSelected()[i];
+            temp[j++]=tilesSelected[i];
         }
-        clientView.setTilesSelected(temp) ;
+        return temp ;
     }
     /**
      * @return check that each ItemTile of selectedBoard is adjacent to the previous one
-
-    public boolean allAdjacent(ArrayList<Integer> coordinatesSelected,int selectedCount) {
+     */
+    public static boolean allAdjacent(ArrayList<Integer> coordinatesSelected, int selectedCount) {
         for (int i = 2; i <= selectedCount * 2; i = i + 2) {
             if (Math.abs(coordinatesSelected.get(i) - coordinatesSelected.get(i - 2)) != 1 && Math.abs(coordinatesSelected.get(i + 1) - coordinatesSelected.get(i - 1)) != 1) {
                 return false;
@@ -77,8 +56,8 @@ public interface ClientInterface  {
 
     /**
      * @return check that all the ItemTiles in the selectedBoard array are on the same row or column
-
-    public boolean allSameRowOrSameColumn(ArrayList<Integer> coordinatesSelected,int selectedCount) {
+     */
+    public static boolean allSameRowOrSameColumn(ArrayList<Integer> coordinatesSelected,int selectedCount) {
         int firstX = coordinatesSelected.get(0);
         int firstY = coordinatesSelected.get(1);
         boolean allSameRow = true;
@@ -97,11 +76,10 @@ public interface ClientInterface  {
 
         return false;
     }
-    public ErrorType checkCoordinates(int x, int y) {
-        BoardBoxView[][] board= clientView.getBoardView();
+    public static ErrorType checkCoordinates(int x, int y,BoardBoxView[][] board) {
+        //BoardBoxView[][] board= clientView.getBoardView();
         if (x < 0 || y<0 || x> board.length-1 || y> board[0].length-1 || !board[x][y].isOccupiable() ) {
             return ErrorType.INVALID_COORDINATES;
-
         }
         return null;
     }
@@ -110,9 +88,9 @@ public interface ClientInterface  {
      * adjacent, in the same row or column and adjacent
      *
      * @return
+     */
 
-
-    public ErrorType checkSelectable(int x, int y,ArrayList<Integer> selection) throws Error {
+    public static ErrorType checkSelectable(int x, int y,ArrayList<Integer> selection,BoardBoxView[][] board) throws Error {
         //TODO AGGIUNGERE 3 COME PARAMETRO
         //TODO ricontrollare ill metodo
         ArrayList<Integer> coordinatesSelected =selection;
@@ -121,7 +99,7 @@ public interface ClientInterface  {
         if (selectedCount >= (3)) {
             return ErrorType.TOO_MANY_TILES;
         }
-        BoardBoxView boardBox = clientView.getBoardView()[x][y];
+        BoardBoxView boardBox = board[x][y];
         if ((boardBox.getFreeEdges() <= 0)) {
             return ErrorType.NOT_ENOUGH_FREE_EDGES;
         }
@@ -138,60 +116,57 @@ public interface ClientInterface  {
         }
         return null;
     }
-    public ErrorType checkNumTilesSelectedBoard(){
-        if(getClientView().getCoordinatesSelected()!=null){
-            if (getClientView().getCoordinatesSelected().size() >= numSelectableTiles()*2) {
+
+    public static ErrorType checkNumTilesSelectedBoard(ArrayList<Integer> coordinatesSelected,ItemTileView[][] bookshelf){
+        if(coordinatesSelected!=null){
+            if (coordinatesSelected.size() >= numSelectableTiles(bookshelf)*2) {
                 return ErrorType.TOO_MANY_TILES;
             }else return null;
 
         }else return null;
     }
-    public ErrorType resetChoiceBoard(int lastOrAll) throws Error{
-        if (!(getClientView().getCoordinatesSelected()==null) && !getClientView().getCoordinatesSelected().isEmpty()) {
+    //TODO questi li cambiero
+    public static ErrorType resetChoiceBoard(int lastOrAll,ArrayList<Integer> coordinatesSelected) throws Error{
+        if (!(coordinatesSelected==null) && !coordinatesSelected.isEmpty()) {
             if(lastOrAll==0){
-                int lastIndex = getClientView().getCoordinatesSelected().size() - 1;
-                getClientView().getCoordinatesSelected().remove(lastIndex);
-                getClientView().getCoordinatesSelected().remove(lastIndex - 1);
-            }else getClientView().getCoordinatesSelected().clear();
+                int lastIndex = coordinatesSelected.size() - 1;
+                coordinatesSelected.remove(lastIndex);
+                coordinatesSelected.remove(lastIndex - 1);
+            }else coordinatesSelected.clear();
             return null;
         }
         return ErrorType.NOT_VALUE_SELECTED;
     }
-
-   */
-
-
-
-   /* public ErrorType checkBookshelf(int column) throws Error {
+    public static ErrorType checkBookshelf(int column,ItemTileView[][] bookshelfView,ItemTileView[] tilesSelected) throws Error {
         //int numSelectedTiles=clientView.getCoordinatesSelected().size()/2;
-        int numSelectedTiles=clientView.getTilesSelected().length;
-        if (column < 0 || column > clientView.getBookshelfView()[0].length-1 ) {
+        int numSelectedTiles=tilesSelected.length;
+        if (column < 0 || column > bookshelfView[0].length-1 ) {
             return ErrorType.INVALID_COLUMN;
         }
-        computeFreeShelves();
+        int[] freeShelves=computeFreeShelves(bookshelfView);
         if(!(numSelectedTiles <= freeShelves[column])){
             return ErrorType.NOT_ENOUGH_FREE_CELLS_COLUMN;
         }
         return null;
     }
-    public int numSelectableTiles() {
-        computeFreeShelves();
+    public static int numSelectableTiles(ItemTileView[][] bookshelfView) {
+        int[] freeShelves=computeFreeShelves(bookshelfView);
         //TODO importare 3 come parametro attraverso gamerules
-        int max = maxFreeShelves();
+        int max = maxFreeShelves(freeShelves);
         return (max > 3) ? 3 : max;
     }
-    public int[] computeFreeShelves() {
-        ItemTileView[][] matrix= clientView.getBookshelfView();
-        freeShelves=new int[matrix[0].length];
-        for (int j = 0; j < matrix[0].length; j++) {
+    public static int[] computeFreeShelves(ItemTileView[][] bookshelfView) {
+        //ItemTileView[][] bookshelfView= clientView.getBookshelfView();
+        int[] freeShelves=new int[bookshelfView[0].length];
+        for (int j = 0; j < bookshelfView[0].length; j++) {
             freeShelves[j] = 0;
-            for (int i = 0; i < matrix.length && matrix[i][j].getTileID() == -1; i++) {
+            for (int i = 0; i < bookshelfView.length && bookshelfView[i][j].getTileID() == -1; i++) {
                 freeShelves[j]++;
             }
         }
         return freeShelves;
     }
-    private int maxFreeShelves() {
+    public static int maxFreeShelves(int[] freeShelves) {
         int max = 0;
         for (int i = 0; i < freeShelves.length; i++) {
             if (freeShelves[i] > max) {
@@ -201,8 +176,8 @@ public interface ClientInterface  {
         return max;
     }
 
-    public ErrorType checkPermuteSelection(int[] order) throws Error {
-        int maxIndex = clientView.getCoordinatesSelected().size()/2 - 1;
+    public static ErrorType checkPermuteSelection(int[] order,ArrayList<Integer> coordinatesSelected) throws Error {
+        int maxIndex = coordinatesSelected.size()/2 - 1;
         for (int i = 0; i < order.length; i++) {
             int curIndex = order[i];
             if (curIndex > maxIndex || curIndex < 0) {
@@ -212,22 +187,10 @@ public interface ClientInterface  {
             for (int j = i + 1; j < order.length; j++) {
                 if (order[j] == curIndex) {
                     return ErrorType.INVALID_ORDER_TILE_REPETITION;
-                    // throw new Error(ErrorType.INVALID_ORDER_TILE);
                 }
             }
         }
         return null;
     }
-
-    public int[] getFreeshelves() {
-        return freeShelves;
-    }
-
-    public void setFreeshelves(int[] freeshelves) {
-        this.freeShelves = freeshelves;
-    }
-
-    */
-
 
 }
