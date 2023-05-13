@@ -55,6 +55,7 @@ public class Board{
         this.selectedBoard = selectedBoard;
 
     }
+    /*
     public ErrorType checkCoordinates(int x, int y) {
         if (x < 0 || y<0 || x> matrix.length-1 || y> matrix[0].length-1 || !getBoardBox(x,y).isOccupiable() ) {
             return ErrorType.INVALID_COORDINATES;
@@ -62,6 +63,8 @@ public class Board{
         }
         return null;
     }
+
+     */
 
     public ErrorType checkFinishChoice() {
         if (selectedBoard.size()==0) {
@@ -203,11 +206,103 @@ public class Board{
                 matrix[x][y+1].increasefreeEdges();
         }
     }
+    /**
+     * @return check that each ItemTile of selectedBoard is adjacent to the previous one
+     */
+    public boolean allAdjacent(int[] coordinatesSelected) {
+        for (int i = 2; i < coordinatesSelected.length; i = i + 2) {
+            if (Math.abs(coordinatesSelected[i] - coordinatesSelected[i-2]) != 1 && Math.abs(coordinatesSelected[i+1] - coordinatesSelected[i-1]) != 1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @return check that all the ItemTiles in the selectedBoard array are on the same row or column
+     */
+    public boolean allSameRowOrSameColumn(int[] coordinatesSelected) {
+        int firstX = coordinatesSelected[0];
+        int firstY = coordinatesSelected[1];
+        boolean allSameRow = true;
+        boolean allSameColumn = true;
+        for (int i = 2; i < coordinatesSelected.length; i = i + 2) {
+            if (coordinatesSelected[i] != firstX) {
+                allSameRow = false;
+            }
+            if (coordinatesSelected[i+1]!= firstY) {
+                allSameColumn = false;
+            }
+        }
+        if (allSameRow ^ allSameColumn) {
+            return true;
+        }
+
+        return false;
+    }
+    public ErrorType checkCoordinates(int x, int y) {
+        //BoardBoxView[][] board= clientView.getBoardView();
+        if (x < 0 || y<0 || x> matrix.length-1 || y> matrix[0].length-1 ||matrix[x][y].getTile()==null) {
+            return ErrorType.INVALID_COORDINATES;
+        }
+        return null;
+    }
+    public boolean checkError(ErrorType error){
+        if(error!=null){
+            return true;
+        }
+        else return false;
+    }
+
+    /**
+     * adjacent, in the same row or column and adjacent
+     *
+     * @return
+     */
+
+    public ErrorType checkSelectable(int[] selection,int maxSelectebleTile) throws Error {
+        //TODO AGGIUNGERE 3 COME PARAMETRO
+        //TODO ricontrollare ill metodo
+        selectedBoard=new ArrayList<>();
+        ErrorType error;
+        if(selection==null || selection.length%2!=0){
+            return ErrorType.INVALID_INPUT;
+        }
+        if (selection.length/2 > (maxSelectebleTile)) {
+            return ErrorType.TOO_MANY_TILES;
+        }
+        if(selection.length==2 && matrix[0][1].getFreeEdges()<=0){
+            return null;
+        }
+        for(int k=0;k<selection.length;k+=2){
+            int x=selection[k];
+            int y=selection[k+1];
+            error=checkCoordinates(x,y);
+            if(checkError(error)){
+                return error;
+            }
+            if (matrix[x][y].getFreeEdges() <= 0) {
+                return ErrorType.NOT_ENOUGH_FREE_EDGES;
+            }
+
+            BoardBox boardBox=new BoardBox(x,y);
+            ItemTile tile=new ItemTile(matrix[x][y].getTile().getType(),matrix[x][y].getTile().getTileID());
+            boardBox.setTile(tile);
+            selectedBoard.add(boardBox);
+        }
+
+
+        if (!allAdjacent(selection) || !allSameRowOrSameColumn(selection)){
+            return ErrorType.NOT_SAME_ROW_OR_COLUMN;
+        }
+        return null;
+    }
+
 
     /**
      *
      * @return check that each ItemTile of selectedBoard is adjacent to the previous one
-     */
+
     public boolean allAdjacent(){
         for (int i = 1; i < selectedBoard.size(); i++) {
             BoardBox currentTile = selectedBoard.get(i);
@@ -222,7 +317,7 @@ public class Board{
     /**
      *
      * @return check that all the ItemTiles in the selectedBoard array are on the same row or column
-     */
+
     public boolean allSameRowOrSameColumn(){
         int firstX = selectedBoard.get(0).getX();
         int firstY = selectedBoard.get(0).getY();
@@ -245,7 +340,7 @@ public class Board{
     /**
      * adjacent, in the same row or column and adjacent
      * @return
-     */
+
 
     public ErrorType checkSelectable(BoardBox boardBox, int numSelectableTiles) throws Error {
         if(selectedBoard.size() > (numSelectableTiles+1)){

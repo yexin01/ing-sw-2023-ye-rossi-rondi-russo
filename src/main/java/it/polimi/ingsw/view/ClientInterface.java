@@ -25,7 +25,7 @@ public interface ClientInterface  {
     //public abstract void endTurn(boolean phase) throws Exception;
 
     void askNicknameAndConnection() throws Exception;
-    Message askLobbyDecision() throws Exception;
+    void askLobbyDecision() throws Exception;
     //booleano corrisponde alla partecipazione ad una nuova partita se é true vuole terminare il gioco altrimenti no
     boolean endGame();
     void Setup();

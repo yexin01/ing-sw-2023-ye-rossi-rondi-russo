@@ -95,34 +95,20 @@ public class GameController {
 
     public void checkAndInsertBoardBox(Message message) throws Exception {
         int[] coordinates=(int[]) message.getPayload().getContent(Data.VALUE_CLIENT);
-        int x;
-        int y;
-        //TODO il controllo verra cambiato rendendolo piu veloce
-        ErrorType errorType=null;
         int maxPlayerSelectableTiles=game.getTurnPlayer().getBookshelf().numSelectableTiles();
-        for (int i = 0; i <coordinates.length; i = i + 2) {
-            x=coordinates[i];
-            y=coordinates[i+1];
-            errorType=game.getBoard().checkCoordinates(x,y);
-            if(errorType!=null) {
+        if(!checkError(game.getBoard().checkSelectable(coordinates,maxPlayerSelectableTiles))){
+            System.out.println("Le asocia");
+            ErrorType errorType=game.getBoard().checkFinishChoice();
+            if(errorType!=null){
                 checkError(errorType);
-                break;
-            }
-            System.out.println("You selected "+x+","+y);
-            BoardBox boardBox=game.getBoard().getBoardBox(x,y);
-            errorType=game.getBoard().checkSelectable(boardBox,maxPlayerSelectableTiles);
-            System.out.println(coordinates.length);
-            System.out.println(i);
-            if(errorType!=null) {
-                checkError(errorType);
-                break;
+            }else{
+                game.getTurnPlayer().selection(game.getBoard());
+                //game.getBoard().resetBoard();
+                turnPhaseController.setCurrentPhase(TurnPhase.SELECT_ORDER_TILES);
+                System.out.println("CAMBIA FASE CONTROLLER");
+                listenerManager.fireEvent(KeyDataPayload.PHASE,getTurnNickname(),TurnPhase.SELECT_ORDER_TILES);
             }
         }
-        if(errorType==null){
-            System.out.println("Le asocia");
-            associatePlayerTiles();
-        };
-
     }
     public void resetBoardChoice() throws Exception {
         game.getBoard().resetBoardChoice();
@@ -130,10 +116,14 @@ public class GameController {
         //serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
     }
 
-    public void checkError(ErrorType possibleInvalidArgoment) throws Exception {
-        System.out.println("ERRORE DATA CLIENT");
-        System.out.println(possibleInvalidArgoment.getErrorMessage());
-        listenerManager.fireEvent(KeyErrorPayload.ERROR_DATA,getTurnNickname(),possibleInvalidArgoment);
+    public boolean checkError(ErrorType possibleInvalidArgoment) throws Exception {
+        if(possibleInvalidArgoment!=null){
+            System.out.println("ERRORE NEL CONTROLLER RILEVATO: "+possibleInvalidArgoment.getErrorMessage());
+            System.out.println(possibleInvalidArgoment.getErrorMessage());
+            listenerManager.fireEvent(KeyErrorPayload.ERROR_DATA,getTurnNickname(),possibleInvalidArgoment);
+            return true;
+        }
+        return false;
 
     }
     public void disconnectionPlayer(String nickname){
@@ -149,20 +139,7 @@ public class GameController {
 
     }
 
-    public void associatePlayerTiles() throws Exception {
 
-        ErrorType errorType=game.getBoard().checkFinishChoice();
-        if(errorType!=null){
-            checkError(errorType);
-        }else{
-            game.getTurnPlayer().selection(game.getBoard());
-            //game.getBoard().resetBoard();
-            turnPhaseController.setCurrentPhase(TurnPhase.SELECT_ORDER_TILES);
-            System.out.println("CAMBIA FASE");
-            listenerManager.fireEvent(KeyDataPayload.PHASE,getTurnNickname(),TurnPhase.SELECT_ORDER_TILES);
-        }
-
-    }
     public void permutePlayerTiles(Message message) throws Exception {
         int[] orderTiles=(int[]) message.getPayload().getContent(Data.VALUE_CLIENT);
         ErrorType errorType=game.getTurnPlayer().checkPermuteSelection(orderTiles);
@@ -186,22 +163,19 @@ public class GameController {
         if(errorType!=null){
             checkError(errorType);
         }else{
-            game.getTurnPlayer().getBookshelf().setColumnSelected(column);
-            insertBookshelf();
+            turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
+            game.getTurnPlayer().insertBookshelf(column);
+            System.out.println("finish1");
+            if(game.getTurnPlayer().getBookshelf().isFull()){
+                game.setEndGame(true);
+            }
+            System.out.println("finish2");
+            game.updateAllPoints();
+            finishTurn();
         }
     }
 
-    public void insertBookshelf() throws Exception {
-        turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
-        game.getTurnPlayer().insertBookshelf();
-        System.out.println("finish1");
-        if(game.getTurnPlayer().getBookshelf().isFull()){
-            game.setEndGame(true);
-        }
-        System.out.println("finish2");
-        game.updateAllPoints();
-        finishTurn();
-    }
+
     public void finishTurn() {
         //TODO da finire
         game.getBoard().resetBoard();

@@ -93,9 +93,10 @@ public class ClientHandler implements Runnable {
             connection="SOCKET";
         }
         managerHandlers.registerEventHandler(MessageType.DATA,new TurnHandler(clientInterface,client,new StartAndEndGameHandler(clientInterface,this.client)));
-        managerHandlers.registerEventHandler(MessageType.LOBBY,new LobbyHandler(clientInterface,client));
-        managerHandlers.registerEventHandler(MessageType.ERROR,new ErrorHandler(clientInterface,client));
-        clientInterface.getClientView().setMessageToserverHandler(new MessageToserverHandler(clientInterface,client));
+        LobbyHandler lobbyHandler=new LobbyHandler(clientInterface,client);
+        managerHandlers.registerEventHandler(MessageType.LOBBY,lobbyHandler);
+        managerHandlers.registerEventHandler(MessageType.ERROR,new ErrorHandler(clientInterface,client, lobbyHandler));
+        clientInterface.getClientView().setMessageToserverHandler(new MessageToserverHandlerTurn(clientInterface,client));
 
 
 

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.CLI;
 
+import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Type;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.view.ClientView;
@@ -14,17 +15,14 @@ public class PrinterBoard {
     private int sizeTile =3;
     private int sizeWordType=8;
     private int spaceBetweenTiles=2;
-    public void printMatrixBoard(ClientView clientView) {
+    public void printMatrixBoard(BoardBoxView[][] boardView, ArrayList<Integer> selectionBoard) {
         //System.out.println("BOARD");
 
         int lineLength= sizeTile +2*spaceBetweenTiles;
         int valuesType=0;
-        ArrayList<Integer> coordinates=new ArrayList<>();
-        BoardBoxView[][] boardView = clientView.getBoardView();
-        if(clientView.getCoordinatesSelected()==null){
+        if(selectionBoard==null){
             valuesType=Type.values().length+1;
-        }else coordinates = clientView.getCoordinatesSelected();
-
+        }
         //Colors.upperOneBoard(Colors.WHITE_CODE);
         Colors.printFreeSpaces(2+ sizeTile +sizeWordType+freeSpacesFromTableTypesSelected+sizeCoordinates);
         for (int i=0;i<boardView[0].length;i++){
@@ -52,7 +50,7 @@ public class PrinterBoard {
 
         for (int i = 0; i < boardView.length; i++) {
             finishLine=false;
-            valuesType=printValues(valuesType,clientView,coordinates);
+            valuesType=printValues(valuesType,boardView,selectionBoard);
             /*
             if(valuesType<Type.values().length){
                 Colors.printTypeWithTypeColor(Type.values()[valuesType]);
@@ -64,11 +62,11 @@ public class PrinterBoard {
             System.out.print(String.format("%-"+sizeCoordinates+"s", i));
             for (int j = 0; j < boardView[i].length; j++) {
 
-                if (boardView[i][j].getItemTileView().getTypeView() != null) {
+                if (boardView[i][j].getItemTileView().getTileID() != -1) {
                     //System.out.printf("%-6s","("+i+","+j+")");
                     boolean selected = false;
-                    for (int k = 0; coordinates.size() > 0 && k < coordinates.size(); k += 2) {
-                        if (coordinates.get(k).equals(i) && coordinates.get(k + 1).equals(j)) {
+                    for (int k = 0; selectionBoard!=null && k < selectionBoard.size(); k += 2) {
+                        if (selectionBoard.get(k).equals(i) && selectionBoard.get(k + 1).equals(j)) {
                             // colors.colorize(Colors.RED_CODE,"SELECTED");
                             Colors.colorize(Colors.WHITE_CODE,"║");
                             Colors.printFreeSpaces(spaceBetweenTiles);
@@ -120,7 +118,7 @@ public class PrinterBoard {
             }
             //Colors.colorize(Colors.WHITE_CODE,"║ ");
             System.out.println("");
-            valuesType=printValues(valuesType,clientView,coordinates);
+            valuesType=printValues(valuesType,boardView,selectionBoard);
 
 /*                if(valuesType<Type.values().length){
                     Colors.printTypeWithTypeColor(Type.values()[valuesType]);
@@ -162,14 +160,13 @@ public class PrinterBoard {
 */
         //askCoordinates();
     }
-    public int printValues(int valuesType,ClientView clientView,ArrayList<Integer> selection){
+    public int printValues(int valuesType,BoardBoxView[][] boardView,ArrayList<Integer> selection){
         ArrayList<Integer> coordinatesSelected=selection;
-        BoardBoxView[][] boardView=clientView.getBoardView();
         int numSelectedType=0;
         if(valuesType<Type.values().length){
             for (int k = 0;k < coordinatesSelected.size(); k += 2) {
                 Type type=boardView[coordinatesSelected.get(k)][coordinatesSelected.get(k + 1)].getType();
-                if(type.equals(Type.values()[valuesType])){
+                if(type!=null && type.equals(Type.values()[valuesType])){
                     numSelectedType++;
                 }
             }
