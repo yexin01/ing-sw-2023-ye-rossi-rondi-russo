@@ -47,7 +47,9 @@ gameController.getModel().getBoard().resetBoard();
             cl.getClientView().setBoardView(gameController.getModel().getModelView().getBoardView());
             PrinterBoard puu=new PrinterBoard();
             puu.printMatrixBoard(cl.getClientView());
-            cl.askLobbyDecision();
+            cl.getClientView().setCoordinatesSelected( new ArrayList<>(List.of(7, 3, 7, 4,7, 5)));
+            puu.printMatrixBoard(cl.getClientView());
+            //cl.askLobbyDecision();
 
             Bookshelf bo = new Bookshelf(6, 5, 3);
             bo.setTile(new ItemTile(Type.CAT, 9), 5, 0);

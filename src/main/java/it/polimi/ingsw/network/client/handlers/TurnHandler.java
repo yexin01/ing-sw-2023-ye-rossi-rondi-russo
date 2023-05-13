@@ -22,7 +22,10 @@ public class TurnHandler extends MessageHandler {
         System.out.println("SONO TURN HANDLER");
 
         //KeyDataPayload data = (KeyDataPayload) mes.getPayload().getKey();
+        /*
         MessagePayload messagePayload=null;
+
+         */
         TurnPhase turnPhase=(TurnPhase) mes.getPayload().getKey();
         switch(turnPhase){
             /*
@@ -34,25 +37,29 @@ public class TurnHandler extends MessageHandler {
 
              */
             case SELECT_ORDER_TILES -> {
-                int[] orderTiles=  getClientInterface().askOrder();
-                messagePayload=new MessagePayload(TurnPhase.SELECT_ORDER_TILES);
-                messagePayload.put(Data.VALUE_CLIENT,orderTiles);
+                getClientInterface().askOrder();
+                //messagePayload=new MessagePayload(TurnPhase.SELECT_ORDER_TILES);
+                //messagePayload.put(Data.VALUE_CLIENT,orderTiles);
             }
             case SELECT_COLUMN -> {
-                int column=getClientInterface().askColumn();
-                messagePayload=new MessagePayload(TurnPhase.SELECT_COLUMN);
-                messagePayload.put(Data.VALUE_CLIENT,column);
+                getClientInterface().askColumn();
+                //messagePayload=new MessagePayload(TurnPhase.SELECT_COLUMN);
+                //messagePayload.put(Data.VALUE_CLIENT,column);
             }
             case END_TURN -> {
                 System.out.println("END TURN CLIENT");
                BoardBoxView[][] boardBoxViews= (BoardBoxView[][]) mes.getPayload().getContent(Data.NEW_BOARD);
                getClientInterface().getClientView().setBoardView(boardBoxViews);
-               String player= (String) mes.getPayload().getContent(Data.PLAYERS);
-               getClientInterface().endTurn();
+               String player= (String) mes.getPayload().getContent(Data.WHO_CHANGE);
                 if(player.equals(getClientInterface().getClientView().getNickname())){
-                    int[] selectionBoard=getClientInterface().askCoordinates();
-                    messagePayload=new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
-                    messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
+                    getClientInterface().stop();
+                    //getClientInterface().endTurn(false);
+                    getClientInterface().askCoordinates();
+                    //messagePayload=new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
+                    //messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
+                }else{
+                    getClientInterface().start();
+                    //getClientInterface().endTurn(true);
                 }
             }
             default -> {
@@ -60,10 +67,13 @@ public class TurnHandler extends MessageHandler {
                 return;
             }
         }
+        /*
         MessageHeader header=new MessageHeader(MessageType.DATA,getClientInterface().getClientView().getNickname());
         Message messageToServer=new Message(header,messagePayload);
         getClient().sendMessageToServer(messageToServer);
-        System.out.println("HA MANDATO IL MESSAGGIO");
+
+         */
+        System.out.println("HA FINITO TURN HANDLER");
     }
 }
  /*

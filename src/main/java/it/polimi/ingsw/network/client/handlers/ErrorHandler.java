@@ -42,10 +42,11 @@ public class ErrorHandler extends MessageHandler {
 
             }
             case ERROR_LOBBY -> {
-                if(error.equals(ErrorType.ERR_RECONNECT_TO_GAME_LOBBY) || error.equals(ErrorType.ERR_JOIN_GLOBAL_LOBBY)){
+                if(error.equals(ErrorType.ERR_NO_FREE_SPOTS)){
+                    getClientInterface().displayError(error.getErrorMessage());
+                }else if(error.equals(ErrorType.ERR_RECONNECT_TO_GAME_LOBBY) || error.equals(ErrorType.ERR_JOIN_GLOBAL_LOBBY)){
                     getClientInterface().askNicknameAndConnection();
-                }
-                else getClientInterface().askLobbyDecision();
+                }else getClientInterface().askLobbyDecision();
 
             }
 

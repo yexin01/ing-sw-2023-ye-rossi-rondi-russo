@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 //TODO will change
 
-public abstract class ClientInterface extends JPanel {
+public abstract class ClientInterface  {
     private ClientView clientView;
     private TurnPhase turnPhase;
 
@@ -22,12 +22,13 @@ public abstract class ClientInterface extends JPanel {
     //public abstract void start();
 
    // String askNickname();
-
-    public abstract int[] askCoordinates() throws Exception;
-    public abstract int[] askOrder() throws Exception;
-    public abstract int askColumn() throws Exception;
+   public abstract void start() throws Exception;
+    public abstract void stop() throws Exception;
+    public abstract void askCoordinates() throws Exception;
+    public abstract void askOrder() throws Exception;
+    public abstract void askColumn() throws Exception;
     public abstract void displayError(String error);
-    public abstract void endTurn() throws Exception;
+    //public abstract void endTurn(boolean phase) throws Exception;
 
     public abstract void askNicknameAndConnection() throws Exception;
     public abstract Message askLobbyDecision() throws Exception;
@@ -36,15 +37,18 @@ public abstract class ClientInterface extends JPanel {
     public abstract void Setup();
 
     public void createItemTileView() throws Error {
-        ItemTileView[] itemTileViews=new ItemTileView[getClientView().getCoordinatesSelected().size()/2];
-        BoardBoxView[][] boardView= getClientView().getBoardView();
-        int j=0;
-        for (int i = 0; i < getClientView().getCoordinatesSelected().size(); i += 2) {
-            int x = getClientView().getCoordinatesSelected().get(i);
-            int y = getClientView().getCoordinatesSelected().get(i + 1);
-            itemTileViews[j++]=new ItemTileView(boardView[x][y].getType(),boardView[x][y].getId());
+        if(getClientView().getCoordinatesSelected()!=null){
+            ItemTileView[] itemTileViews=new ItemTileView[getClientView().getCoordinatesSelected().size()/2];
+            BoardBoxView[][] boardView= getClientView().getBoardView();
+            int j=0;
+            for (int i = 0; i < getClientView().getCoordinatesSelected().size(); i += 2) {
+                int x = getClientView().getCoordinatesSelected().get(i);
+                int y = getClientView().getCoordinatesSelected().get(i + 1);
+                itemTileViews[j++]=new ItemTileView(boardView[x][y].getType(),boardView[x][y].getId());
+            }
+            getClientView().setTilesSelected(itemTileViews);
         }
-        getClientView().setTilesSelected(itemTileViews);
+
     }
     public void insertTiles(int columnSelected) throws Error {
         ItemTileView[][] bookshelf=clientView.getBookshelfView();
@@ -114,10 +118,10 @@ public abstract class ClientInterface extends JPanel {
      * @return
      */
 
-    public ErrorType checkSelectable(int x, int y) throws Error {
+    public ErrorType checkSelectable(int x, int y,ArrayList<Integer> selection) throws Error {
         //TODO AGGIUNGERE 3 COME PARAMETRO
         //TODO ricontrollare ill metodo
-        ArrayList<Integer> coordinatesSelected =clientView.getCoordinatesSelected();
+        ArrayList<Integer> coordinatesSelected =selection;
 
         int selectedCount=coordinatesSelected.size()/2;
         if (selectedCount >= (3)) {
@@ -141,12 +145,15 @@ public abstract class ClientInterface extends JPanel {
         return null;
     }
     public ErrorType checkNumTilesSelectedBoard(){
-        if (getClientView().getCoordinatesSelected().size() >= numSelectableTiles()*2) {
-            return ErrorType.TOO_MANY_TILES;
+        if(getClientView().getCoordinatesSelected()!=null){
+            if (getClientView().getCoordinatesSelected().size() >= numSelectableTiles()*2) {
+                return ErrorType.TOO_MANY_TILES;
+            }else return null;
+
         }else return null;
     }
     public ErrorType resetChoiceBoard(int lastOrAll) throws Error{
-        if (!getClientView().getCoordinatesSelected().isEmpty()) {
+        if (!(getClientView().getCoordinatesSelected()==null) && !getClientView().getCoordinatesSelected().isEmpty()) {
             if(lastOrAll==0){
                 int lastIndex = getClientView().getCoordinatesSelected().size() - 1;
                 getClientView().getCoordinatesSelected().remove(lastIndex);

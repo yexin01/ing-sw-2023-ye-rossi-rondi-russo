@@ -15,7 +15,8 @@ public class EndTurnListener extends EventListener{
 
     @Override
     public void fireEvent(KeyAbstractPayload event, String playerNickname, Object newValue) throws IOException {
-        System.out.println("STO INVIANDO END");
+        System.out.println("STO INVIANDO END, PROSSIMO GIOCATORE");
+        System.out.println(playerNickname);
         ModelView model=(ModelView) newValue;
         BoardBoxView[][] boardView= model.getBoardView();
         //ItemTileView[][] bookshelfView=model.getBookshelfView(playerNickname);
@@ -25,7 +26,7 @@ public class EndTurnListener extends EventListener{
         payload.put(Data.NEW_BOARD,boardView);
         payload.put(Data.WHO_CHANGE,playerNickname);
         Message message=new Message(header,payload);
-        //getGameLobby().sendMessageToAllPlayers(message);
+        getGameLobby().sendMessageToAllPlayers(message);
 
     }
 }

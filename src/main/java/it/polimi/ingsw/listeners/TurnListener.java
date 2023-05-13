@@ -21,7 +21,7 @@ public class TurnListener extends EventListener {
        MessageHeader header=new MessageHeader(MessageType.DATA,playerNickname);
        MessagePayload payload=new MessagePayload(turnPhase);
        Message message=new Message(header,payload);
-       //getGameLobby().sendMessageToSpecificPlayer(message,playerNickname);
+       getGameLobby().sendMessageToSpecificPlayer(message,playerNickname);
 
     }
 }

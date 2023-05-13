@@ -12,6 +12,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.Semaphore;
 
 import static java.lang.System.out;
 
@@ -140,13 +141,14 @@ public class CLI extends ClientInterface {
 
 
     @Override
-    public int[] askCoordinates() throws Exception {
+    public void askCoordinates() throws Exception {
         out.println();
         //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: SELECT FROM BOARD");
         PrinterLogo.printBoardPhase();
         out.println();
-        getClientView().setCoordinatesSelected(new ArrayList<>());
-        printerBoard.printMatrixBoard(getClientView());
+        ArrayList<Integer> selection=new ArrayList<>();
+        //getClientView().setCoordinatesSelected(new ArrayList<>());
+       // printerBoard.printMatrixBoard(getClientView());
         //TODO aggiungere attributo che indica il numero di tile massimo
         Scanner scanner=new Scanner(System.in);
         boolean continueToAsk = true;
@@ -158,7 +160,7 @@ public class CLI extends ClientInterface {
           }
           switch (commandsTurn) {
               case SELECT_FROM_BOARD1:
-                  selectTile();
+                  selectTile(selection );
                   break;
               case SELECT_FROM_BOARD2:
                   resetChoice(0);
@@ -167,8 +169,9 @@ public class CLI extends ClientInterface {
                   resetChoice(1);
                   break;
               case SELECT_FROM_BOARD4:
-                  if(!getClientView().getCoordinatesSelected().isEmpty()){
+                  if(!selection.isEmpty()){
                       Colors.colorize(Colors.GAME_INSTRUCTION, "Confirmation successful.");
+                      getClientView().setCoordinatesSelected(selection);;
                       continueToAsk = false;
                   }
                  break;
@@ -177,15 +180,15 @@ public class CLI extends ClientInterface {
                 continue;
             }
 
-            if (getClientView().getCoordinatesSelected().isEmpty()) {
+            if (selection.isEmpty()) {
                 //printerBoard.printMatrixBoard(getClientView());
                 Colors.colorize(Colors.ERROR_MESSAGE,ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
             } else {
                 //printerBoard.printMatrixBoard(getClientView());
                 Colors.colorize(Colors.GAME_INSTRUCTION,"Your current selections: ");
-                for (int i = 0; i < getClientView().getCoordinatesSelected().size(); i += 2) {
-                    int x = getClientView().getCoordinatesSelected().get(i);
-                    int y = getClientView().getCoordinatesSelected().get(i + 1);
+                for (int i = 0; i < selection.size(); i += 2) {
+                    int x = selection.get(i);
+                    int y = selection.get(i + 1);
                     Colors.colorize(Colors.GAME_INSTRUCTION,"(" + x + ", " + y + ") ");
                     out.print(Colors.printTiles(getClientView().getBoardView()[x][y].getType(),3));
                     Colors.colorize(Colors.GAME_INSTRUCTION,"; ");
@@ -193,12 +196,11 @@ public class CLI extends ClientInterface {
                 out.println();
             }
         }
-        return getClientView().getCoordinatesSelected().stream().mapToInt(Integer::intValue).toArray();
     }
 
     private void printCommands(CommandsTurn commandsTurn) throws Exception {
         switch (commandsTurn){
-            case PRINT1 -> printerBoard.printMatrixBoard(getClientView());
+            //case PRINT1 -> //printerBoard.printMatrixBoard(getClientView());
             case PRINT2 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3,1,60,false,false,0);
             case PRINT3 -> printerBookshelfAndPersonal.printPersonal(getClientView(),2,35);
             case PRINT4 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,1,60,true,false,0);
@@ -209,7 +211,7 @@ public class CLI extends ClientInterface {
         }
     }
 
-    private void selectTile() {
+    private void selectTile(ArrayList<Integer> selection) {
         int x, y;
         ErrorType error=checkNumTilesSelectedBoard();
         if (error!=null) {
@@ -225,14 +227,14 @@ public class CLI extends ClientInterface {
             scanner.nextLine();
             error= checkCoordinates(x, y);
             if(error==null){
-                error= checkSelectable(x, y);
+                error= checkSelectable(x, y,selection);
             }
             if (error!=null) {
-                printerBoard.printMatrixBoard(getClientView());
+                //printerBoard.printMatrixBoard(getClientView());
                 Colors.colorize(Colors.ERROR_MESSAGE, error.getErrorMessage());
                 out.println();
             }else {
-                printerBoard.printMatrixBoard(getClientView());
+               // printerBoard.printMatrixBoard(getClientView());
             }
         }
     }
@@ -240,7 +242,7 @@ public class CLI extends ClientInterface {
     private void resetChoice(int lastOrAll) {
         ErrorType error=resetChoiceBoard(lastOrAll);
         if (error==null) {
-            printerBoard.printMatrixBoard(getClientView());
+           // printerBoard.printMatrixBoard(getClientView());
             Colors.colorize(Colors.GAME_INSTRUCTION, "Reset successful\n");
         }
     }
@@ -255,7 +257,7 @@ public class CLI extends ClientInterface {
     private int sizeLenghtFromBordChoiceItem = 20;
     private int distanceBetweenTilesChoice = 4;
     @Override
-    public int[] askOrder() throws Exception {
+    public void askOrder() throws Exception {
         out.println();
         //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: ORDER TILES");
         PrinterLogo.printOrderPhase();
@@ -274,7 +276,7 @@ public class CLI extends ClientInterface {
             }
             switch (commandsTurn) {
                 case ORDER_TILES1:
-                    printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 1, 60, true, false, 0);
+                    //printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 1, 60, true, false, 0);
 
                     Colors.colorize(Colors.GAME_INSTRUCTION, "Insert numbers from 0 to " + (getClientView().getCoordinatesSelected().size() / 2 - 1) + "\n");
                     out.println();
@@ -323,11 +325,10 @@ public class CLI extends ClientInterface {
             }
 
         }
-        return orderTiles;
     }
 
     @Override
-    public int askColumn() throws Exception {
+    public void askColumn() throws Exception {
         out.println();
         //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: COLUMN");
         PrinterLogo.printColumnPhase();
@@ -381,7 +382,7 @@ public class CLI extends ClientInterface {
                     break;
             }
         }
-        return column;
+
     }
 
     @Override
@@ -390,15 +391,7 @@ public class CLI extends ClientInterface {
         out.println();
     }
 
-    @Override
-    public void endTurn() throws Exception {
-        printerBoard.printMatrixBoard(getClientView());
-        //Colors.colorize(Colors.ERROR_MESSAGE, "FINE TURNO");
-        PrinterLogo.printWaitingTurnPhase();
-        allCommands(3);
 
-
-    }
 
 
     @Override
@@ -604,7 +597,43 @@ public class CLI extends ClientInterface {
             }
         } while (true);
     }
+/*
+    @Override
+    public void endTurn(boolean phase) throws Exception {
+        // printerBoard.printMatrixBoard(getClientView());
+        //Colors.colorize(Colors.ERROR_MESSAGE, "FINE TURNO");
+        PrinterLogo.printWaitingTurnPhase();
+        while(phase){
+            CommandsTurn commandsTurn = (CommandsTurn)checkCommand(3);
+            if (commandsTurn == null) {
+                continue;
+            }
+            handleInvalidPhase(commandsTurn);
+        }
+    }
 
+ */
+
+    @Override
+    public void start() throws Exception {
+        PrinterLogo.printWaitingTurnPhase();
+        while (true) {
+            CommandsTurn commandsTurn = (CommandsTurn)checkCommand(3);
+            if (commandsTurn == null) {
+                continue;
+            }
+            handleInvalidPhase(commandsTurn);
+            if (semaphore.tryAcquire()) {
+                break;
+            }
+        }
+
+    }
+    @Override
+    public void stop() {
+        semaphore.release();
+    }
+    private Semaphore semaphore = new Semaphore(0);
 }
 
 

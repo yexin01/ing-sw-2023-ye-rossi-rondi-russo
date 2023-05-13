@@ -52,7 +52,7 @@ public class PrinterBoard {
 
         for (int i = 0; i < boardView.length; i++) {
             finishLine=false;
-            valuesType=printValues(valuesType,clientView);
+            valuesType=printValues(valuesType,clientView,coordinates);
             /*
             if(valuesType<Type.values().length){
                 Colors.printTypeWithTypeColor(Type.values()[valuesType]);
@@ -120,7 +120,7 @@ public class PrinterBoard {
             }
             //Colors.colorize(Colors.WHITE_CODE,"║ ");
             System.out.println("");
-            valuesType=printValues(valuesType,clientView);
+            valuesType=printValues(valuesType,clientView,coordinates);
 
 /*                if(valuesType<Type.values().length){
                     Colors.printTypeWithTypeColor(Type.values()[valuesType]);
@@ -162,8 +162,8 @@ public class PrinterBoard {
 */
         //askCoordinates();
     }
-    public int printValues(int valuesType,ClientView clientView){
-        ArrayList<Integer> coordinatesSelected=clientView.getCoordinatesSelected();
+    public int printValues(int valuesType,ClientView clientView,ArrayList<Integer> selection){
+        ArrayList<Integer> coordinatesSelected=selection;
         BoardBoxView[][] boardView=clientView.getBoardView();
         int numSelectedType=0;
         if(valuesType<Type.values().length){

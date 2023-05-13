@@ -21,6 +21,7 @@ public class PingHandler extends TimerTask {
         Message message = new Message(header, payload);
 
         client.messageQueue.add(message);
+
     }
 
 }

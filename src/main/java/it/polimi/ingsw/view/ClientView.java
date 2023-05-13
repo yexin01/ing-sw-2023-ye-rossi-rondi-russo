@@ -4,17 +4,22 @@ import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.*;
+import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.network.client.handlers.MessageToserverHandler;
 
 import java.util.ArrayList;
 
 
 public class ClientView {
+
+    private MessageToserverHandler messageToserverHandler;
     private BoardBoxView[][] boardView;
     private int[] orderTiles;
     private ArrayList<Integer> coordinatesSelected;
     private CommonGoalView[] commonGoalViews;
     private int[] commonGoalPoints;
     //TODO initialization will be inserted in the method related to the start of the game
+    //TODO per il momento non la uso, quando finisco l'errorHandler potrebbe essere utile per confrontare la fase del client con quella del server
     private TurnPhase turnPhase;
     private String[] players;
     private ItemTileView[][] bookshelfView;
@@ -27,9 +32,11 @@ public class ClientView {
 
     public ClientView(){
         turnPhase=TurnPhase.SELECT_FROM_BOARD;
+
     }
 
     public String getNickname(){
+
         return nickname;
     }
 
@@ -107,16 +114,20 @@ public class ClientView {
         return coordinatesSelected;
     }
 
-    public void setCoordinatesSelected(ArrayList<Integer> coordinatesSelected) {
+    public void setCoordinatesSelected(ArrayList<Integer> coordinatesSelected) throws Exception {
         this.coordinatesSelected = coordinatesSelected;
+        turnPhase=TurnPhase.SELECT_FROM_BOARD;
+        messageToserverHandler.handleMessageToServer(coordinatesSelected.stream().mapToInt(Integer::intValue).toArray(),TurnPhase.SELECT_FROM_BOARD,nickname);
     }
 
     public int[] getOrderTiles() {
         return orderTiles;
     }
 
-    public void setOrderTiles(int[] orderTiles) {
+    public void setOrderTiles(int[] orderTiles) throws Exception {
         this.orderTiles = orderTiles;
+        turnPhase=TurnPhase.SELECT_ORDER_TILES;
+        messageToserverHandler.handleMessageToServer(orderTiles,TurnPhase.SELECT_ORDER_TILES,nickname);
     }
 
     public int getIndexPersonal() {
@@ -133,7 +144,18 @@ public class ClientView {
         return column;
     }
 
-    public void setColumn(int column) {
+    public void setColumn(int column) throws Exception {
         this.column = column;
+        turnPhase=TurnPhase.SELECT_COLUMN;
+        messageToserverHandler.handleMessageToServer(column,TurnPhase.SELECT_COLUMN,nickname);
+    }
+
+
+    public MessageToserverHandler getMessageToserverHandler(ClientInterface clientInterface, Client client) {
+        return messageToserverHandler;
+    }
+
+    public void setMessageToserverHandler(MessageToserverHandler messageToserverHandler) {
+        this.messageToserverHandler = messageToserverHandler;
     }
 }

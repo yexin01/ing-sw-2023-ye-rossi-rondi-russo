@@ -24,10 +24,14 @@ public class StartAndEndGameHandler extends MessageHandler {
         System.out.println("SONO IN START AND GAME HANDLER");
 
         TurnPhase data = (TurnPhase) mes.getPayload().getKey();
+        /*
         MessagePayload messagePayload=null;
         System.out.println(getClientInterface().getClientView().getNickname());
+         */
         String[] p=((String[])mes.getPayload().getContent(Data.PLAYERS));
-        System.out.println(p[0]);
+
+
+        System.out.println("IL PRIMO GIOCATORE é "+p[0]);
         switch(data){
             case START_GAME->{
                 BoardBoxView[][] boardView= (BoardBoxView[][]) mes.getPayload().getContent(Data.NEW_BOARD);
@@ -42,14 +46,19 @@ public class StartAndEndGameHandler extends MessageHandler {
                 getClientInterface().getClientView().setCommonGoalViews(commonGoalViews);
                 PlayerPointsView playerPointsView=((PlayerPointsView)mes.getPayload().getContent(Data.POINTS));
                 getClientInterface().getClientView().setPlayerPoints(playerPointsView);
-                messagePayload=new MessagePayload(KeyDataPayload.START_GAME);
-                if(players[0].equals(getClientInterface().getClientView().getNickname())){
-                    MessageHeader header=new MessageHeader(MessageType.DATA,getClientInterface().getClientView().getNickname());
-                    int[] selectionBoard=getClientInterface().askCoordinates();
-                    messagePayload=new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
-                    messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
-                    getClient().sendMessageToServer(new Message(header,messagePayload));
+                System.out.println("I GIOCATORI SONO\n");
+                for (String str : players) {
+                    System.out.println(str);
                 }
+                //messagePayload=new MessagePayload(KeyDataPayload.START_GAME);
+                if(players[0].equals(getClientInterface().getClientView().getNickname())){
+                    getClientInterface().stop();
+                    //MessageHeader header=new MessageHeader(MessageType.DATA,getClientInterface().getClientView().getNickname());
+                    getClientInterface().askCoordinates();
+                    //messagePayload=new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
+                    //messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
+                    //getClient().sendMessageToServer(new Message(header,messagePayload));
+                }else getClientInterface().start();
                 /*
                 MessageHeader messageHeader=new MessageHeader(MessageType.DATA,getClientInterface().getNickname());
                 Message message=new Message(messageHeader, messagePayload);
@@ -60,7 +69,7 @@ public class StartAndEndGameHandler extends MessageHandler {
             }
             case END_GAME ->{
                 String[] ranking=(String[]) mes.getPayload().getContent(Data.RANKING);
-                messagePayload=new MessagePayload(KeyDataPayload.END_GAME);
+                //messagePayload=new MessagePayload(KeyDataPayload.END_GAME);
             }
         }
 

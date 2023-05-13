@@ -39,14 +39,16 @@ public class StartAndEndGameListener extends EventListener{
                     payload.put(Data.COMMON_GOAL_CARD,commonGoalViews);
                     payload.put(Data.PLAYERS,nicknames.toArray(new String[nicknames.size()]));
                     Message m=new Message(header,payload);
-/*
+
                     try {
                        getGameLobby().sendMessageToSpecificPlayer(m,nickname);
                     } catch (IOException e) {
                         //TODO gestire se non e arrivato
                     }
 
- */
+
+
+
 
 
 

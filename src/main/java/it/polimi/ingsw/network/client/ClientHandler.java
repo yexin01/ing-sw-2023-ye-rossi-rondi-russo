@@ -95,6 +95,10 @@ public class ClientHandler implements Runnable {
         managerHandlers.registerEventHandler(MessageType.DATA,new TurnHandler(clientInterface,client,new StartAndEndGameHandler(clientInterface,this.client)));
         managerHandlers.registerEventHandler(MessageType.LOBBY,new LobbyHandler(clientInterface,client));
         managerHandlers.registerEventHandler(MessageType.ERROR,new ErrorHandler(clientInterface,client));
+        clientInterface.getClientView().setMessageToserverHandler(new MessageToserverHandler(clientInterface,client));
+
+
+
 
         //TODO come collegare l'utimo handler o aggiungo un'altro message type relativo all'inizio e alla fine del game o cambio managerHandler
         //managerHandlers.registerEventHandler(MessageType.DATA,new StartAndEndGameHandler(clientInterface,this.client));
