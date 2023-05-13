@@ -69,9 +69,10 @@ public class GameLobby {
             connection.sendMessageToClient(new Message(header,payload));
 
             if(isFull()){
+                System.out.println("è piena la lobby. posso creare il gioco vero");
                 createGame();
+                System.out.println("creato un game con gameID: "+idGameLobby+"\n");
             }
-            System.out.println("creato un game\n");
 
         } catch (IOException e){
             MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
@@ -130,7 +131,7 @@ public class GameLobby {
         System.out.println("Sono la GameLobby ho cambiato il giocatore "+nickname+" in attivo");
     }
 
-    public synchronized void changePlayerInDisconnected(String nickname){
+    public synchronized void changePlayerInDisconnected(String nickname) throws IOException {
         playersDisconnected.add(nickname);
         players.remove(nickname);
         if(gameController!=null){
