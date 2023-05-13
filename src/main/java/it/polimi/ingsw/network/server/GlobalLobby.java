@@ -92,7 +92,7 @@ public class GlobalLobby {
     public synchronized void playerJoinsFirstFreeSpotInRandomGame(String nickname, Connection connection) throws IOException {
         boolean done = false;
         for (GameLobby gameLobby : gameLobbies.values()) {
-            if (!gameLobby.isFull()) {
+            if (!gameLobby.isFull() && !done) {
                 gameLobby.addPlayerToGame(nickname, connection);
                 done = true;
 
