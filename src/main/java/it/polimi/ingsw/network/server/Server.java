@@ -1,28 +1,17 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.message.*;
-import it.polimi.ingsw.model.Board;
-import it.polimi.ingsw.model.Bookshelf;
-import it.polimi.ingsw.model.ItemTile;
-import it.polimi.ingsw.model.Type;
-import it.polimi.ingsw.model.modelView.BoardBoxView;
-import it.polimi.ingsw.model.modelView.ItemTileView;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class Server implements Runnable{
     private final Object clientsLock = new Object();
-    private int rmiPort = 51633;
-    private int socketPort = 51634;
+    private static int rmiPort = 1099;
+    private static int socketPort = 1099;
+    private static String ipAddress = "192.0.0.1";
 
     private static Server instance = null;
     private RMIServer rmiServer;
@@ -36,32 +25,17 @@ public class Server implements Runnable{
     private final static int MAX_PLAYERS = 4;
     private final static int MIN_PLAYERS = 2;
 
-    private Server (){
-        synchronized (clientsLock) {
-            this.clientsConnected = new ConcurrentHashMap<>();
-        }
+    public Server(int rmiPort, int socketPort, String ipAddress) {
         // Verifica se il server è già stato avviato
         if (instance != null) {
             return;
         }
-        startServers();
-        executor = new ThreadPoolExecutor(4, 20, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
-        globalLobby = new GlobalLobby();
-    }
-
-    public static void main(){
-        Server server = new Server();
-        server.run();
-    }
-
-    public Server(String ipAddress, int rmiPort, int socketPort) {
-        this.rmiPort = rmiPort;
-        this.socketPort = socketPort;
-
+        Server.rmiPort = rmiPort;
+        Server.socketPort = socketPort;
+        Server.ipAddress = ipAddress;
         synchronized (clientsLock) {
             this.clientsConnected = new ConcurrentHashMap<>();
         }
-
         startServers();
         executor = new ThreadPoolExecutor(4, 20, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
         globalLobby = new GlobalLobby();
@@ -71,13 +45,12 @@ public class Server implements Runnable{
     Per avviare il server da terminale macbook: (da cambiare il path in base alla posizione del progetto):
     
     cd ~/Desktop/prog_sw/progsw_ingsw2023/ing-sw-2023-ye-rossi-rondi-russo
-
     mvn clean install
     javac src/main/java/it/polimi/ingsw/network/server/Server.java
     java src/main/java/it/polimi/ingsw/network/server/Server 6000 7000 192.168.1.100
 
      */
-
+    /* se vogliamo farlo da terminale
     public static void main(String[] args){
         int rmiPort = 51633; // porta di default
         int socketPort = 51634; // porta di default
@@ -96,7 +69,79 @@ public class Server implements Runnable{
         Server server = new Server(ipAddress, rmiPort, socketPort);
         server.run();
     }
+     */
+    //TODO: poi saranno da togliere i parametri di default dalla CLI e forse da fare un metodo per avviare il server da terminale
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int portRmi = 1099;
+        int portSocket = 1100;
+        String ipAddress = "192.0.0.1";
 
+        boolean correctInput = false;
+        System.out.println("Insert the port Rmi (default 1099): (Press Enter button to use default port)");
+        while (!correctInput) {
+            try {
+                System.out.print("> ");
+                sc.reset();
+                if (sc.nextLine().equals("")) {
+                    portRmi = 1099;
+                    break;
+                }
+                portRmi = Integer.parseInt(sc.next()); //did this because of InputMismatchException
+                if (portRmi < 1024 || portRmi > 65535) System.out.println("Port must be between 1024 and 65535, retry");
+                else correctInput = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Port must be a number, retry");
+            }
+        }
+
+        correctInput = false;
+        System.out.println("Insert the port Socket (default 1100): (Press Enter button to use default port)");
+        while (!correctInput) {
+            try {
+                System.out.print("> ");
+
+                sc.reset();
+                if (sc.nextLine().equals("")) {
+                    portSocket = 1100;
+                    break;
+                }
+
+                portSocket = Integer.parseInt(sc.next()); //did this because of InputMismatchException
+                if (portSocket < 1024 || portSocket > 65535) System.out.println("Port must be between 1024 and 65535, retry");
+                else if (portSocket == portRmi) System.out.println("Port already in use, retry");
+                else correctInput = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Port must be a number, retry");
+            }
+        }
+
+        correctInput = false;
+        System.out.println("Insert the IP address (default " + ipAddress + "): (Press button Enter to use default IP)");
+        while (!correctInput) {
+            try {
+                System.out.print("> ");
+
+                sc.reset();
+                if (sc.nextLine().equals("")) {
+                    ipAddress = "192.0.0.1";
+                    break;
+                }
+
+                ipAddress = sc.next();
+                if (!ipAddress.matches("^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$")) System.out.println("IP address not valid, retry");
+                else correctInput = true;
+            } catch (InputMismatchException e) {
+                System.out.println("IP address not valid, retry");
+            }
+        }
+
+        Server server = new Server(portRmi,portSocket,ipAddress);
+        server.run();
+    }
 
     private void startServers(){
         if (instance != null) {
@@ -112,6 +157,8 @@ public class Server implements Runnable{
         instance.socketServer = new SocketServer(this, socketPort);
         instance.socketServer.startServer();
         System.out.println("Socket Server started on port: " + socketPort + "\n");
+
+        System.out.println("Server started successfully with IP address: " + ipAddress + "\n");
     }
 
     /**
@@ -141,7 +188,7 @@ public class Server implements Runnable{
 
     public static synchronized Server getInstance() throws IOException {
         if (instance == null) {
-            instance = new Server();
+            instance = new Server(rmiPort, socketPort, ipAddress);
         }
         return instance;
     }
@@ -208,7 +255,7 @@ public class Server implements Runnable{
             String token = UUID.randomUUID().toString();
             connection.setToken(token);
 
-            MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
+            MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
             MessagePayload payload = new MessagePayload(KeyConnectionPayload.CONNECTION_CREATION);
             String content = "Login effettuato con successo sul server! Ora verrai riconnesso alla tua partita...";
             payload.put(Data.CONTENT, content);

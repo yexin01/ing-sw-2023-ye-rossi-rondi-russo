@@ -177,7 +177,7 @@ public class GlobalLobby {
 
                     System.out.println("Player "+nickname+" is now disconnected in game lobby "+gameLobby.getIdGameLobby()+".. ora mando il mess a tutti!");
 
-                    MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
+                    MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
                     MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
                     String content = "Player "+nickname+" disconnected from Game Lobby "+ gameLobby.getIdGameLobby()+ "!";
                     payload.put(Data.CONTENT,content);

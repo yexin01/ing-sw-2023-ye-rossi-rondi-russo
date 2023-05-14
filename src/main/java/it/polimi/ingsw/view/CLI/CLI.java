@@ -38,6 +38,116 @@ public class CLI implements ClientInterface {
         printerStartAndEndTurn =new PrinterStartAndEndTurn();
         printerCommonGoalAndPoints=new PrinterCommonGoalAndPoints();
     }
+
+    public void initialLobby(){
+        //printMyShelfieLogo();
+        doConnection();
+    }
+
+    private void doConnection(){
+        int connectionType = -1;
+
+        String nickname = askNickname();
+        out.println("Hi "+ nickname +"!");
+
+        connectionType = askConnection();
+        if (connectionType == 0) {
+            out.println("You chose Socket connection\n");
+        } else if (connectionType == 1){
+            out.println("You chose RMI connection\n");
+        } else {
+            out.println("Invalid connection");
+            doConnection();
+        }
+
+        String ip = askIp();
+        int port = askPort(connectionType);
+
+        out.println("Server Ip Address: " + ip);
+        out.println("Server Port: " + port + "\n");
+        ClientHandler clientHandler=new ClientHandler();
+        try{ //metodo di Clienthanlder (la cli estende ClientHandler)
+            clientHandler.createConnection(connectionType, ip, port,this);
+            out.println("Connection created");
+        } catch (Exception e){
+            out.println("Error in creating connection. Please try again.\n");
+            doConnection();
+        }
+    }
+
+    private String askNickname(){
+        Colors.colorize(Colors.WHITE_CODE,"Enter your username: ");
+        String nickname=in.nextLine().toLowerCase();
+        getClientView().setNickname(nickname);
+        return nickname;
+    }
+
+    private int askConnection(){
+        int connectionType = -1;
+        do{
+            out.println("Enter your connection type: (0 for Socket, 1 for RMI) ");
+            connectionType = Integer.parseInt(in.next());
+            in.nextLine(); // aggiungo questa riga per consumare il carattere di fine riga rimanente
+        } while (connectionType != 0 && connectionType != 1);
+        return connectionType;
+    }
+
+    private String askIp() {
+        String defaultIp = "127.0.0.1";
+        out.println("Enter the server Ip Address (default " + defaultIp + "): (press Enter button to choose default)");
+        in.reset();
+
+        do {
+            if (in.hasNextLine()) {
+                String line = in.nextLine();
+
+                if (line.equals("")) {
+                    return defaultIp;
+                } else {
+                    try {
+                        InetAddress address = InetAddress.getByName(line);
+                        return address.getHostAddress();
+                    } catch (UnknownHostException e) {
+                        out.println("Invalid IP address. Please enter a valid IP address or press Enter to choose the default.");
+                    }
+                }
+            } else {
+                in.nextLine();
+                out.println("Invalid input. Please enter a valid IP address or press Enter to choose the default.");
+            }
+        } while (true);
+    }
+
+    private int askPort(int connectionType) {
+        int defaultPort = (connectionType == 0 ? 1100 : 1099);
+        out.println("Enter the server port (default " + defaultPort + "): (press Enter button to choose default)");
+        in.reset();
+
+        do {
+            if (in.hasNextLine()) {
+                String line = in.nextLine();
+
+                if (line.equals("")) {
+                    return defaultPort;
+                } else {
+                    try {
+                        int port = Integer.parseInt(line);
+                        if (port >= 1024 && port <= 65535) {
+                            return port;
+                        } else {
+                            out.println("Invalid port number. Please enter a port number between 1024 and 65535.");
+                        }
+                    } catch (NumberFormatException e) {
+                        out.println("Invalid input. Please enter a valid port number.");
+                    }
+                }
+            } else {
+                in.nextLine();
+                out.println("Invalid input. Please enter a valid port number.");
+            }
+        } while (true);
+    }
+
     public void printLobbyCommands() throws Exception {
         out.println();
         for(CommandsLobby commandsLobby:CommandsLobby.values()){
@@ -524,119 +634,6 @@ public class CLI implements ClientInterface {
     }
 
 
-
-    public void initialLobby(){
-        //printMyShelfieLogo();
-        doConnection();
-    }
-
-    private void doConnection(){
-        int connectionType = -1;
-
-        String nickname = askNickname();
-        out.println("Hi "+ nickname +"!");
-
-        connectionType = askConnection();
-        if (connectionType == 0) {
-            out.println("You chose Socket connection\n");
-        } else if (connectionType == 1){
-            out.println("You chose RMI connection\n");
-        } else {
-            out.println("Invalid connection");
-            doConnection();
-        }
-
-
-        String ip = askIp();
-        int port = askPort(connectionType);
-
-        out.println("Server Ip Address: " + ip);
-        out.println("Server Port: " + port + "\n");
-        ClientHandler clientHandler=new ClientHandler();
-        try{
-            //metodo di Clienthanlder (la cli estende ClientHandler)
-            clientHandler.createConnection(connectionType, ip, port,this);
-            out.println("Connection created");
-        } catch (Exception e){
-            out.println("Error in creating connection. Please try again.\n");
-            doConnection();
-        }
-
-
-    }
-
-    private String askNickname(){
-        Colors.colorize(Colors.WHITE_CODE,"Enter your username: ");
-        String nickname=in.nextLine().toLowerCase();
-        getClientView().setNickname(nickname);
-        return nickname;
-    }
-
-    private int askConnection(){
-        int connectionType = -1;
-        do{
-            out.println("Enter your connection type: (0 for Socket, 1 for RMI) ");
-            connectionType = in.nextInt();
-            in.nextLine(); // aggiungo questa riga per consumare il carattere di fine riga rimanente
-        } while (connectionType != 0 && connectionType != 1);
-        return connectionType;
-    }
-    //TODO questo i stess come quello sotto poi ci accordiamo su dove metterlo
-    private String askIp() {
-        String defaultIp = "127.0.0.1";
-        out.println("Enter the server Ip Address (default " + defaultIp + "): (press Enter button to choose default)");
-        in.reset();
-
-        do {
-            if (in.hasNextLine()) {
-                String line = in.nextLine();
-
-                if (line.equals("")) {
-                    return defaultIp;
-                } else {
-                    try {
-                        InetAddress address = InetAddress.getByName(line);
-                        return address.getHostAddress();
-                    } catch (UnknownHostException e) {
-                        out.println("Invalid IP address. Please enter a valid IP address or press Enter to choose the default.");
-                    }
-                }
-            } else {
-                in.nextLine();
-                out.println("Invalid input. Please enter a valid IP address or press Enter to choose the default.");
-            }
-        } while (true);
-    }
-    //TODO poi questa funzione la spostamo sulla CLI ho il metodo che crea la connessione chiede il soprannome, crea gli handler...
-    private int askPort(int connectionType) {
-        int defaultPort = (connectionType == 0 ? 51634 : 51633);
-        out.println("Enter the server port (default " + defaultPort + "): (press Enter button to choose default)");
-        in.reset();
-
-        do {
-            if (in.hasNextLine()) {
-                String line = in.nextLine();
-
-                if (line.equals("")) {
-                    return defaultPort;
-                } else {
-                    try {
-                        int port = Integer.parseInt(line);
-                        if (port >= 1024 && port <= 65535) {
-                            return port;
-                        } else {
-                            out.println("Invalid port number. Please enter a port number between 1024 and 65535.");
-                        }
-                    } catch (NumberFormatException e) {
-                        out.println("Invalid input. Please enter a valid port number.");
-                    }
-                }
-            } else {
-                in.nextLine();
-                out.println("Invalid input. Please enter a valid port number.");
-            }
-        } while (true);
-    }
 /*
     @Override
     public void endTurn(boolean phase) throws Exception {
