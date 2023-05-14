@@ -1,8 +1,13 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.controller.TurnPhase;
+import it.polimi.ingsw.listeners.ListenerManager;
+import it.polimi.ingsw.listeners.StartAndEndGameListener;
 import it.polimi.ingsw.message.*;
-import it.polimi.ingsw.model.modelView.ModelView;
+import it.polimi.ingsw.model.PersonalGoalCard;
+import it.polimi.ingsw.model.modelView.*;
+import it.polimi.ingsw.network.client.handlers.StartAndEndGameHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,18 +23,18 @@ public class GameLobby {
     private final int wantedPlayers;
     private GameController gameController;
     private ModelView modelView;
+    private StartAndEndGameListener startAndEndGameListener;
+
 
     private ConcurrentHashMap<String, Connection> players; //mappa di tutti i giocatori attivi in partita
     private CopyOnWriteArrayList<String> playersDisconnected; //mappa di tutti i giocatori disconnessi della partita
 
-    //TODO: da aggiungere il controller della partita e tutti i listeners o quello che serve per gestire la partita
     //io per ora metto solo quello che mi serve per gestire la mappa
     //lavoro principalmente sui nickname dei giocatori
 
     public GameLobby(int idGameLobby, int wantedPlayers){
         this.idGameLobby= idGameLobby; //gli è dato in input il primo idGameLobby disponibile
         this.wantedPlayers = wantedPlayers;
-
         players = new ConcurrentHashMap<>();
         playersDisconnected = new CopyOnWriteArrayList<>();
     }
@@ -103,11 +108,34 @@ public class GameLobby {
 
     }
 
-    public synchronized void handleErrorFromClient(Message message){
+    public synchronized void handleErrorFromClient(Message message) throws IOException {
         if(message.getHeader().getMessageType().equals(MessageType.ERROR)){
-            gameController.receiveMessageFromClient(message);
+            startAndEndGameListener.fireEvent(TurnPhase.START_GAME,message.getHeader().getNickname(),modelView);
+            /*
+            String nickname=message.getHeader().getNickname();
+            MessageHeader header;
+            MessagePayload payload=new MessagePayload(TurnPhase.START_GAME);
+            BoardBoxView[][] boardView= modelView.getBoardView();
+            ArrayList<String> nicknames=modelView.getPlayersOrder();
+            header=new MessageHeader(MessageType.DATA,nickname);
+            payload.put(Data.NEW_BOARD,boardView);
+            ItemTileView[][] bookshelfView=modelView.getBookshelfView(nickname);
+            payload.put(Data.NEW_BOOKSHELF,bookshelfView);
+            PersonalGoalCard personalGoalCard=modelView.getPlayerPersonalGoal(nickname);
+            payload.put(Data.PERSONAL_GOAL_CARD,personalGoalCard);
+            PlayerPointsView playerPointsView=modelView.getPlayerPoints(nickname);
+            payload.put(Data.POINTS,playerPointsView);
+            CommonGoalView[] commonGoalViews=modelView.getCommonGoalViews();
+            payload.put(Data.COMMON_GOAL_CARD,commonGoalViews);
+            payload.put(Data.PLAYERS,nicknames.toArray(new String[nicknames.size()]));
+            Message m=new Message(header,payload);
+            sendMessageToSpecificPlayer(m,nickname);
+
+             */
+
+            //listenerManager.fireEvent(TurnPhase.START_GAME,message.getHeader().getNickname(),modelView);
+            System.out.println("SONO NELLA GAME LOBBY l'utente ha segnalato un error:"+message.getHeader().getNickname());
         }
-        //TODO: rimandare tipo l'ultimo messaggio che ha mandato il giocatore o azione ecc
     }
 
     public synchronized void changePlayerInActive(String nickname, Connection connection) throws IOException {
@@ -188,5 +216,12 @@ public class GameLobby {
     public synchronized void sendMessageToSpecificPlayer(Message message, String nickname) throws IOException {
         players.get(nickname).sendMessageToClient(message);
     }
+    public StartAndEndGameListener getStartAndEndGameListener(){
+        return startAndEndGameListener;
+    }
+    public void setStartAndEndGameListener(StartAndEndGameListener startAndEndGameListener){
+        this.startAndEndGameListener=startAndEndGameListener;
+    }
+
 
 }

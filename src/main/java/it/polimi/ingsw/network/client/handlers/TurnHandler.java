@@ -28,23 +28,13 @@ public class TurnHandler extends MessageHandler {
          */
         TurnPhase turnPhase=(TurnPhase) mes.getPayload().getKey();
         switch(turnPhase){
-            /*
-            case SELECT_FROM_BOARD -> {
-                int[] selectionBoard=getClientInterface().askCoordinates();
-                messagePayload=new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
-                messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
-            }
-
-             */
-            case SELECT_ORDER_TILES -> {
+            case SELECT_ORDER_TILES ->{
+                getClientInterface().getClientView().setTurnPhase(TurnPhase.SELECT_ORDER_TILES);
                 getClientInterface().askOrder();
-                //messagePayload=new MessagePayload(TurnPhase.SELECT_ORDER_TILES);
-                //messagePayload.put(Data.VALUE_CLIENT,orderTiles);
             }
-            case SELECT_COLUMN -> {
+            case SELECT_COLUMN ->{
+                getClientInterface().getClientView().setTurnPhase(TurnPhase.SELECT_COLUMN);
                 getClientInterface().askColumn();
-                //messagePayload=new MessagePayload(TurnPhase.SELECT_COLUMN);
-                //messagePayload.put(Data.VALUE_CLIENT,column);
             }
             case END_TURN -> {
                 System.out.println("END TURN CLIENT");
@@ -54,10 +44,12 @@ public class TurnHandler extends MessageHandler {
                 if(player.equals(getClientInterface().getClientView().getNickname())){
                     getClientInterface().stop();
                     //getClientInterface().endTurn(false);
+                    getClientInterface().getClientView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
                     getClientInterface().askCoordinates();
                     //messagePayload=new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
                     //messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
                 }else{
+                    getClientInterface().getClientView().setTurnPhase(TurnPhase.END_TURN);
                     getClientInterface().start();
                     //getClientInterface().endTurn(true);
                 }

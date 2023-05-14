@@ -21,5 +21,6 @@ public class MessageToserverHandlerTurn {
         payload.put(Data.VALUE_CLIENT,newValue);
         Message message=new Message(header,payload);
         client.sendMessageToServer(message);
+        System.out.println("HO INVIATO IL MESSAGGIO TIPOLOGIA "+messageType);
     }
 }

@@ -27,13 +27,16 @@ public class GameController {
 
     public GameController(GameLobby gameLobby, ArrayList<String> nicknames) throws Exception {
         listenerManager=new ListenerManager();
+        StartAndEndGameListener startAndEndGameListener=new StartAndEndGameListener(gameLobby);
         turnPhaseController =new PhaseController<>(TurnPhase.SELECT_FROM_BOARD);
         listenerManager.addListener(KeyErrorPayload.ERROR_DATA,new ErrorListener(gameLobby));
-        listenerManager.addListener(KeyDataPayload.START_GAME,new StartAndEndGameListener(gameLobby));
+        listenerManager.addListener(TurnPhase.START_GAME,startAndEndGameListener);
         listenerManager.addListener(TurnPhase.END_TURN,new EndTurnListener(gameLobby));
         listenerManager.addListener(KeyDataPayload.PHASE,new TurnListener(gameLobby));
+        gameLobby.setStartAndEndGameListener(startAndEndGameListener);
         GameRules gameRules=new GameRules();
         ModelView modelView=new ModelView(nicknames.size(), gameRules,listenerManager);
+
 
         game=new Game(gameRules, nicknames.size(),modelView);
         game.addPlayers(nicknames);
@@ -47,7 +50,7 @@ public class GameController {
 
         //modelView.addListener(KeyDataPayload.VALUE_CLIENT,new TurnListener(gameLobby));
         //modelView.addListener(KeyDataPayload.END_TURN,new EndTurnListener(gameLobby));
-        listenerManager.fireEvent(KeyDataPayload.START_GAME,null,game.getModelView());
+        listenerManager.fireEvent(TurnPhase.START_GAME,null,game.getModelView());
     }
 
     public Game getModel() {
@@ -98,16 +101,17 @@ public class GameController {
         int maxPlayerSelectableTiles=game.getTurnPlayer().getBookshelf().numSelectableTiles();
         if(!checkError(game.getBoard().checkSelectable(coordinates,maxPlayerSelectableTiles))){
             System.out.println("Le asocia");
-            ErrorType errorType=game.getBoard().checkFinishChoice();
-            if(errorType!=null){
-                checkError(errorType);
-            }else{
-                game.getTurnPlayer().selection(game.getBoard());
+            //ErrorType errorType=game.getBoard().checkFinishChoice();
+
+            //if(errorType!=null){
+             //   checkError(errorType);
+           // }else{
+              game.getTurnPlayer().selection(game.getBoard());
                 //game.getBoard().resetBoard();
                 turnPhaseController.setCurrentPhase(TurnPhase.SELECT_ORDER_TILES);
                 System.out.println("CAMBIA FASE CONTROLLER");
                 listenerManager.fireEvent(KeyDataPayload.PHASE,getTurnNickname(),TurnPhase.SELECT_ORDER_TILES);
-            }
+            //}
         }
     }
     public void resetBoardChoice() throws Exception {

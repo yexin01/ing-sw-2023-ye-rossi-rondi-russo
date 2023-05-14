@@ -50,15 +50,20 @@ public class StartAndEndGameHandler extends MessageHandler {
                 for (String str : players) {
                     System.out.println(str);
                 }
-                //messagePayload=new MessagePayload(KeyDataPayload.START_GAME);
-                if(players[0].equals(getClientInterface().getClientView().getNickname())){
-                    getClientInterface().stop();
-                    //MessageHeader header=new MessageHeader(MessageType.DATA,getClientInterface().getClientView().getNickname());
-                    getClientInterface().askCoordinates();
-                    //messagePayload=new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
-                    //messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
-                    //getClient().sendMessageToServer(new Message(header,messagePayload));
-                }else getClientInterface().start();
+                if(!getClientInterface().getTurnPhase().equals(TurnPhase.START_GAME)){
+                    System.out.println("RICEVUTO I DATI tutto ok ricevuto ACK dell'error message");
+                    switch(getClientInterface().getTurnPhase()){
+                        case SELECT_FROM_BOARD -> getClientInterface().askCoordinates();
+                        case SELECT_ORDER_TILES -> getClientInterface().askOrder();
+                        case SELECT_COLUMN-> getClientInterface().askColumn();
+                    }
+
+                } else{
+                    getClientInterface().getClientView().setTurnPhase(TurnPhase.END_TURN);
+                    if(players[0].equals(getClientInterface().getClientView().getNickname())){
+                        getClientInterface().askCoordinates();
+                    }else getClientInterface().start();
+                }
                 /*
                 MessageHeader messageHeader=new MessageHeader(MessageType.DATA,getClientInterface().getNickname());
                 Message message=new Message(messageHeader, messagePayload);

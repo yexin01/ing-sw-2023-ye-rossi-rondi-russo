@@ -31,14 +31,15 @@ public class App{
             GameLobby gameLobby = new GameLobby(3, 3);
             ArrayList<String> playerNames = new ArrayList<>(List.of("TIZIO", "CAIO"/*, "SEMPRONIO", "PIPPO"*/));
             GameController gameController = new GameController(gameLobby, playerNames);
-          /*   MessageHeader header=new MessageHeader(MessageType.DATA,"TIZIO");
-            int[] selectionBoard=new int[]{7,3,7,4,7,5};
+            //gameLobby.handleErrorFromClient(new Message(new MessageHeader(MessageType.ERROR,"TIZIO"),null));
+           MessageHeader header=new MessageHeader(MessageType.DATA, gameController.getTurnNickname());
+            int[] selectionBoard=new int[]{7,3,7,4};
             MessagePayload messagePayload=new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
             messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
             Message m=new Message(header,messagePayload);
             gameController.receiveMessageFromClient(m);
            // gameController.checkAndInsertBoardBox(m);
-            int[] orderTiles=new int[]{1,0,2};
+            int[] orderTiles=new int[]{1,0};
 
             messagePayload =new MessagePayload(TurnPhase.SELECT_ORDER_TILES);
             messagePayload.put(Data.VALUE_CLIENT,orderTiles);
@@ -69,7 +70,7 @@ public class App{
             gameController.receiveMessageFromClient(m);
             //gameController.selectingColumn(m);
 //gameController.getModel().getBoard().resetBoard();
-*/
+
 
             CLI cl=new CLI();
 

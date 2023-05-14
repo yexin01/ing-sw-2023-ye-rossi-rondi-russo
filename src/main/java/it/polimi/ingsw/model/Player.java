@@ -117,6 +117,7 @@ public class Player {
         }
         return null;
     }
+
     public void permuteSelection(int[] order){
         ArrayList<ItemTile> temp = new ArrayList<>();
         for(int i : order){

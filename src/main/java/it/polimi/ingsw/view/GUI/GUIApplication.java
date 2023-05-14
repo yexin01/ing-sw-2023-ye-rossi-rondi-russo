@@ -85,8 +85,8 @@ public class GUIApplication extends Application implements ClientInterface {
     }
 
     @Override
-    public Message askLobbyDecision() throws Exception {
-        return null;
+    public void askLobbyDecision() throws Exception {
+
     }
 
     @Override

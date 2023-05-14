@@ -34,6 +34,7 @@ public class CLI implements ClientInterface {
         this.scanner= new Scanner(System.in);
         this.clientView=new ClientView();
         printerBoard=new PrinterBoard();
+        clientView.setTurnPhase(TurnPhase.START_GAME);
         printerBookshelfAndPersonal=new PrinterBookshelfAndPersonal();
         printerStartAndEndTurn =new PrinterStartAndEndTurn();
         printerCommonGoalAndPoints=new PrinterCommonGoalAndPoints();
@@ -177,8 +178,11 @@ public class CLI implements ClientInterface {
                       continueToAsk = false;
                   }
                  break;
+
               default:
-                  handleInvalidPhase(commandsTurn);
+                  if(handleInvalidPhase(commandsTurn)){
+                      continueToAsk = false;
+                  }
                 continue;
             }
 /*
@@ -201,8 +205,9 @@ public class CLI implements ClientInterface {
                 }
             }
         }
-        askOrder();
+
     }
+
 
     private void printCommands(CommandsTurn commandsTurn) throws Exception {
         switch (commandsTurn){
@@ -213,7 +218,7 @@ public class CLI implements ClientInterface {
             case PRINT5 -> printerCommonGoalAndPoints.printPoints(getClientView());
             case PRINT6 -> printerCommonGoalAndPoints.printCommonGoalCards(getClientView());
             case PRINT7 -> printerStartAndEndTurn.rulesGame();
-            //TODO qua vanno inserite anche le common e i punti
+            //case PRINT8 -> clientView.somethingWrong();
         }
     }
 
@@ -259,11 +264,18 @@ public class CLI implements ClientInterface {
             Colors.colorize(Colors.GAME_INSTRUCTION, "Reset successful\n");
         }
     }
-    public void handleInvalidPhase(CommandsTurn commandsTurn) throws Exception {
+    public boolean handleInvalidPhase(CommandsTurn commandsTurn) throws Exception {
         String commandString = commandsTurn.toString();
         if (commandString.toLowerCase().startsWith("print")) {
-            printCommands(commandsTurn);
+            if(commandsTurn.equals(CommandsTurn.PRINT8)){
+                clientView.somethingWrong();
+                return true;
+            }else{
+                printCommands(commandsTurn);
+
+            }
         } else Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.ILLEGAL_PHASE.getErrorMessage());
+        return false;
     }
 
     private int sizetile=3;
@@ -333,12 +345,12 @@ public class CLI implements ClientInterface {
                     clientView.setTilesSelected(Check.permuteSelection(clientView.getTilesSelected(),clientView.getOrderTiles()));
                     break;
                 default:
-                    handleInvalidPhase(commandsTurn);
-                    continue;
+                    if(handleInvalidPhase(commandsTurn)){
+                        continueToAsk = false;
+                    }
             }
 
         }
-        askColumn();
     }
 
     @Override
@@ -391,8 +403,9 @@ public class CLI implements ClientInterface {
                     printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 1, 60, false, false, 0);
                     continue;
                 default:
-                    handleInvalidPhase(commandsTurn);
-                    break;
+                    if(handleInvalidPhase(commandsTurn)){
+                        continueToAsk = false;
+                    }
             }
         }
 

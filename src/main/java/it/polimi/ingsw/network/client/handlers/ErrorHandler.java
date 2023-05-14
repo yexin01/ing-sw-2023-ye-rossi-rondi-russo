@@ -23,14 +23,22 @@ public class ErrorHandler extends MessageHandler {
         switch(key){
             case ERROR_DATA -> {
                 if(error.equals(ErrorType.WRONG_PHASE)){
-                    //TODO nel contenuto ci sara la fase e chiama quella se e indietro gli manda i dati fino a quel momento
-                }
-                if(!error.equals(ErrorType.ILLEGAL_TURN)){
                     switch(getClientInterface().getTurnPhase()){
                         case SELECT_FROM_BOARD -> getClientInterface().askCoordinates();
                         case SELECT_ORDER_TILES -> getClientInterface().askOrder();
                         case SELECT_COLUMN -> getClientInterface().askColumn();
                     }
+
+                }
+                if(!error.equals(ErrorType.ILLEGAL_TURN)){
+                    /*
+                    switch(getClientInterface().getTurnPhase()){
+                        //case SELECT_FROM_BOARD -> getClientInterface().askCoordinates();
+                        case SELECT_ORDER_TILES -> getClientInterface().askOrder();
+                        case SELECT_COLUMN -> getClientInterface().askColumn();
+                    }
+
+                     */
 
                 }
             }

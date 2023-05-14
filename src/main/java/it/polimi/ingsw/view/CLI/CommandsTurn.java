@@ -19,7 +19,8 @@ public enum CommandsTurn implements Commands {
     PRINT6("CommonGoals"),
     SELECT_FROM_BOARD4("CONFIRM all choices"),
 
-    PRINT7("HELP");
+    PRINT7("HELP"),
+    PRINT8("Something wrong");
 
 
     private final String command;

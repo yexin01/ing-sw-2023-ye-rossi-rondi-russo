@@ -65,7 +65,7 @@ public class Board{
     }
 
      */
-
+/*
     public ErrorType checkFinishChoice() {
         if (selectedBoard.size()==0) {
             return ErrorType.NOT_VALUE_SELECTED;
@@ -73,6 +73,8 @@ public class Board{
         }
         return null;
     }
+
+ */
 
 
 
@@ -271,10 +273,16 @@ public class Board{
         if (selection.length/2 > (maxSelectebleTile)) {
             return ErrorType.TOO_MANY_TILES;
         }
-        if(selection.length==2 && matrix[0][1].getFreeEdges()<=0){
-            return null;
+        if(matrix[0][1].getFreeEdges()<=0){
+            BoardBox boardBox=new BoardBox(selection[0],selection[1]);
+            ItemTile tile=new ItemTile(matrix[selection[0]][selection[1]].getTile().getType(),matrix[selection[0]][selection[1]].getTile().getTileID());
+            boardBox.setTile(tile);
+            selectedBoard.add(boardBox);
+            if(selection.length==2){
+                return null;
+            }
         }
-        for(int k=0;k<selection.length;k+=2){
+        for(int k=2;k<selection.length;k+=2){
             int x=selection[k];
             int y=selection[k+1];
             error=checkCoordinates(x,y);

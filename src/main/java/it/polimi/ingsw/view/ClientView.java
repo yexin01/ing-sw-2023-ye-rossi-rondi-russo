@@ -2,9 +2,7 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.message.KeyLobbyPayload;
-import it.polimi.ingsw.message.Message;
-import it.polimi.ingsw.message.MessageType;
+import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.*;
 import it.polimi.ingsw.network.client.Client;
@@ -34,7 +32,7 @@ public class ClientView {
     private int column;
 
     public ClientView(){
-        turnPhase=TurnPhase.SELECT_FROM_BOARD;
+        turnPhase=TurnPhase.END_TURN;
 
     }
 
@@ -119,7 +117,7 @@ public class ClientView {
 
     public void setCoordinatesSelected(ArrayList<Integer> coordinatesSelected) throws Exception {
         this.coordinatesSelected = coordinatesSelected;
-        turnPhase=TurnPhase.SELECT_FROM_BOARD;
+
         messageToserverHandlerTurn.handleMessageToServer(coordinatesSelected.stream().mapToInt(Integer::intValue).toArray(),TurnPhase.SELECT_FROM_BOARD,nickname, MessageType.DATA);
     }
 
@@ -129,7 +127,7 @@ public class ClientView {
 
     public void setOrderTiles(int[] orderTiles) throws Exception {
         this.orderTiles = orderTiles;
-        turnPhase=TurnPhase.SELECT_ORDER_TILES;
+
         messageToserverHandlerTurn.handleMessageToServer(orderTiles,TurnPhase.SELECT_ORDER_TILES,nickname,MessageType.DATA);
     }
 
@@ -149,7 +147,7 @@ public class ClientView {
 
     public void setColumn(int column) throws Exception {
         this.column = column;
-        turnPhase=TurnPhase.SELECT_COLUMN;
+
         messageToserverHandlerTurn.handleMessageToServer(column,TurnPhase.SELECT_COLUMN,nickname,MessageType.DATA);
     }
 
@@ -173,5 +171,8 @@ public class ClientView {
 
     public void lobby(KeyLobbyPayload keyLobbyPayload,int value) throws Exception {
         messageToserverHandlerTurn.handleMessageToServer(value,keyLobbyPayload,nickname,MessageType.LOBBY);
+    }
+    public void somethingWrong() throws Exception {
+        messageToserverHandlerTurn.handleMessageToServer(null, KeyErrorPayload.ERROR_DATA,nickname,MessageType.ERROR);
     }
 }
