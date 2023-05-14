@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.modelView;
 
+import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.listeners.EventListener;
 import it.polimi.ingsw.listeners.ListenerManager;
@@ -21,6 +22,7 @@ public class ModelView {
 
     private BoardBoxView[][] boardView;
     private CommonGoalView[] commonGoalViews;
+    private TurnPhase turnPhase;
 
     private ItemTileView[][][] bookshelfView;
     private PlayerPointsView[] playerPoints;
@@ -162,6 +164,14 @@ public class ModelView {
 
     public void setPlayersOrder(ArrayList<String> playersOrder) {
         this.playersOrder = playersOrder;
+    }
+
+    public TurnPhase getTurnPhase() {
+        return turnPhase;
+    }
+
+    public void setTurnPhase(TurnPhase turnPhase) {
+        this.turnPhase = turnPhase;
     }
 /*
     public void setPlayersId(HashMap<String, Integer> playersId) {

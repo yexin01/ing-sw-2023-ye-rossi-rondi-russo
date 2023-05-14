@@ -174,7 +174,8 @@ public class CLI implements ClientInterface {
               case SELECT_FROM_BOARD4:
                   if(!selection.isEmpty()){
                       Colors.colorize(Colors.GAME_INSTRUCTION, "Confirmation successful.");
-                      getClientView().setCoordinatesSelected(selection);;
+                      clientView.setCoordinatesSelected(selection);;
+                      clientView.setTilesSelected(Check.createItemTileView(selection, clientView.getBoardView()));
                       continueToAsk = false;
                   }
                  break;
@@ -287,7 +288,7 @@ public class CLI implements ClientInterface {
         //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: ORDER TILES");
         PrinterLogo.printOrderPhase();
         out.println();
-        clientView.setTilesSelected(Check.createItemTileView(clientView.getCoordinatesSelected(), clientView.getBoardView()));
+        //clientView.setTilesSelected(Check.createItemTileView(clientView.getCoordinatesSelected(), clientView.getBoardView()));
         //insertTiles(2);
         //Colors.colorize(Colors.GAME_INSTRUCTION,"ORDER TILES " );
         boolean continueToAsk = true;
@@ -320,7 +321,7 @@ public class CLI implements ClientInterface {
                             Colors.colorize(Colors.GAME_INSTRUCTION, "Insert number: ");
                             orderTiles[i] = scanner.nextInt();
                         }
-                        error = Check.checkPermuteSelection(orderTiles,clientView.getCoordinatesSelected());
+                        error = Check.checkPermuteSelection(orderTiles,clientView.getTilesSelected());
                         if (error != null) {
                             Colors.colorize(Colors.ERROR_MESSAGE, error.getErrorMessage());
                             out.println();

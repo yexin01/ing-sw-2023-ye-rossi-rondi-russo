@@ -24,12 +24,22 @@ public class StartAndEndGameListener extends EventListener{
         switch((TurnPhase)event){
             case START_GAME  ->{
                 if(playerNickname!=null){
-                    getGameLobby().sendMessageToSpecificPlayer(creationMessageInfo(playerNickname,modelView,nicknames),playerNickname) ;
+                    Message message=creationMessageInfo(playerNickname,modelView,nicknames);
+                    if(!modelView.getTurnPhase().equals(TurnPhase.SELECT_FROM_BOARD)){
+                        MessagePayload payload=message.getPayload();
+                        payload.put(Data.SELECTED_ITEMS,modelView.getSelectedItems());
+                        Message message1=new Message(message.getHeader(),payload);
+                        getGameLobby().sendMessageToSpecificPlayer(message1,playerNickname);
+                    }else  getGameLobby().sendMessageToSpecificPlayer(creationMessageInfo(playerNickname,modelView,nicknames),playerNickname) ;
+
+
                 }else{
                     for(String nickname:nicknames){
                         getGameLobby().sendMessageToSpecificPlayer(creationMessageInfo(nickname,modelView,nicknames),nickname) ;
                     }
                 }
+
+
             }
             case END_GAME ->{
                 //TODO in base a come implementiamo la CLI e la GUI vediamo cosa inserire nel messaggio di endGame

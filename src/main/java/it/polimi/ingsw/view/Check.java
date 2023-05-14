@@ -177,8 +177,8 @@ public class Check {
         return max;
     }
 
-    public static ErrorType checkPermuteSelection(int[] order,ArrayList<Integer> coordinatesSelected) throws Error {
-        int maxIndex = coordinatesSelected.size()/2 - 1;
+    public static ErrorType checkPermuteSelection(int[] order,ItemTileView[] itemTileViews) throws Error {
+        int maxIndex = itemTileViews.length - 1;
         for (int i = 0; i < order.length; i++) {
             int curIndex = order[i];
             if (curIndex > maxIndex || curIndex < 0) {

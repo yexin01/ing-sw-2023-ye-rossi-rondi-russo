@@ -54,13 +54,22 @@ public class StartAndEndGameHandler extends MessageHandler {
                     System.out.println("RICEVUTO I DATI tutto ok ricevuto ACK dell'error message");
                     switch(getClientInterface().getTurnPhase()){
                         case SELECT_FROM_BOARD -> getClientInterface().askCoordinates();
-                        case SELECT_ORDER_TILES -> getClientInterface().askOrder();
-                        case SELECT_COLUMN-> getClientInterface().askColumn();
+                        case SELECT_ORDER_TILES ->{
+                            ItemTileView[] selectedItems=((ItemTileView[])mes.getPayload().getContent(Data.SELECTED_ITEMS));
+                            getClientInterface().getClientView().setTilesSelected(selectedItems);
+                            getClientInterface().askOrder();
+                        }
+                        case SELECT_COLUMN->{
+                            ItemTileView[] selectedItems=((ItemTileView[])mes.getPayload().getContent(Data.SELECTED_ITEMS));
+                            getClientInterface().getClientView().setTilesSelected(selectedItems);
+                            getClientInterface().askColumn();
+                        }
                     }
 
                 } else{
                     getClientInterface().getClientView().setTurnPhase(TurnPhase.END_TURN);
                     if(players[0].equals(getClientInterface().getClientView().getNickname())){
+                        getClientInterface().getClientView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
                         getClientInterface().askCoordinates();
                     }else getClientInterface().start();
                 }

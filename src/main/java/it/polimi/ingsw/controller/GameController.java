@@ -36,6 +36,7 @@ public class GameController {
         gameLobby.setStartAndEndGameListener(startAndEndGameListener);
         GameRules gameRules=new GameRules();
         ModelView modelView=new ModelView(nicknames.size(), gameRules,listenerManager);
+        modelView.setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
 
 
         game=new Game(gameRules, nicknames.size(),modelView);
@@ -109,6 +110,7 @@ public class GameController {
               game.getTurnPlayer().selection(game.getBoard());
                 //game.getBoard().resetBoard();
                 turnPhaseController.setCurrentPhase(TurnPhase.SELECT_ORDER_TILES);
+                game.getModelView().setTurnPhase(TurnPhase.SELECT_ORDER_TILES);
                 System.out.println("CAMBIA FASE CONTROLLER");
                 listenerManager.fireEvent(KeyDataPayload.PHASE,getTurnNickname(),TurnPhase.SELECT_ORDER_TILES);
             //}
@@ -134,6 +136,7 @@ public class GameController {
         //TODO disconnection
         if(nickname== getTurnNickname()){
             turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
+            game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
             game.setNextPlayer();
         }
 
@@ -152,6 +155,7 @@ public class GameController {
         }else {
             game.getTurnPlayer().permuteSelection(orderTiles);
             turnPhaseController.setCurrentPhase(TurnPhase.SELECT_COLUMN);
+            game.getModelView().setTurnPhase(TurnPhase.SELECT_COLUMN);
             System.out.println("CAMBIA FASE");
             listenerManager.fireEvent(KeyDataPayload.PHASE,getTurnNickname(),TurnPhase.SELECT_COLUMN);
         }
@@ -168,6 +172,7 @@ public class GameController {
             checkError(errorType);
         }else{
             turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
+            game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
             game.getTurnPlayer().insertBookshelf(column);
             System.out.println("finish1");
             if(game.getTurnPlayer().getBookshelf().isFull()){
