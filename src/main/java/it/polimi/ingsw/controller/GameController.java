@@ -26,13 +26,13 @@ public class GameController {
 
     public GameController(GameLobby gameLobby, ArrayList<String> nicknames) throws Exception {
         listenerManager=new ListenerManager();
-        StartAndEndGameListener startAndEndGameListener=new StartAndEndGameListener(gameLobby);
+        InfoAndEndGameListener infoAndEndGameListener =new InfoAndEndGameListener(gameLobby);
         turnPhaseController =new PhaseController<>(TurnPhase.SELECT_FROM_BOARD);
         listenerManager.addListener(KeyErrorPayload.ERROR_DATA,new ErrorListener(gameLobby));
-        listenerManager.addListener(TurnPhase.ALL_INFO,startAndEndGameListener);
+        listenerManager.addListener(TurnPhase.ALL_INFO, infoAndEndGameListener);
         listenerManager.addListener(TurnPhase.END_TURN,new EndTurnListener(gameLobby));
         listenerManager.addListener(KeyDataPayload.PHASE,new TurnListener(gameLobby));
-        gameLobby.setStartAndEndGameListener(startAndEndGameListener);
+        gameLobby.setStartAndEndGameListener(infoAndEndGameListener);
         GameRules gameRules=new GameRules();
         ModelView modelView=new ModelView(nicknames.size(), gameRules,listenerManager);
         modelView.setTurnPhase(TurnPhase.ALL_INFO);

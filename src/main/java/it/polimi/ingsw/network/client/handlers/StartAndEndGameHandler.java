@@ -47,8 +47,7 @@ public class StartAndEndGameHandler extends MessageHandler {
                 //se si é disconnesso l'utente si troverà automaticamente nella fase end Turn, in piu se non e di turno non entrera in questo if
                 if(mes.getPayload().getContent(Data.WHO_CHANGE).equals(getClientInterface().getClientView().getNickname())){
                     switch((TurnPhase)mes.getPayload().getContent(Data.PHASE)) {
-                        case ALL_INFO -> getClientInterface().askCoordinates();
-                        case END_TURN, SELECT_FROM_BOARD -> {
+                        case END_TURN, SELECT_FROM_BOARD ,ALL_INFO-> {
                             getClientInterface().askCoordinates();
                         }
                         case SELECT_ORDER_TILES -> {

@@ -2,7 +2,7 @@ package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.controller.TurnPhase;
-import it.polimi.ingsw.listeners.StartAndEndGameListener;
+import it.polimi.ingsw.listeners.InfoAndEndGameListener;
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.modelView.*;
 
@@ -20,7 +20,7 @@ public class GameLobby {
     private final int wantedPlayers;
     private GameController gameController;
     private ModelView modelView;
-    private StartAndEndGameListener startAndEndGameListener;
+    private InfoAndEndGameListener infoAndEndGameListener;
 
 
     private ConcurrentHashMap<String, Connection> players; //mappa di tutti i giocatori attivi in partita
@@ -107,7 +107,7 @@ public class GameLobby {
 
     public synchronized void handleErrorFromClient(Message message) throws IOException {
         if(message.getHeader().getMessageType().equals(MessageType.ERROR)){
-            startAndEndGameListener.fireEvent(TurnPhase.ALL_INFO,message.getHeader().getNickname(),modelView);
+            infoAndEndGameListener.fireEvent(TurnPhase.ALL_INFO,message.getHeader().getNickname(),modelView);
             System.out.println("SONO NELLA GAME LOBBY l'utente ha segnalato un error:"+message.getHeader().getNickname());
         }
     }
@@ -198,11 +198,11 @@ public class GameLobby {
     public synchronized void sendMessageToSpecificPlayer(Message message, String nickname) throws IOException {
         players.get(nickname).sendMessageToClient(message);
     }
-    public StartAndEndGameListener getStartAndEndGameListener(){
-        return startAndEndGameListener;
+    public InfoAndEndGameListener getStartAndEndGameListener(){
+        return infoAndEndGameListener;
     }
-    public void setStartAndEndGameListener(StartAndEndGameListener startAndEndGameListener){
-        this.startAndEndGameListener=startAndEndGameListener;
+    public void setStartAndEndGameListener(InfoAndEndGameListener infoAndEndGameListener){
+        this.infoAndEndGameListener = infoAndEndGameListener;
     }
 
 

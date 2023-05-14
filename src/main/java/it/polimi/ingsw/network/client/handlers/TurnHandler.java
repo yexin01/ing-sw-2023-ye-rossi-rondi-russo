@@ -34,16 +34,14 @@ public class TurnHandler extends MessageHandler {
                getClientInterface().getClientView().setBoardView(boardBoxViews);
                String player= (String) mes.getPayload().getContent(Data.WHO_CHANGE);
                 getClientInterface().getClientView().setTurnPlayer(player);
+                //e il suo turno
                 if(player.equals(getClientInterface().getClientView().getNickname())){
                     getClientInterface().stop();
-                    //getClientInterface().endTurn(false);
                     getClientInterface().askCoordinates();
-                    //messagePayload=new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
-                    //messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
+                    //non e il suo turno
                 }else{
                     System.out.println("ORA TOCCA A "+player);
                     getClientInterface().start();
-                    //getClientInterface().endTurn(true);
                 }
             }
             default -> {

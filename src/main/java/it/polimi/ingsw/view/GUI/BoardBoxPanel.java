@@ -43,11 +43,11 @@ public class BoardBoxPanel extends BasePanel {
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, false, false);
         BackgroundImage background2 = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         setBackground(new Background(background2));
-        Image box = new Image("file:src\\main\\java\\com\\example\\demo1\\Images\\Publisher material\\box 280x280px.png");
+        Image box = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\Publisher material\\box 280x280px.png");
         ImageView boxView = new ImageView(box);
         getChildren().add(boxView);
         setAlignment(boxView, Pos.BOTTOM_RIGHT);
-        ImageView background = new ImageView(new Image("file:src\\main\\java\\com\\example\\demo1\\Images\\boards\\livingroom.png"));
+        ImageView background = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\boards\\livingroom.png"));
         background.setFitWidth(screenBounds.getWidth());
         background.setFitHeight(screenBounds.getHeight());
         background.setPreserveRatio(true);

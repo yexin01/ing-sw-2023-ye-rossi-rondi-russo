@@ -217,7 +217,7 @@ public class CLI implements ClientInterface {
             case PRINT4 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,1,60,true,false,0);
             case PRINT5 -> printerCommonGoalAndPoints.printPoints(getClientView());
             //TODO poi gli passero i valori delle common
-            case PRINT6 -> printerCommonGoalAndPoints.printCommonGoalCards(0,1);
+            case PRINT6 -> printerCommonGoalAndPoints.printCommonGoalCards(1,2);
             case PRINT7 -> printerStartAndEndTurn.rulesGame();
             //case PRINT8 -> clientView.somethingWrong();
         }
@@ -654,26 +654,26 @@ public class CLI implements ClientInterface {
 
  */
 
-
+    boolean continueToAskEndTurn;
 
     @Override
     public void start() throws Exception {
+        this.continueToAskEndTurn=continueToAskEndTurn;
         PrinterLogo.printWaitingTurnPhase();
         /*
-        while (true) {
+        this.continueToAskEndTurn=continueToAskEndTurn;
+        while (continueToAskEndTurn) {
             CommandsTurn commandsTurn = (CommandsTurn)checkCommand(3);
-            if (commandsTurn == null) {
-                continue;
-            }
-            handleInvalidPhase(commandsTurn);
-            if (semaphore.tryAcquire()) {
-                break;
-            }
         }
 
          */
 
+
+
     }
+
+
+
     @Override
     public void stop() {
         semaphore.release();

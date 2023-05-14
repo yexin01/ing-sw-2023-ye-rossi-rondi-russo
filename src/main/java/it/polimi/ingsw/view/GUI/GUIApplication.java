@@ -36,6 +36,9 @@ public class GUIApplication extends Application implements ClientInterface {
 
     }
 
+
+
+
     @Override
     public void stop() throws Exception {
 

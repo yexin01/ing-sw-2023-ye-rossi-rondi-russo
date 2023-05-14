@@ -9,18 +9,19 @@ import it.polimi.ingsw.network.server.GameLobby;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class StartAndEndGameListener extends EventListener{
-    public StartAndEndGameListener(GameLobby gameLobby) {
+public class InfoAndEndGameListener extends EventListener{
+    public InfoAndEndGameListener(GameLobby gameLobby) {
         super(gameLobby);
     }
 
     @Override
     public void fireEvent(KeyAbstractPayload event, String playerNickname, Object newValue) throws IOException {
         System.out.println("SONO NEL LISTENER STARTGAME e NEL caso something wrong LATO SERVER sto inviando");
-        ModelView modelView=(ModelView) newValue;
-        ArrayList<String> nicknames=modelView.getPlayersOrder();
+
         switch((TurnPhase)event){
             case ALL_INFO ->{
+                ModelView modelView=(ModelView) newValue;
+                ArrayList<String> nicknames=modelView.getPlayersOrder();
                 //TODO questa sarbbe una funzionalità in piu nel caso in cui vengano corrotti i dati
                 if(playerNickname!=null){
                     Message message=creationMessageInfo(playerNickname,modelView,nicknames);
@@ -37,6 +38,11 @@ public class StartAndEndGameListener extends EventListener{
                 }
             }
             case END_GAME ->{
+                MessageHeader header=new MessageHeader(MessageType.DATA,null);
+                MessagePayload payload=new MessagePayload(TurnPhase.END_GAME);
+                payload.put(Data.RANKING,newValue);
+                Message message=new Message(header,payload);
+                getGameLobby().sendMessageToAllPlayers(message);
             }
         }
     }

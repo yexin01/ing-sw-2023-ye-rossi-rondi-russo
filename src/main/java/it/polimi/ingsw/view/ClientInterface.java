@@ -16,6 +16,8 @@ public interface ClientInterface  {
 
     ClientView getClientView();
    void start() throws Exception;
+
+
    void stop() throws Exception;
     void askCoordinates() throws Exception;
     void askOrder() throws Exception;
