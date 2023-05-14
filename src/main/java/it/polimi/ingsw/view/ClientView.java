@@ -23,6 +23,7 @@ public class ClientView {
 
     private TurnPhase turnPhase;
     private String[] players;
+    private String turnPlayer;
     private ItemTileView[][] bookshelfView;
     private ItemTileView[] tilesSelected;
     private PlayerPointsView playerPoints;
@@ -174,5 +175,13 @@ public class ClientView {
     }
     public void somethingWrong() throws Exception {
         messageToserverHandlerTurn.handleMessageToServer(null, KeyErrorPayload.ERROR_DATA,nickname,MessageType.ERROR);
+    }
+
+    public String getTurnPlayer() {
+        return turnPlayer;
+    }
+
+    public void setTurnPlayer(String turnPlayer) {
+        this.turnPlayer = turnPlayer;
     }
 }

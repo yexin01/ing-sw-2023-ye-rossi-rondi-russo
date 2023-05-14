@@ -19,6 +19,7 @@ public class ModelView {
     private ListenerManager listenerManager;
     private int indexRemoveToken;
     private ArrayList<String> playersOrder;
+    private String turnPlayer;
 
     private BoardBoxView[][] boardView;
     private CommonGoalView[] commonGoalViews;
@@ -172,6 +173,14 @@ public class ModelView {
 
     public void setTurnPhase(TurnPhase turnPhase) {
         this.turnPhase = turnPhase;
+    }
+
+    public String getTurnPlayer() {
+        return turnPlayer;
+    }
+
+    public void setTurnPlayer(String turnPlayer) {
+        this.turnPlayer = turnPlayer;
     }
 /*
     public void setPlayersId(HashMap<String, Integer> playersId) {

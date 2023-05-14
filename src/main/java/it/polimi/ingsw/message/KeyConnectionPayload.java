@@ -3,7 +3,7 @@ package it.polimi.ingsw.message;
 public enum KeyConnectionPayload implements KeyAbstractPayload {
     CONNECTION_CREATION,
 
-
+    RECONNECTION_DURING_GAME,
 
 
 

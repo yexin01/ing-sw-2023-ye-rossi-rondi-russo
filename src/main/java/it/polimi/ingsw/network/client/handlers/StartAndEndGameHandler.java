@@ -22,18 +22,12 @@ public class StartAndEndGameHandler extends MessageHandler {
     @Override
     public void handleMessage(Message mes) throws Exception {
         System.out.println("SONO IN START AND GAME HANDLER");
-
         TurnPhase data = (TurnPhase) mes.getPayload().getKey();
-        /*
-        MessagePayload messagePayload=null;
-        System.out.println(getClientInterface().getClientView().getNickname());
-         */
         String[] p=((String[])mes.getPayload().getContent(Data.PLAYERS));
-
-
         System.out.println("IL PRIMO GIOCATORE é "+p[0]);
         switch(data){
-            case START_GAME->{
+            //sia all'inizio del game che durant la partita se un utente si disconnette
+            case ALL_INFO ->{
                 BoardBoxView[][] boardView= (BoardBoxView[][]) mes.getPayload().getContent(Data.NEW_BOARD);
                 getClientInterface().getClientView().setBoardView(boardView);
                 ItemTileView[][] bookshelfView=((ItemTileView[][])mes.getPayload().getContent(Data.NEW_BOOKSHELF));
@@ -50,24 +44,28 @@ public class StartAndEndGameHandler extends MessageHandler {
                 for (String str : players) {
                     System.out.println(str);
                 }
-                if(!getClientInterface().getTurnPhase().equals(TurnPhase.START_GAME)){
+                if(!getClientInterface().getTurnPhase().equals(TurnPhase.ALL_INFO)){
                     System.out.println("RICEVUTO I DATI tutto ok ricevuto ACK dell'error message");
-                    switch(getClientInterface().getTurnPhase()){
-                        case SELECT_FROM_BOARD -> getClientInterface().askCoordinates();
-                        case SELECT_ORDER_TILES ->{
-                            System.out.println("anche i selected Items");
-                            ItemTileView[] selectedItems=((ItemTileView[])mes.getPayload().getContent(Data.SELECTED_ITEMS));
-                            getClientInterface().getClientView().setTilesSelected(selectedItems);
-                            getClientInterface().askOrder();
+                    if(mes.getPayload().getContent(Data.WHO_CHANGE).equals(getClientInterface().getClientView().getTurnPlayer())){
+                        switch(getClientInterface().getTurnPhase()){
+                            case SELECT_FROM_BOARD -> getClientInterface().askCoordinates();
+                            case SELECT_ORDER_TILES ->{
+                                System.out.println("anche i selected Items");
+                                ItemTileView[] selectedItems=((ItemTileView[])mes.getPayload().getContent(Data.SELECTED_ITEMS));
+                                getClientInterface().getClientView().setTilesSelected(selectedItems);
+                                getClientInterface().askOrder();
+                            }
+                            case SELECT_COLUMN->{
+                                System.out.println("anche i selected items");
+                                ItemTileView[] selectedItems=((ItemTileView[])mes.getPayload().getContent(Data.SELECTED_ITEMS));
+                                getClientInterface().getClientView().setTilesSelected(selectedItems);
+                                getClientInterface().askColumn();
+                            }
                         }
-                        case SELECT_COLUMN->{
-                            System.out.println("anche i selected items");
-                            ItemTileView[] selectedItems=((ItemTileView[])mes.getPayload().getContent(Data.SELECTED_ITEMS));
-                            getClientInterface().getClientView().setTilesSelected(selectedItems);
-                            getClientInterface().askColumn();
-                        }
+                    }else{
+                        getClientInterface().getClientView().setTurnPhase(TurnPhase.END_TURN);
+                        getClientInterface().start();
                     }
-
                 } else{
                     getClientInterface().getClientView().setTurnPhase(TurnPhase.END_TURN);
                     if(players[0].equals(getClientInterface().getClientView().getNickname())){

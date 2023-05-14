@@ -20,12 +20,6 @@ public class TurnHandler extends MessageHandler {
     @Override
     public void handleMessage(Message mes) throws Exception {
         System.out.println("SONO TURN HANDLER");
-
-        //KeyDataPayload data = (KeyDataPayload) mes.getPayload().getKey();
-        /*
-        MessagePayload messagePayload=null;
-
-         */
         TurnPhase turnPhase=(TurnPhase) mes.getPayload().getKey();
         switch(turnPhase){
             case SELECT_ORDER_TILES ->{
@@ -41,6 +35,7 @@ public class TurnHandler extends MessageHandler {
                BoardBoxView[][] boardBoxViews= (BoardBoxView[][]) mes.getPayload().getContent(Data.NEW_BOARD);
                getClientInterface().getClientView().setBoardView(boardBoxViews);
                String player= (String) mes.getPayload().getContent(Data.WHO_CHANGE);
+                getClientInterface().getClientView().setTurnPlayer(player);
                 if(player.equals(getClientInterface().getClientView().getNickname())){
                     getClientInterface().stop();
                     //getClientInterface().endTurn(false);
@@ -50,6 +45,7 @@ public class TurnHandler extends MessageHandler {
                     //messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
                 }else{
                     getClientInterface().getClientView().setTurnPhase(TurnPhase.END_TURN);
+                    System.out.println("ORA TOCCA A "+player);
                     getClientInterface().start();
                     //getClientInterface().endTurn(true);
                 }

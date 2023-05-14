@@ -34,7 +34,7 @@ public class CLI implements ClientInterface {
         this.scanner= new Scanner(System.in);
         this.clientView=new ClientView();
         printerBoard=new PrinterBoard();
-        clientView.setTurnPhase(TurnPhase.START_GAME);
+        clientView.setTurnPhase(TurnPhase.ALL_INFO);
         printerBookshelfAndPersonal=new PrinterBookshelfAndPersonal();
         printerStartAndEndTurn =new PrinterStartAndEndTurn();
         printerCommonGoalAndPoints=new PrinterCommonGoalAndPoints();
@@ -418,7 +418,10 @@ public class CLI implements ClientInterface {
         out.println();
     }
 
-
+    @Override
+    public void displayMessage(String error) {
+        Colors.colorize(Colors.GREEN_CODE, error);
+    }
 
 
     @Override

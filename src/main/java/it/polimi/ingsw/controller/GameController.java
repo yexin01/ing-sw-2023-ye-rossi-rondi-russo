@@ -7,7 +7,6 @@ import it.polimi.ingsw.json.GameRules;
 
 
 import it.polimi.ingsw.message.*;
-import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.network.server.GameLobby;
@@ -30,7 +29,7 @@ public class GameController {
         StartAndEndGameListener startAndEndGameListener=new StartAndEndGameListener(gameLobby);
         turnPhaseController =new PhaseController<>(TurnPhase.SELECT_FROM_BOARD);
         listenerManager.addListener(KeyErrorPayload.ERROR_DATA,new ErrorListener(gameLobby));
-        listenerManager.addListener(TurnPhase.START_GAME,startAndEndGameListener);
+        listenerManager.addListener(TurnPhase.ALL_INFO,startAndEndGameListener);
         listenerManager.addListener(TurnPhase.END_TURN,new EndTurnListener(gameLobby));
         listenerManager.addListener(KeyDataPayload.PHASE,new TurnListener(gameLobby));
         gameLobby.setStartAndEndGameListener(startAndEndGameListener);
@@ -47,11 +46,12 @@ public class GameController {
 
         game.createCommonGoalCard(gameRules);
         game.createPersonalGoalCard(gameRules);
+        modelView.setTurnPlayer(game.getPlayers().get(0).getNickname());
         //TODO capire come organizzarlo meglio
 
         //modelView.addListener(KeyDataPayload.VALUE_CLIENT,new TurnListener(gameLobby));
         //modelView.addListener(KeyDataPayload.END_TURN,new EndTurnListener(gameLobby));
-        listenerManager.fireEvent(TurnPhase.START_GAME,null,game.getModelView());
+        listenerManager.fireEvent(TurnPhase.ALL_INFO,null,game.getModelView());
     }
 
     public Game getModel() {
@@ -138,6 +138,7 @@ public class GameController {
             turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
             game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
             game.setNextPlayer();
+            game.getModelView().setTurnPlayer(game.getTurnPlayer().getNickname());
         }
 
     }
@@ -197,6 +198,7 @@ public class GameController {
                 game.getBoard().refill();
             }
             game.setNextPlayer();
+            game.getModelView().setTurnPlayer(game.getTurnPlayer().getNickname());
             System.out.println("finish4");
             listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
         }

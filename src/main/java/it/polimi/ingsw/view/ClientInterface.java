@@ -22,6 +22,7 @@ public interface ClientInterface  {
     void askOrder() throws Exception;
     void askColumn() throws Exception;
     void displayError(String error);
+    void displayMessage(String error);
     //public abstract void endTurn(boolean phase) throws Exception;
 
     void askNicknameAndConnection() throws Exception;

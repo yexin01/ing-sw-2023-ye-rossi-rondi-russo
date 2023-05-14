@@ -18,7 +18,6 @@ public class ErrorHandler extends MessageHandler {
     @Override
     public void handleMessage(Message mes) throws Exception {
         KeyErrorPayload key= (KeyErrorPayload) mes.getPayload().getKey();
-        MessagePayload payload=mes.getPayload();
         ErrorType error=(ErrorType) mes.getPayload().getContent(Data.ERROR);
         getClientInterface().displayError(error.getErrorMessage());
         switch(key){
@@ -44,18 +43,24 @@ public class ErrorHandler extends MessageHandler {
                 }
             }
             case ERROR_CONNECTION -> {
-                getClientInterface().askNicknameAndConnection();
-                /*
-                if(error.equals(ErrorType.PING_NOT_RECEIVED)){
+                switch(error){
+                    case DISCONNECTION -> {
+                        switch((KeyConnectionPayload)mes.getPayload().getKey()){
+                            //un giocatore si é riconnesso
+                            case BROADCAST,RECONNECTION_DURING_GAME -> getClientInterface().displayMessage((String) mes.getPayload().getContent(Data.VALUE_CLIENT));
+                            //case CONNECTION_CREATION ->
+                            //case DISCONNECTION_FORCED ->
+                        }
+                    }
+                    //mandato direttamente dal clientHandler ti sei disconnesso questa gestine potrà cambiare
+                    case PING_NOT_RECEIVED -> getClientInterface().askNicknameAndConnection();
+                    //errore nella login chiede di riconnettersi
+                    case ERR_NICKNAME_LENGTH,ERR_NICKNAME_TAKEN -> getClientInterface().askNicknameAndConnection();
                 }
-                if(error.equals(ErrorType.ERR_NICKNAME_LENGTH) || error.equals(ErrorType.ERR_NICKNAME_TAKEN)){
-                    getClientInterface().askNicknameAndConnection();
-                }
-
-                 */
 
             }
             case ERROR_LOBBY -> {
+                //il gioco continua automaticamente con startGame
                 if(error.equals(ErrorType.ERR_NO_FREE_SPOTS)){
                     System.out.println("IN REALTA NON SEI UN ERRORE PERCHE IL GIOCO CONTINUA");
                 } else if(error.equals(ErrorType.ERR_RECONNECT_TO_GAME_LOBBY) || error.equals(ErrorType.ERR_JOIN_GLOBAL_LOBBY)){

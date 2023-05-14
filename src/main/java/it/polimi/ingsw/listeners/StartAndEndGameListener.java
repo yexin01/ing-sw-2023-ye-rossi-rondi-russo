@@ -5,8 +5,6 @@ import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.*;
 import it.polimi.ingsw.network.server.GameLobby;
-import it.polimi.ingsw.view.CLI.CLI;
-import it.polimi.ingsw.view.ClientView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +20,9 @@ public class StartAndEndGameListener extends EventListener{
         ModelView modelView=(ModelView) newValue;
         ArrayList<String> nicknames=modelView.getPlayersOrder();
         switch((TurnPhase)event){
-            case START_GAME  ->{
+            case ALL_INFO ->{
+
+                //TODO questa sarbbe una funzionalità in piu nel caso in cui vengano corrotti i dati
                 if(playerNickname!=null){
                     Message message=creationMessageInfo(playerNickname,modelView,nicknames);
                     if(!modelView.getTurnPhase().equals(TurnPhase.SELECT_FROM_BOARD)){
@@ -38,22 +38,16 @@ public class StartAndEndGameListener extends EventListener{
                         getGameLobby().sendMessageToSpecificPlayer(creationMessageInfo(nickname,modelView,nicknames),nickname) ;
                     }
                 }
-
-
             }
             case END_GAME ->{
-                //TODO in base a come implementiamo la CLI e la GUI vediamo cosa inserire nel messaggio di endGame
-
             }
         }
 
     }
-
-
     public Message creationMessageInfo(String nickname,ModelView modelView,ArrayList<String> nicknames){
         getGameLobby().setModelView(modelView);
         MessageHeader header;
-        MessagePayload payload=new MessagePayload(TurnPhase.START_GAME);
+        MessagePayload payload=new MessagePayload(TurnPhase.ALL_INFO);
         BoardBoxView[][] boardView= modelView.getBoardView();
         header=new MessageHeader(MessageType.DATA,nickname);
         payload.put(Data.NEW_BOARD,boardView);
@@ -63,6 +57,8 @@ public class StartAndEndGameListener extends EventListener{
         payload.put(Data.PERSONAL_GOAL_CARD,personalGoalCard);
         PlayerPointsView playerPointsView=modelView.getPlayerPoints(nickname);
         payload.put(Data.POINTS,playerPointsView);
+        String turnPlayer= modelView.getTurnPlayer();
+        payload.put(Data.WHO_CHANGE,turnPlayer);
         CommonGoalView[] commonGoalViews=modelView.getCommonGoalViews();
         payload.put(Data.COMMON_GOAL_CARD,commonGoalViews);
         payload.put(Data.PLAYERS,nicknames.toArray(new String[nicknames.size()]));

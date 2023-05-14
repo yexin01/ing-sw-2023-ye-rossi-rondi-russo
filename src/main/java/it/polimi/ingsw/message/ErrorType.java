@@ -5,6 +5,7 @@ public enum ErrorType implements KeyAbstractPayload {
     //qui connection (nickname, porte, connessioni)
     PING_NOT_RECEIVED("Ping not received.\n Disconnection started.."),//stampare
     DISCONNECTION_FORCED("Something went wrong during login. Connection refused! \n Disconnection started.."),
+    DISCONNECTION("Disconnection from the server"),
 
     ERR_NICKNAME_LENGTH("Invalid username length.\n Disconnection.."),//da rifare connessione+login lato client
     ERR_NICKNAME_TAKEN("This nickname is already taken \n Disconnection.."),
@@ -39,7 +40,7 @@ public enum ErrorType implements KeyAbstractPayload {
     INVALID_COORDINATES("COORDINATES of the tile are invalid"),
     NOT_SAME_ROW_OR_COLUMN("Tiles are not on the same row or column, tiles must be all adjacent"),
     NOT_ENOUGH_FREE_EDGES("The selected tile has no free edges"),
-    WRONG_PHASE("You can't do this action now."),
+    WRONG_PHASE("You can't do this action now.");
 
 
 
@@ -51,7 +52,7 @@ public enum ErrorType implements KeyAbstractPayload {
     //da dividere
 
     //NOT_RECEIVED_TILES("Problem with receiving tiles"),
-    DISCONNECTION("Disconnection from the server");
+
 
 
 

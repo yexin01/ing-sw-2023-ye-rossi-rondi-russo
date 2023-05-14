@@ -2,12 +2,9 @@ package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.controller.TurnPhase;
-import it.polimi.ingsw.listeners.ListenerManager;
 import it.polimi.ingsw.listeners.StartAndEndGameListener;
 import it.polimi.ingsw.message.*;
-import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.*;
-import it.polimi.ingsw.network.client.handlers.StartAndEndGameHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,6 +28,8 @@ public class GameLobby {
 
     //io per ora metto solo quello che mi serve per gestire la mappa
     //lavoro principalmente sui nickname dei giocatori
+
+    // sto valutando cosa conviene fare per le disconnessioni di un player potrei cambiare i metodi di disconnessione
 
     public GameLobby(int idGameLobby, int wantedPlayers){
         this.idGameLobby= idGameLobby; //gli è dato in input il primo idGameLobby disponibile
@@ -102,38 +101,15 @@ public class GameLobby {
         return playersDisconnected.contains(nickname);
     }
     public synchronized void handleTurn(Message message){
-        if(message.getHeader().getMessageType().equals(MessageType.DATA)){
+        if(message.getHeader().getMessageType().equals(MessageType.DATA)&& !playersDisconnected.contains(gameController.getTurnNickname())){
             gameController.receiveMessageFromClient(message);
-        }
-
+        }else gameController.disconnectionPlayer(gameController.getTurnNickname());
     }
 
     public synchronized void handleErrorFromClient(Message message) throws IOException {
         if(message.getHeader().getMessageType().equals(MessageType.ERROR)){
-            startAndEndGameListener.fireEvent(TurnPhase.START_GAME,message.getHeader().getNickname(),modelView);
-            /*
-            String nickname=message.getHeader().getNickname();
-            MessageHeader header;
-            MessagePayload payload=new MessagePayload(TurnPhase.START_GAME);
-            BoardBoxView[][] boardView= modelView.getBoardView();
-            ArrayList<String> nicknames=modelView.getPlayersOrder();
-            header=new MessageHeader(MessageType.DATA,nickname);
-            payload.put(Data.NEW_BOARD,boardView);
-            ItemTileView[][] bookshelfView=modelView.getBookshelfView(nickname);
-            payload.put(Data.NEW_BOOKSHELF,bookshelfView);
-            PersonalGoalCard personalGoalCard=modelView.getPlayerPersonalGoal(nickname);
-            payload.put(Data.PERSONAL_GOAL_CARD,personalGoalCard);
-            PlayerPointsView playerPointsView=modelView.getPlayerPoints(nickname);
-            payload.put(Data.POINTS,playerPointsView);
-            CommonGoalView[] commonGoalViews=modelView.getCommonGoalViews();
-            payload.put(Data.COMMON_GOAL_CARD,commonGoalViews);
-            payload.put(Data.PLAYERS,nicknames.toArray(new String[nicknames.size()]));
-            Message m=new Message(header,payload);
-            sendMessageToSpecificPlayer(m,nickname);
-
-             */
-
-            //listenerManager.fireEvent(TurnPhase.START_GAME,message.getHeader().getNickname(),modelView);
+            startAndEndGameListener.fireEvent(TurnPhase.ALL_INFO,message.getHeader().getNickname(),modelView);
+            startAndEndGameListener.fireEvent(TurnPhase.ALL_INFO,message.getHeader().getNickname(),modelView);
             System.out.println("SONO NELLA GAME LOBBY l'utente ha segnalato un error:"+message.getHeader().getNickname());
         }
     }
@@ -141,31 +117,39 @@ public class GameLobby {
     public synchronized void changePlayerInActive(String nickname, Connection connection) throws IOException {
         players.put(nickname,connection);
 
-        MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
+        MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
         MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
         String content = "Player "+nickname+" reconnected to Game Lobby "+ idGameLobby + "!";
         payload.put(Data.CONTENT,content);
         Message message = new Message(header,payload);
         sendMessageToAllPlayersExceptOne(message, nickname);
+        content="YOU reconnected to Game Lobby "+ idGameLobby + "!";
+        payload=new MessagePayload(KeyConnectionPayload.BROADCAST);
+        payload.put(Data.CONTENT,content);
+        message=new Message(header,payload);
+        sendMessageToSpecificPlayer(message, nickname);
 
-        //TODO questo si potrebbe anche cancellare, al game controller interessa solo la disconessione
         //sse il gameController punta alle liste del gameLobby, deve solo stampare il broadcast e non fare altro
         gameController.reconnectionPlayer(nickname);
-
-        //TODO PER RESILIENZA: bisogna mandarli tutti i dati del game in corso a cui si sta ricollegando
-
-        playersDisconnected.remove(nickname);
-
-        System.out.println("Sono la GameLobby ho cambiato il giocatore "+nickname+" in attivo");
+        MessageHeader header1=new MessageHeader(MessageType.ERROR, nickname);
+        MessagePayload payload1=new MessagePayload(KeyErrorPayload.ERROR_DATA);
+        payload.put(Data.VALUE_CLIENT,null);
+        Message message1=new Message(header1,payload1);
+        handleErrorFromClient(message1);
+        System.out.println("Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in attivo");
     }
 
     public synchronized void changePlayerInDisconnected(String nickname) throws IOException {
+        String content="Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in disconnesso";
         playersDisconnected.add(nickname);
         players.remove(nickname);
-        if(gameController!=null){
-            gameController.disconnectionPlayer(nickname);
-        }
-        System.out.println("Sono la GameLobby ho cambiato il giocatore "+nickname+" in disconnesso");
+        MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
+        MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
+        payload.put(Data.CONTENT,content);
+        Message message = new Message(header,payload);
+        sendMessageToAllPlayersExceptOne(message, nickname);
+
+        System.out.println(content);
     }
 
     public ModelView getModelView() {
