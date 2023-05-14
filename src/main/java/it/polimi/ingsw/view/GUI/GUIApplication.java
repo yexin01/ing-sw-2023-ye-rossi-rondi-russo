@@ -23,10 +23,7 @@ public class GUIApplication extends Application implements ClientInterface {
         //ClientMain.semaphore.release();
     }
 
-    @Override
-    public TurnPhase getTurnPhase() {
-        return null;
-    }
+
 
     @Override
     public ClientView getClientView() {
@@ -75,6 +72,11 @@ public class GUIApplication extends Application implements ClientInterface {
         Scene scene = new Scene(disconnectionPanel);
         stage.setScene(scene);
         stage.show();
+    }
+
+    @Override
+    public void displayMessage(String error) {
+
     }
 
     @Override

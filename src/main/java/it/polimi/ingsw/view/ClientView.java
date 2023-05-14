@@ -21,7 +21,7 @@ public class ClientView {
     private CommonGoalView[] commonGoalViews;
     private int[] commonGoalPoints;
 
-    private TurnPhase turnPhase;
+
     private String[] players;
     private String turnPlayer;
     private ItemTileView[][] bookshelfView;
@@ -33,7 +33,7 @@ public class ClientView {
     private int column;
 
     public ClientView(){
-        turnPhase=TurnPhase.END_TURN;
+
 
     }
 
@@ -161,13 +161,7 @@ public class ClientView {
         this.messageToserverHandlerTurn = messageToserverHandlerTurn;
     }
 
-    public TurnPhase getTurnPhase() {
-        return turnPhase;
-    }
 
-    public void setTurnPhase(TurnPhase turnPhase) {
-        this.turnPhase = turnPhase;
-    }
 
 
     public void lobby(KeyLobbyPayload keyLobbyPayload,int value) throws Exception {

@@ -35,7 +35,7 @@ public class GameController {
         gameLobby.setStartAndEndGameListener(startAndEndGameListener);
         GameRules gameRules=new GameRules();
         ModelView modelView=new ModelView(nicknames.size(), gameRules,listenerManager);
-        modelView.setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
+        modelView.setTurnPhase(TurnPhase.ALL_INFO);
 
 
         game=new Game(gameRules, nicknames.size(),modelView);
@@ -52,6 +52,7 @@ public class GameController {
         //modelView.addListener(KeyDataPayload.VALUE_CLIENT,new TurnListener(gameLobby));
         //modelView.addListener(KeyDataPayload.END_TURN,new EndTurnListener(gameLobby));
         listenerManager.fireEvent(TurnPhase.ALL_INFO,null,game.getModelView());
+        modelView.setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
     }
 
     public Game getModel() {

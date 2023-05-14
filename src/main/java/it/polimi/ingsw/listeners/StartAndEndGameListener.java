@@ -21,7 +21,6 @@ public class StartAndEndGameListener extends EventListener{
         ArrayList<String> nicknames=modelView.getPlayersOrder();
         switch((TurnPhase)event){
             case ALL_INFO ->{
-
                 //TODO questa sarbbe una funzionalità in piu nel caso in cui vengano corrotti i dati
                 if(playerNickname!=null){
                     Message message=creationMessageInfo(playerNickname,modelView,nicknames);
@@ -31,9 +30,7 @@ public class StartAndEndGameListener extends EventListener{
                         Message message1=new Message(message.getHeader(),payload);
                         getGameLobby().sendMessageToSpecificPlayer(message1,playerNickname);
                     }else  getGameLobby().sendMessageToSpecificPlayer(creationMessageInfo(playerNickname,modelView,nicknames),playerNickname) ;
-
-
-                }else{
+             }else{
                     for(String nickname:nicknames){
                         getGameLobby().sendMessageToSpecificPlayer(creationMessageInfo(nickname,modelView,nicknames),nickname) ;
                     }
@@ -42,7 +39,6 @@ public class StartAndEndGameListener extends EventListener{
             case END_GAME ->{
             }
         }
-
     }
     public Message creationMessageInfo(String nickname,ModelView modelView,ArrayList<String> nicknames){
         getGameLobby().setModelView(modelView);
@@ -61,6 +57,7 @@ public class StartAndEndGameListener extends EventListener{
         payload.put(Data.WHO_CHANGE,turnPlayer);
         CommonGoalView[] commonGoalViews=modelView.getCommonGoalViews();
         payload.put(Data.COMMON_GOAL_CARD,commonGoalViews);
+        payload.put(Data.PHASE,modelView.getTurnPhase());
         payload.put(Data.PLAYERS,nicknames.toArray(new String[nicknames.size()]));
         Message m=new Message(header,payload);
        return m;

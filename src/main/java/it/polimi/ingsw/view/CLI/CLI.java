@@ -34,7 +34,6 @@ public class CLI implements ClientInterface {
         this.scanner= new Scanner(System.in);
         this.clientView=new ClientView();
         printerBoard=new PrinterBoard();
-        clientView.setTurnPhase(TurnPhase.ALL_INFO);
         printerBookshelfAndPersonal=new PrinterBookshelfAndPersonal();
         printerStartAndEndTurn =new PrinterStartAndEndTurn();
         printerCommonGoalAndPoints=new PrinterCommonGoalAndPoints();
@@ -654,10 +653,7 @@ public class CLI implements ClientInterface {
 
  */
 
-    @Override
-    public TurnPhase getTurnPhase() {
-        return clientView.getTurnPhase();
-    }
+
 
     @Override
     public void start() throws Exception {

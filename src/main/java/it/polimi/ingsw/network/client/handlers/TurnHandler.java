@@ -19,15 +19,13 @@ public class TurnHandler extends MessageHandler {
 
     @Override
     public void handleMessage(Message mes) throws Exception {
-        System.out.println("SONO TURN HANDLER");
         TurnPhase turnPhase=(TurnPhase) mes.getPayload().getKey();
+        System.out.println("SONO TURN HANDLER"+turnPhase);
         switch(turnPhase){
             case SELECT_ORDER_TILES ->{
-                getClientInterface().getClientView().setTurnPhase(TurnPhase.SELECT_ORDER_TILES);
                 getClientInterface().askOrder();
             }
             case SELECT_COLUMN ->{
-                getClientInterface().getClientView().setTurnPhase(TurnPhase.SELECT_COLUMN);
                 getClientInterface().askColumn();
             }
             case END_TURN -> {
@@ -39,12 +37,10 @@ public class TurnHandler extends MessageHandler {
                 if(player.equals(getClientInterface().getClientView().getNickname())){
                     getClientInterface().stop();
                     //getClientInterface().endTurn(false);
-                    getClientInterface().getClientView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
                     getClientInterface().askCoordinates();
                     //messagePayload=new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
                     //messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
                 }else{
-                    getClientInterface().getClientView().setTurnPhase(TurnPhase.END_TURN);
                     System.out.println("ORA TOCCA A "+player);
                     getClientInterface().start();
                     //getClientInterface().endTurn(true);

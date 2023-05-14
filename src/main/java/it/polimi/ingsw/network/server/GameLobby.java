@@ -108,7 +108,6 @@ public class GameLobby {
     public synchronized void handleErrorFromClient(Message message) throws IOException {
         if(message.getHeader().getMessageType().equals(MessageType.ERROR)){
             startAndEndGameListener.fireEvent(TurnPhase.ALL_INFO,message.getHeader().getNickname(),modelView);
-            startAndEndGameListener.fireEvent(TurnPhase.ALL_INFO,message.getHeader().getNickname(),modelView);
             System.out.println("SONO NELLA GAME LOBBY l'utente ha segnalato un error:"+message.getHeader().getNickname());
         }
     }

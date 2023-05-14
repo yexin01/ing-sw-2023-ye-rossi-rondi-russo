@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public interface ClientInterface  {
 
 
-    TurnPhase getTurnPhase();
     ClientView getClientView();
    void start() throws Exception;
    void stop() throws Exception;
