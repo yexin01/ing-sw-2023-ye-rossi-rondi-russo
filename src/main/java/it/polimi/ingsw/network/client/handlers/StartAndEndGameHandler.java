@@ -55,11 +55,13 @@ public class StartAndEndGameHandler extends MessageHandler {
                     switch(getClientInterface().getTurnPhase()){
                         case SELECT_FROM_BOARD -> getClientInterface().askCoordinates();
                         case SELECT_ORDER_TILES ->{
+                            System.out.println("anche i selected Items");
                             ItemTileView[] selectedItems=((ItemTileView[])mes.getPayload().getContent(Data.SELECTED_ITEMS));
                             getClientInterface().getClientView().setTilesSelected(selectedItems);
                             getClientInterface().askOrder();
                         }
                         case SELECT_COLUMN->{
+                            System.out.println("anche i selected items");
                             ItemTileView[] selectedItems=((ItemTileView[])mes.getPayload().getContent(Data.SELECTED_ITEMS));
                             getClientInterface().getClientView().setTilesSelected(selectedItems);
                             getClientInterface().askColumn();

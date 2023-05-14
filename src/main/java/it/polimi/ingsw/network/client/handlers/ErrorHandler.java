@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.client.handlers;
 
+import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientMain;
@@ -51,11 +52,13 @@ public class ErrorHandler extends MessageHandler {
 
             }
             case ERROR_LOBBY -> {
-            if(error.equals(ErrorType.ERR_RECONNECT_TO_GAME_LOBBY) || error.equals(ErrorType.ERR_JOIN_GLOBAL_LOBBY)){
-                    //new ClientMain();
+                if(error.equals(ErrorType.ERR_NO_FREE_SPOTS)){
+                    System.out.println("IN REALTA NON SEI UN ERRORE PERCHE IL GIOCO CONTINUA");
+                } else if(error.equals(ErrorType.ERR_RECONNECT_TO_GAME_LOBBY) || error.equals(ErrorType.ERR_JOIN_GLOBAL_LOBBY)){
+                    new ClientMain();
                 }else {
                     getClientInterface().askLobbyDecision();
-            }
+                }
             }
 
 
