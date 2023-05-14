@@ -11,6 +11,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
 
+/**
+ * Socket connection between server and client (server side)
+ */
 public class SocketConnection extends Connection implements Runnable {
     private final SocketServer socketServer;
     private final Socket socket;
@@ -25,6 +28,13 @@ public class SocketConnection extends Connection implements Runnable {
 
     private Thread listener;
 
+    /**
+     * Constructor of the class SocketConnection that creates a new socket connection between server and client
+     * and starts a new thread to listen for messages from the client and send them to the server (server side) through the socket connection
+     * @param socketServer the server that creates the socket connection
+     * @param socket the socket connection between server and client
+     * @throws IOException if there are problems with the input/output streams of the socket connection
+     */
     SocketConnection(SocketServer socketServer, Socket socket) throws IOException {
         this.socketServer = socketServer;
         this.socket = socket;
@@ -46,6 +56,9 @@ public class SocketConnection extends Connection implements Runnable {
         listener.start();
     }
 
+    /**
+     * Method that creates the connection through the socket and when the stream is closed it disconnects the client
+     */
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
@@ -78,11 +91,20 @@ public class SocketConnection extends Connection implements Runnable {
         }
     }
 
+    /**
+     * Method that checks if the socket connection is active or not
+     * @return true if the socket connection is active, false otherwise
+     */
     @Override
     public boolean isConnected() {
         return connected;
     }
 
+    /**
+     * Method that sends a message to the client (server side) through the socket connection
+     * @param message the message to send to the client
+     * @throws IOException if there are problems with the output stream of the socket connection
+     */
     @Override
     public void sendMessageToClient(Message message) throws IOException {
         if (connected) {
@@ -98,6 +120,10 @@ public class SocketConnection extends Connection implements Runnable {
         }
     }
 
+    /**
+     * Method that disconnects the client from the server (server side) and closes the socket connection
+     * @throws IOException if there are problems with the input/output streams of the socket connection
+     */
     @Override
     public void disconnect() throws IOException {
         if (connected) {
@@ -117,6 +143,10 @@ public class SocketConnection extends Connection implements Runnable {
         }
     }
 
+    /**
+     * Method that sends a ping message to the client (server side) through the socket connection
+     * @throws IOException if there are problems with the output stream of the socket connection
+     */
     @Override
     public void ping() throws IOException {
         MessageHeader header = new MessageHeader(MessageType.PING, super.getClientPinger().getNickname());

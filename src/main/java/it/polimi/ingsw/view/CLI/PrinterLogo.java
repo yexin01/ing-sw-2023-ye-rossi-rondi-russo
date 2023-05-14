@@ -2,6 +2,11 @@ package it.polimi.ingsw.view.CLI;
 
 import static java.lang.System.out;
 
+/**
+ * Class that prints the logos or drawings of the game in the CLI version of the game (ASCII art)
+ * using ANSI escape codes to color the output text in the terminal (only for Linux and MacOS)
+ * and the Unicode characters to print the drawings in the terminal
+ */
 public class PrinterLogo {
 
     public static void printMyShelfieLogo() {
@@ -59,7 +64,7 @@ public class PrinterLogo {
 
 
 
-    //titoli per le info
+    // titles for the infos
     public static void printBoardLogo() {
         String boardLogo = """
 
@@ -82,15 +87,26 @@ public class PrinterLogo {
         out.println(myBookshelfLogo);
     }
 
+    public static void printGamesRulesLogo() {
+        String gamesRulesLogo = """
+
+                ╔═╗╔═╗╔╦╗╔═╗╔═╗  ╦═╗╦ ╦╦  ╔═╗╔═╗
+                ║ ╦╠═╣║║║║╣ ╚═╗  ╠╦╝║ ║║  ║╣ ╚═╗
+                ╚═╝╩ ╩╩ ╩╚═╝╚═╝  ╩╚═╚═╝╩═╝╚═╝╚═╝
+                                                                                                                      \s
+                """;
+        out.println(gamesRulesLogo);
+    }
 
 
-    //titoli per le fasi
+
+    // titles for the phases of the game and the lobby
     public static void printGlobalLobbyPhase() {
         String globalLobbyPhaseLogo = """
                 
-                ╔═╗╦  ╔═╗╔╗ ╔═╗╦    ╦  ╔═╗╔╗ ╔╗ ╦ ╦
-                ║ ╦║  ║ ║╠╩╗╠═╣║    ║  ║ ║╠╩╗╠╩╗╚╦╝
-                ╚═╝╩═╝╚═╝╚═╝╩ ╩╩═╝  ╩═╝╚═╝╚═╝╚═╝ ╩\s
+                                            ╔═╗╦  ╔═╗╔╗ ╔═╗╦    ╦  ╔═╗╔╗ ╔╗ ╦ ╦
+                                            ║ ╦║  ║ ║╠╩╗╠═╣║    ║  ║ ║╠╩╗╠╩╗╚╦╝
+                                            ╚═╝╩═╝╚═╝╚═╝╩ ╩╩═╝  ╩═╝╚═╝╚═╝╚═╝ ╩\s
                 
                 """;
         out.println(globalLobbyPhaseLogo);
@@ -99,9 +115,9 @@ public class PrinterLogo {
     public static void printGameLobbyPhase() {
         String gameLobbyPhaseLogo = """
                 
-                ╔═╗╔═╗╔╦╗╔═╗  ╦  ╔═╗╔╗ ╔╗ ╦ ╦
-                ║ ╦╠═╣║║║║╣   ║  ║ ║╠╩╗╠╩╗╚╦╝
-                ╚═╝╩ ╩╩ ╩╚═╝  ╩═╝╚═╝╚═╝╚═╝ ╩\s
+                                               ╔═╗╔═╗╔╦╗╔═╗  ╦  ╔═╗╔╗ ╔╗ ╦ ╦
+                                               ║ ╦╠═╣║║║║╣   ║  ║ ║╠╩╗╠╩╗╚╦╝
+                                               ╚═╝╩ ╩╩ ╩╚═╝  ╩═╝╚═╝╚═╝╚═╝ ╩\s
                 
                 """;
         out.println(gameLobbyPhaseLogo);
@@ -165,9 +181,9 @@ public class PrinterLogo {
     public static void printFinalRankingPhase() {
         String finalRankingPhaseLogo = """
                 
-                ╔═╗╦╔╗╔╔═╗╦    ╦═╗╔═╗╔╗╔╦╔═╦╔╗╔╔═╗
-                ╠╣ ║║║║╠═╣║    ╠╦╝╠═╣║║║╠╩╗║║║║║ ╦
-                ╚  ╩╝╚╝╩ ╩╩═╝  ╩╚═╩ ╩╝╚╝╩ ╩╩╝╚╝╚═╝
+                                ╔═╗╦╔╗╔╔═╗╦    ╦═╗╔═╗╔╗╔╦╔═╦╔╗╔╔═╗
+                                ╠╣ ║║║║╠═╣║    ╠╦╝╠═╣║║║╠╩╗║║║║║ ╦
+                                ╚  ╩╝╚╝╩ ╩╩═╝  ╩╚═╩ ╩╝╚╝╩ ╩╩╝╚╝╚═╝
                 
                 """;
         out.println(finalRankingPhaseLogo);
@@ -175,7 +191,7 @@ public class PrinterLogo {
 
 
 
-    //disegnini
+    // drawings :)
     public static void printWinnerLogo() {
         String winnerLogo = """
 
