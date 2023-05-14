@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.GUI;
 
-import it.polimi.ingsw.view.ClientInterface;
 import it.polimi.ingsw.view.ClientView;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -157,7 +156,7 @@ public abstract class BasePanel extends StackPane {
             }
         });
 
-        ImageView personalGoalCard = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\personal goal cards\\Personal_Goals"+clientView.getIndexPersonal()+".png"));
+        ImageView personalGoalCard = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\personal goal cards\\Personal_Goals"+(clientView.getIndexPersonal()+1)+".png"));
         personalGoalCard.setFitWidth(screenBounds.getWidth()*0.5);
         personalGoalCard.setFitHeight(screenBounds.getHeight()*0.5);
         personalGoalCard.setPreserveRatio(true);
