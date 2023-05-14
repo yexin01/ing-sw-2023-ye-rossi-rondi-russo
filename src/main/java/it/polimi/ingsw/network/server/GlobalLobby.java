@@ -165,7 +165,7 @@ public class GlobalLobby {
         //o lo trova nella waitingPlayersWithNoGame o lo trova in una gameLobby
         if(waitingPlayersWithNoGame.containsKey(nickname)){
             waitingPlayersWithNoGame.remove(nickname);
-        } else {
+        } else if (isPlayerActiveInAnyGameLobby(nickname)){
             for (GameLobby gameLobby : gameLobbies.values()) {
                 if (gameLobby.isPlayerActiveInThisGame(nickname)) {
                     gameLobby.changePlayerInDisconnected(nickname);
@@ -179,6 +179,8 @@ public class GlobalLobby {
                     return;
                 }
             }
+        } else {
+            System.out.println("Player "+nickname+" is not in the global lobby!");
         }
     }
 
