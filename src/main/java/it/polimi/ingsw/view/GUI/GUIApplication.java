@@ -1,7 +1,6 @@
 package it.polimi.ingsw.view.GUI;
 
 import it.polimi.ingsw.controller.TurnPhase;
-import it.polimi.ingsw.network.client.ClientMain;
 import it.polimi.ingsw.view.ClientInterface;
 import it.polimi.ingsw.view.ClientView;
 import javafx.application.Application;
@@ -21,7 +20,7 @@ public class GUIApplication extends Application implements ClientInterface {
     public void start(Stage stage) throws Exception {
         this.stage = stage;
         this.clientView = new ClientView();
-        ClientMain.semaphore.release();
+        //ClientMain.semaphore.release();
     }
 
     @Override
