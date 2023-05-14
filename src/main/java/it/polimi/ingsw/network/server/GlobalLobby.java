@@ -115,6 +115,8 @@ public class GlobalLobby {
             GameLobby gameLobby = new GameLobby(getFirstFreeGameLobbyId(), MIN_PLAYERS);
             gameLobbies.put(gameLobby.getIdGameLobby(), gameLobby);
             gameLobby.addPlayerToGame(nickname, connection);
+
+            System.out.println("\nCreated a new game lobby with id: "+gameLobby.getIdGameLobby()+" and added player "+nickname+" to it!\n");
         }
         waitingPlayersWithNoGame.remove(nickname);
     }
@@ -124,6 +126,9 @@ public class GlobalLobby {
         for (GameLobby gameLobby : gameLobbies.values()) {
             if (gameLobby.containsPlayerDisconnectedInThisGame(nickname)) {
                 gameLobby.changePlayerInActive(nickname, connection);
+
+                System.out.println("Player "+nickname+" is now disconnected in game lobby "+gameLobby.getIdGameLobby()+".. ora mando il mess a tutti!");
+
 
                 MessageHeader header = new MessageHeader(MessageType.LOBBY, nickname);
                 MessagePayload payload = new MessagePayload(KeyLobbyPayload.RECONNECT_TO_GAME_LOBBY);
@@ -170,12 +175,14 @@ public class GlobalLobby {
                 if (gameLobby.isPlayerActiveInThisGame(nickname)) {
                     gameLobby.changePlayerInDisconnected(nickname);
 
+                    System.out.println("Player "+nickname+" is now disconnected in game lobby "+gameLobby.getIdGameLobby()+".. ora mando il mess a tutti!");
+
                     MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
                     MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
                     String content = "Player "+nickname+" disconnected from Game Lobby "+ gameLobby.getIdGameLobby()+ "!";
                     payload.put(Data.CONTENT,content);
                     Message message = new Message(header,payload);
-                    gameLobby.sendMessageToAllPlayersExceptOne(message, nickname);
+                    gameLobby.sendMessageToAllPlayers(message); //doesn't send to the disconnected player because he is not active (in players map) anymore
                     return;
                 }
             }

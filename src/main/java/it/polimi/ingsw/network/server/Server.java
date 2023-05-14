@@ -49,10 +49,54 @@ public class Server implements Runnable{
         globalLobby = new GlobalLobby();
     }
 
-    public static void main(String[] args){
+    public static void main(){
         Server server = new Server();
         server.run();
     }
+
+    public Server(String ipAddress, int rmiPort, int socketPort) {
+        this.rmiPort = rmiPort;
+        this.socketPort = socketPort;
+
+        synchronized (clientsLock) {
+            this.clientsConnected = new ConcurrentHashMap<>();
+        }
+
+        startServers();
+        executor = new ThreadPoolExecutor(4, 20, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+        globalLobby = new GlobalLobby();
+    }
+
+    /*
+    Per avviare il server da terminale macbook: (da cambiare il path in base alla posizione del progetto):
+    
+    cd ~/Desktop/prog_sw/progsw_ingsw2023/ing-sw-2023-ye-rossi-rondi-russo
+
+    mvn clean install
+    javac src/main/java/it/polimi/ingsw/network/server/Server.java
+    java src/main/java/it/polimi/ingsw/network/server/Server 6000 7000 192.168.1.100
+
+     */
+
+    public static void main(String[] args){
+        int rmiPort = 51633; // porta di default
+        int socketPort = 51634; // porta di default
+        String ipAddress = "127.0.0.1"; // indirizzo IP di default
+
+        if (args.length >= 1) {
+            rmiPort = Integer.parseInt(args[0]);
+        }
+        if (args.length >= 2) {
+            socketPort = Integer.parseInt(args[1]);
+        }
+        if (args.length >= 3) {
+            ipAddress = args[2];
+        }
+
+        Server server = new Server(ipAddress, rmiPort, socketPort);
+        server.run();
+    }
+
 
     private void startServers(){
         if (instance != null) {

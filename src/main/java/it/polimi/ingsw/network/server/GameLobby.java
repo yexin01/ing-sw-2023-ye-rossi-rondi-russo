@@ -89,7 +89,6 @@ public class GameLobby {
         }
     }
 
-    //TODO: quando è isFull è vera allora crea il Game e tutto
     public boolean isFull(){
         return players.size() == wantedPlayers;
     }
