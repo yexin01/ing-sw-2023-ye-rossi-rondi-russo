@@ -44,18 +44,22 @@ public class ErrorHandler extends MessageHandler {
                 }
             }
             case ERROR_CONNECTION -> {
+                getClientInterface().askNicknameAndConnection();
+                /*
                 if(error.equals(ErrorType.PING_NOT_RECEIVED)){
                 }
                 if(error.equals(ErrorType.ERR_NICKNAME_LENGTH) || error.equals(ErrorType.ERR_NICKNAME_TAKEN)){
                     getClientInterface().askNicknameAndConnection();
                 }
 
+                 */
+
             }
             case ERROR_LOBBY -> {
                 if(error.equals(ErrorType.ERR_NO_FREE_SPOTS)){
                     System.out.println("IN REALTA NON SEI UN ERRORE PERCHE IL GIOCO CONTINUA");
                 } else if(error.equals(ErrorType.ERR_RECONNECT_TO_GAME_LOBBY) || error.equals(ErrorType.ERR_JOIN_GLOBAL_LOBBY)){
-                    new ClientMain();
+                    getClientInterface().askNicknameAndConnection();
                 }else {
                     getClientInterface().askLobbyDecision();
                 }
