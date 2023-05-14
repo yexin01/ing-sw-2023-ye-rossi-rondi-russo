@@ -2,15 +2,8 @@ package it.polimi.ingsw.view.GUI;
 
 
 import it.polimi.ingsw.view.ClientView;
-
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -105,6 +98,21 @@ public class EndTurnPanel extends BasePanel {
         vBox2.setAlignment(Pos.TOP_RIGHT);
         vBox2.setPickOnBounds(false);
         getChildren().add(vBox2);
+
+        VBox vBox3 = new VBox();
+        vBox3.setMaxSize(450, 250);
+        Label label2 = new Label(clientView.getNickname()+":"); label2.setFont(font); label2.setTextFill(Color.YELLOW);
+        Label label3 = new Label("Total points: "+clientView.getPlayerPoints().getPoints()); label3.setFont(font); label3.setTextFill(Color.WHITE);
+        Label label4 = new Label("Personal Goal points: "+clientView.getPlayerPoints().getPersonalGoalPoints()); label4.setFont(font); label4.setTextFill(Color.WHITE);
+        Label label5 = new Label("Adjacent tiles points: "+clientView.getPlayerPoints().getAdjacentPoints()); label5.setFont(font); label5.setTextFill(Color.WHITE);
+        vBox3.setSpacing(15);
+        vBox3.getChildren().addAll(label2, label3, label4, label5);
+        label2.setAlignment(Pos.TOP_CENTER);
+        label3.setAlignment(Pos.CENTER_LEFT);
+        label4.setAlignment(Pos.CENTER_LEFT);
+        label5.setAlignment(Pos.CENTER_LEFT);
+        getChildren().add(vBox3);
+        setAlignment(vBox3, Pos.CENTER);
     }
 
     /*private Button createEmptyBoardButton(Button button) {

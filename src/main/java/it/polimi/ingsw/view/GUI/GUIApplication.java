@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.GUI;
-import it.polimi.ingsw.App;
+
 import it.polimi.ingsw.controller.TurnPhase;
-import it.polimi.ingsw.message.Message;
+import it.polimi.ingsw.network.client.ClientMain;
 import it.polimi.ingsw.view.ClientInterface;
 import it.polimi.ingsw.view.ClientView;
 import javafx.application.Application;
@@ -10,20 +10,18 @@ import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Semaphore;
-
 public class GUIApplication extends Application implements ClientInterface {
     private Stage stage;
     private ClientView clientView;
     private ChoicePanel choicePanel;
     private int column;
-    Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
 
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
         this.clientView = new ClientView();
+        ClientMain.semaphore.release();
     }
 
     @Override
@@ -48,6 +46,7 @@ public class GUIApplication extends Application implements ClientInterface {
 
     @Override
     public void askCoordinates() throws Exception {
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         ChoicePanel choicePanel = new ChoicePanel(clientView, screenBounds.getWidth()*0.28);
         this.choicePanel = choicePanel;
         BoardBoxPanel boardBoxPanel = new BoardBoxPanel(clientView, choicePanel);
@@ -73,7 +72,10 @@ public class GUIApplication extends Application implements ClientInterface {
 
     @Override
     public void displayError(String error) {
-
+        DisconnectionPanel disconnectionPanel = new DisconnectionPanel();
+        Scene scene = new Scene(disconnectionPanel);
+        stage.setScene(scene);
+        stage.show();
     }
 
     @Override
@@ -86,7 +88,6 @@ public class GUIApplication extends Application implements ClientInterface {
 
     @Override
     public void askLobbyDecision() throws Exception {
-
     }
 
     @Override
