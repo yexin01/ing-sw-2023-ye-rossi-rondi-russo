@@ -216,7 +216,8 @@ public class CLI implements ClientInterface {
             case PRINT3 -> printerBookshelfAndPersonal.printPersonal(getClientView(),2,35);
             case PRINT4 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,1,60,true,false,0);
             case PRINT5 -> printerCommonGoalAndPoints.printPoints(getClientView());
-            case PRINT6 -> printerCommonGoalAndPoints.printCommonGoalCards(getClientView());
+            //TODO poi gli passero i valori delle common
+            case PRINT6 -> printerCommonGoalAndPoints.printCommonGoalCards(0,1);
             case PRINT7 -> printerStartAndEndTurn.rulesGame();
             //case PRINT8 -> clientView.somethingWrong();
         }
