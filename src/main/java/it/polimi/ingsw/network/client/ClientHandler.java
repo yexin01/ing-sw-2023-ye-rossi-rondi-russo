@@ -7,19 +7,23 @@ import it.polimi.ingsw.view.ClientInterface;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * Class that creates a new client handler that handles the messages received from the server
+ */
 public class ClientHandler implements Runnable {
-
     private Client client;
 
     private Thread messageHandlerThread;
     private BlockingQueue<Message> queueToHandle = new LinkedBlockingQueue<>();
     private ManagerHandlers managerHandlers=new ManagerHandlers();
-    //serve da buffer tra il thread del clientHandler e il thread che riceve i messaggi dalla connessione di rete (sia essa di tipo RMI o Socket)
-
+    // is a buffer between the clientHandler thread and the thread that receives messages from the network connection (whether it is RMI or Socket)
     private boolean isRMI;
 
-
-   public void run() {
+    /**
+     * the run method of the class ClientHandler that handles the messages received from the server
+     * when the queue of messages to handle is not empty, it takes the first message from the queue and handles it
+     */
+    public void run() {
         while (true) {
             synchronized (this) {
                 while (queueToHandle.isEmpty()) {
@@ -39,11 +43,21 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Method to add a message to the queue of messages to handle
+     * @param message the message to add to the queue
+     */
     public synchronized void addMessageToQueue(Message message) {
         queueToHandle.add(message);
         notify();
     }
 
+    /**
+     * Method to create a new message handler thread that handles the messages received from the server:
+     * if the client is a ClientRMI, it handles the message directly
+     * if the client is a ClientSocket, it adds the message to the queue of messages to handle
+     * @param client the client that receives the messages from the server
+     */
     public void createMessageHandlerThread(Client client) {
         this.client = client;
         messageHandlerThread = new Thread(() -> {
@@ -55,14 +69,12 @@ public class ClientHandler implements Runnable {
                     throw new RuntimeException(e);
                 }
                 if (isRMI) {
-                    // se il client è un ClientRMI, gestisce il messaggio direttamente
                     try {
                         handleMessageFromServer(message);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 } else {
-                    // se il client è un ClientSocket, aggiunge il messaggio alla coda di messaggi
                     synchronized (this) {
                         addMessageToQueue(message);
                         try {
@@ -77,6 +89,14 @@ public class ClientHandler implements Runnable {
         messageHandlerThread.start();
     }
 
+    /**
+     * Method to create a new connection between client and server
+     * @param isRMI 0 if the connection is a socket connection, 1 if the connection is an RMI connection
+     * @param ip the ip of the server
+     * @param port the port of the server
+     * @param clientInterface the client interface of the client
+     * @throws Exception if there are problems with the connection
+     */
     public void createConnection(int isRMI,String ip, int port,ClientInterface clientInterface) throws Exception {
         String connection;
         String nickname=clientInterface.getClientView().getNickname();
@@ -118,7 +138,12 @@ public class ClientHandler implements Runnable {
 
     }
 
-    public synchronized void handleMessageFromServer(Message message) throws Exception {
+    /**
+     * Method to handle the messages received from the server and to call the right handler for the message received
+     * @param message the message received from the server
+     * @throws Exception if there are problems with the connection
+     */
+    public void handleMessageFromServer(Message message) throws Exception {
         //System.out.println("sono il clientHandler.. " + message.toString());
         managerHandlers.handleMessageFromServer(message);
 

@@ -17,7 +17,7 @@ public interface RMIHandler extends Remote {
      * @param message the message received from the client
      * @throws Exception if there are problems with the connection
      */
-    public void receiveMessageFromClient(Message message) throws Exception;
+    void receiveMessageFromClient(Message message) throws Exception;
 
     /**
      * Method to login to the server through the RMI connection so that the server can add the player to the clientsConnected list
@@ -25,12 +25,12 @@ public interface RMIHandler extends Remote {
      * @param client the RMI connection between server and client
      * @throws Exception if there are problems with the connection
      */
-    public void login(String username, RMIClientConnection client) throws Exception;
+    void login(String username, RMIClientConnection client) throws Exception;
 
     /**
      * Method to disconnect from the server through the RMI connection so that the server can remove the player from the clientsConnected list
      * @throws IOException if there are problems with the connection
      */
-    public void disconnectMe() throws IOException;
+    void disconnectMe() throws IOException;
 
 }

@@ -34,7 +34,7 @@ public class RMIHandlerImplementation extends UnicastRemoteObject implements RMI
      * @throws Exception if there are problems with the connection
      */
     @Override
-    public void receiveMessageFromClient(Message message) throws Exception {
+    public synchronized void receiveMessageFromClient(Message message) throws Exception {
         server.receiveMessageFromClient(message);
     }
 

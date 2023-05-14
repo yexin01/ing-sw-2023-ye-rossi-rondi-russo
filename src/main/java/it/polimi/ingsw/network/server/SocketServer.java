@@ -69,7 +69,7 @@ public class SocketServer extends Thread {
      * @param message the message received from the client through the socket connection
      * @throws Exception if there are problems with the input/output streams of the socket connection
      */
-    public void receiveMessageFromClient(Message message) throws Exception {
+    public synchronized void receiveMessageFromClient(Message message) throws Exception {
         server.receiveMessageFromClient(message);
     }
 
