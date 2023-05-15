@@ -20,6 +20,8 @@ public class ModelView {
     private int indexRemoveToken;
     private ArrayList<String> playersOrder;
     private String turnPlayer;
+    private int[] idCommon;
+    private int[] idPersonal;
 
     private BoardBoxView[][] boardView;
     private CommonGoalView[] commonGoalViews;
@@ -38,8 +40,8 @@ public class ModelView {
         bookshelfView=new ItemTileView[numPlayers][gameRules.getRowsBookshelf()][gameRules.getColumnsBookshelf()];
         playerPoints=new PlayerPointsView[numPlayers];
         playerPersonalGoal=new PersonalGoalCard[numPlayers];
-
-
+        idPersonal=new int[numPlayers];
+        idCommon=new int[gameRules.getNumOfCommonGoals()];
     }
 
     public int getIntegerValue(String nickname) {
@@ -90,19 +92,22 @@ public class ModelView {
 
 
 
-    public ItemTileView[][] getBookshelfView(java.lang.String nickname) {
+    public ItemTileView[][] getBookshelfView(String nickname) {
         return bookshelfView[getIntegerValue(nickname)];
     }
 
-    public void setBookshelfView(ItemTileView[][] bookshelfView, java.lang.String nickname) {
+    public void setBookshelfView(ItemTileView[][] bookshelfView,String nickname) {
         this.bookshelfView[getIntegerValue(nickname)] = bookshelfView;
     }
 
-    public PlayerPointsView getPlayerPoints(java.lang.String nickname) {
+    public PlayerPointsView getPlayerPoints(String nickname) {
         return playerPoints[getIntegerValue(nickname)];
     }
+    public int getIdPersonal(String nickname) {
+        return idPersonal[getIntegerValue(nickname)];
+    }
 
-    public void setPlayerPoints(PlayerPointsView playerPersonalGoal, java.lang.String nickname) {
+    public void setPlayerPoints(PlayerPointsView playerPersonalGoal,String nickname) {
         this.playerPoints[getIntegerValue(nickname)] = playerPersonalGoal;
         listenerManager.fireEvent(KeyDataPayload.END_TURN,nickname,this);
     }
@@ -181,6 +186,22 @@ public class ModelView {
 
     public void setTurnPlayer(String turnPlayer) {
         this.turnPlayer = turnPlayer;
+    }
+
+    public int[] getIdCommon() {
+        return idCommon;
+    }
+
+    public void setIdCommon(int[] idCommon) {
+        this.idCommon = idCommon;
+    }
+
+    public int[] getIdPersonal() {
+        return idPersonal;
+    }
+
+    public void setIdPersonal(int[] idPersonal) {
+        this.idPersonal = idPersonal;
     }
 /*
     public void setPlayersId(HashMap<String, Integer> playersId) {

@@ -34,10 +34,11 @@ public class GameLobby {
      * @param idGameLobby the id of the game lobby
      * @param wantedPlayers the number of players wanted in the game lobby
      */
-    public GameLobby(int idGameLobby, int wantedPlayers){
+    public GameLobby(int idGameLobby, int wantedPlayers,GlobalLobby globalLobby){
         this.idGameLobby= idGameLobby;
         this.wantedPlayers = wantedPlayers;
         players = new ConcurrentHashMap<>();
+        infoAndEndGameListener=new InfoAndEndGameListener(this,globalLobby);
         playersDisconnected = new CopyOnWriteArrayList<>();
     }
 
@@ -50,7 +51,7 @@ public class GameLobby {
         for (String player : players.keySet()) {
             playersGame.add(player);
         }
-        this.gameController=new GameController(this,playersGame);
+        this.gameController=new GameController(this,playersGame,infoAndEndGameListener);
     }
 
     /**
@@ -216,13 +217,14 @@ public class GameLobby {
         players.put(nickname,connection);
 
         MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
-        MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
+        MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_CONNECTION);
         String content = "Player "+nickname+" reconnected to Game Lobby "+ idGameLobby + "!";
         payload.put(Data.CONTENT,content);
         Message message = new Message(header,payload);
         sendMessageToAllPlayersExceptOne(message, nickname);
         content="YOU reconnected to Game Lobby "+ idGameLobby + "!";
-        payload=new MessagePayload(KeyConnectionPayload.BROADCAST);
+        payload=new MessagePayload(KeyErrorPayload.ERROR_CONNECTION);
+        payload.put(Data.ERROR,ErrorType.DISCONNECTION);
         payload.put(Data.CONTENT,content);
         message=new Message(header,payload);
         sendMessageToSpecificPlayer(message, nickname);
@@ -248,7 +250,8 @@ public class GameLobby {
         playersDisconnected.add(nickname);
         players.remove(nickname);
         MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
-        MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
+        MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_CONNECTION);
+        payload.put(Data.ERROR,ErrorType.DISCONNECTION);
         payload.put(Data.CONTENT,content);
         Message message = new Message(header,payload);
         sendMessageToAllPlayersExceptOne(message, nickname);

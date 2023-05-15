@@ -63,7 +63,7 @@ public class GlobalLobby {
      */
     public synchronized void playerCreatesGameLobby(int wantedPlayers, String nickname,Connection connection) throws IOException {
         int gameId = getFirstFreeGameLobbyId();
-        GameLobby gameLobby = new GameLobby(gameId, wantedPlayers);
+        GameLobby gameLobby = new GameLobby(gameId, wantedPlayers,this);
         gameLobbies.put(gameId, gameLobby);
 
         waitingPlayersWithNoGame.remove(nickname);
@@ -148,7 +148,7 @@ public class GlobalLobby {
             payload.put(Data.ERROR, ErrorType.ERR_NO_FREE_SPOTS);
             connection.sendMessageToClient(new Message(header,payload));
 
-            GameLobby gameLobby = new GameLobby(getFirstFreeGameLobbyId(), MIN_PLAYERS);
+            GameLobby gameLobby = new GameLobby(getFirstFreeGameLobbyId(), MIN_PLAYERS,this);
             gameLobbies.put(gameLobby.getIdGameLobby(), gameLobby);
             gameLobby.addPlayerToGame(nickname, connection);
 
@@ -234,7 +234,8 @@ public class GlobalLobby {
                     System.out.println("Player "+nickname+" is now disconnected in game lobby "+gameLobby.getIdGameLobby()+".. ora mando il mess a tutti!");
 
                     MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
-                    MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
+                    MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_CONNECTION);
+                    payload.put(Data.ERROR,ErrorType.DISCONNECTION);
                     String content = "Player "+nickname+" disconnected from Game Lobby "+ gameLobby.getIdGameLobby()+ "!";
                     payload.put(Data.CONTENT,content);
                     Message message = new Message(header,payload);

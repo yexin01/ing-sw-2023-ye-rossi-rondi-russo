@@ -36,6 +36,10 @@ public class StartAndEndGameHandler extends MessageHandler {
                 getClientInterface().getClientView().setPlayerPersonalGoal(personalGoalCard);
                 String[] players=((String[])mes.getPayload().getContent(Data.PLAYERS));
                 getClientInterface().getClientView().setPlayers(players);
+                int[] idCommon=((int[])mes.getPayload().getContent(Data.IDCOMMON));
+                getClientInterface().getClientView().setIdCommonGoals(idCommon);
+                int idPersonal=((int)mes.getPayload().getContent(Data.IDPERSONAL));
+                getClientInterface().getClientView().setIdPersonal(idPersonal);
                 CommonGoalView[] commonGoalViews=((CommonGoalView[])mes.getPayload().getContent(Data.COMMON_GOAL_CARD));
                 getClientInterface().getClientView().setCommonGoalViews(commonGoalViews);
                 PlayerPointsView playerPointsView=((PlayerPointsView)mes.getPayload().getContent(Data.POINTS));
@@ -105,7 +109,7 @@ public class StartAndEndGameHandler extends MessageHandler {
             }
             case END_GAME ->{
                 getClientInterface().endGame();
-                String[] ranking=(String[]) mes.getPayload().getContent(Data.RANKING);
+                //String[] ranking=(String[]) mes.getPayload().getContent(Data.RANKING);
                 //messagePayload=new MessagePayload(KeyDataPayload.END_GAME);
             }
         }

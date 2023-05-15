@@ -229,10 +229,7 @@ public class CLI implements ClientInterface {
         int input;
         Commands commands;
         int enumSize=-1;
-        if(phase==-2){
-            printLobbyCommands(CommandsEndGame.class);
-            enumSize=CommandsEndGame.values().length;
-        }else if(phase==-1){
+        if(phase==-1){
             printLobbyCommands(CommandsLobby.class);
             enumSize=CommandsLobby.values().length;
         }else{
@@ -248,9 +245,7 @@ public class CLI implements ClientInterface {
             return null;
         }
         out.println();
-        if(phase==-2){
-            return CommandsEndGame.values()[input];
-        }
+
         if(phase==-1){
             return CommandsLobby.values()[input];
         }else return CommandsTurn.values()[input];
@@ -597,6 +592,9 @@ public class CLI implements ClientInterface {
                     continueToAsk=false;
                     //payload = new MessagePayload(KeyLobbyPayload.JOIN_RANDOM_GAME_LOBBY);
                 }
+                case QUIT_SERVER -> {
+                    clientView.lobby(KeyLobbyPayload.QUIT_SERVER,-1);
+                }
                 /*
                 case RESET_CHOICE ->{
                     if(payload == null){
@@ -624,18 +622,7 @@ public class CLI implements ClientInterface {
 
     @Override
     public boolean endGame() throws Exception {
-        CommandsEndGame commandsEndGame=(CommandsEndGame) checkCommand(-2);
-        switch(commandsEndGame){
-            case QUIT_GAME -> {
-                out.println("you choose quit");
-                clientView.endGame(1);
-            }
-            case JOIN_NEW_GAME ->{
-                out.println("you choose new game");
-                clientView.endGame(0);
-            }
-
-        }
+        askLobbyDecision();
         printerStartAndEndTurn.endGame(getClientView());
         return false;
     }
