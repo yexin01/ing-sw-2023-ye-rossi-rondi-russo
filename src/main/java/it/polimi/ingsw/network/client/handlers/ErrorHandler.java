@@ -7,13 +7,11 @@ import it.polimi.ingsw.network.client.ClientMain;
 import it.polimi.ingsw.view.ClientInterface;
 
 public class ErrorHandler extends MessageHandler {
-    private final LobbyHandler lobbyHandler;
-    public ErrorHandler(ClientInterface clientInterface, Client client, LobbyHandler lobbyHandler) {
+
+    public ErrorHandler(ClientInterface clientInterface, Client client) {
         super(clientInterface, client);
-        this.lobbyHandler = lobbyHandler;
+
     }
-
-
 
     @Override
     public void handleMessage(Message mes) throws Exception {
@@ -28,20 +26,6 @@ public class ErrorHandler extends MessageHandler {
             }
             case ERROR_CONNECTION -> {
                 switch(error){
-                    //TODO finire gli errori di disconnessione
-                    /*
-                    case DISCONNECTION -> {
-                        switch((KeyErrorPayload)mes.getPayload().getContent(Data.CONTENT)){
-                            //un giocatore si é riconnesso
-                            case BROADCAST,RECONNECTION_DURING_GAME -> getClientInterface().displayMessage((String) mes.getPayload().getContent(Data.VALUE_CLIENT));
-                            //case CONNECTION_CREATION ->
-                            //case DISCONNECTION_FORCED ->
-                        }
-
-
-                    }
-
-                     */
                     //mandato direttamente dal clientHandler ti sei disconnesso questa gestine potrà cambiare
                     case PING_NOT_RECEIVED -> {
                         getClientInterface().displayError(error.getErrorMessage());
@@ -56,13 +40,9 @@ public class ErrorHandler extends MessageHandler {
                         getClientInterface().endGame();
                     }
                 }
-
             }
             case ERROR_LOBBY -> {
-                //il gioco continua automaticamente con startGame
-                //if(error.equals(ErrorType.ERR_NO_FREE_SPOTS)){
-                    //System.out.println("IN REALTA NON SEI UN ERRORE PERCHE IL GIOCO CONTINUA");
-                /*} else*/ if(error.equals(ErrorType.ERR_RECONNECT_TO_GAME_LOBBY) || error.equals(ErrorType.ERR_JOIN_GLOBAL_LOBBY)){
+                if(error.equals(ErrorType.ERR_RECONNECT_TO_GAME_LOBBY) || error.equals(ErrorType.ERR_JOIN_GLOBAL_LOBBY)){
                     getClientInterface().askNicknameAndConnection();
                 }else {
                     getClientInterface().askLobbyDecision();

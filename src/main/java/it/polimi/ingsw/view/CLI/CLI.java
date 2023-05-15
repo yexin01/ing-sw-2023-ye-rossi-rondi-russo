@@ -531,13 +531,12 @@ public class CLI implements ClientInterface {
 
     @Override
     public void displayMessage(String error) {
-        Colors.colorize(Colors.GREEN_CODE, error);
+        Colors.colorize(Colors.BLUE_CODE, error);
     }
 
 
     @Override
     public void askNicknameAndConnection() throws Exception {
-        //Colors.colorize(Colors.YELLOW_CODE,"QUESTA E LA TUA NUOVA LA CLI");
         PrinterLogo.printMyShelfieLogo();
         initialLobby();
     }
@@ -547,7 +546,6 @@ public class CLI implements ClientInterface {
     public void askLobbyDecision() throws Exception {
         PrinterLogo.printGlobalLobbyPhase();
         out.println();
-       // Colors.colorize(Colors.ERROR_MESSAGE,"Welcome to Lobby what do you want to do?\n");
         boolean continueToAsk = true;
         MessageHeader header=new MessageHeader(MessageType.LOBBY, getClientView().getNickname());
         MessagePayload payload = null;

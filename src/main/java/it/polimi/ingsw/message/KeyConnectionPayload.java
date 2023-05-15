@@ -5,7 +5,8 @@ package it.polimi.ingsw.message;
  */
 public enum KeyConnectionPayload implements KeyAbstractPayload {
     CONNECTION_CREATION,
-    RECONNECTION_DURING_GAME,
-    DISCONNECTION_FORCED, // from the server
-    BROADCAST // only to print to the client
+
+    RECONNECTION,
+   // DISCONNECTION_FORCED, // from the server
+    BROADCAST; // only to print to the client
 }

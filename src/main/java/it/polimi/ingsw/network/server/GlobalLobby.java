@@ -1,7 +1,6 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.message.*;
-import it.polimi.ingsw.model.Game;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,8 +47,8 @@ public class GlobalLobby {
 
         MessageHeader header = new MessageHeader(MessageType.LOBBY, nickname);
         MessagePayload payload = new MessagePayload(KeyLobbyPayload.GLOBAL_LOBBY_DECISION);
-        String content = "Welcome to the Global Lobby!";
-        payload.put(Data.CONTENT,content);
+        //String content = "Welcome to the Global Lobby!";
+        //payload.put(Data.CONTENT,content);
         connection.sendMessageToClient(new Message(header,payload));
     }
 
@@ -71,11 +70,15 @@ public class GlobalLobby {
         //it adds the player to the game lobby and sends a message to the player that the game lobby has been created as requested
         gameLobby.addPlayerToGame(nickname, connection);
 
+        //questo messaggio lo manda già la gameLobby
+        /*
         MessageHeader header = new MessageHeader(MessageType.LOBBY, nickname);
-        MessagePayload payload = new MessagePayload(KeyLobbyPayload.CREATE_GAME_LOBBY);
+        MessagePayload payload = new MessagePayload(KeyLobbyPayload.ACK_LOBBY);
         String content = "Game Lobby created!";
         payload.put(Data.CONTENT,content);
         connection.sendMessageToClient(new Message(header,payload));
+
+         */
 
         System.out.println("\nCreated a new game lobby with id: "+gameId+" and added player "+nickname+" to it!\n");
     }
@@ -106,17 +109,13 @@ public class GlobalLobby {
             connection.sendMessageToClient(new Message(header,payload));
 
         } else {
-
-            gameLobby.addPlayerToGame(nickname,connection);
-
             waitingPlayersWithNoGame.remove(nickname);
-
-            MessageHeader header = new MessageHeader(MessageType.LOBBY, nickname);
-            MessagePayload payload = new MessagePayload(KeyLobbyPayload.JOIN_SPECIFIC_GAME_LOBBY);
-            String content = "You have joined the game lobby requested!";
+            MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
+            MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
+            String content = "You have joined the game lobby requested! Waiting For all players";
             payload.put(Data.CONTENT,content);
             connection.sendMessageToClient(new Message(header,payload));
-
+            gameLobby.addPlayerToGame(nickname,connection);
         }
     }
 
@@ -131,21 +130,23 @@ public class GlobalLobby {
         boolean done = false;
         for (GameLobby gameLobby : gameLobbies.values()) {
             if (!gameLobby.isFull() && !done) {
-                gameLobby.addPlayerToGame(nickname, connection);
-                done = true;
 
-                MessageHeader header = new MessageHeader(MessageType.LOBBY, nickname);
-                MessagePayload payload = new MessagePayload(KeyLobbyPayload.JOIN_RANDOM_GAME_LOBBY);
+
+                MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
+                MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
                 String content = "You have joined the first free spot available in a random game!";
                 payload.put(Data.CONTENT,content);
                 connection.sendMessageToClient(new Message(header,payload));
+                gameLobby.addPlayerToGame(nickname, connection);
+                done = true;
+
             }
         }
         if(!done){ // if there is no free spot in any game lobby, create a new game lobby with minimum number of players
 
-            MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
-            MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_LOBBY);
-            payload.put(Data.ERROR, ErrorType.ERR_NO_FREE_SPOTS);
+            MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
+            MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
+            payload.put(Data.CONTENT, ErrorType.ERR_NO_FREE_SPOTS.getErrorMessage());
             connection.sendMessageToClient(new Message(header,payload));
 
             GameLobby gameLobby = new GameLobby(getFirstFreeGameLobbyId(), MIN_PLAYERS,this);
@@ -170,22 +171,28 @@ public class GlobalLobby {
                 gameLobby.changePlayerInActive(nickname, connection);
 
                 System.out.println("Player "+nickname+" is now disconnected in game lobby "+gameLobby.getIdGameLobby()+".. ora mando il mess a tutti!");
-
-
+                return;
+                //viene già inviato nella game lobby
+/*
                 MessageHeader header = new MessageHeader(MessageType.LOBBY, nickname);
                 MessagePayload payload = new MessagePayload(KeyLobbyPayload.RECONNECT_TO_GAME_LOBBY);
                 String content = "You have been reconnected to your previous game lobby!";
                 payload.put(Data.CONTENT,content);
                 connection.sendMessageToClient(new Message(header,payload));
                 return;
+
+ */
             }
         }
+        //non può arrivare al client se e disconnesso
+        /*
 
         MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
-        MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_LOBBY);
+        MessagePayload payload = new MessagePayload(KeyConnectionPayload.RECONNECTION);
         payload.put(Data.ERROR, ErrorType.ERR_RECONNECT_TO_GAME_LOBBY);
         connection.sendMessageToClient(new Message(header,payload));
 
+         */
     }
 
     /**
@@ -230,7 +237,8 @@ public class GlobalLobby {
             for (GameLobby gameLobby : gameLobbies.values()) {
                 if (gameLobby.isPlayerActiveInThisGame(nickname)) {
                     gameLobby.changePlayerInDisconnected(nickname);
-
+                    //se appartiene ad una gameLobby questo messaggio viene già inviato
+                    /*
                     System.out.println("Player "+nickname+" is now disconnected in game lobby "+gameLobby.getIdGameLobby()+".. ora mando il mess a tutti!");
 
                     MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
@@ -239,7 +247,8 @@ public class GlobalLobby {
                     String content = "Player "+nickname+" disconnected from Game Lobby "+ gameLobby.getIdGameLobby()+ "!";
                     payload.put(Data.CONTENT,content);
                     Message message = new Message(header,payload);
-                    gameLobby.sendMessageToAllPlayers(message); //doesn't send to the disconnected player because he is not active (in players map) anymore
+                    gameLobby.sendMessageToAllPlayers(message);
+                     */
                     return;
                 }
             }

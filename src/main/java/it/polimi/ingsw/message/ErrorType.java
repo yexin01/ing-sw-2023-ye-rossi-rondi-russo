@@ -25,7 +25,7 @@ public enum ErrorType implements KeyAbstractPayload {
 
     ERR_NO_FREE_SPOTS("Failed in joining a random game lobby because all games are full!\nCreating a new Game Lobby for min num players..."),//stampare
 
-
+//non possono arrivare al client se é disconnesso
     ERR_RECONNECT_TO_GAME_LOBBY("Failed to reconnect to previous game lobby! \n Disconnection.."),//da rifare connnesione+Login lato client
     ERR_JOIN_GLOBAL_LOBBY("Failed in joining the Global Lobby! \n Disconnection.."),
 

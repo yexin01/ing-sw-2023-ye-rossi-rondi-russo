@@ -115,22 +115,10 @@ public class ClientHandler implements Runnable {
         managerHandlers.registerEventHandler(MessageType.DATA,new TurnHandler(clientInterface,client,new StartAndEndGameHandler(clientInterface,this.client)));
         LobbyHandler lobbyHandler=new LobbyHandler(clientInterface,client);
         managerHandlers.registerEventHandler(MessageType.LOBBY,lobbyHandler);
-        managerHandlers.registerEventHandler(MessageType.ERROR,new ErrorHandler(clientInterface,client, lobbyHandler));
+        managerHandlers.registerEventHandler(MessageType.ERROR,new ErrorHandler(clientInterface,client));
+        managerHandlers.registerEventHandler(MessageType.CONNECTION,new ConnectionHandler(clientInterface,client));
         clientInterface.getClientView().setMessageToserverHandler(new MessageToserverHandlerTurn(clientInterface,client));
 
-
-
-
-        //TODO come collegare l'utimo handler o aggiungo un'altro message type relativo all'inizio e alla fine del game o cambio managerHandler
-        //managerHandlers.registerEventHandler(MessageType.DATA,new StartAndEndGameHandler(clientInterface,this.client));
-        /*
-        Message m=new Message(new MessageHeader(MessageType.DATA,nickname),null);
-        managerHandlers.handleMessageFromServer(m);
-        m=new Message(new MessageHeader(MessageType.LOBBY,nickname),null);
-        managerHandlers.handleMessageFromServer(m);
-        createMessageHandlerThread(client);
-
-         */
         System.out.println("creato messageHandlerThread...");
         System.out.println("provo a startare la connection di tipo " + connection + "...");
         createMessageHandlerThread(client);
@@ -144,47 +132,7 @@ public class ClientHandler implements Runnable {
      * @throws Exception if there are problems with the connection
      */
     public void handleMessageFromServer(Message message) throws Exception {
-        //System.out.println("sono il clientHandler.. " + message.toString());
         managerHandlers.handleMessageFromServer(message);
-
-
-        /*
-        switch (key){
-            case JOIN_GLOBAL_LOBBY:
-                System.out.println("\nJoined global lobby\n");
-
-                break;
-
-        }
-
-         */
-
-
-
-        //TODO qui si gestiscono i messaggi che arrivano dal server
-        /*
-        EventType type = message.getHeader().getMessageType();
-
-        switch (type) {
-            case CONNECTION_CREATED:
-                System.out.println("Connection created");
-                break;
-            case DISCONNECTION_FORCED: //il server forza la disconnessione del client
-                //TODO non si può usare questa funzione
-                //client.getRMIHandler().disconnectMe();
-                System.exit(0);
-                break;
-            case PING:
-                //System.out.println("Ping received su socket");
-                break;
-            case JOIN_GLOBAL_LOBBY:
-                System.out.println("\nJoined global lobby\n");
-                break;
-            default:
-                break;
-
-        }
-         */
     }
 
 }

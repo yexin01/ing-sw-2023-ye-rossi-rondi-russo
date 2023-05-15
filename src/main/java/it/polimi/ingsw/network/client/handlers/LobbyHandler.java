@@ -5,8 +5,6 @@ import it.polimi.ingsw.network.client.Client;
 
 import it.polimi.ingsw.view.ClientInterface;
 
-import java.rmi.RemoteException;
-
 public class LobbyHandler extends MessageHandler {
 
 
@@ -16,22 +14,7 @@ public class LobbyHandler extends MessageHandler {
 
     @Override
     public void handleMessage(Message mes) throws Exception {
-        KeyLobbyPayload key= (KeyLobbyPayload) mes.getPayload().getKey();
-        System.out.println(mes.getPayload().getContent(Data.CONTENT));
-        switch(key){
-            case GLOBAL_LOBBY_DECISION -> {
-                KeyLobbyPayload data = (KeyLobbyPayload) mes.getPayload().getKey();
-                MessagePayload messagePayload=null;
-                getClientInterface().askLobbyDecision();
-
-            }
-            case CREATE_GAME_LOBBY-> {
-                //System.out.println("NELLA LOBBY");
-                System.out.println(mes.getPayload().getContent(Data.CONTENT));
-            }
-
-        }
-
+        getClientInterface().askLobbyDecision();
     }
 }
 

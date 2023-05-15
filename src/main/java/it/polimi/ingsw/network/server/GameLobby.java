@@ -137,8 +137,8 @@ public class GameLobby {
         try{
             players.put(nickname,connection);
 
-            MessageHeader header = new MessageHeader(MessageType.LOBBY, nickname);
-            MessagePayload payload = new MessagePayload(KeyLobbyPayload.JOINED_GAME_LOBBY);
+            MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
+            MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
             String content = "\nWelcome to Game Lobby "+ idGameLobby + "! -> waiting for "+ wantedPlayers +" players...\nGame will be starting soon...";
             payload.put(Data.CONTENT,content);
             connection.sendMessageToClient(new Message(header,payload));
@@ -216,19 +216,19 @@ public class GameLobby {
     public synchronized void changePlayerInActive(String nickname, Connection connection) throws IOException {
         players.put(nickname,connection);
 
-        MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
-        MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_CONNECTION);
+        MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
+        MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
         String content = "Player "+nickname+" reconnected to Game Lobby "+ idGameLobby + "!";
         payload.put(Data.CONTENT,content);
         Message message = new Message(header,payload);
         sendMessageToAllPlayersExceptOne(message, nickname);
+
         content="YOU reconnected to Game Lobby "+ idGameLobby + "!";
-        payload=new MessagePayload(KeyErrorPayload.ERROR_CONNECTION);
-        payload.put(Data.ERROR,ErrorType.DISCONNECTION);
+        payload=new MessagePayload(KeyConnectionPayload.RECONNECTION);
         payload.put(Data.CONTENT,content);
         message=new Message(header,payload);
         sendMessageToSpecificPlayer(message, nickname);
-
+/*
         //sse il gameController punta alle liste del gameLobby, deve solo stampare il broadcast e non fare altro
         gameController.reconnectionPlayer(nickname);
         MessageHeader header1=new MessageHeader(MessageType.ERROR, nickname);
@@ -236,6 +236,8 @@ public class GameLobby {
         payload.put(Data.VALUE_CLIENT,null);
         Message message1=new Message(header1,payload1);
         handleErrorFromClient(message1);
+
+ */
         System.out.println("Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in attivo");
     }
 
@@ -249,10 +251,8 @@ public class GameLobby {
         String content="Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in disconnesso";
         playersDisconnected.add(nickname);
         players.remove(nickname);
-        MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
-        MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_CONNECTION);
-        payload.put(Data.ERROR,ErrorType.DISCONNECTION);
-        payload.put(Data.CONTENT,content);
+        MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
+        MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
         Message message = new Message(header,payload);
         sendMessageToAllPlayersExceptOne(message, nickname);
 
