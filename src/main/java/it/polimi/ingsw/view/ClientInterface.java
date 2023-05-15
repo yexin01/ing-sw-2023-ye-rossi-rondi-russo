@@ -29,7 +29,7 @@ public interface ClientInterface  {
     void askNicknameAndConnection() throws Exception;
     void askLobbyDecision() throws Exception;
     //booleano corrisponde alla partecipazione ad una nuova partita se é true vuole terminare il gioco altrimenti no
-    boolean endGame();
+    boolean endGame() throws Exception;
     void Setup();
 
   /*  public void createItemTileView() throws Error {

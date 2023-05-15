@@ -18,6 +18,10 @@ public class ClientView {
     private BoardBoxView[][] boardView;
     private int[] orderTiles;
     private ArrayList<Integer> coordinatesSelected;
+
+    private int[] idCommonGoals;
+
+    private int idPersonal;
     private CommonGoalView[] commonGoalViews;
     private int[] commonGoalPoints;
 
@@ -162,7 +166,13 @@ public class ClientView {
     }
 
 
-
+    public void endGame(int choice) throws Exception {
+        if(choice==0){
+            //quit game
+            messageToserverHandlerTurn.handleMessageToServer(1,KeyLobbyPayload.QUIT_SERVER,nickname,MessageType.LOBBY);
+            //join new game
+        }else messageToserverHandlerTurn.handleMessageToServer(0,KeyLobbyPayload.GLOBAL_LOBBY_DECISION,nickname,MessageType.LOBBY);
+    }
 
     public void lobby(KeyLobbyPayload keyLobbyPayload,int value) throws Exception {
         messageToserverHandlerTurn.handleMessageToServer(value,keyLobbyPayload,nickname,MessageType.LOBBY);
@@ -177,5 +187,21 @@ public class ClientView {
 
     public void setTurnPlayer(String turnPlayer) {
         this.turnPlayer = turnPlayer;
+    }
+
+    public int[] getIdCommonGoals() {
+        return idCommonGoals;
+    }
+
+    public void setIdCommonGoals(int[] idCommonGoals) {
+        this.idCommonGoals = idCommonGoals;
+    }
+
+    public int getIdPersonal() {
+        return idPersonal;
+    }
+
+    public void setIdPersonal(int idPersonal) {
+        this.idPersonal = idPersonal;
     }
 }

@@ -23,11 +23,7 @@ public class LobbyHandler extends MessageHandler {
                 KeyLobbyPayload data = (KeyLobbyPayload) mes.getPayload().getKey();
                 MessagePayload messagePayload=null;
                 getClientInterface().askLobbyDecision();
-                /*
-                getClient().sendMessageToServer(message);
-                System.out.println(getClientInterface().getClientView().getNickname());
 
-                 */
             }
             case CREATE_GAME_LOBBY-> {
                 //System.out.println("NELLA LOBBY");

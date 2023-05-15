@@ -104,6 +104,7 @@ public class StartAndEndGameHandler extends MessageHandler {
                  */
             }
             case END_GAME ->{
+                getClientInterface().endGame();
                 String[] ranking=(String[]) mes.getPayload().getContent(Data.RANKING);
                 //messagePayload=new MessagePayload(KeyDataPayload.END_GAME);
             }

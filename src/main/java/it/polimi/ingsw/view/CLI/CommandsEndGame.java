@@ -1,21 +1,20 @@
 package it.polimi.ingsw.view.CLI;
 
-public enum CommandsLobby implements Commands {
-    CREATE_GAME_LOBBY("Create a new Lobby"),
+public enum CommandsEndGame implements Commands {
+    JOIN_NEW_GAME("Join a new game"),
     //RESET_CHOICE("RESET choice"),
-    JOIN_SPECIFIC_GAME_LOBBY("Add a specific Lobby"),
+    QUIT_GAME("Quit game");
     // CONFIRM_CHOICE("CONFIRM choice"),
-    JOIN_RANDOM_GAME_LOBBY("Join random Game");
+
 
 
 
     private final String command;
 
 
-    CommandsLobby(String command) {
+    CommandsEndGame(String command) {
         this.command = command;
     }
-
     public String getCommand() {
         return command;
     }
