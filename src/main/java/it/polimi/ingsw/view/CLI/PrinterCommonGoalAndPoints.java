@@ -163,7 +163,9 @@ public class PrinterCommonGoalAndPoints {
     }
 
     //TODO: aggiusta il related problem
-    public  void printCommonGoalCards(int cgc1, int cgc2){
+    public  void printCommonGoalCards(ClientView clientView){
+        int cgc1=1;
+        int cgc2=2;
         for (int i=0; i<commonGoalCard1.length; i++){
             Colors.colorizeSize(Colors.BLUE_CODE, getCommonGoalCard(cgc1)[i], 70);
             Colors.colorizeSize(Colors.BLUE_CODE, getCommonGoalCard(cgc2)[i], 70);
