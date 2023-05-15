@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 public class Server implements Runnable{
     private final Object clientsLock = new Object();
     private static int rmiPort = 1099;
-    private static int socketPort = 1099;
-    private static String ipAddress = "192.0.0.1";
+    private static int socketPort = 1100;
+    private static String ipAddress = "127.0.0.1";
 
     private static Server instance = null;
     private RMIServer rmiServer;
@@ -84,7 +84,7 @@ public class Server implements Runnable{
         Scanner sc = new Scanner(System.in);
         int portRmi = 1099;
         int portSocket = 1100;
-        String ipAddress = "192.0.0.1";
+        String ipAddress = "127.0.0.1";
 
         boolean correctInput = false;
         System.out.println("Insert the port Rmi (default 1099): (Press Enter button to use default port)");

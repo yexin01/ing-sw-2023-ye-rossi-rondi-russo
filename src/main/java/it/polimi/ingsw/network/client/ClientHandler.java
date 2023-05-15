@@ -105,12 +105,12 @@ public class ClientHandler implements Runnable {
             client = new ClientSocket(nickname, ip, port);
             this.isRMI = false;
             System.out.println("creato ClientSocket in createConnection()...");
-            connection="RMI";
+            connection="SOCKET";
         } else {
             client = new ClientRMI(nickname, ip, port);
             this.isRMI = true;
             System.out.println("creato ClientRMI in createConnection()...");
-            connection="SOCKET";
+            connection="RMI";
         }
         managerHandlers.registerEventHandler(MessageType.DATA,new TurnHandler(clientInterface,client,new StartAndEndGameHandler(clientInterface,this.client)));
         LobbyHandler lobbyHandler=new LobbyHandler(clientInterface,client);
