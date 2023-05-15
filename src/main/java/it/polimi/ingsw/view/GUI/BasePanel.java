@@ -40,7 +40,7 @@ public abstract class BasePanel extends StackPane {
         Button button = new Button();
         ImageView imageView = new ImageView();
         if (!filled) {
-            Image icon = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\itemTiles\\BOOK 0.png");
+            Image icon = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\item tiles\\BOOK 0.png");
             imageView.setImage(icon);
             button.setDisable(true);
             button.setOpacity(0);
@@ -62,12 +62,12 @@ public abstract class BasePanel extends StackPane {
         Button button = new Button();
         ImageView imageView = new ImageView();
         if (!filled) {
-            Image icon = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\itemTiles\\BOOK 0.png");
+            Image icon = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\item tiles\\BOOK 0.png");
             imageView.setImage(icon);
             button.setDisable(true);
             button.setOpacity(0);
         } else {
-            Image icon = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\Item tiles\\" + clientView.getBookshelfView()[i][j].getTypeView() + " " + clientView.getBookshelfView()[i][j].getTileID() % 3 + ".png");
+            Image icon = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\item tiles\\" + clientView.getBookshelfView()[i][j].getTypeView() + " " + clientView.getBookshelfView()[i][j].getTileID() % 3 + ".png");
             imageView.setImage(icon);
         }
         imageView.setFitWidth(bookshelfWidth);
@@ -162,28 +162,28 @@ public abstract class BasePanel extends StackPane {
         personalGoalCard.setPreserveRatio(true);
 
         Button common1 = new Button("Common Goal Card 1");
-        personal.setFont(font);
-        personal.setStyle(style1);
-        personal.setOnMouseEntered(new EventHandler<MouseEvent>() {
+        common1.setFont(font);
+        common1.setStyle(style1);
+        common1.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 common1.setStyle(style2);
             }
         });
 
-        personal.setOnMouseExited(new EventHandler<MouseEvent>() {
+        common1.setOnMouseExited(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 common1.setStyle(style1);
             }
         });
 
-        ImageView commonGoalCard1 = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\personal goal cards\\Personal_Goals"+clientView.getIndexPersonal()+".png"));
+        ImageView commonGoalCard1 = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\personal goal cards\\Personal_Goals"+(clientView.getIndexPersonal()+1)+".png"));
         commonGoalCard1.setFitWidth(screenBounds.getWidth()*0.5);
         commonGoalCard1.setFitHeight(screenBounds.getHeight()*0.5);
         commonGoalCard1.setPreserveRatio(true);
 
-        Button common2 = new Button("Personal Goal Card");
+        Button common2 = new Button("Common Goal Card 2");
         common2.setFont(font);
         common2.setStyle(style1);
         common2.setOnMouseEntered(new EventHandler<MouseEvent>() {
@@ -193,14 +193,14 @@ public abstract class BasePanel extends StackPane {
             }
         });
 
-        personal.setOnMouseExited(new EventHandler<MouseEvent>() {
+        common2.setOnMouseExited(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 common2.setStyle(style1);
             }
         });
 
-        ImageView commonGoalCard2 = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\personal goal cards\\Personal_Goals"+clientView.getIndexPersonal()+".png"));
+        ImageView commonGoalCard2 = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\personal goal cards\\Personal_Goals"+(clientView.getIndexPersonal()+1)+".png"));
         commonGoalCard2.setFitWidth(screenBounds.getWidth()*0.5);
         commonGoalCard2.setFitHeight(screenBounds.getHeight()*0.5);
         commonGoalCard2.setPreserveRatio(true);
@@ -275,7 +275,11 @@ public abstract class BasePanel extends StackPane {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
                 Button button;
-                button = createBookshelfButton(clientView, screenBounds.getWidth()*0.35/5, screenBounds.getHeight()*0.35/6, i, j, true);
+                if (clientView.getBookshelfView()[i][j].getTypeView() != null) {
+                    button = createBookshelfButton(clientView, screenBounds.getWidth()*0.35/5, screenBounds.getHeight()*0.35/6, i, j, true);
+                } else {
+                    button = createBookshelfButton(clientView, screenBounds.getWidth()*0.35/5, screenBounds.getHeight()*0.35/6, i, j, false);
+                }
                 bookshelf.add(button, j, i);
             }
         }

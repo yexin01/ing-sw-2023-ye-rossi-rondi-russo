@@ -1,17 +1,13 @@
 package it.polimi.ingsw.view.GUI;
 
 import it.polimi.ingsw.message.ErrorType;
-import it.polimi.ingsw.model.modelView.BoardBoxView;
-import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.view.Check;
 import it.polimi.ingsw.view.ClientView;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,12 +17,11 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
 public class BoardBoxPanel extends BasePanel {
 
-    private ArrayList<Integer> coordinatesSelected;
+    private ArrayList<Integer> coordinatesSelected = new ArrayList<>();
     private ClientView clientView;
     private ChoicePanel choicePanel;
     private ArrayList<Integer> selectedButtons=new ArrayList<>();
@@ -69,7 +64,8 @@ public class BoardBoxPanel extends BasePanel {
                                     button.setOpacity(0.5);
                                     choicePanel.setButtonIcon(getBoardTiles(finalI, finalJ), selectedCount);
                                     button.setDisable(true);
-                                    coordinatesSelected.add(finalI, finalJ);
+                                    coordinatesSelected.add(finalI);
+                                    coordinatesSelected.add(finalJ);
                                     selectedCount++;
                                 } else {
                                     Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -84,7 +80,7 @@ public class BoardBoxPanel extends BasePanel {
                 } else {
                     button = createBoardButton(clientView, background.getFitWidth() * 0.75 / 9, background.getFitHeight() * 0.75 / 9, i, j, false);
                 }
-                gridPane.add(button, i, j);
+                gridPane.add(button, j, i);
             }
         }
         //gridPane.setMaxSize(x*9, y*9);
@@ -97,8 +93,10 @@ public class BoardBoxPanel extends BasePanel {
         box1.getChildren().get(0).setOnMouseClicked(mouseEvent ->  {
             Platform.runLater(() -> {
                 try {
+                    choicePanel.setup(selectedCount);
                     clientView.setCoordinatesSelected(coordinatesSelected);
-                    coordinatesSelected.clear();
+                    //ChoicePanel.semaphore.release();
+                    //coordinatesSelected.clear();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }

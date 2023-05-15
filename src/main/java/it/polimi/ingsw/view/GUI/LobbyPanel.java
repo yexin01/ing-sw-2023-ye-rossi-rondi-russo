@@ -65,7 +65,8 @@ public class LobbyPanel extends BasePanel{
                 alert.setContentText("Please insert a connection");
                 alert.show();
             } else {
-                int defaultPort = (connection.equals("0") ? 51634 : 51633);
+                //int defaultPort = (1099);
+                int defaultPort = (connection.equals("0") ? 1100 : 1099);
                 ClientHandler clientHandler=new ClientHandler();
                 try{
                     clientHandler.createConnection(Integer.parseInt(connection), defaultIp, defaultPort, GUIApplication.guiApplicationStatic);

@@ -1,4 +1,5 @@
 package it.polimi.ingsw.view.GUI;
+
 import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.view.ClientView;
 import javafx.application.Platform;
@@ -17,11 +18,12 @@ import javafx.stage.Screen;
 
 public class ChoicePanel extends BasePanel{
     private ItemTileView[] tilesSelected;
+    //public static Semaphore semaphore = new Semaphore(0);
 
     private ClientView clientView;
     private int counter;
     private Button[] itemButtons;
-    private javafx.scene.image.Image[] itemImages;
+    private int[] orderTiles;
 
     public ChoicePanel (ClientView clientView, double gap) {
         this.clientView=clientView;
@@ -33,6 +35,7 @@ public class ChoicePanel extends BasePanel{
         BackgroundImage background2 = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         setBackground(new Background(background2));
         itemButtons = new Button[3];
+        //semaphore.acquire();
         for (int i = 0; i < 3; i++) {
             itemButtons[i] = new Button();
             createEmptyButton(itemButtons[i], i);
@@ -49,6 +52,11 @@ public class ChoicePanel extends BasePanel{
         box1.setPickOnBounds(false);
         box1.getChildren().get(0).setOnMouseClicked(mouseEvent ->  {
             Platform.runLater(() -> {
+                try {
+                    clientView.setOrderTiles(orderTiles);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
                 clientView.setTilesSelected(tilesSelected);
             });
         });
@@ -116,5 +124,16 @@ public class ChoicePanel extends BasePanel{
             itemButtons[index].setStyle("-fx-border-color: rgba(255,255,0,0.86); -fx-border-width: 2px; -fx-border-radius: 4px; -fx-effect: dropshadow(three-pass-box, rgba(255,255,0,0.86), 20, 0, 0, 0);");
     }
 
+    public void setup (int num) {
+        this.tilesSelected = new ItemTileView[num];
+        switch (num) {
+            case 1:
+                this.orderTiles = new int[]{0};
+            case 2:
+                this.orderTiles = new int[]{0, 1};
+            case 3:
+                this.orderTiles = new int[]{0, 1, 2};
+        }
+    }
 
 }

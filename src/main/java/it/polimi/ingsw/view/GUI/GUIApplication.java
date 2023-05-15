@@ -33,7 +33,12 @@ public class GUIApplication extends Application implements ClientInterface {
 
     @Override
     public void start() throws Exception {
-
+        Platform.runLater(()-> {
+            EndTurnPanel endTurnPanel = new EndTurnPanel(clientView);
+            Scene scene = new Scene(endTurnPanel, screenBounds.getWidth(), screenBounds.getHeight());
+            stage.setScene(scene);
+            stage.show();
+        });
     }
 
 
@@ -51,7 +56,7 @@ public class GUIApplication extends Application implements ClientInterface {
             ChoicePanel choicePanel = new ChoicePanel(clientView, screenBounds.getWidth()*0.28);
             this.choicePanel = choicePanel;
             BoardBoxPanel boardBoxPanel = new BoardBoxPanel(clientView, choicePanel);
-            Scene scene = new Scene(boardBoxPanel);
+            Scene scene = new Scene(boardBoxPanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
             stage.show();
         });
@@ -60,7 +65,7 @@ public class GUIApplication extends Application implements ClientInterface {
     @Override
     public void askOrder() throws Exception {
         Platform.runLater(()-> {
-            Scene scene = new Scene(choicePanel);
+            Scene scene = new Scene(choicePanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
             stage.show();
         });
@@ -70,7 +75,7 @@ public class GUIApplication extends Application implements ClientInterface {
     public void askColumn() throws Exception {
         Platform.runLater(()-> {
             BookshelfPanel bookshelfPanel = new BookshelfPanel(clientView);
-            Scene scene = new Scene(bookshelfPanel);
+            Scene scene = new Scene(bookshelfPanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
             stage.show();
         });
@@ -80,7 +85,7 @@ public class GUIApplication extends Application implements ClientInterface {
     public void displayError(String error) {
         Platform.runLater(()-> {
             DisconnectionPanel disconnectionPanel = new DisconnectionPanel();
-            Scene scene = new Scene(disconnectionPanel);
+            Scene scene = new Scene(disconnectionPanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
             stage.show();
         });
@@ -120,4 +125,9 @@ public class GUIApplication extends Application implements ClientInterface {
     public void Setup() {
 
     }
+    /*public ChoicePanel getChoicePanel () {
+        return this.choicePanel;
+    }
+
+     */
 }
