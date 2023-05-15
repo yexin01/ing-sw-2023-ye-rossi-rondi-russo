@@ -65,6 +65,7 @@ public class ChoicePanel extends BasePanel{
                 counter = 0;
                 for (int i = 0; i < 3; i++) {
                     itemButtons[i].setDisable(false);
+                    itemButtons[i].setOpacity(1);
                 }
             });
         });
@@ -125,15 +126,24 @@ public class ChoicePanel extends BasePanel{
     }
 
     public void setup (int num) {
-        this.tilesSelected = new ItemTileView[num];
+        tilesSelected = new ItemTileView[num];
         switch (num) {
             case 1:
-                this.orderTiles = new int[]{0};
+                orderTiles = new int[]{0};
+                break;
             case 2:
-                this.orderTiles = new int[]{0, 1};
+                orderTiles = new int[]{0,1};
+                break;
             case 3:
-                this.orderTiles = new int[]{0, 1, 2};
+                orderTiles = new int[]{0,1,2};
+                break;
         }
     }
 
+    public void clear () {
+        for (int i = 0; i < 3; i++) {
+            itemButtons[i].setDisable(true);
+            itemButtons[i].setOpacity(0);
+        }
+    }
 }

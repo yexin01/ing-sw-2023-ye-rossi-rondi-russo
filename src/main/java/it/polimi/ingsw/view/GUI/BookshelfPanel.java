@@ -37,9 +37,9 @@ public class BookshelfPanel extends BasePanel {
             for (int j = 0; j < 5; j++) {
                 Button button;
                 if (clientView.getBookshelfView()[i][j].getTypeView() != null) {
-                    button = createBookshelfButton(clientView, screenBounds.getWidth()*0.58/5, screenBounds.getHeight()*0.35/6, i, j, true);
+                    button = createBookshelfButton(clientView, screenBounds.getWidth()*0.58/5, screenBounds.getHeight()*0.58/6, i, j, true);
                 } else {
-                    button = createBookshelfButton(clientView, screenBounds.getWidth()*0.58/5, screenBounds.getHeight()*0.35/6, i, j, false);
+                    button = createBookshelfButton(clientView, screenBounds.getWidth()*0.58/5, screenBounds.getHeight()*0.58/6, i, j, false);
                 }
                 gridPane.add(button, j, i+2);
             }
