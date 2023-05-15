@@ -2,7 +2,6 @@ package it.polimi.ingsw.listeners;
 
 
 import it.polimi.ingsw.message.KeyAbstractPayload;
-import it.polimi.ingsw.message.KeyDataPayload;
 import it.polimi.ingsw.network.server.GameLobby;
 
 import java.io.IOException;

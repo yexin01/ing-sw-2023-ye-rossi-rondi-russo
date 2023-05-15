@@ -76,21 +76,3 @@ public class InfoAndEndGameListener extends EventListener{
        return m;
     }
 }
-
-
-
-
-                /*
-                ClientView clientView=new ClientView();
-                CLI cl=new CLI();
-                clientView.setBoardView(((ModelView) newValue).getBoardView());
-                clientView.setBookshelfView(((ModelView) newValue).getBookshelfView("TIZIO"));
-                clientView.setPlayerPersonalGoal(((ModelView) newValue).getPlayerPersonalGoal("TIZIO"));
-                cl.setClientView(clientView);
-                try {
-                    cl.askCoordinates();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-
-                 */

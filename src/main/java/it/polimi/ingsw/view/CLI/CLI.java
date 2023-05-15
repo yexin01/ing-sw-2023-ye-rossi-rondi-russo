@@ -51,25 +51,25 @@ public class CLI implements ClientInterface {
 
         connectionType = askConnection();
         if (connectionType == 0) {
-            out.println("You chose Socket connection\n");
+            Colors.colorize(Colors.WHITE_CODE,"You chose Socket connection\n");
+
         } else if (connectionType == 1){
-            out.println("You chose RMI connection\n");
+            Colors.colorize(Colors.WHITE_CODE,"You chose RMI connection\n");
         } else {
-            out.println("Invalid connection");
+            Colors.colorize(Colors.WHITE_CODE,"Invalid connection\n");
             doConnection();
         }
 
         String ip = askIp();
         int port = askPort(connectionType);
-
-        out.println("Server Ip Address: " + ip);
-        out.println("Server Port: " + port + "\n");
+        Colors.colorize(Colors.WHITE_CODE,"Server Ip Address: " + ip);
+        Colors.colorize(Colors.WHITE_CODE,"Server Port: " + port + "\n");
         ClientHandler clientHandler=new ClientHandler();
         try{ //metodo di Clienthanlder (la cli estende ClientHandler)
             clientHandler.createConnection(connectionType, ip, port,this);
-            out.println("Connection created");
+            Colors.colorize(Colors.WHITE_CODE,"Connection created");
         } catch (Exception e){
-            out.println("Error in creating connection. Please try again.\n");
+            Colors.colorize(Colors.ERROR_MESSAGE,"Error in creating connection. Please try again.\n");
             doConnection();
         }
     }
@@ -84,7 +84,7 @@ public class CLI implements ClientInterface {
     private int askConnection(){
         int connectionType = -1;
         do{
-            out.println("Enter your connection type: (0 for Socket, 1 for RMI) ");
+            Colors.colorize(Colors.WHITE_CODE,"Enter your connection type: (0 for Socket, 1 for RMI) ");
             connectionType = Integer.parseInt(in.next());
             in.nextLine(); // aggiungo questa riga per consumare il carattere di fine riga rimanente
         } while (connectionType != 0 && connectionType != 1);
@@ -93,7 +93,7 @@ public class CLI implements ClientInterface {
 
     private String askIp() {
         String defaultIp = "127.0.0.1";
-        out.println("Enter the server Ip Address (default " + defaultIp + "): (press Enter button to choose default)");
+        Colors.colorize(Colors.WHITE_CODE,"Enter the server Ip Address (default " + defaultIp + "): (press Enter button to choose default)");
         in.reset();
 
         do {
@@ -107,21 +107,21 @@ public class CLI implements ClientInterface {
                         InetAddress address = InetAddress.getByName(line);
                         return address.getHostAddress();
                     } catch (UnknownHostException e) {
-                        out.println("Invalid IP address. Please enter a valid IP address or press Enter to choose the default.");
+                        Colors.colorize(Colors.ERROR_MESSAGE,"Invalid IP address. Please enter a valid IP address or press Enter to choose the default.");
                     }
                 }
             } else {
                 in.nextLine();
-                out.println("Invalid input. Please enter a valid IP address or press Enter to choose the default.");
+                Colors.colorize(Colors.ERROR_MESSAGE,"Invalid input. Please enter a valid IP address or press Enter to choose the default.");
             }
         } while (true);
     }
 
     private int askPort(int connectionType) {
         int defaultPort = (connectionType == 0 ? 1100 : 1099);
-        out.println("Enter the server port (default " + defaultPort + "): (press Enter button to choose default)");
+        Colors.colorize(Colors.WHITE_CODE,"Enter the server port (default " + defaultPort + "): (press Enter button to choose default)");
         in.reset();
-
+        //qua nel catch e nell'else fanno la stessa cosa
         do {
             if (in.hasNextLine()) {
                 String line = in.nextLine();
@@ -134,15 +134,15 @@ public class CLI implements ClientInterface {
                         if (port >= 1024 && port <= 65535) {
                             return port;
                         } else {
-                            out.println("Invalid port number. Please enter a port number between 1024 and 65535.");
-                        }
+                            Colors.colorize(Colors.ERROR_MESSAGE,"Invalid port number. Please enter a port number between 1024 and 65535.");
+                         }
                     } catch (NumberFormatException e) {
-                        out.println("Invalid input. Please enter a valid port number.");
+                        Colors.colorize(Colors.ERROR_MESSAGE,"Invalid input. Please enter a valid port number.");
                     }
                 }
             } else {
                 in.nextLine();
-                out.println("Invalid input. Please enter a valid port number.");
+                Colors.colorize(Colors.ERROR_MESSAGE,"Invalid input. Please enter a valid port number.");
             }
         } while (true);
     }
@@ -296,14 +296,7 @@ public class CLI implements ClientInterface {
                     }
                     continue;
             }
-/*
-            if (selection.isEmpty()) {
-                printerBoard.printMatrixBoard(getClientView().getBoardView(),selection);
-                Colors.colorize(Colors.ERROR_MESSAGE,ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
-            } else {
-
- */         if (!selection.isEmpty()) {
-                //printerBoard.printMatrixBoard(getClientView().getBoardView(),selection);
+            if (!selection.isEmpty()) {
                 Colors.colorize(Colors.GAME_INSTRUCTION, "Your current selections: ");
                 for (int i = 0; i < selection.size(); i += 2) {
                     int x = selection.get(i);
@@ -311,7 +304,6 @@ public class CLI implements ClientInterface {
                     Colors.colorize(Colors.GAME_INSTRUCTION, "(" + x + ", " + y + ") ");
                     out.print(Colors.printTiles(getClientView().getBoardView()[x][y].getType(), 3));
                     Colors.colorize(Colors.GAME_INSTRUCTION, "; ");
-                    // }
                     out.println();
                 }
             }

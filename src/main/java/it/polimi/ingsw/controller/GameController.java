@@ -12,32 +12,28 @@ import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.network.server.GameLobby;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
 public class GameController {
 
     private ListenerManager listenerManager;
-
-
     private PhaseController<TurnPhase> turnPhaseController;
     private Game game;
 
 
     public GameController(GameLobby gameLobby, ArrayList<String> nicknames,InfoAndEndGameListener infoAndEndGameListener) throws Exception {
         listenerManager=new ListenerManager();
-        //InfoAndEndGameListener infoAndEndGameListener =new InfoAndEndGameListener(gameLobby, globalLobby);
         turnPhaseController =new PhaseController<>(TurnPhase.SELECT_FROM_BOARD);
         listenerManager.addListener(KeyErrorPayload.ERROR_DATA,new ErrorListener(gameLobby));
         listenerManager.addListener(TurnPhase.ALL_INFO, infoAndEndGameListener);
         listenerManager.addListener(TurnPhase.END_TURN,new EndTurnListener(gameLobby));
-        listenerManager.addListener(KeyDataPayload.PHASE,new TurnListener(gameLobby));
+        listenerManager.addListener(Data.PHASE,new TurnListener(gameLobby));
         gameLobby.setStartAndEndGameListener(infoAndEndGameListener);
         GameRules gameRules=new GameRules();
         ModelView modelView=new ModelView(nicknames.size(), gameRules,listenerManager);
         modelView.setTurnPhase(TurnPhase.ALL_INFO);
-
-
         game=new Game(gameRules, nicknames.size(),modelView);
         game.addPlayers(nicknames);
 
@@ -47,10 +43,7 @@ public class GameController {
         game.createCommonGoalCard(gameRules);
         game.createPersonalGoalCard(gameRules);
         modelView.setTurnPlayer(game.getPlayers().get(0).getNickname());
-        //TODO capire come organizzarlo meglio
 
-        //modelView.addListener(KeyDataPayload.VALUE_CLIENT,new TurnListener(gameLobby));
-        //modelView.addListener(KeyDataPayload.END_TURN,new EndTurnListener(gameLobby));
         listenerManager.fireEvent(TurnPhase.ALL_INFO,null,game.getModelView());
         modelView.setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
     }
@@ -65,9 +58,6 @@ public class GameController {
 
 
     public void receiveMessageFromClient(Message message){
-        System.out.println("SONO NEL GAME CONTROLLER");
-        System.out.println(message.getHeader().getNickname());
-        System.out.println(message.getPayload().getKey());
         String nicknamePlayer= message.getHeader().getNickname();
         try{
             if (!nicknamePlayer.equals(game.getTurnPlayer().getNickname())) {
@@ -79,9 +69,6 @@ public class GameController {
                 case SELECT_FROM_BOARD ->  checkAndInsertBoardBox(message);
                 case SELECT_ORDER_TILES-> permutePlayerTiles(message);
                 case SELECT_COLUMN->selectingColumn(message);
-                //case ABANDON_GAME -> removePlayer(message.getNicknameSender());
-                //TODO inviera il messaggio di ILLEGAL PHASE di default
-                //default -> ;
             }
         }catch(Exception e){
         }
@@ -113,16 +100,10 @@ public class GameController {
                 turnPhaseController.setCurrentPhase(TurnPhase.SELECT_ORDER_TILES);
                 game.getModelView().setTurnPhase(TurnPhase.SELECT_ORDER_TILES);
                 System.out.println("CAMBIA FASE CONTROLLER");
-                listenerManager.fireEvent(KeyDataPayload.PHASE,getTurnNickname(),TurnPhase.SELECT_ORDER_TILES);
+                listenerManager.fireEvent(Data.PHASE,getTurnNickname(),TurnPhase.SELECT_ORDER_TILES);
             //}
         }
     }
-    public void resetBoardChoice() throws Exception {
-        game.getBoard().resetBoardChoice();
-        //TODO inviare mes
-        //serverView.sendMessage(null,MessageFromServerType.RECEIVE,getTurnNickname());
-    }
-
     public boolean checkError(ErrorType possibleInvalidArgoment) throws Exception {
         if(possibleInvalidArgoment!=null){
             System.out.println("ERRORE NEL CONTROLLER RILEVATO: "+possibleInvalidArgoment.getErrorMessage());
@@ -143,11 +124,6 @@ public class GameController {
         }
 
     }
-    public void reconnectionPlayer(String nickname){
-        //TODO reconnection
-
-    }
-
 
     public void permutePlayerTiles(Message message) throws Exception {
         int[] orderTiles=(int[]) message.getPayload().getContent(Data.VALUE_CLIENT);
@@ -159,11 +135,8 @@ public class GameController {
             turnPhaseController.setCurrentPhase(TurnPhase.SELECT_COLUMN);
             game.getModelView().setTurnPhase(TurnPhase.SELECT_COLUMN);
             System.out.println("CAMBIA FASE");
-            listenerManager.fireEvent(KeyDataPayload.PHASE,getTurnNickname(),TurnPhase.SELECT_COLUMN);
+            listenerManager.fireEvent(Data.PHASE,getTurnNickname(),TurnPhase.SELECT_COLUMN);
         }
-
-
-
     }
 
     public void selectingColumn(Message message) throws Exception {
@@ -188,23 +161,19 @@ public class GameController {
 
 
     public void finishTurn() {
-        //TODO da finire
         game.getBoard().resetBoard();
-        System.out.println("finish3");
         if(game.isEndGame() && game.getTurnPlayer().equals(game.getLastPlayer())){
             endGame();
-            return ;
+            listenerManager.fireEvent(TurnPhase.ALL_INFO,getTurnNickname(),game.getModelView());
         }else{
             if(game.getBoard().checkRefill()){
                 game.getBoard().refill();
             }
             game.setNextPlayer();
             game.getModelView().setTurnPlayer(game.getTurnPlayer().getNickname());
-            System.out.println("finish4");
             listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
         }
 
-        //serverView.sendMessage(null,MessageFromServerType.START_TURN,getTurnNickname());
     }
 
     public void endGame() {
@@ -238,6 +207,8 @@ public class GameController {
     public void setListenerManager(ListenerManager listenerManager) {
         this.listenerManager = listenerManager;
     }
+
+
 
 
     /*
