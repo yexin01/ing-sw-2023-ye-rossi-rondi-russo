@@ -1,7 +1,9 @@
 package it.polimi.ingsw.message;
 
+/**
+ * Enum that represents the key of the payload for information about the lobby
+ */
 public enum KeyLobbyPayload implements KeyAbstractPayload  {
-
     GLOBAL_LOBBY_DECISION,
 
     CREATE_GAME_LOBBY,

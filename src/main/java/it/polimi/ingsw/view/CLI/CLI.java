@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.CLI;
 
-import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 
@@ -34,18 +33,128 @@ public class CLI implements ClientInterface {
         this.scanner= new Scanner(System.in);
         this.clientView=new ClientView();
         printerBoard=new PrinterBoard();
-        clientView.setTurnPhase(TurnPhase.ALL_INFO);
         printerBookshelfAndPersonal=new PrinterBookshelfAndPersonal();
         printerStartAndEndTurn =new PrinterStartAndEndTurn();
         printerCommonGoalAndPoints=new PrinterCommonGoalAndPoints();
     }
-    public void printLobbyCommands() throws Exception {
+
+    public void initialLobby(){
+        //printMyShelfieLogo();
+        doConnection();
+    }
+
+    private void doConnection(){
+        int connectionType = -1;
+
+        String nickname = askNickname();
+        out.println("Hi "+ nickname +"!");
+
+        connectionType = askConnection();
+        if (connectionType == 0) {
+            out.println("You chose Socket connection\n");
+        } else if (connectionType == 1){
+            out.println("You chose RMI connection\n");
+        } else {
+            out.println("Invalid connection");
+            doConnection();
+        }
+
+        String ip = askIp();
+        int port = askPort(connectionType);
+
+        out.println("Server Ip Address: " + ip);
+        out.println("Server Port: " + port + "\n");
+        ClientHandler clientHandler=new ClientHandler();
+        try{ //metodo di Clienthanlder (la cli estende ClientHandler)
+            clientHandler.createConnection(connectionType, ip, port,this);
+            out.println("Connection created");
+        } catch (Exception e){
+            out.println("Error in creating connection. Please try again.\n");
+            doConnection();
+        }
+    }
+
+    private String askNickname(){
+        Colors.colorize(Colors.WHITE_CODE,"Enter your username: ");
+        String nickname=in.nextLine().toLowerCase();
+        getClientView().setNickname(nickname);
+        return nickname;
+    }
+
+    private int askConnection(){
+        int connectionType = -1;
+        do{
+            out.println("Enter your connection type: (0 for Socket, 1 for RMI) ");
+            connectionType = Integer.parseInt(in.next());
+            in.nextLine(); // aggiungo questa riga per consumare il carattere di fine riga rimanente
+        } while (connectionType != 0 && connectionType != 1);
+        return connectionType;
+    }
+
+    private String askIp() {
+        String defaultIp = "127.0.0.1";
+        out.println("Enter the server Ip Address (default " + defaultIp + "): (press Enter button to choose default)");
+        in.reset();
+
+        do {
+            if (in.hasNextLine()) {
+                String line = in.nextLine();
+
+                if (line.equals("")) {
+                    return defaultIp;
+                } else {
+                    try {
+                        InetAddress address = InetAddress.getByName(line);
+                        return address.getHostAddress();
+                    } catch (UnknownHostException e) {
+                        out.println("Invalid IP address. Please enter a valid IP address or press Enter to choose the default.");
+                    }
+                }
+            } else {
+                in.nextLine();
+                out.println("Invalid input. Please enter a valid IP address or press Enter to choose the default.");
+            }
+        } while (true);
+    }
+
+    private int askPort(int connectionType) {
+        int defaultPort = (connectionType == 0 ? 1100 : 1099);
+        out.println("Enter the server port (default " + defaultPort + "): (press Enter button to choose default)");
+        in.reset();
+
+        do {
+            if (in.hasNextLine()) {
+                String line = in.nextLine();
+
+                if (line.equals("")) {
+                    return defaultPort;
+                } else {
+                    try {
+                        int port = Integer.parseInt(line);
+                        if (port >= 1024 && port <= 65535) {
+                            return port;
+                        } else {
+                            out.println("Invalid port number. Please enter a port number between 1024 and 65535.");
+                        }
+                    } catch (NumberFormatException e) {
+                        out.println("Invalid input. Please enter a valid port number.");
+                    }
+                }
+            } else {
+                in.nextLine();
+                out.println("Invalid input. Please enter a valid port number.");
+            }
+        } while (true);
+    }
+
+    public <T extends Enum<T> & Commands> void printLobbyCommands(Class<T> enumClass) throws Exception {
+        T[] enumValues = enumClass.getEnumConstants();
         out.println();
-        for(CommandsLobby commandsLobby:CommandsLobby.values()){
-            Colors.colorizeSize(Colors.GAME_INSTRUCTION, "•["+(commandsLobby.ordinal()+1)+"]",5);
-            Colors.colorizeSize(Colors.GAME_INSTRUCTION,commandsLobby.getCommand(), 30);
+        for(T enumValue : enumValues){
+            Colors.colorizeSize(Colors.GAME_INSTRUCTION, "•["+(enumValue.ordinal()+1)+"]",5);
+            Colors.colorizeSize(Colors.GAME_INSTRUCTION,enumValue.getCommand(), 30);
             Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
-            if((commandsLobby.ordinal()+1)%2==0){
+            if((enumValue.ordinal()+1)%2==0){
                 out.println();
             }
             //Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
@@ -120,8 +229,11 @@ public class CLI implements ClientInterface {
         int input;
         Commands commands;
         int enumSize=-1;
-        if(phase==-1){
-            printLobbyCommands();
+        if(phase==-2){
+            printLobbyCommands(CommandsEndGame.class);
+            enumSize=CommandsEndGame.values().length;
+        }else if(phase==-1){
+            printLobbyCommands(CommandsLobby.class);
             enumSize=CommandsLobby.values().length;
         }else{
             allCommands(phase);
@@ -136,6 +248,9 @@ public class CLI implements ClientInterface {
             return null;
         }
         out.println();
+        if(phase==-2){
+            return CommandsEndGame.values()[input];
+        }
         if(phase==-1){
             return CommandsLobby.values()[input];
         }else return CommandsTurn.values()[input];
@@ -151,40 +266,40 @@ public class CLI implements ClientInterface {
         out.println();
         ArrayList<Integer> selection=new ArrayList<>();
         //getClientView().setCoordinatesSelected(new ArrayList<>());
-       printerBoard.printMatrixBoard(getClientView().getBoardView(),null);
+        printerBoard.printMatrixBoard(getClientView().getBoardView(),null);
         //TODO aggiungere attributo che indica il numero di tile massimo
         Scanner scanner=new Scanner(System.in);
         boolean continueToAsk = true;
 
         while (continueToAsk) {
-          CommandsTurn commandsTurn =(CommandsTurn) checkCommand(0);
-          if(commandsTurn ==null){
-            continue;
-          }
-          switch (commandsTurn) {
-              case SELECT_FROM_BOARD1:
-                  selection=selectTile(selection );
-                  break;
-              case SELECT_FROM_BOARD2:
-                  resetChoice(0,selection);
-                  break;
-              case SELECT_FROM_BOARD3:
-                  resetChoice(1,selection);
-                  break;
-              case SELECT_FROM_BOARD4:
-                  if(!selection.isEmpty()){
-                      Colors.colorize(Colors.GAME_INSTRUCTION, "Confirmation successful.");
-                      clientView.setCoordinatesSelected(selection);;
-                      clientView.setTilesSelected(Check.createItemTileView(selection, clientView.getBoardView()));
-                      continueToAsk = false;
-                  }
-                 break;
-
-              default:
-                  if(handleInvalidPhase(commandsTurn)){
-                      continueToAsk = false;
-                  }
+            CommandsTurn commandsTurn =(CommandsTurn) checkCommand(0);
+            if(commandsTurn ==null){
                 continue;
+            }
+            switch (commandsTurn) {
+                case SELECT_FROM_BOARD1:
+                    selection=selectTile(selection );
+                    break;
+                case SELECT_FROM_BOARD2:
+                    resetChoice(0,selection);
+                    break;
+                case SELECT_FROM_BOARD3:
+                    resetChoice(1,selection);
+                    break;
+                case SELECT_FROM_BOARD4:
+                    if(!selection.isEmpty()){
+                        Colors.colorize(Colors.GAME_INSTRUCTION, "Confirmation successful.");
+                        clientView.setCoordinatesSelected(selection);;
+                        clientView.setTilesSelected(Check.createItemTileView(selection, clientView.getBoardView()));
+                        continueToAsk = false;
+                    }
+                    break;
+
+                default:
+                    if(handleInvalidPhase(commandsTurn)){
+                        continueToAsk = false;
+                    }
+                    continue;
             }
 /*
             if (selection.isEmpty()) {
@@ -217,7 +332,8 @@ public class CLI implements ClientInterface {
             case PRINT3 -> printerBookshelfAndPersonal.printPersonal(getClientView(),2,35);
             case PRINT4 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,1,60,true,false,0);
             case PRINT5 -> printerCommonGoalAndPoints.printPoints(getClientView());
-            case PRINT6 -> printerCommonGoalAndPoints.printCommonGoalCards(getClientView());
+            //TODO poi gli passero i valori delle common
+            case PRINT6 -> printerCommonGoalAndPoints.printCommonGoalCards(1,2);
             case PRINT7 -> printerStartAndEndTurn.rulesGame();
             //case PRINT8 -> clientView.somethingWrong();
         }
@@ -246,13 +362,13 @@ public class CLI implements ClientInterface {
             selection.add(y);
             error= Check.checkSelectable(selection, getClientView().getBoardView());
             if (error!=null) {
-               //printerBoard.printMatrixBoard(getClientView().getBoardView(),selection);
-               Colors.colorize(Colors.ERROR_MESSAGE, error.getErrorMessage());
-               selection.remove(selection.size()-1);
-               selection.remove(selection.size()-1);
-               out.println();
+                //printerBoard.printMatrixBoard(getClientView().getBoardView(),selection);
+                Colors.colorize(Colors.ERROR_MESSAGE, error.getErrorMessage());
+                selection.remove(selection.size()-1);
+                selection.remove(selection.size()-1);
+                out.println();
             }else {
-               printerBoard.printMatrixBoard(getClientView().getBoardView(),selection);
+                printerBoard.printMatrixBoard(getClientView().getBoardView(),selection);
             }
         }
         return selection;
@@ -261,7 +377,7 @@ public class CLI implements ClientInterface {
     private void resetChoice(int lastOrAll,ArrayList<Integer> coordinatesSelected) {
         ErrorType error=Check.resetChoiceBoard(lastOrAll,coordinatesSelected);
         if (error==null) {
-           printerBoard.printMatrixBoard(getClientView().getBoardView(),coordinatesSelected);
+            printerBoard.printMatrixBoard(getClientView().getBoardView(),coordinatesSelected);
             Colors.colorize(Colors.GAME_INSTRUCTION, "Reset successful\n");
         }
     }
@@ -463,7 +579,7 @@ public class CLI implements ClientInterface {
                     payload.put(Data.VALUE_CLIENT, num);
 
                      */
-                continueToAsk=false;
+                    continueToAsk=false;
 
 
                 }
@@ -507,7 +623,19 @@ public class CLI implements ClientInterface {
     }
 
     @Override
-    public boolean endGame() {
+    public boolean endGame() throws Exception {
+        CommandsEndGame commandsEndGame=(CommandsEndGame) checkCommand(-2);
+        switch(commandsEndGame){
+            case QUIT_GAME -> {
+                out.println("you choose quit");
+                clientView.endGame(1);
+            }
+            case JOIN_NEW_GAME ->{
+                out.println("you choose new game");
+                clientView.endGame(0);
+            }
+
+        }
         printerStartAndEndTurn.endGame(getClientView());
         return false;
     }
@@ -525,118 +653,6 @@ public class CLI implements ClientInterface {
 
 
 
-    public void initialLobby(){
-        //printMyShelfieLogo();
-        doConnection();
-    }
-
-    private void doConnection(){
-        int connectionType = -1;
-
-        String nickname = askNickname();
-        out.println("Hi "+ nickname +"!");
-
-        connectionType = askConnection();
-        if (connectionType == 0) {
-            out.println("You chose Socket connection\n");
-        } else if (connectionType == 1){
-            out.println("You chose RMI connection\n");
-        } else {
-            out.println("Invalid connection");
-            doConnection();
-        }
-
-
-        String ip = askIp();
-        int port = askPort(connectionType);
-
-        out.println("Server Ip Address: " + ip);
-        out.println("Server Port: " + port + "\n");
-        ClientHandler clientHandler=new ClientHandler();
-        try{
-            //metodo di Clienthanlder (la cli estende ClientHandler)
-            clientHandler.createConnection(connectionType, ip, port,this);
-            out.println("Connection created");
-        } catch (Exception e){
-            out.println("Error in creating connection. Please try again.\n");
-            doConnection();
-        }
-
-
-    }
-
-    private String askNickname(){
-        Colors.colorize(Colors.WHITE_CODE,"Enter your username: ");
-        String nickname=in.nextLine().toLowerCase();
-        getClientView().setNickname(nickname);
-        return nickname;
-    }
-
-    private int askConnection(){
-        int connectionType = -1;
-        do{
-            out.println("Enter your connection type: (0 for Socket, 1 for RMI) ");
-            connectionType = in.nextInt();
-            in.nextLine(); // aggiungo questa riga per consumare il carattere di fine riga rimanente
-        } while (connectionType != 0 && connectionType != 1);
-        return connectionType;
-    }
-    //TODO questo i stess come quello sotto poi ci accordiamo su dove metterlo
-    private String askIp() {
-        String defaultIp = "127.0.0.1";
-        out.println("Enter the server Ip Address (default " + defaultIp + "): (press Enter button to choose default)");
-        in.reset();
-
-        do {
-            if (in.hasNextLine()) {
-                String line = in.nextLine();
-
-                if (line.equals("")) {
-                    return defaultIp;
-                } else {
-                    try {
-                        InetAddress address = InetAddress.getByName(line);
-                        return address.getHostAddress();
-                    } catch (UnknownHostException e) {
-                        out.println("Invalid IP address. Please enter a valid IP address or press Enter to choose the default.");
-                    }
-                }
-            } else {
-                in.nextLine();
-                out.println("Invalid input. Please enter a valid IP address or press Enter to choose the default.");
-            }
-        } while (true);
-    }
-    //TODO poi questa funzione la spostamo sulla CLI ho il metodo che crea la connessione chiede il soprannome, crea gli handler...
-    private int askPort(int connectionType) {
-        int defaultPort = (connectionType == 0 ? 51634 : 51633);
-        out.println("Enter the server port (default " + defaultPort + "): (press Enter button to choose default)");
-        in.reset();
-
-        do {
-            if (in.hasNextLine()) {
-                String line = in.nextLine();
-
-                if (line.equals("")) {
-                    return defaultPort;
-                } else {
-                    try {
-                        int port = Integer.parseInt(line);
-                        if (port >= 1024 && port <= 65535) {
-                            return port;
-                        } else {
-                            out.println("Invalid port number. Please enter a port number between 1024 and 65535.");
-                        }
-                    } catch (NumberFormatException e) {
-                        out.println("Invalid input. Please enter a valid port number.");
-                    }
-                }
-            } else {
-                in.nextLine();
-                out.println("Invalid input. Please enter a valid port number.");
-            }
-        } while (true);
-    }
 /*
     @Override
     public void endTurn(boolean phase) throws Exception {
@@ -654,29 +670,24 @@ public class CLI implements ClientInterface {
 
  */
 
-    @Override
-    public TurnPhase getTurnPhase() {
-        return clientView.getTurnPhase();
-    }
+    boolean continueToAskEndTurn;
 
     @Override
     public void start() throws Exception {
+        this.continueToAskEndTurn=continueToAskEndTurn;
         PrinterLogo.printWaitingTurnPhase();
         /*
-        while (true) {
+        this.continueToAskEndTurn=continueToAskEndTurn;
+        while (continueToAskEndTurn) {
             CommandsTurn commandsTurn = (CommandsTurn)checkCommand(3);
-            if (commandsTurn == null) {
-                continue;
-            }
-            handleInvalidPhase(commandsTurn);
-            if (semaphore.tryAcquire()) {
-                break;
-            }
         }
 
          */
 
+
+
     }
+
     @Override
     public void stop() {
         semaphore.release();

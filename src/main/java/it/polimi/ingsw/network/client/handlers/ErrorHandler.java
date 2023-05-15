@@ -22,6 +22,7 @@ public class ErrorHandler extends MessageHandler {
         getClientInterface().displayError(error.getErrorMessage());
         switch(key){
             case ERROR_DATA -> {
+                /*
                 if(error.equals(ErrorType.WRONG_PHASE)){
                     switch(getClientInterface().getTurnPhase()){
                         case SELECT_FROM_BOARD -> getClientInterface().askCoordinates();
@@ -30,6 +31,8 @@ public class ErrorHandler extends MessageHandler {
                     }
 
                 }
+
+                 */
                 if(!error.equals(ErrorType.ILLEGAL_TURN)){
                     /*
                     switch(getClientInterface().getTurnPhase()){

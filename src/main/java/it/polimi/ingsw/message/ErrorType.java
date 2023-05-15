@@ -1,5 +1,8 @@
 package it.polimi.ingsw.message;
 
+/**
+ * Enum that represents the type of the error message sent between client and server and the String to print when the error occurs
+ */
 public enum ErrorType implements KeyAbstractPayload {
 
     //qui connection (nickname, porte, connessioni)
@@ -60,10 +63,17 @@ public enum ErrorType implements KeyAbstractPayload {
 
     private final String errorMessage;
 
+    /**
+     * Constructor of the class ErrorType that creates a new error type
+     * @param errorMessage the error message to print
+     */
     ErrorType(String errorMessage) {
         this.errorMessage = errorMessage;
     }
 
+    /**
+     * @return the error message to print
+     */
     public String getErrorMessage() {
         return errorMessage;
     }

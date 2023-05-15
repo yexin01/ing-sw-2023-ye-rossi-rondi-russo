@@ -2,7 +2,6 @@ package it.polimi.ingsw.view.GUI;
 
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -18,7 +17,7 @@ public class DisconnectionPanel extends BasePanel{
         BackgroundImage background = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         setBackground(new Background(background));
         Label label = new Label("Connection error between server and client.\n Wait until the connection is trying to setup again");
-        label.setFont(new Font("Poor Richard", 25)); label.setTextFill(Color.RED);
+        label.setFont(new Font("Poor Richard", 40)); label.setTextFill(Color.YELLOW);
         getChildren().add(label);
         setAlignment(label, Pos.CENTER);
     }

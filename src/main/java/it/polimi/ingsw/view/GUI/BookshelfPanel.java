@@ -10,8 +10,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,7 +19,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
 
 public class BookshelfPanel extends BasePanel {
     private ClientView clientView;
@@ -29,6 +26,7 @@ public class BookshelfPanel extends BasePanel {
     private double y;
 
     public BookshelfPanel(ClientView clientView) {
+        this.clientView = clientView;
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         Image backgroundImage = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\misc\\base_pagina2.jpg");
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, false, false);
@@ -37,8 +35,12 @@ public class BookshelfPanel extends BasePanel {
         GridPane gridPane = new GridPane();
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
-                Button button = new Button();
-                button = createBookshelfButton(clientView, screenBounds.getWidth()*0.58/5, screenBounds.getHeight()*0.58/6, i, j, true);
+                Button button;
+                if (clientView.getBookshelfView()[i][j].getTypeView() != null) {
+                    button = createBookshelfButton(clientView, screenBounds.getWidth()*0.58/5, screenBounds.getHeight()*0.35/6, i, j, true);
+                } else {
+                    button = createBookshelfButton(clientView, screenBounds.getWidth()*0.58/5, screenBounds.getHeight()*0.35/6, i, j, false);
+                }
                 gridPane.add(button, j, i+2);
             }
         }
@@ -53,7 +55,7 @@ public class BookshelfPanel extends BasePanel {
             button = createArrow(button, j);
             gridPane.add(button, j, 0);
         }
-        ImageView background = new ImageView(new Image("file:src\\main\\java\\com\\example\\demo1\\Images\\boards\\bookshelf.png"));
+        ImageView background = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\boards\\bookshelf.png"));
         background.setFitWidth(screenBounds.getWidth()*0.8);
         background.setFitHeight(screenBounds.getHeight()*0.8);
         background.setPreserveRatio(true);
@@ -94,11 +96,13 @@ public class BookshelfPanel extends BasePanel {
         hBox.setSpacing(25);
         Label label = new Label("YOUR TILE(S):    "); label.setFont(font); label.setTextFill(Color.YELLOW);
         hBox.getChildren().add(label);
-        for (int i=0;i<6;i+=2) {
+        for (int i=0;i<clientView.getTilesSelected().length;i++) {
             Button button = new Button();
             button.setPrefSize(80, 80);
             BackgroundSize backgroundSize1 = new BackgroundSize(100, 100, true, true, true, false);
-            BackgroundImage backgroundImage1 = new BackgroundImage(getBoardTiles(clientView.getCoordinatesSelected().get(i), clientView.getCoordinatesSelected().get(i+1)), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize1);
+            //BackgroundImage backgroundImage1 = new BackgroundImage(getBoardTiles(clientView.getCoordinatesSelected().get(i), clientView.getCoordinatesSelected().get(i+1)), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize1);
+            Image image = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\item tiles\\" + clientView.getTilesSelected()[i].getTypeView() + " " + clientView.getTilesSelected()[i].getTileID() % 3 + ".png");
+            BackgroundImage backgroundImage1 = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize1);
             Background background1 = new Background(backgroundImage1);
             button.setBackground(background1);
             hBox.getChildren().add(button);

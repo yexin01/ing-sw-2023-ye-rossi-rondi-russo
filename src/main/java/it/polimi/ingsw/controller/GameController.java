@@ -26,16 +26,16 @@ public class GameController {
 
     public GameController(GameLobby gameLobby, ArrayList<String> nicknames) throws Exception {
         listenerManager=new ListenerManager();
-        StartAndEndGameListener startAndEndGameListener=new StartAndEndGameListener(gameLobby);
+        InfoAndEndGameListener infoAndEndGameListener =new InfoAndEndGameListener(gameLobby);
         turnPhaseController =new PhaseController<>(TurnPhase.SELECT_FROM_BOARD);
         listenerManager.addListener(KeyErrorPayload.ERROR_DATA,new ErrorListener(gameLobby));
-        listenerManager.addListener(TurnPhase.ALL_INFO,startAndEndGameListener);
+        listenerManager.addListener(TurnPhase.ALL_INFO, infoAndEndGameListener);
         listenerManager.addListener(TurnPhase.END_TURN,new EndTurnListener(gameLobby));
         listenerManager.addListener(KeyDataPayload.PHASE,new TurnListener(gameLobby));
-        gameLobby.setStartAndEndGameListener(startAndEndGameListener);
+        gameLobby.setStartAndEndGameListener(infoAndEndGameListener);
         GameRules gameRules=new GameRules();
         ModelView modelView=new ModelView(nicknames.size(), gameRules,listenerManager);
-        modelView.setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
+        modelView.setTurnPhase(TurnPhase.ALL_INFO);
 
 
         game=new Game(gameRules, nicknames.size(),modelView);
@@ -52,6 +52,7 @@ public class GameController {
         //modelView.addListener(KeyDataPayload.VALUE_CLIENT,new TurnListener(gameLobby));
         //modelView.addListener(KeyDataPayload.END_TURN,new EndTurnListener(gameLobby));
         listenerManager.fireEvent(TurnPhase.ALL_INFO,null,game.getModelView());
+        modelView.setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
     }
 
     public Game getModel() {
