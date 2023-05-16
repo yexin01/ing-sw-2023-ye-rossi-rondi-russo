@@ -612,6 +612,7 @@ public class CLI implements ClientInterface {
 
     @Override
     public boolean endGame() throws Exception {
+        PrinterLogo.printWinnerLogo();
         askLobbyDecision();
         printerStartAndEndTurn.endGame(getClientView());
         return false;
@@ -622,47 +623,15 @@ public class CLI implements ClientInterface {
         //printerStartAndEndTurn.initialLobby();
     }
 
-
-
     public PrinterBookshelfAndPersonal getPrinterBookshelfAndPersonal() {
         return printerBookshelfAndPersonal;
     }
-
-
-
-/*
-    @Override
-    public void endTurn(boolean phase) throws Exception {
-        // printerBoard.printMatrixBoard(getClientView());
-        //Colors.colorize(Colors.ERROR_MESSAGE, "FINE TURNO");
-        PrinterLogo.printWaitingTurnPhase();
-        while(phase){
-            CommandsTurn commandsTurn = (CommandsTurn)checkCommand(3);
-            if (commandsTurn == null) {
-                continue;
-            }
-            handleInvalidPhase(commandsTurn);
-        }
-    }
-
- */
 
     boolean continueToAskEndTurn;
 
     @Override
     public void start() throws Exception {
-        this.continueToAskEndTurn=continueToAskEndTurn;
         PrinterLogo.printWaitingTurnPhase();
-        /*
-        this.continueToAskEndTurn=continueToAskEndTurn;
-        while (continueToAskEndTurn) {
-            CommandsTurn commandsTurn = (CommandsTurn)checkCommand(3);
-        }
-
-         */
-
-
-
     }
 
     @Override
