@@ -133,7 +133,7 @@ public class Server implements Runnable{
 
                 sc.reset();
                 if (sc.nextLine().equals("")) {
-                    ipAddress = "192.0.0.1";
+                    ipAddress = "127.0.0.1";
                     break;
                 }
 

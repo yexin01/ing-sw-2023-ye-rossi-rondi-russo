@@ -33,6 +33,10 @@ public class BoardBoxPanel extends BasePanel {
     public BoardBoxPanel (ClientView clientView, ChoicePanel choicePanel) {
         this.clientView=clientView;
         this.choicePanel = choicePanel;
+
+        coordinatesSelected.clear();
+        selectedCount = 0;
+
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         Image backgroundImage = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\misc\\base_pagina2.jpg");
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, false, false);
@@ -59,15 +63,20 @@ public class BoardBoxPanel extends BasePanel {
                         public void handle(ActionEvent actionEvent) {
                             Platform.runLater(() -> {
                                 ErrorType errorType1 = Check.checkNumTilesSelectedBoard(coordinatesSelected, clientView.getBookshelfView());
+                                coordinatesSelected.add(finalI);
+                                coordinatesSelected.add(finalJ);
                                 ErrorType errorType2 = Check.checkCoordinates(finalI, finalJ, clientView.getBoardView());
-                                if (errorType1 == null && errorType2 == null) {
+                                ErrorType errorType = Check.checkSelectable(coordinatesSelected, clientView.getBoardView());
+                                if (errorType1 == null && errorType2 == null && errorType == null) {
                                     button.setOpacity(0.5);
                                     choicePanel.setButtonIcon(getBoardTiles(finalI, finalJ), selectedCount);
                                     button.setDisable(true);
-                                    coordinatesSelected.add(finalI);
-                                    coordinatesSelected.add(finalJ);
+                                    //coordinatesSelected.add(finalI);
+                                    //coordinatesSelected.add(finalJ);
                                     selectedCount++;
                                 } else {
+                                    coordinatesSelected.remove(coordinatesSelected.size()-2);
+                                    coordinatesSelected.remove(coordinatesSelected.size()-1);
                                     Alert alert = new Alert(Alert.AlertType.WARNING);
                                     alert.setTitle("Error!");
                                     alert.setHeaderText("Invalid tile selected");
@@ -109,6 +118,7 @@ public class BoardBoxPanel extends BasePanel {
                 for (int i =0;i<81; i++) {
                     gridPane.getChildren().get(i).setDisable(false);
                 }
+                choicePanel.clear();
             });
         });
         getChildren().add(box1);

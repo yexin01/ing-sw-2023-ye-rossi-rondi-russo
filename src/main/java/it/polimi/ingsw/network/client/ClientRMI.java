@@ -49,7 +49,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
      * @throws Exception if there are problems with the connection
      */
     @Override
-    public synchronized void sendMessageToServer(Message message) throws Exception {
+    public void sendMessageToServer(Message message) throws Exception {
         if (server == null) {
             throw new RemoteException();
         }

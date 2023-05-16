@@ -6,20 +6,17 @@ import it.polimi.ingsw.listeners.EventListener;
 import it.polimi.ingsw.listeners.ListenerManager;
 
 import it.polimi.ingsw.message.KeyAbstractPayload;
-import it.polimi.ingsw.message.KeyDataPayload;
 import it.polimi.ingsw.model.PersonalGoalCard;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ModelView {
-
-    private ListenerManager listenerManager;
     private int indexRemoveToken;
     private ArrayList<String> playersOrder;
     private String turnPlayer;
+    private int[] idCommon;
+    private int[] idPersonal;
 
     private BoardBoxView[][] boardView;
     private CommonGoalView[] commonGoalViews;
@@ -31,15 +28,13 @@ public class ModelView {
     private ItemTileView[] selectedItems;
 
     public ModelView(int numPlayers,GameRules gameRules,ListenerManager listenerManager){
-        //this.playersId=playersId;
-        this.listenerManager=listenerManager;
         playersOrder=new ArrayList<>();
         commonGoalViews=new CommonGoalView[gameRules.getNumOfCommonGoals()];
         bookshelfView=new ItemTileView[numPlayers][gameRules.getRowsBookshelf()][gameRules.getColumnsBookshelf()];
         playerPoints=new PlayerPointsView[numPlayers];
         playerPersonalGoal=new PersonalGoalCard[numPlayers];
-
-
+        idPersonal=new int[numPlayers];
+        idCommon=new int[gameRules.getNumOfCommonGoals()];
     }
 
     public int getIntegerValue(String nickname) {
@@ -66,14 +61,6 @@ public class ModelView {
         playerPersonalGoal=deleteObjectByIndex(playerPersonalGoal,index);
         bookshelfView=deleteObjectByIndex(bookshelfView,index);
         playersOrder.remove(nickname);
-        /*
-        for(Map.Entry<java.lang.String, Integer> entry : playersId.entrySet()) {
-            if(entry.getValue() >= index) {
-                entry.setValue(entry.getValue() - 1);
-            }
-        }
-
-         */
         return index;
 
     }
@@ -84,27 +71,25 @@ public class ModelView {
 
     public void setCommonGoalViews(CommonGoalView commonGoalViews, int index, java.lang.String nickname) {
         this.commonGoalViews[index] = commonGoalViews;
-        //listenerManager.fireEvent(EventType.WIN_TOKEN,nickname,this);
     }
 
-
-
-
-    public ItemTileView[][] getBookshelfView(java.lang.String nickname) {
+    public ItemTileView[][] getBookshelfView(String nickname) {
         return bookshelfView[getIntegerValue(nickname)];
     }
 
-    public void setBookshelfView(ItemTileView[][] bookshelfView, java.lang.String nickname) {
+    public void setBookshelfView(ItemTileView[][] bookshelfView,String nickname) {
         this.bookshelfView[getIntegerValue(nickname)] = bookshelfView;
     }
 
-    public PlayerPointsView getPlayerPoints(java.lang.String nickname) {
+    public PlayerPointsView getPlayerPoints(String nickname) {
         return playerPoints[getIntegerValue(nickname)];
     }
+    public int getIdPersonal(String nickname) {
+        return idPersonal[getIntegerValue(nickname)];
+    }
 
-    public void setPlayerPoints(PlayerPointsView playerPersonalGoal, java.lang.String nickname) {
+    public void setPlayerPoints(PlayerPointsView playerPersonalGoal,String nickname) {
         this.playerPoints[getIntegerValue(nickname)] = playerPersonalGoal;
-        listenerManager.fireEvent(KeyDataPayload.END_TURN,nickname,this);
     }
 
 
@@ -127,22 +112,10 @@ public class ModelView {
         return selectedItems;
     }
 
-    public void setSelectedItems(ItemTileView[] selectedItems, String nickname) {
+    public void setSelectedItems(ItemTileView[] selectedItems) {
         this.selectedItems = selectedItems;
-        //listenerManager.fireEvent(KeyDataPayload.VALUE_CLIENT,nickname,this);
-    }
-    public void addListener(KeyAbstractPayload eventType, EventListener listener) {
-        this.listenerManager.addListener(eventType,listener);
     }
 
-    public void removeListener(KeyAbstractPayload eventType, EventListener listener) {
-        this.listenerManager.removeListener(eventType, listener);
-    }
-
-
-    public ListenerManager getListenerManager(){
-        return listenerManager;
-    }
 
     public int getIndexRemoveToken() {
         return indexRemoveToken;
@@ -182,12 +155,23 @@ public class ModelView {
     public void setTurnPlayer(String turnPlayer) {
         this.turnPlayer = turnPlayer;
     }
-/*
-    public void setPlayersId(HashMap<String, Integer> playersId) {
-        this.playersId = playersId;
+
+    public int[] getIdCommon() {
+        return idCommon;
     }
 
- */
+    public void setIdCommon(int[] idCommon) {
+        this.idCommon = idCommon;
+    }
+
+    public int[] getIdPersonal() {
+        return idPersonal;
+    }
+
+    public void setIdPersonal(int[] idPersonal) {
+        this.idPersonal = idPersonal;
+    }
+
 }
 
 

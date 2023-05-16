@@ -51,25 +51,25 @@ public class CLI implements ClientInterface {
 
         connectionType = askConnection();
         if (connectionType == 0) {
-            out.println("You chose Socket connection\n");
+            Colors.colorize(Colors.WHITE_CODE,"You chose Socket connection\n");
+
         } else if (connectionType == 1){
-            out.println("You chose RMI connection\n");
+            Colors.colorize(Colors.WHITE_CODE,"You chose RMI connection\n");
         } else {
-            out.println("Invalid connection");
+            Colors.colorize(Colors.WHITE_CODE,"Invalid connection\n");
             doConnection();
         }
 
         String ip = askIp();
         int port = askPort(connectionType);
-
-        out.println("Server Ip Address: " + ip);
-        out.println("Server Port: " + port + "\n");
+        Colors.colorize(Colors.WHITE_CODE,"Server Ip Address: " + ip);
+        Colors.colorize(Colors.WHITE_CODE,"Server Port: " + port + "\n");
         ClientHandler clientHandler=new ClientHandler();
         try{ //metodo di Clienthanlder (la cli estende ClientHandler)
             clientHandler.createConnection(connectionType, ip, port,this);
-            out.println("Connection created");
+            Colors.colorize(Colors.WHITE_CODE,"Connection created");
         } catch (Exception e){
-            out.println("Error in creating connection. Please try again.\n");
+            Colors.colorize(Colors.ERROR_MESSAGE,"Error in creating connection. Please try again.\n");
             doConnection();
         }
     }
@@ -84,7 +84,7 @@ public class CLI implements ClientInterface {
     private int askConnection(){
         int connectionType = -1;
         do{
-            out.println("Enter your connection type: (0 for Socket, 1 for RMI) ");
+            Colors.colorize(Colors.WHITE_CODE,"Enter your connection type: (0 for Socket, 1 for RMI) ");
             connectionType = Integer.parseInt(in.next());
             in.nextLine(); // aggiungo questa riga per consumare il carattere di fine riga rimanente
         } while (connectionType != 0 && connectionType != 1);
@@ -93,7 +93,7 @@ public class CLI implements ClientInterface {
 
     private String askIp() {
         String defaultIp = "127.0.0.1";
-        out.println("Enter the server Ip Address (default " + defaultIp + "): (press Enter button to choose default)");
+        Colors.colorize(Colors.WHITE_CODE,"Enter the server Ip Address (default " + defaultIp + "): (press Enter button to choose default)");
         in.reset();
 
         do {
@@ -107,21 +107,21 @@ public class CLI implements ClientInterface {
                         InetAddress address = InetAddress.getByName(line);
                         return address.getHostAddress();
                     } catch (UnknownHostException e) {
-                        out.println("Invalid IP address. Please enter a valid IP address or press Enter to choose the default.");
+                        Colors.colorize(Colors.ERROR_MESSAGE,"Invalid IP address. Please enter a valid IP address or press Enter to choose the default.");
                     }
                 }
             } else {
                 in.nextLine();
-                out.println("Invalid input. Please enter a valid IP address or press Enter to choose the default.");
+                Colors.colorize(Colors.ERROR_MESSAGE,"Invalid input. Please enter a valid IP address or press Enter to choose the default.");
             }
         } while (true);
     }
 
     private int askPort(int connectionType) {
         int defaultPort = (connectionType == 0 ? 1100 : 1099);
-        out.println("Enter the server port (default " + defaultPort + "): (press Enter button to choose default)");
+        Colors.colorize(Colors.WHITE_CODE,"Enter the server port (default " + defaultPort + "): (press Enter button to choose default)");
         in.reset();
-
+        //qua nel catch e nell'else fanno la stessa cosa
         do {
             if (in.hasNextLine()) {
                 String line = in.nextLine();
@@ -134,15 +134,15 @@ public class CLI implements ClientInterface {
                         if (port >= 1024 && port <= 65535) {
                             return port;
                         } else {
-                            out.println("Invalid port number. Please enter a port number between 1024 and 65535.");
-                        }
+                            Colors.colorize(Colors.ERROR_MESSAGE,"Invalid port number. Please enter a port number between 1024 and 65535.");
+                         }
                     } catch (NumberFormatException e) {
-                        out.println("Invalid input. Please enter a valid port number.");
+                        Colors.colorize(Colors.ERROR_MESSAGE,"Invalid input. Please enter a valid port number.");
                     }
                 }
             } else {
                 in.nextLine();
-                out.println("Invalid input. Please enter a valid port number.");
+                Colors.colorize(Colors.ERROR_MESSAGE,"Invalid input. Please enter a valid port number.");
             }
         } while (true);
     }
@@ -229,10 +229,7 @@ public class CLI implements ClientInterface {
         int input;
         Commands commands;
         int enumSize=-1;
-        if(phase==-2){
-            printLobbyCommands(CommandsEndGame.class);
-            enumSize=CommandsEndGame.values().length;
-        }else if(phase==-1){
+        if(phase==-1){
             printLobbyCommands(CommandsLobby.class);
             enumSize=CommandsLobby.values().length;
         }else{
@@ -248,9 +245,7 @@ public class CLI implements ClientInterface {
             return null;
         }
         out.println();
-        if(phase==-2){
-            return CommandsEndGame.values()[input];
-        }
+
         if(phase==-1){
             return CommandsLobby.values()[input];
         }else return CommandsTurn.values()[input];
@@ -301,14 +296,7 @@ public class CLI implements ClientInterface {
                     }
                     continue;
             }
-/*
-            if (selection.isEmpty()) {
-                printerBoard.printMatrixBoard(getClientView().getBoardView(),selection);
-                Colors.colorize(Colors.ERROR_MESSAGE,ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
-            } else {
-
- */         if (!selection.isEmpty()) {
-                //printerBoard.printMatrixBoard(getClientView().getBoardView(),selection);
+            if (!selection.isEmpty()) {
                 Colors.colorize(Colors.GAME_INSTRUCTION, "Your current selections: ");
                 for (int i = 0; i < selection.size(); i += 2) {
                     int x = selection.get(i);
@@ -316,7 +304,6 @@ public class CLI implements ClientInterface {
                     Colors.colorize(Colors.GAME_INSTRUCTION, "(" + x + ", " + y + ") ");
                     out.print(Colors.printTiles(getClientView().getBoardView()[x][y].getType(), 3));
                     Colors.colorize(Colors.GAME_INSTRUCTION, "; ");
-                    // }
                     out.println();
                 }
             }
@@ -536,13 +523,12 @@ public class CLI implements ClientInterface {
 
     @Override
     public void displayMessage(String error) {
-        Colors.colorize(Colors.GREEN_CODE, error);
+        Colors.colorize(Colors.BLUE_CODE, error);
     }
 
 
     @Override
     public void askNicknameAndConnection() throws Exception {
-        //Colors.colorize(Colors.YELLOW_CODE,"QUESTA E LA TUA NUOVA LA CLI");
         PrinterLogo.printMyShelfieLogo();
         initialLobby();
     }
@@ -552,7 +538,6 @@ public class CLI implements ClientInterface {
     public void askLobbyDecision() throws Exception {
         PrinterLogo.printGlobalLobbyPhase();
         out.println();
-       // Colors.colorize(Colors.ERROR_MESSAGE,"Welcome to Lobby what do you want to do?\n");
         boolean continueToAsk = true;
         MessageHeader header=new MessageHeader(MessageType.LOBBY, getClientView().getNickname());
         MessagePayload payload = null;
@@ -597,6 +582,9 @@ public class CLI implements ClientInterface {
                     continueToAsk=false;
                     //payload = new MessagePayload(KeyLobbyPayload.JOIN_RANDOM_GAME_LOBBY);
                 }
+                case QUIT_SERVER -> {
+                    clientView.lobby(KeyLobbyPayload.QUIT_SERVER,-1);
+                }
                 /*
                 case RESET_CHOICE ->{
                     if(payload == null){
@@ -624,18 +612,8 @@ public class CLI implements ClientInterface {
 
     @Override
     public boolean endGame() throws Exception {
-        CommandsEndGame commandsEndGame=(CommandsEndGame) checkCommand(-2);
-        switch(commandsEndGame){
-            case QUIT_GAME -> {
-                out.println("you choose quit");
-                clientView.endGame(1);
-            }
-            case JOIN_NEW_GAME ->{
-                out.println("you choose new game");
-                clientView.endGame(0);
-            }
-
-        }
+        PrinterLogo.printWinnerLogo();
+        askLobbyDecision();
         printerStartAndEndTurn.endGame(getClientView());
         return false;
     }
@@ -645,47 +623,15 @@ public class CLI implements ClientInterface {
         //printerStartAndEndTurn.initialLobby();
     }
 
-
-
     public PrinterBookshelfAndPersonal getPrinterBookshelfAndPersonal() {
         return printerBookshelfAndPersonal;
     }
-
-
-
-/*
-    @Override
-    public void endTurn(boolean phase) throws Exception {
-        // printerBoard.printMatrixBoard(getClientView());
-        //Colors.colorize(Colors.ERROR_MESSAGE, "FINE TURNO");
-        PrinterLogo.printWaitingTurnPhase();
-        while(phase){
-            CommandsTurn commandsTurn = (CommandsTurn)checkCommand(3);
-            if (commandsTurn == null) {
-                continue;
-            }
-            handleInvalidPhase(commandsTurn);
-        }
-    }
-
- */
 
     boolean continueToAskEndTurn;
 
     @Override
     public void start() throws Exception {
-        this.continueToAskEndTurn=continueToAskEndTurn;
         PrinterLogo.printWaitingTurnPhase();
-        /*
-        this.continueToAskEndTurn=continueToAskEndTurn;
-        while (continueToAskEndTurn) {
-            CommandsTurn commandsTurn = (CommandsTurn)checkCommand(3);
-        }
-
-         */
-
-
-
     }
 
     @Override

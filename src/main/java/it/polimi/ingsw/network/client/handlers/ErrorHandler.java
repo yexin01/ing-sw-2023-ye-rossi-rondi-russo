@@ -7,13 +7,11 @@ import it.polimi.ingsw.network.client.ClientMain;
 import it.polimi.ingsw.view.ClientInterface;
 
 public class ErrorHandler extends MessageHandler {
-    private final LobbyHandler lobbyHandler;
-    public ErrorHandler(ClientInterface clientInterface, Client client, LobbyHandler lobbyHandler) {
+
+    public ErrorHandler(ClientInterface clientInterface, Client client) {
         super(clientInterface, client);
-        this.lobbyHandler = lobbyHandler;
+
     }
-
-
 
     @Override
     public void handleMessage(Message mes) throws Exception {
@@ -22,51 +20,29 @@ public class ErrorHandler extends MessageHandler {
         getClientInterface().displayError(error.getErrorMessage());
         switch(key){
             case ERROR_DATA -> {
-                /*
-                if(error.equals(ErrorType.WRONG_PHASE)){
-                    switch(getClientInterface().getTurnPhase()){
-                        case SELECT_FROM_BOARD -> getClientInterface().askCoordinates();
-                        case SELECT_ORDER_TILES -> getClientInterface().askOrder();
-                        case SELECT_COLUMN -> getClientInterface().askColumn();
-                    }
-
-                }
-
-                 */
                 if(!error.equals(ErrorType.ILLEGAL_TURN)){
-                    /*
-                    switch(getClientInterface().getTurnPhase()){
-                        //case SELECT_FROM_BOARD -> getClientInterface().askCoordinates();
-                        case SELECT_ORDER_TILES -> getClientInterface().askOrder();
-                        case SELECT_COLUMN -> getClientInterface().askColumn();
-                    }
-
-                     */
-
+                    getClientInterface().getClientView().somethingWrong();
                 }
             }
             case ERROR_CONNECTION -> {
                 switch(error){
-                    case DISCONNECTION -> {
-                        switch((KeyConnectionPayload)mes.getPayload().getKey()){
-                            //un giocatore si é riconnesso
-                            case BROADCAST,RECONNECTION_DURING_GAME -> getClientInterface().displayMessage((String) mes.getPayload().getContent(Data.VALUE_CLIENT));
-                            //case CONNECTION_CREATION ->
-                            //case DISCONNECTION_FORCED ->
-                        }
-                    }
                     //mandato direttamente dal clientHandler ti sei disconnesso questa gestine potrà cambiare
-                    case PING_NOT_RECEIVED -> getClientInterface().askNicknameAndConnection();
+                    case PING_NOT_RECEIVED -> {
+                        getClientInterface().displayError(error.getErrorMessage());
+                        //getClientInterface().askNicknameAndConnection();
+                    }
                     //errore nella login chiede di riconnettersi
-                    case ERR_NICKNAME_LENGTH,ERR_NICKNAME_TAKEN -> getClientInterface().askNicknameAndConnection();
+                    case ERR_NICKNAME_LENGTH,ERR_NICKNAME_TAKEN ->{
+                        getClientInterface().askNicknameAndConnection();
+                    }
+                    default->{
+                        getClientInterface().displayMessage((String) mes.getPayload().getContent(Data.CONTENT));
+                        getClientInterface().endGame();
+                    }
                 }
-
             }
             case ERROR_LOBBY -> {
-                //il gioco continua automaticamente con startGame
-                if(error.equals(ErrorType.ERR_NO_FREE_SPOTS)){
-                    System.out.println("IN REALTA NON SEI UN ERRORE PERCHE IL GIOCO CONTINUA");
-                } else if(error.equals(ErrorType.ERR_RECONNECT_TO_GAME_LOBBY) || error.equals(ErrorType.ERR_JOIN_GLOBAL_LOBBY)){
+                if(error.equals(ErrorType.ERR_RECONNECT_TO_GAME_LOBBY) || error.equals(ErrorType.ERR_JOIN_GLOBAL_LOBBY)){
                     getClientInterface().askNicknameAndConnection();
                 }else {
                     getClientInterface().askLobbyDecision();

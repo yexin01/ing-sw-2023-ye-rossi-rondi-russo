@@ -23,11 +23,12 @@ public class StartAndEndGameHandler extends MessageHandler {
     public void handleMessage(Message mes) throws Exception {
         System.out.println("SONO IN START AND GAME HANDLER");
         TurnPhase data = (TurnPhase) mes.getPayload().getKey();
-        String p=((String)mes.getPayload().getContent(Data.WHO_CHANGE));
-        System.out.println("IL PRIMO GIOCATORE é "+p);
+
         switch(data){
             //sia all'inizio del game che durant la partita se un utente si disconnette
             case ALL_INFO ->{
+                String p=((String)mes.getPayload().getContent(Data.WHO_CHANGE));
+                getClientInterface().displayMessage("Turn player is: "+p);
                 BoardBoxView[][] boardView= (BoardBoxView[][]) mes.getPayload().getContent(Data.NEW_BOARD);
                 getClientInterface().getClientView().setBoardView(boardView);
                 ItemTileView[][] bookshelfView=((ItemTileView[][])mes.getPayload().getContent(Data.NEW_BOOKSHELF));
@@ -36,6 +37,10 @@ public class StartAndEndGameHandler extends MessageHandler {
                 getClientInterface().getClientView().setPlayerPersonalGoal(personalGoalCard);
                 String[] players=((String[])mes.getPayload().getContent(Data.PLAYERS));
                 getClientInterface().getClientView().setPlayers(players);
+                int[] idCommon=((int[])mes.getPayload().getContent(Data.IDCOMMON));
+                getClientInterface().getClientView().setIdCommonGoals(idCommon);
+                int idPersonal=((int)mes.getPayload().getContent(Data.IDPERSONAL));
+                getClientInterface().getClientView().setIdPersonal(idPersonal);
                 CommonGoalView[] commonGoalViews=((CommonGoalView[])mes.getPayload().getContent(Data.COMMON_GOAL_CARD));
                 getClientInterface().getClientView().setCommonGoalViews(commonGoalViews);
                 PlayerPointsView playerPointsView=((PlayerPointsView)mes.getPayload().getContent(Data.POINTS));
@@ -67,46 +72,9 @@ public class StartAndEndGameHandler extends MessageHandler {
                     getClientInterface().start();
                 }
 
-
-                /*
-                if(!getClientInterface().getTurnPhase().equals(TurnPhase.ALL_INFO)){
-                    //caso in cui si é disconnesso il client
-                    System.out.println("RICEVUTO I DATI tutto ok ricevuto ACK dell'error message");
-                    if(mes.getPayload().getContent(Data.WHO_CHANGE).equals(getClientInterface().getClientView().getTurnPlayer())){
-                        switch(getClientInterface().getTurnPhase()){
-                            case END_TURN,SELECT_FROM_BOARD -> getClientInterface().askCoordinates();
-                            case SELECT_ORDER_TILES ->{
-                                System.out.println("anche i selected Items");
-                                ItemTileView[] selectedItems=((ItemTileView[])mes.getPayload().getContent(Data.SELECTED_ITEMS));
-                                getClientInterface().getClientView().setTilesSelected(selectedItems);
-                                getClientInterface().askOrder();
-                            }
-                            case SELECT_COLUMN->{
-                                System.out.println("anche i selected items");
-                                ItemTileView[] selectedItems=((ItemTileView[])mes.getPayload().getContent(Data.SELECTED_ITEMS));
-                                getClientInterface().getClientView().setTilesSelected(selectedItems);
-                                getClientInterface().askColumn();
-                            }
-                        }
-                        //inizio del gioco
-                    }else{
-                        //getClientInterface().getClientView().setTurnPhase(TurnPhase.END_TURN);
-                        getClientInterface().start();
-                    }
-                } else{
-                    getClientInterface().getClientView().setTurnPhase(TurnPhase.END_TURN);
-                    if(p.equals(getClientInterface().getClientView().getNickname())){
-                        getClientInterface().getClientView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
-                        getClientInterface().askCoordinates();
-                    }else getClientInterface().start();
-                }
-
-                 */
             }
             case END_GAME ->{
                 getClientInterface().endGame();
-                String[] ranking=(String[]) mes.getPayload().getContent(Data.RANKING);
-                //messagePayload=new MessagePayload(KeyDataPayload.END_GAME);
             }
         }
 

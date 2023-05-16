@@ -85,20 +85,8 @@ public class Player {
         for(ItemTile i:selectedItems){
             selectedItem[j++]=new ItemTileView(i.getType(), i.getTileID());
         }
-       // modelView.setBoardView((board.cloneBoard()));
-        modelView.setSelectedItems(selectedItem,nickname);
-
-        //serverView.firePlayer(payload,MessageFromServerType.DATA,nickname);
-        //serverView.fireEvent(payload,MessageFromServerType.DATA,true,nickname);
-        //.on(.EventType.BOARD_SELECTION, payload,nickname);
+        modelView.setSelectedItems(selectedItem);
     }
-    /*
-    public void selection(Board board) {
-        selectedItems=board.selected();
-        listenerManager.fireEvent("BoardSelection",board,nickname);
-    }
-
-     */
 
     public ErrorType checkPermuteSelection(int[] order) throws Error {
         int maxIndex = selectedItems.size() - 1;
@@ -106,12 +94,10 @@ public class Player {
             int curIndex = order[i];
             if (curIndex > maxIndex || curIndex < 0) {
                 return ErrorType.INVALID_ORDER_TILE_NUMBER;
-                //throw new Error(ErrorType.INVALID_ORDER_TILE);
             }
             for (int j = i + 1; j < order.length; j++) {
                 if (order[j] == curIndex) {
                     return ErrorType.INVALID_ORDER_TILE_REPETITION;
-                   // throw new Error(ErrorType.INVALID_ORDER_TILE);
                 }
             }
         }

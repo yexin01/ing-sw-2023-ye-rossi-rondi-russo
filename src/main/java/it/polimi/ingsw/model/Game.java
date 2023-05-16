@@ -259,17 +259,14 @@ public class Game {
         int numOfPossibleCommonGoalsCards = gameRules.getCommonGoalCardsSize();
         ArrayList<Integer> numbers = generateRandomNumber(numOfPossibleCommonGoalsCards, numOfCommonGoals);
         setCommonGoalCards(new ArrayList<CommonGoalCard>());
+        int i=0;
         //TokenListener tokenListener=new TokenListener(sendMessages);
         for (Integer number : numbers) {
             String className = gameRules.getCommonGoalCard(number);
             Class<?> clazz = Class.forName(className);
             Object obj = clazz.getDeclaredConstructor().newInstance();
             ((CommonGoalCard) obj).setModelView(modelview);
-
-            //CommonGoalView common=new CommonGoalView(((CommonGoalCard) obj).getLastPoint(),null, points);
-            //serverView.setCommonGoalViews(common,num++);
-            //Listener listener=new Listener(serverView);
-            //((CommonGoalCard) obj).addListener(EventType.REMOVE_TOKEN,listener);
+            modelview.getIdCommon()[i++]=number;
             commonGoalCards.add((CommonGoalCard) obj);
         }
 
@@ -352,7 +349,7 @@ public class Game {
             p.setBookshelf(bookshelf);
             modelview.setBookshelfView(bookshelf.cloneBookshelf(),p.getNickname());
             commonGoalsSetup=new int[commonGoalCards.size()];
-
+            modelview.getIdPersonal()[i]=numbers.get(i);
             //Arrays.setAll(commonGoalsSetup, num -> 0);
             Arrays.fill(commonGoalsSetup, 0);
             PlayerPointsView setupPoints=new PlayerPointsView(0,commonGoalsSetup,0, 0);

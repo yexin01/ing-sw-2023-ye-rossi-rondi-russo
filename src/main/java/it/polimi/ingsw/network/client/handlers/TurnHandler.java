@@ -20,7 +20,7 @@ public class TurnHandler extends MessageHandler {
     @Override
     public void handleMessage(Message mes) throws Exception {
         TurnPhase turnPhase=(TurnPhase) mes.getPayload().getKey();
-        System.out.println("SONO TURN HANDLER"+turnPhase);
+        //System.out.println("SONO TURN HANDLER"+turnPhase);
         switch(turnPhase){
             case SELECT_ORDER_TILES ->{
                 getClientInterface().askOrder();
@@ -29,7 +29,7 @@ public class TurnHandler extends MessageHandler {
                 getClientInterface().askColumn();
             }
             case END_TURN -> {
-                System.out.println("END TURN CLIENT");
+                //System.out.println("END TURN CLIENT");
                BoardBoxView[][] boardBoxViews= (BoardBoxView[][]) mes.getPayload().getContent(Data.NEW_BOARD);
                getClientInterface().getClientView().setBoardView(boardBoxViews);
                String player= (String) mes.getPayload().getContent(Data.WHO_CHANGE);
@@ -40,7 +40,7 @@ public class TurnHandler extends MessageHandler {
                     getClientInterface().askCoordinates();
                     //non e il suo turno
                 }else{
-                    System.out.println("ORA TOCCA A "+player);
+                    getClientInterface().displayMessage("Turn player is: "+player);
                     getClientInterface().start();
                 }
             }
@@ -49,13 +49,8 @@ public class TurnHandler extends MessageHandler {
                 return;
             }
         }
-        /*
-        MessageHeader header=new MessageHeader(MessageType.DATA,getClientInterface().getClientView().getNickname());
-        Message messageToServer=new Message(header,messagePayload);
-        getClient().sendMessageToServer(messageToServer);
 
-         */
-        System.out.println("HA FINITO TURN HANDLER");
+
     }
 }
  /*

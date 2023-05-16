@@ -3,7 +3,6 @@ package it.polimi.ingsw.listeners;
 
 
 import it.polimi.ingsw.message.KeyAbstractPayload;
-import it.polimi.ingsw.message.KeyDataPayload;
 
 import java.io.IOException;
 import java.util.ArrayList;

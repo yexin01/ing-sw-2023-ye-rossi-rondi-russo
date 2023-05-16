@@ -22,16 +22,16 @@ public class App{
 
         public static void main(String[] args) throws Exception {
             CLI cli=new CLI();
-            cli.endGame();
+            //cli.endGame();
 
 
 
 
 
 
-            GameLobby gameLobby = new GameLobby(3, 3);
-            ArrayList<String> playerNames = new ArrayList<>(List.of("TIZIO", "CAIO"/*, "SEMPRONIO", "PIPPO"*/));
-            GameController gameController = new GameController(gameLobby, playerNames);
+            GameLobby gameLobby = new GameLobby(3, 3,null);
+            ArrayList<String> playerNames = new ArrayList<>(List.of("TIZIO", "CAIO", "SEMPRONIO", "PIPPO"));
+            GameController gameController = new GameController(gameLobby, playerNames,null);
             //gameLobby.handleErrorFromClient(new Message(new MessageHeader(MessageType.ERROR,"TIZIO"),null));
            MessageHeader header=new MessageHeader(MessageType.DATA, gameController.getTurnNickname());
             int[] selectionBoard=new int[]{7,3,7,4};
