@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class GameRules {
     private JSONObject json;
-    private String boardJsonFile=".\\src\\main\\java\\it\\polimi\\ingsw\\json\\gameRules.json";
+    private String boardJsonFile="src/main/java/it/polimi/ingsw/json/gameRules.json";
     public GameRules() throws Exception {
         this.json = readJsonFromFile();
     }
