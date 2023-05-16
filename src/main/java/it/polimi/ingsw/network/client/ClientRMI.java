@@ -61,7 +61,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
      * @param message the message to send
      */
     @Override
-    public void receiveMessageFromServer(Message message) {
+    public synchronized void receiveMessageFromServer(Message message) {
         System.out.println("sono il client... ho ricevuto il messaggio: " +message.toString() +" dal server!-------");
         addMessage(message);
     }

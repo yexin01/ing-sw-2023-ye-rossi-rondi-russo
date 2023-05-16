@@ -131,7 +131,7 @@ public class ClientHandler implements Runnable {
      * @param message the message received from the server
      * @throws Exception if there are problems with the connection
      */
-    public void handleMessageFromServer(Message message) throws Exception {
+    public synchronized void handleMessageFromServer(Message message) throws Exception {
         managerHandlers.handleMessageFromServer(message);
     }
 
