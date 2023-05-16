@@ -1,54 +1,55 @@
 package it.polimi.ingsw.model;
 
-public class CommonGoalCard11 extends CommonGoalCard{
-
+public class CommonGoalCard11 extends CommonGoalCard {
 
     /**
      * Goal11: "Five tiles of the same type forming a diagonal."
+     *
      * @param mat matrix of ItemTile[][]
      * @return boolean if the goal is reached or not
      */
     @Override
     public boolean checkGoal(ItemTile[][] mat) {
-        boolean verified;
-        // check the goal
-        for (int i=0; i<=mat.length-mat[0].length; i++) {
-            if(mat[i][0].getTileID()!=-1){
-                verified=true;
-                for (int a=1; a<mat[0].length && verified; a++) {
-                    if(mat[i+a][a].getTileID()==-1){
-                        verified=false;
-                    }
-                    if ( verified && !mat[i][0].getType().equals(mat[i+a][a].getType())) {
-                        verified=false;
-                    }
+        int numRows=mat.length;
+        int numCols=mat[0].length;
+        //checks diagonal from top-left to bottom-right
+        for (int row=0; row<=numRows-5; row++) {
+            for (int col=0; col<=numCols-5; col++) {
+                if (checkDiagonal(mat,row,col,1,1)) {
+                    return true;
                 }
-            }else{
-                verified=false;
-            }
-            if(verified){
-                return true;
             }
         }
-        for (int i=0; i<=mat.length-mat[0].length; i++) {
-            if(mat[i][mat[0].length-1].getTileID()!=-1){
-                verified=true;
-
-                for (int a=mat[0].length-1, b=0; a>1 && b<mat.length-1 && verified; b++, a--) {
-                    if(mat[i+b][a].getTileID()==-1){
-                        verified=false;
-                    }
-                    if ( verified && !mat[i][mat[0].length-1].getType().equals(mat[i+b][a].getType()) ) {
-                        verified=false;
-                    }
+        //checks diagonal from top-right to bottom-left
+        for (int row=0; row<=numRows-5; row++) {
+            for (int col=numCols-1; col>=4; col--) {
+                if (checkDiagonal(mat,row,col,1,-1)) {
+                    return true;
                 }
-            }else{
-                verified=false;
-            }
-            if(verified){
-                return true;
             }
         }
         return false;
     }
+
+    /**
+     * Method that checks if the diagonal starting at the specified position forms a diagonal pattern with five tiles of the same type.
+     * @param mat matrix of ItemTile[][]
+     * @param startRow starting row index
+     * @param startCol starting column index
+     * @param rowIncrement row increment value (1 for bottom-right direction, -1 for bottom-left direction)
+     * @param colIncrement column increment value (1 for bottom-right direction, -1 for top-right direction)
+     * @return boolean if a diagonal pattern is formed
+     */
+    private boolean checkDiagonal(ItemTile[][] mat, int startRow, int startCol, int rowIncrement, int colIncrement) {
+        Type type=mat[startRow][startCol].getType();
+        for (int i=1; i<5; i++) {
+            int row=startRow+i*rowIncrement;
+            int col=startCol+i*colIncrement;
+            if (mat[row][col].getTileID()==-1 || !mat[row][col].getType().equals(type)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
