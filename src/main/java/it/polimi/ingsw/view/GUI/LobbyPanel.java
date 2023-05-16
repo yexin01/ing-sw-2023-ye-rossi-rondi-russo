@@ -58,11 +58,11 @@ public class LobbyPanel extends BasePanel{
         Button confirmButton1 = new Button("Set Connection");
         confirmButton1.setOnAction(actionEvent -> {
             connection = textField1.getText();
-            if (connection.isEmpty()) {
+            if (connection.isEmpty() || (!connection.equals("0") && !connection.equals("1"))) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Error!");
                 alert.setHeaderText("No connection founded");
-                alert.setContentText("Please insert a connection");
+                alert.setContentText("Please insert a valid number connection");
                 alert.show();
             } else {
                 //int defaultPort = (1099);
@@ -78,6 +78,7 @@ public class LobbyPanel extends BasePanel{
         });
         HBox hBox1 = new HBox(textField1, confirmButton1);
         VBox vBox = new VBox(hBox, hBox1);
+        vBox.setSpacing(10);
         hBox.setAlignment(Pos.CENTER);
         hBox1.setAlignment(Pos.CENTER);
         getChildren().add(vBox);

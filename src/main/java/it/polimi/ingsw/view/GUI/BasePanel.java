@@ -4,6 +4,7 @@ import it.polimi.ingsw.view.ClientView;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
@@ -156,7 +157,7 @@ public abstract class BasePanel extends StackPane {
             }
         });
 
-        ImageView personalGoalCard = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\personal goal cards\\Personal_Goals"+(clientView.getIndexPersonal()+1)+".png"));
+        ImageView personalGoalCard = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\personal goal cards\\Personal_Goals"+(clientView.getIdPersonal()+1)+".png"));
         personalGoalCard.setFitWidth(screenBounds.getWidth()*0.5);
         personalGoalCard.setFitHeight(screenBounds.getHeight()*0.5);
         personalGoalCard.setPreserveRatio(true);
@@ -178,9 +179,9 @@ public abstract class BasePanel extends StackPane {
             }
         });
 
-        ImageView commonGoalCard1 = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\personal goal cards\\Personal_Goals"+(clientView.getIndexPersonal()+1)+".png"));
-        commonGoalCard1.setFitWidth(screenBounds.getWidth()*0.5);
-        commonGoalCard1.setFitHeight(screenBounds.getHeight()*0.5);
+        ImageView commonGoalCard1 = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\common goal cards\\"+(clientView.getIdCommonGoals()[0]+1)+".jpg"));
+        commonGoalCard1.setFitWidth(screenBounds.getWidth()*0.35);
+        commonGoalCard1.setFitHeight(screenBounds.getHeight()*0.35);
         commonGoalCard1.setPreserveRatio(true);
 
         Button common2 = new Button("Common Goal Card 2");
@@ -200,9 +201,9 @@ public abstract class BasePanel extends StackPane {
             }
         });
 
-        ImageView commonGoalCard2 = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\personal goal cards\\Personal_Goals"+(clientView.getIndexPersonal()+1)+".png"));
-        commonGoalCard2.setFitWidth(screenBounds.getWidth()*0.5);
-        commonGoalCard2.setFitHeight(screenBounds.getHeight()*0.5);
+        ImageView commonGoalCard2 = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\common goal cards\\"+(clientView.getIdCommonGoals()[1]+1)+".jpg"));
+        commonGoalCard2.setFitWidth(screenBounds.getWidth()*0.35);
+        commonGoalCard2.setFitHeight(screenBounds.getHeight()*0.35);
         commonGoalCard2.setPreserveRatio(true);
 
 
@@ -255,6 +256,37 @@ public abstract class BasePanel extends StackPane {
                 stackPane3.setVisible(false);
             });
         });
+
+        Button restore = new Button("Restore info");
+        restore.setFont(font);
+        restore.setStyle(style1);
+        restore.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                restore.setStyle(style2);
+            }
+        });
+
+        restore.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                restore.setStyle(style1);
+            }
+        });
+
+        restore.setOnMouseClicked(mouseEvent -> {
+            try {
+                clientView.somethingWrong();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Request sent");
+            alert.setHeaderText(null);
+            alert.setContentText("Server restored all game's info");
+            alert.show();
+        });
+
         Button yourBookshelf = new Button("Your bookshelf");
         yourBookshelf.setFont(font);
         yourBookshelf.setStyle("-fx-border-color: rgba(255,255,0,0.65); -fx-border-width: 2px; -fx-border-radius: 4px; -fx-effect: dropshadow(three-pass-box, rgba(255,255,0,0.65), 6, 0, 0, 0); -fx-background-color: rgba(0,0,0,0.58); -fx-text-fill: white;");
@@ -271,6 +303,7 @@ public abstract class BasePanel extends StackPane {
             }
         });
         vBox.getChildren().add(yourBookshelf);
+        vBox.getChildren().add(restore);
         GridPane bookshelf = new GridPane();
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
