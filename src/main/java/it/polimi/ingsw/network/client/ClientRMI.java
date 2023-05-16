@@ -49,7 +49,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
      * @throws Exception if there are problems with the connection
      */
     @Override
-    public synchronized void sendMessageToServer(Message message) throws Exception {
+    public void sendMessageToServer(Message message) throws Exception {
         if (server == null) {
             throw new RemoteException();
         }
@@ -61,7 +61,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
      * @param message the message to send
      */
     @Override
-    public synchronized void receiveMessageFromServer(Message message) {
+    public void receiveMessageFromServer(Message message) {
         System.out.println("sono il client... ho ricevuto il messaggio: " +message.toString() +" dal server!-------");
         addMessage(message);
     }

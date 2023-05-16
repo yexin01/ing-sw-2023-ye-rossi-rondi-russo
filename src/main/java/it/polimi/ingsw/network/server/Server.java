@@ -365,7 +365,7 @@ public class Server implements Runnable{
      * @param message received from the client
      * @throws Exception if the message is not valid
      */
-    public synchronized void receiveMessageFromClient(Message message) throws Exception {
+    public void receiveMessageFromClient(Message message) throws Exception {
         System.out.println("\nSono il server... ho ricevuto il messaggio: "+ message.toString() + "da un client\n");
         MessageType messageType = message.getHeader().getMessageType();
 
