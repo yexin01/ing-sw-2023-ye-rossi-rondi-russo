@@ -1,10 +1,8 @@
 package it.polimi.ingsw.view.GUI;
 
 import it.polimi.ingsw.message.KeyLobbyPayload;
-import it.polimi.ingsw.message.MessageHeader;
-import it.polimi.ingsw.message.MessagePayload;
-import it.polimi.ingsw.message.MessageType;
 import it.polimi.ingsw.view.ClientView;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Alert;
@@ -20,7 +18,7 @@ public class LobbyDecisionPanel extends BasePanel{
     private String numPlayers;
     private String id;
         public LobbyDecisionPanel(ClientView clientView) {
-            MessageHeader header=new MessageHeader(MessageType.LOBBY, clientView.getNickname());
+            //MessageHeader header=new MessageHeader(MessageType.LOBBY, clientView.getNickname());
 
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
             Image backgroundImage = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\Publisher material\\Display_5.jpg");
@@ -50,12 +48,17 @@ public class LobbyDecisionPanel extends BasePanel{
                     alert.setContentText("Please insert a number");
                     alert.show();
                 } else {
-                    MessagePayload payload = new MessagePayload(KeyLobbyPayload.CREATE_GAME_LOBBY);
+                    //MessagePayload payload = new MessagePayload(KeyLobbyPayload.CREATE_GAME_LOBBY);
                     try {
                         clientView.lobby(KeyLobbyPayload.CREATE_GAME_LOBBY, Integer.parseInt(numPlayers));
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Game created");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Wait until other players join");
+                    alert.show();
                 }
             });
             HBox hBox = new HBox(textField, confirmButton);
@@ -77,12 +80,44 @@ public class LobbyDecisionPanel extends BasePanel{
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
+                    Alert alert1 = new Alert(Alert.AlertType.INFORMATION);
+                    alert1.setTitle("You joined the lobby");
+                    alert1.setHeaderText(null);
+                    alert1.setContentText("Wait until the game starts");
                 }
             });
             HBox hBox1 = new HBox(textField1, confirmButton1);
-            VBox vBox = new VBox(hBox, hBox1);
+
+            Button random = new Button("Join random game");
+            random.setOnMouseClicked(mouseEvent -> {
+                try {
+                    clientView.lobby(KeyLobbyPayload.JOIN_RANDOM_GAME_LOBBY,-1);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                alert2.setTitle("You joined a random lobby");
+                alert2.setHeaderText(null);
+                alert2.setContentText("Wait until the game starts");
+            });
+
+            Button quit = new Button("Quit server");
+            quit.setOnMouseClicked(mouseEvent -> {
+                try {
+                    clientView.lobby(KeyLobbyPayload.QUIT_SERVER,-1);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                Platform.exit();
+            });
+
+            HBox hBox2 = new HBox(random, quit);
+
+            VBox vBox = new VBox(hBox, hBox1, hBox2);
+            vBox.setSpacing(10);
             hBox.setAlignment(Pos.CENTER);
             hBox1.setAlignment(Pos.CENTER);
+            hBox2.setAlignment(Pos.CENTER);
             getChildren().add(vBox);
             vBox.setAlignment(Pos.CENTER);
         }

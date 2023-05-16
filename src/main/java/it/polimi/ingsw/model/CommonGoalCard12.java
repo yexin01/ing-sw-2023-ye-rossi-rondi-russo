@@ -2,10 +2,10 @@ package it.polimi.ingsw.model;
 
 public class CommonGoalCard12 extends CommonGoalCard{
 
-
     /**
      * Goal12: "Five columns of increasing or decreasing height. Starting from the first column on the left or on the right,
      *          each next column must be made of exactly one more tile. Tiles can be of any type."
+     *
      * @param mat matrix of ItemTile[][]
      * @return boolean if the goal is reached or not
      */
@@ -13,8 +13,6 @@ public class CommonGoalCard12 extends CommonGoalCard{
     public boolean checkGoal(ItemTile[][] mat) {
         boolean verified;
         int i;
-
-        // check the goal
         // case1: decreasing height
         i=0;
         if (mat[0][0].getTileID()==-1){
@@ -31,7 +29,6 @@ public class CommonGoalCard12 extends CommonGoalCard{
         if(verified){
             return true;
         }
-
         // case2: increasing height
         i=0;
         if (mat[0][mat[i].length-1].getTileID()==-1){
@@ -47,4 +44,5 @@ public class CommonGoalCard12 extends CommonGoalCard{
         }
         return verified;
     }
+
 }

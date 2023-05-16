@@ -248,13 +248,17 @@ public class GameLobby {
      * @throws IOException if there are problems with the connection
      */
     public synchronized void changePlayerInDisconnected(String nickname) throws IOException {
-        String content="Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in disconnesso";
+        System.out.println("Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in disconnesso");
+
         playersDisconnected.add(nickname);
         players.remove(nickname);
+
         MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
         MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
+        String content = "Player "+nickname+" reconnected to Game Lobby "+ idGameLobby + "!";
+        payload.put(Data.CONTENT,content);
         Message message = new Message(header,payload);
-        sendMessageToAllPlayersExceptOne(message, nickname);
+        sendMessageToAllPlayers(message);
 
         System.out.println(content);
     }
