@@ -71,6 +71,15 @@ public class Colors {
         System.out.printf("%s%s%s\u001B[0m", color, text, space);
     }
 
+    public static void printSize2(String text, int size) {
+        int lengthDifference = size - text.length();
+        String space = "";
+        for (int i = 0; i < lengthDifference; i++) {
+            space += " ";
+        }
+        System.out.printf("%s%s", text, space);
+    }
+
     public static void upperOneBoard(String color) {
         String text = "      0      1      2      3      4      5      6      7      8\n" +
                 "╔══════╦══════╦══════╦══════╦══════╦══════╦══════╦══════╦══════╗";
