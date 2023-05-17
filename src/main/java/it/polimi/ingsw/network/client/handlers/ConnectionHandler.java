@@ -15,8 +15,7 @@ public class ConnectionHandler extends MessageHandler{
     public void handleMessage(Message mes) throws Exception {
         KeyConnectionPayload key= (KeyConnectionPayload) mes.getPayload().getKey();
         getClientInterface().displayMessage((String) mes.getPayload().getContent(Data.CONTENT));
-        if(key.equals(KeyConnectionPayload.RECONNECTION)){
-            getClientInterface().displayMessage((String) mes.getPayload().getContent(Data.CONTENT));
+        if(key.equals(KeyConnectionPayload.RECONNECTION) && mes.getPayload().getContent(Data.WHO_CHANGE).equals(getClientInterface().getClientView().getNickname())){
             getClientInterface().getClientView().somethingWrong();
         }
     }

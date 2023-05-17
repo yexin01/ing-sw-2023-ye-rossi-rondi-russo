@@ -8,6 +8,7 @@ import it.polimi.ingsw.json.GameRules;
 
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.network.server.GameLobby;
 
@@ -20,6 +21,7 @@ public class GameController {
 
     private ListenerManager listenerManager;
     private PhaseController<TurnPhase> turnPhaseController;
+    private boolean[] activePlayers;
     private Game game;
 
 
@@ -31,6 +33,8 @@ public class GameController {
         listenerManager.addListener(TurnPhase.END_TURN,new EndTurnListener(gameLobby));
         listenerManager.addListener(Data.PHASE,new TurnListener(gameLobby));
         gameLobby.setStartAndEndGameListener(infoAndEndGameListener);
+        activePlayers=new boolean[nicknames.size()];
+        Arrays.fill(activePlayers, true);
         GameRules gameRules=new GameRules();
         ModelView modelView=new ModelView(nicknames.size(), gameRules,listenerManager);
         modelView.setTurnPhase(TurnPhase.ALL_INFO);
@@ -60,7 +64,7 @@ public class GameController {
     public void receiveMessageFromClient(Message message){
         String nicknamePlayer= message.getHeader().getNickname();
         try{
-            if (!nicknamePlayer.equals(game.getTurnPlayer().getNickname())) {
+            if (!nicknamePlayer.equals(game.getTurnPlayerOfTheGame().getNickname())) {
                 listenerManager.fireEvent(KeyErrorPayload.ERROR_DATA,nicknamePlayer, ErrorType.ILLEGAL_TURN);
 
             }
@@ -87,7 +91,7 @@ public class GameController {
 
     public void checkAndInsertBoardBox(Message message) throws Exception {
         int[] coordinates=(int[]) message.getPayload().getContent(Data.VALUE_CLIENT);
-        int maxPlayerSelectableTiles=game.getTurnPlayer().getBookshelf().numSelectableTiles();
+        int maxPlayerSelectableTiles=game.getTurnPlayerOfTheGame().getBookshelf().numSelectableTiles();
         if(!checkError(game.getBoard().checkSelectable(coordinates,maxPlayerSelectableTiles))){
             System.out.println("Le asocia");
             //ErrorType errorType=game.getBoard().checkFinishChoice();
@@ -95,7 +99,7 @@ public class GameController {
             //if(errorType!=null){
              //   checkError(errorType);
            // }else{
-              game.getTurnPlayer().selection(game.getBoard());
+              game.getTurnPlayerOfTheGame().selection(game.getBoard());
                 //game.getBoard().resetBoard();
                 turnPhaseController.setCurrentPhase(TurnPhase.SELECT_ORDER_TILES);
                 game.getModelView().setTurnPhase(TurnPhase.SELECT_ORDER_TILES);
@@ -116,22 +120,38 @@ public class GameController {
     }
     public void disconnectionPlayer(String nickname){
         //TODO disconnection
-        if(nickname== getTurnNickname()){
+        System.out.println(nickname.equals(getTurnNickname()));
+        System.out.println("I GIOCATORI SONO1\n");
+        activePlayers=game.disconnectionAndReconnectionPlayer(activePlayers,nickname,false);
+        if(nickname.equals(getTurnNickname())){
             turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
             game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
-            game.setNextPlayer();
-            game.getModelView().setTurnPlayer(game.getTurnPlayer().getNickname());
+            System.out.println("I GIOCATORI SONO2\n");
+            game.setNextPlayer(activePlayers);
+            System.out.println("I GIOCATORI SONO3\n");
+            int i=0;
+            for (Player str : game.getPlayers()) {
+                System.out.print(str.getNickname());
+                System.out.println(activePlayers[i++]);
+            }
+            game.getModelView().setTurnPlayer(game.getTurnPlayerOfTheGame().getNickname());
+            listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
         }
+
+    }
+    public void reconnectionPlayer(String nickname){
+        System.out.println(nickname.equals(getTurnNickname()));
+        activePlayers=game.disconnectionAndReconnectionPlayer(activePlayers,nickname,true);
 
     }
 
     public void permutePlayerTiles(Message message) throws Exception {
         int[] orderTiles=(int[]) message.getPayload().getContent(Data.VALUE_CLIENT);
-        ErrorType errorType=game.getTurnPlayer().checkPermuteSelection(orderTiles);
+        ErrorType errorType=game.getTurnPlayerOfTheGame().checkPermuteSelection(orderTiles);
         if(errorType!=null){
             checkError(errorType);
         }else {
-            game.getTurnPlayer().permuteSelection(orderTiles);
+            game.getTurnPlayerOfTheGame().permuteSelection(orderTiles);
             turnPhaseController.setCurrentPhase(TurnPhase.SELECT_COLUMN);
             game.getModelView().setTurnPhase(TurnPhase.SELECT_COLUMN);
             System.out.println("CAMBIA FASE");
@@ -142,15 +162,15 @@ public class GameController {
     public void selectingColumn(Message message) throws Exception {
         int column=(int) message.getPayload().getContent(Data.VALUE_CLIENT);
         System.out.println("You selected "+column);
-        ErrorType errorType=game.getTurnPlayer().getBookshelf().checkBookshelf(column,game.getTurnPlayer().getSelectedItems().size());
+        ErrorType errorType=game.getTurnPlayerOfTheGame().getBookshelf().checkBookshelf(column,game.getTurnPlayerOfTheGame().getSelectedItems().size());
         if(errorType!=null){
             checkError(errorType);
         }else{
             turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
             game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
-            game.getTurnPlayer().insertBookshelf(column);
+            game.getTurnPlayerOfTheGame().insertBookshelf(column);
             System.out.println("finish1");
-            if(game.getTurnPlayer().getBookshelf().isFull()){
+            if(game.getTurnPlayerOfTheGame().getBookshelf().isFull()){
                 game.setEndGame(true);
             }
             System.out.println("finish2");
@@ -162,15 +182,17 @@ public class GameController {
 
     public void finishTurn() {
         game.getBoard().resetBoard();
-        if(game.isEndGame() && game.getTurnPlayer().equals(game.getLastPlayer())){
+        if(game.isEndGame() && game.getTurnPlayerOfTheGame().equals(game.getLastPlayer())){
             endGame();
             listenerManager.fireEvent(TurnPhase.ALL_INFO,getTurnNickname(),game.getModelView());
         }else{
             if(game.getBoard().checkRefill()){
                 game.getBoard().refill();
             }
-            game.setNextPlayer();
-            game.getModelView().setTurnPlayer(game.getTurnPlayer().getNickname());
+
+            game.setNextPlayer(activePlayers);
+            System.out.println("Il prossimo giocatore é "+game.getTurnPlayerOfTheGame().getNickname());
+            game.getModelView().setTurnPlayer(game.getTurnPlayerOfTheGame().getNickname());
             listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
         }
 
@@ -197,7 +219,7 @@ public class GameController {
         return;
     }
     public String getTurnNickname() {
-        return game.getTurnPlayer().getNickname();
+        return game.getTurnPlayerOfTheGame().getNickname();
     }
 
     public ListenerManager getListenerManager() {
@@ -208,7 +230,8 @@ public class GameController {
         this.listenerManager = listenerManager;
     }
 
-
+    public boolean[] getActivePlayers(){return activePlayers;};
+    public void setActivePlayers(boolean[] activePlayers){this.activePlayers=activePlayers;};
 
 
     /*

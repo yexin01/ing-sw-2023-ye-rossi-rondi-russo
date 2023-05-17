@@ -56,15 +56,43 @@ public class Game {
 
 
 
-    public Player getTurnPlayer() {
+    public Player getTurnPlayerOfTheGame() {
         return players.get(turnPlayer);
     }
 
-    public void setNextPlayer() {
+    public int getTurnPlayer() {
+        return turnPlayer;
+    }
+    public void setNextPlayer(boolean[] activePlayers) {
         // in case a player abandons the game and is the last one, index is > of players.size()-1
-        if(turnPlayer >= (players.size() - 1))
-            turnPlayer=0;
-        else turnPlayer++;
+        System.out.println(activePlayers[getTurnPlayer()]);
+        while(!activePlayers[getTurnPlayer()]){
+            System.out.println("DENTRO "+activePlayers[getTurnPlayer()]);
+            if(turnPlayer >= (players.size() - 1))
+                turnPlayer=0;
+            else turnPlayer++;
+        }
+        System.out.println("Il prossimo giocatore che deve giocare ed é attivo é: "+players.get(getTurnPlayer()).getNickname());
+    }
+    public boolean[] disconnectionAndReconnectionPlayer(boolean[] activePlayers,String nickname,boolean discOrRec) {
+        System.out.println("PRIMA" +nickname);
+        int j=0;
+        for(Player p:players){
+            System.out.println(p.getNickname()+" "+activePlayers[j++]);
+        }
+        for(int i=0;i<players.size();i++){
+            System.out.println("il giocatore che sto esaminando "+players.get(i).getNickname());
+            if(players.get(i).getNickname().equals(nickname)){
+                activePlayers[i]=discOrRec;
+                break;
+            }
+        }
+        System.out.println("DOPO");
+        j=0;
+        for(Player p:players){
+            System.out.println(p.getNickname()+" "+activePlayers[j++]);
+        }
+        return activePlayers;
     }
 
     //CURRENT BOARD
@@ -88,7 +116,6 @@ public class Game {
 
     public void addPlayers(ArrayList<String> nicknames) throws Exception {
         ArrayList<Integer> orderPlayers=generateRandomNumber(nicknames.size(), nicknames.size());
-
         players = new ArrayList<Player>();
         for(Integer player:orderPlayers){
             String nickname=nicknames.get(player);
@@ -284,6 +311,7 @@ public class Game {
     }
 
 
+
     /**
      * Match arraylist of scores based on number of players
      */
@@ -380,17 +408,17 @@ public class Game {
             }
             sum += points[groupSize-2];
         }
-        getTurnPlayer().setAdjacentPoints(sum);
+        getTurnPlayerOfTheGame().setAdjacentPoints(sum);
         return sum;
     }
     public int updatePointsCommonGoals(){
         int points=0;
-        for (int i=0;i<getTurnPlayer().getCommonGoalPoints().length;i++){
-            if (getTurnPlayer().getCommonGoalPoints()[i]==0 && commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())){
-                int num=commonGoalCards.get(i).removeToken(getTurnPlayer().getNickname(),i);
-                getTurnPlayer().setToken(i,num);
+        for (int i = 0; i< getTurnPlayerOfTheGame().getCommonGoalPoints().length; i++){
+            if (getTurnPlayerOfTheGame().getCommonGoalPoints()[i]==0 && commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())){
+                int num=commonGoalCards.get(i).removeToken(getTurnPlayerOfTheGame().getNickname(),i);
+                getTurnPlayerOfTheGame().setToken(i,num);
             }
-            points=points+getTurnPlayer().getCommonGoalPoints(i);
+            points=points+ getTurnPlayerOfTheGame().getCommonGoalPoints(i);
         }
         return points;
     }
@@ -402,20 +430,20 @@ public class Game {
                 numScored++;
             }
         }
-        getTurnPlayer().setPersonalGoalPoints(points[numScored]);
-        return getTurnPlayer().getPersonalGoalPoints();
+        getTurnPlayerOfTheGame().setPersonalGoalPoints(points[numScored]);
+        return getTurnPlayerOfTheGame().getPersonalGoalPoints();
     }
 
     public void updateAllPoints() throws Exception {
         GameRules gameRules=new GameRules();
-        getTurnPlayer().setPlayerPoints(updateAdjacentPoints(gameRules)+updatePointsCommonGoals()+ updatePersonalGoalPoints(gameRules));
+        getTurnPlayerOfTheGame().setPlayerPoints(updateAdjacentPoints(gameRules)+updatePointsCommonGoals()+ updatePersonalGoalPoints(gameRules));
     }
 
 
 
-    public PersonalGoalCard turnPersonalGoal(){return getTurnPlayer().getPersonalGoalCard();}
+    public PersonalGoalCard turnPersonalGoal(){return getTurnPlayerOfTheGame().getPersonalGoalCard();}
 
-    public Bookshelf turnBookshelf(){return getTurnPlayer().getBookshelf();}
+    public Bookshelf turnBookshelf(){return getTurnPlayerOfTheGame().getBookshelf();}
 
     public List<String> checkWinner() {
         List<String> ranking = Collections.unmodifiableList(

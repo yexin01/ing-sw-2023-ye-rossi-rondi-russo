@@ -295,8 +295,8 @@ public class Server implements Runnable{
             String token = UUID.randomUUID().toString();
             connection.setToken(token);
 
-            MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
-            MessagePayload payload = new MessagePayload(KeyConnectionPayload.CONNECTION_CREATION);
+            MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
+            MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
             String content = "Login effettuato con successo sul server! Ora verrai riconnesso alla tua partita...";
             payload.put(Data.CONTENT, content);
             connection.sendMessageToClient(new Message(header, payload));
