@@ -84,7 +84,7 @@ public class GUIApplication extends Application implements ClientInterface {
     @Override
     public void displayError(String error) {
         Platform.runLater(()-> {
-            DisconnectionPanel disconnectionPanel = new DisconnectionPanel();
+            DisconnectionPanel disconnectionPanel = new DisconnectionPanel(error);
             Scene scene = new Scene(disconnectionPanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
             stage.show();
@@ -93,7 +93,6 @@ public class GUIApplication extends Application implements ClientInterface {
 
     @Override
     public void displayMessage(String error) {
-
     }
 
     @Override

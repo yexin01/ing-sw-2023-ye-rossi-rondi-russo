@@ -24,7 +24,7 @@ class GameTest {
         players.add(new Player("player2", modelView));
         game.setPlayers(players);
         game.setNextPlayer(new boolean[] {true, false});
-        assertEquals(0, game.getTurnPlayer());
+        assertEquals(game.getPlayerByNickname("player1"), game.getTurnPlayerOfTheGame());
     }
 
     @Test
