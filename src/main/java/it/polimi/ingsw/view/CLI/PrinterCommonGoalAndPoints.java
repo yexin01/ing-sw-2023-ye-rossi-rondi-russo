@@ -294,6 +294,9 @@ public class PrinterCommonGoalAndPoints {
     public String[] getCommonGoalCardDescription(int i) {
         return cgcDescriptions[i-1];
     }
+    public void printToken(int num,String player){
+
+    }
 
     public void printPoints(ClientView clientView){
         /*

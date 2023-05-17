@@ -10,12 +10,11 @@ import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
 public class ModelView {
-    private int indexRemoveToken;
 
     private int turnPlayer;
 
     private int[][] commonGoalView;
-
+    private int[] token;
 
     private BoardBoxView[][] boardView;
 
@@ -31,8 +30,8 @@ public class ModelView {
         bookshelfView=new ItemTileView[numPlayers][gameRules.getRowsBookshelf()][gameRules.getColumnsBookshelf()];
         playerPoints=new PlayerPointsView[numPlayers];
         playerPersonalGoal=new PersonalGoalCard[numPlayers];
-
-        commonGoalView =new int[gameRules.getNumOfCommonGoals()][gameRules.getNumOfCommonGoals()];
+        commonGoalView =new int[gameRules.getNumOfCommonGoals()][2];
+        token=new int[gameRules.getNumOfCommonGoals()];
     }
 
     public int getIntegerValue(String nickname) {
@@ -61,6 +60,7 @@ public class ModelView {
         playerPoints = deleteObjectByIndex(playerPoints, index);
         playerPersonalGoal=deleteObjectByIndex(playerPersonalGoal,index);
         bookshelfView=deleteObjectByIndex(bookshelfView,index);
+
         //playersOrder.remove(nickname);
         return index;
 
@@ -87,6 +87,7 @@ public class ModelView {
 
 
 
+
     public PersonalGoalCard getPlayerPersonalGoal(String nickname) {
         return playerPersonalGoal[getIntegerValue(nickname)];
     }
@@ -105,16 +106,8 @@ public class ModelView {
     }
 
     public void setSelectedItems(ItemTileView[] selectedItems) {
+        token=new int [commonGoalView[0].length];
         this.selectedItems = selectedItems;
-    }
-
-
-    public int getIndexRemoveToken() {
-        return indexRemoveToken;
-    }
-
-    public void setIndexRemoveToken(int indexRemoveToken) {
-        this.indexRemoveToken = indexRemoveToken;
     }
 
     public BoardBoxView[][] getBoardView() {
@@ -166,69 +159,12 @@ public class ModelView {
     }
 
 
-}
-
-
-/*
-public class GameListener {
-
-    private ServerView serverView;
-    private MessagePayload boardView;
-    private MessagePayload[] commonGoalViews;
-    private String[] playerNicknames;
-    private MessagePayload bookshelfAndPoints;
-    private MessagePayload playerPersonalGoal;
-
-
-    public ServerView getServerView() {
-        return serverView;
+    public int[] getToken() {
+        return token;
     }
 
-    public void setServerView(ServerView serverView) {
-        this.serverView = serverView;
-    }
-
-
-    public int getPlayerByNickname(String nickname) {
-        int num=0;
-        for (String p: playerNicknames) {
-            if (p.equals(nickname)) return num;
-            num++;
-        }
-        return -1;
-    }
-
-    public MessagePayload getBoardView() {
-        return boardView;
-    }
-
-    public void setBoardView(MessagePayload boardView) {
-        this.boardView = boardView;
-    }
-
-    public MessagePayload[] getCommonGoalViews() {
-        return commonGoalViews;
-    }
-
-    public void setCommonGoalViews(MessagePayload commonGoalView,int index) {
-        this.commonGoalViews[index] = commonGoalView;
-    }
-
-    public MessagePayload getBookshelfAndPoints() {
-        return bookshelfAndPoints;
-    }
-
-    public void setBookshelfAndPoints(MessagePayload bookshelfAndPoints) {
-        this.bookshelfAndPoints = bookshelfAndPoints;
-    }
-
-    public MessagePayload getPlayerPersonalGoal() {
-        return playerPersonalGoal;
-    }
-
-    public void setPlayerPersonalGoal(MessagePayload playerPersonalGoal) {
-        this.playerPersonalGoal = playerPersonalGoal;
+    public void setToken(int[] token) {
+        this.token = token;
     }
 }
 
- */

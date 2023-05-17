@@ -639,6 +639,11 @@ public class CLI implements ClientInterface {
     }
 
     @Override
+    public void displayToken(int num, String nickname) {
+        printerCommonGoalAndPoints.printToken(num,nickname);
+    }
+
+    @Override
     public void stop() {
         semaphore.release();
     }

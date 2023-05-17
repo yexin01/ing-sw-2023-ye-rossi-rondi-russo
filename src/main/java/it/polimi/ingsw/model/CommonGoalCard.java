@@ -20,13 +20,14 @@ public abstract class CommonGoalCard {
     public CommonGoalCard(){
         points=new ArrayList<>();
     }
-    public int removeToken(String nickname,int index){
+    public int removeToken(int index){
         if(points.size()>0){
             int point=points.get(points.size()-1);
             points.remove(points.size()-1);
             //int pointsArray[]= points.stream().mapToInt(Integer::intValue).toArray();
             //CommonGoalView common=new CommonGoalView(nickname, point, pointsArray);
             modelView.setIdCommon(1,index,getLastPoint());
+            modelView.getToken()[index]=point;
             return point;
         }
         return 0;

@@ -19,12 +19,12 @@ public class EndTurnListener extends EventListener{
         System.out.println(playerNickname);
         ModelView model=(ModelView) newValue;
         BoardBoxView[][] boardView= model.getBoardView();
-        //ItemTileView[][] bookshelfView=model.getBookshelfView(playerNickname);
-        //PlayerPointsView playerPointsView=model.getPlayerPoints(playerNickname);
         MessageHeader header=new MessageHeader(MessageType.DATA,playerNickname);
         MessagePayload payload=new MessagePayload(TurnPhase.END_TURN);
         payload.put(Data.NEW_BOARD,boardView);
         payload.put(Data.WHO_CHANGE,playerNickname);
+        payload.put(Data.TOKEN,model.getToken());
+        payload.put(Data.POINTS,model.getPlayerPoints());
         Message message=new Message(header,payload);
         getGameLobby().sendMessageToAllPlayers(message);
 

@@ -32,12 +32,20 @@ public class TurnHandler extends MessageHandler {
                 //System.out.println("END TURN CLIENT");
                BoardBoxView[][] boardBoxViews= (BoardBoxView[][]) mes.getPayload().getContent(Data.NEW_BOARD);
                getClientInterface().getClientView().setBoardView(boardBoxViews);
+               PlayerPointsView[] points=(PlayerPointsView[]) mes.getPayload().getContent(Data.POINTS);
+               getClientInterface().getClientView().setPlayerPointsViews(points);
                String player= (String) mes.getPayload().getContent(Data.WHO_CHANGE);
-                //e il suo turno
+               int[] token= (int[]) mes.getPayload().getContent(Data.TOKEN);
+               for(int num:token){
+                   if(num!=0){
+                       getClientInterface().displayToken(num,player);
+                   }
+                }
+                //é il suo turno
                 if(player.equals(getClientInterface().getClientView().getNickname())){
                     getClientInterface().stop();
                     getClientInterface().askCoordinates();
-                    //non e il suo turno
+                    //non é il suo turno
                 }else{
                     getClientInterface().displayMessage("Turn player is: "+player);
                     getClientInterface().start();

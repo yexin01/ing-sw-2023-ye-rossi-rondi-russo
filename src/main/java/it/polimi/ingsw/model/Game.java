@@ -325,7 +325,7 @@ public class Game {
         int points=0;
         for (int i = 0; i< getTurnPlayerOfTheGame().getCommonGoalPoints().length; i++){
             if (getTurnPlayerOfTheGame().getCommonGoalPoints()[i]==0 && commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())){
-                int num=commonGoalCards.get(i).removeToken(getTurnPlayerOfTheGame().getNickname(),i);
+                int num=commonGoalCards.get(i).removeToken(i);
                 getTurnPlayerOfTheGame().setToken(i,num);
             }
             points=points+ getTurnPlayerOfTheGame().getCommonGoalPoints(i);

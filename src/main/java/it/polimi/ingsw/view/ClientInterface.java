@@ -17,7 +17,7 @@ public interface ClientInterface  {
     ClientView getClientView();
    void start() throws Exception;
 
-
+    void displayToken(int num, String nickname);
    void stop() throws Exception;
     void askCoordinates() throws Exception;
     void askOrder() throws Exception;
