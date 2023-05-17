@@ -2,24 +2,35 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.json.GameRules;
+import it.polimi.ingsw.listeners.ListenerManager;
+import it.polimi.ingsw.message.ErrorType;
 import it.polimi.ingsw.model.modelView.ModelView;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
-/*
+
 class BoardTest {
+
+    @Test
+    @DisplayName("cloneBoard: generic check")
+    void cloneBoard () throws Exception {
+        GameRules gameRules = new GameRules();
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Board board = new Board(modelView);
+        board.fillBag(gameRules);
+        board.firstFillBoard(2, gameRules);
+        assertEquals(board.getMatrix()[4][4].getTile().getType(), board.cloneBoard()[4][4].getType());
+    }
 
     @Test
     @DisplayName("checkCoordinates: check for not occupiable tile")
     void checkCoordinates() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         int numPlayers = 2;
         board.fillBag(gameRules);
@@ -31,9 +42,8 @@ class BoardTest {
     @Test
     @DisplayName("checkCoordinates: check for out of bound tile")
     void checkCoordinatesCC1() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         int numPlayers = 2;
         board.fillBag(gameRules);
@@ -45,9 +55,8 @@ class BoardTest {
     @Test
     @DisplayName("firstFill: check for starting fill box 0,0 (2P)")
     void firstFillBoard() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         //Set the matrix of the number of players you want to test
         int numPlayers = 2;
@@ -62,9 +71,8 @@ class BoardTest {
     @Test
     @DisplayName("setFreeEdges: check for tile 7,3 (2P)")
     void setFreeEdges() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         //Set the matrix of the number of players you want to test
         int numPlayers = 2;
@@ -79,9 +87,8 @@ class BoardTest {
     @Test
     @DisplayName("setFreeEdges: check for tile 2,3 (2P)")
     void setFreeEdgesCC1() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         int numPlayers = 2;
         board.fillBag(gameRules);
@@ -93,9 +100,8 @@ class BoardTest {
     @Test
     @DisplayName("setFreeEdges: check for tile 3,3 (2P)")
     void setFreeEdgesCC2() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         int numPlayers = 2;
         board.fillBag(gameRules);
@@ -107,9 +113,8 @@ class BoardTest {
     @Test
     @DisplayName("increaseNear: removing tile 7,3 (Based on 2P matrix)")
     void increaseNear() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         //Set the matrix of the number of players you want to test
         int numPlayers = 2;
@@ -126,9 +131,8 @@ class BoardTest {
     @Test
     @DisplayName("increaseNear: removing tile 7,4 (Based on 2P matrix)")
     void increaseNearCC1() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         int numPlayers = 2;
         board.fillBag(gameRules);
@@ -143,9 +147,8 @@ class BoardTest {
     @Test
     @DisplayName("increaseNear: removing tile 2,3 ; 2,4 (Based on 2P matrix)")
     void increaseNearCC2() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         int numPlayers = 2;
         board.fillBag(gameRules);
@@ -161,182 +164,137 @@ class BoardTest {
     @Test
     @DisplayName("allAdjacent: selected tiles on the same row")
     void allAdjacent() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
-        //Set the matrix of the number of players you want to test
-        int numPlayers = 2;
-        board.fillBag(gameRules);
-        board.firstFillBoard(numPlayers, gameRules);
-        ArrayList<BoardBox> selectedBoard = new ArrayList<>();
         //Set the coordinates of the 3 selected tiles
         int a=1; int b=3;  int c=1; int d=4;  int e=1; int f=5;
-        selectedBoard.add(new BoardBox(a,b));
-        selectedBoard.add(new BoardBox(c,d));
-        selectedBoard.add(new BoardBox(e,f));
-        board.setSelectedBoard(selectedBoard);
-        assertTrue(board.allAdjacent());
+        int[] coordinatesSelected = new int[] {a,b,c,d,e,f};
+        assertTrue(board.allAdjacent(coordinatesSelected));
     }
 
     @Test
     @DisplayName("allAdjacent: selected tiles on the same column")
     void allAdjacentCC1() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
-        int numPlayers = 2;
-        board.fillBag(gameRules);
-        board.firstFillBoard(numPlayers, gameRules);
-        ArrayList<BoardBox> selectedBoard = new ArrayList<>();
         int a=1; int b=3;  int c=2; int d=3;  int e=3; int f=3;
-        selectedBoard.add(new BoardBox(a,b));
-        selectedBoard.add(new BoardBox(c,d));
-        selectedBoard.add(new BoardBox(e,f));
-        board.setSelectedBoard(selectedBoard);
-        assertTrue(board.allAdjacent());
+        int[] coordinatesSelected = new int[] {a,b,c,d,e,f};
+        assertTrue(board.allAdjacent(coordinatesSelected));
     }
 
     @Test
     @DisplayName("allAdjacent: L-shape pattern selected tiles")
     void allAdjacentCC2() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
-        int numPlayers = 2;
-        board.fillBag(gameRules);
-        board.firstFillBoard(numPlayers, gameRules);
-        ArrayList<BoardBox> selectedBoard = new ArrayList<>();
         int a=1; int b=3;  int c=2; int d=3;  int e=2; int f=4;
-        selectedBoard.add(new BoardBox(a,b));
-        selectedBoard.add(new BoardBox(c,d));
-        selectedBoard.add(new BoardBox(e,f));
-        board.setSelectedBoard(selectedBoard);
-        assertTrue(board.allAdjacent());
+        int[] coordinatesSelected = new int[] {a,b,c,d,e,f};
+        assertTrue(board.allAdjacent(coordinatesSelected));
     }
 
     @Test
     @DisplayName("allAdjacent: selected tiles on the same row but not adjacent")
     void allAdjacentCC3() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
-        int numPlayers = 2;
-        board.fillBag(gameRules);
-        board.firstFillBoard(numPlayers, gameRules);
-        ArrayList<BoardBox> selectedBoard = new ArrayList<>();
         int a=1; int b=2;  int c=1; int d=3;  int e=1; int f=5;
-        selectedBoard.add(new BoardBox(a,b));
-        selectedBoard.add(new BoardBox(c,d));
-        selectedBoard.add(new BoardBox(e,f));
-        board.setSelectedBoard(selectedBoard);
-        assertFalse(board.allAdjacent());
+        int[] coordinatesSelected = new int[] {a,b,c,d,e,f};
+        assertFalse(board.allAdjacent(coordinatesSelected));
     }
 
     @Test
     @DisplayName("allSameRowOrSameColumn: tiles on the same row")
     void allSameRowOrSameColumn() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
-        //Set the matrix of the number of players you want to test
-        int numPlayers = 2;
-        board.fillBag(gameRules);
-        board.firstFillBoard(numPlayers, gameRules);
-        ArrayList<BoardBox> selectedBoard = new ArrayList<>();
         //Set the coordinates of the 3 selected tiles
         int a=1; int b=3;  int c=1; int d=4;  int e=1; int f=5;
-        selectedBoard.add(new BoardBox(a,b));
-        selectedBoard.add(new BoardBox(c,d));
-        selectedBoard.add(new BoardBox(e,f));
-        board.setSelectedBoard(selectedBoard);
-        assertTrue(board.allSameRowOrSameColumn());
+        int[] coordinatesSelected = new int[] {a,b,c,d,e,f};
+        assertTrue(board.allAdjacent(coordinatesSelected));
     }
 
     @Test
     @DisplayName("allSameRowOrSameColumn: tiles on the same column")
     void allSameRowOrSameColumnCC1() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
-        int numPlayers = 2;
-        board.fillBag(gameRules);
-        board.firstFillBoard(numPlayers, gameRules);
-        ArrayList<BoardBox> selectedBoard = new ArrayList<>();
         int a=1; int b=3;  int c=2; int d=3;  int e=3; int f=3;
-        selectedBoard.add(new BoardBox(a,b));
-        selectedBoard.add(new BoardBox(c,d));
-        selectedBoard.add(new BoardBox(e,f));
-        board.setSelectedBoard(selectedBoard);
-        assertTrue(board.allSameRowOrSameColumn());
+        int[] coordinatesSelected = new int[] {a,b,c,d,e,f};
+        assertTrue(board.allAdjacent(coordinatesSelected));
     }
 
     @Test
     @DisplayName("allSameRowOrSameColumn: L-shape pattern tiles")
     void allSameRowOrSameColumnCC2() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
-        int numPlayers = 2;
-        board.fillBag(gameRules);
-        board.firstFillBoard(numPlayers, gameRules);
-        ArrayList<BoardBox> selectedBoard = new ArrayList<>();
         int a=2; int b=3;  int c=3; int d=3;  int e=3; int f=4;
-        selectedBoard.add(new BoardBox(a,b));
-        selectedBoard.add(new BoardBox(c,d));
-        selectedBoard.add(new BoardBox(e,f));
-        board.setSelectedBoard(selectedBoard);
-        assertFalse(board.allSameRowOrSameColumn());
+        int[] coordinatesSelected = new int[] {a,b,c,d,e,f};
+        assertTrue(board.allAdjacent(coordinatesSelected));
     }
 
     @Test
     @DisplayName("allSameRowOrSameColumn: tiles on the same column but not adjacent")
     void allSameRowOrSameColumnCC3() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
-        int numPlayers = 2;
-        board.fillBag(gameRules);
-        board.firstFillBoard(numPlayers, gameRules);
-        ArrayList<BoardBox> selectedBoard = new ArrayList<>();
         int a=2; int b=3;  int c=3; int d=3;  int e=5; int f=3;
-        selectedBoard.add(new BoardBox(a,b));
-        selectedBoard.add(new BoardBox(c,d));
-        selectedBoard.add(new BoardBox(e,f));
-        board.setSelectedBoard(selectedBoard);
-        assertTrue(board.allSameRowOrSameColumn());
+        int[] coordinatesSelected = new int[] {a,b,c,d,e,f};
+        assertFalse(board.allAdjacent(coordinatesSelected));
     }
 
     @Test
     @DisplayName("checkSelectable: generic check")
     void checkSelectable() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         int numPlayers = 2;
         board.fillBag(gameRules);
         board.firstFillBoard(numPlayers, gameRules);
-        ArrayList<BoardBox> selectedBoard = new ArrayList<>();
-        selectedBoard.add(new BoardBox(7,3));
-        selectedBoard.add(new BoardBox(7,4));
-        board.setSelectedBoard(selectedBoard);
-        assertEquals(null, board.checkSelectable(new BoardBox(7,5), 3));
+        int[] selection = new int[] {7,3,7,4,7,5};
+        assertEquals(null, board.checkSelectable((selection), 3));
+    }
+
+    @Test
+    @DisplayName("checkSelectable: only 1 coordinate")
+    void checkSelectableCC1() throws Exception {
+        GameRules gameRules = new GameRules();
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Board board = new Board(modelView);
+        int numPlayers = 2;
+        board.fillBag(gameRules);
+        board.firstFillBoard(numPlayers, gameRules);
+        int[] selection = new int[] {7};
+        assertEquals(ErrorType.INVALID_INPUT, board.checkSelectable((selection), 3));
+    }
+
+    @Test
+    @DisplayName("checkSelectable: 8 coordinate")
+    void checkSelectableCC2() throws Exception {
+        GameRules gameRules = new GameRules();
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Board board = new Board(modelView);
+        int numPlayers = 2;
+        board.fillBag(gameRules);
+        board.firstFillBoard(numPlayers, gameRules);
+        int[] selection = new int[] {7,3,7,4,7,5,7,6};
+        assertEquals(ErrorType.TOO_MANY_TILES, board.checkSelectable((selection), 3));
     }
 
     @Test
     @DisplayName("selected: 3 different tiles")
     void selected() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         board.fillBag(gameRules);
         board.firstFillBoard(2, gameRules);
@@ -360,11 +318,28 @@ class BoardTest {
     }
 
     @Test
+    @DisplayName("resetBoard: generic check")
+    void resetBoard() throws Exception {
+        GameRules gameRules = new GameRules();
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Board board = new Board(modelView);
+        board.fillBag(gameRules);
+        board.firstFillBoard(2, gameRules);
+        ArrayList<BoardBox> selectedBoard = new ArrayList<>();
+        int a=1; int b=3; int tileID=0;
+        ItemTile itemTile1 = new ItemTile(Type.CAT, tileID);
+        BoardBox boardBox1 = new BoardBox(a,b); boardBox1.setTile(itemTile1);
+        selectedBoard.add(boardBox1);
+        board.setSelectedBoard(selectedBoard);
+        board.resetBoard();
+        assertEquals(0, board.getMatrix()[a][b].getFreeEdges());
+    }
+
+    @Test
     @DisplayName("checkRefill: generic false check matrix")
     void checkRefill() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         //Initialize the matrix as you want
         int[][] matrix = {
@@ -403,9 +378,8 @@ class BoardTest {
     @Test
     @DisplayName("checkRefill: generic true check matrix")
     void checkRefillCC1() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         int[][] matrix = {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -442,9 +416,8 @@ class BoardTest {
     @Test
     @DisplayName("checkRefill: 1 row of tiles remained")
     void checkRefillCC2() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         int[][] matrix = {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -481,9 +454,8 @@ class BoardTest {
     @Test
     @DisplayName("checkRefill: 1 tile remained")
     void checkRefillCC3() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         int[][] matrix = {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -520,9 +492,8 @@ class BoardTest {
     @Test
     @DisplayName("checkRefill: blank board")
     void checkRefillCC4() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         int[][] matrix = {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -559,9 +530,8 @@ class BoardTest {
     @Test
     @DisplayName("refill: check for box 0,0 (2P)")
     void refill() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         //Set the matrix of the number of players you want to test
         int numPlayers = 2;
@@ -576,9 +546,8 @@ class BoardTest {
     @Test
     @DisplayName("refill: check for box 6,2 (2P)")
     void refillCC1() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Board board = new Board(modelView);
         //Set the matrix of the number of players you want to test
         int numPlayers = 2;
@@ -591,4 +560,3 @@ class BoardTest {
     }
 }
 
- */

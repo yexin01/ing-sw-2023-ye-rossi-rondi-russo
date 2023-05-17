@@ -1,14 +1,25 @@
 package it.polimi.ingsw.model;
 
-/*
+
+import it.polimi.ingsw.json.GameRules;
+import it.polimi.ingsw.listeners.ListenerManager;
+import it.polimi.ingsw.message.ErrorType;
+import it.polimi.ingsw.model.modelView.ModelView;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+
 class PlayerTest {
 
     @Test
     @DisplayName("selection: generic 3 tiles check")
     void selection() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Player player = new Player("player1", modelView);
         Board board = new Board(modelView);
         board.fillBag(gameRules);
@@ -23,17 +34,17 @@ class PlayerTest {
         }
         board.setSelectedBoard(selectedTiles);
         player.selection(board);
-        int [] order = new int[]{1, 2, 5};
-        assertEquals(ErrorType.INVALID_ORDER_TILE, player.checkPermuteSelection(order));
+        assertEquals(player.getSelectedItems().get(0).getTileID(), modelView.getSelectedItems()[0].getTileID());
+        assertEquals(player.getSelectedItems().get(1).getTileID(), modelView.getSelectedItems()[1].getTileID());
+        assertEquals(player.getSelectedItems().get(2).getTileID(), modelView.getSelectedItems()[2].getTileID());
         //assertThrows(Error.class, ()->player.checkPermuteSelection(order));
     }
 
     @Test
     @DisplayName("checkPermuteSelection: out of bounds order index")
     void checkPermuteSelection() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Player player = new Player("player1", modelView);
         Board board = new Board(modelView);
         board.fillBag(gameRules);
@@ -49,16 +60,15 @@ class PlayerTest {
         board.setSelectedBoard(selectedTiles);
         player.selection(board);
         int [] order = new int[]{1, 2, 5};
-        assertEquals(ErrorType.INVALID_ORDER_TILE, player.checkPermuteSelection(order));
+        assertEquals(ErrorType.INVALID_ORDER_TILE_NUMBER, player.checkPermuteSelection(order));
         //assertThrows(Error.class, ()->player.checkPermuteSelection(order));
     }
 
     @Test
     @DisplayName("checkPermuteSelection: repeated order index")
     void checkPermuteSelectionCC1() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Player player = new Player("player1", modelView);
         Board board = new Board(modelView);
         board.fillBag(gameRules);
@@ -74,16 +84,15 @@ class PlayerTest {
         board.setSelectedBoard(selectedTiles);
         player.selection(board);
         int [] order = new int[]{1, 2, 1};
-        assertEquals(ErrorType.INVALID_ORDER_TILE, player.checkPermuteSelection(order));
+        assertEquals(ErrorType.INVALID_ORDER_TILE_REPETITION, player.checkPermuteSelection(order));
         //assertThrows(Error.class, ()->player.checkPermuteSelection(order));
     }
 
     @Test
     @DisplayName("permuteSelection: generic check with 3 tiles")
     void permuteSelection() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
         Player player = new Player("player1", modelView);
         Board board = new Board(modelView);
         board.fillBag(gameRules);
@@ -109,5 +118,5 @@ class PlayerTest {
         player.permuteSelection(order);
         assertIterableEquals(selectedItems, player.getSelectedItems());
     }
-} */
+}
 

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -103,6 +102,15 @@ class BookshelfTest {
         array[0] = 6-column0; array[1] = 6-column1; array[2] = 6-column2; array[3] = 6-column3; array[4] = 6-column4;
         bookshelf.computeFreeShelves();
         assertArrayEquals(array, bookshelf.getFreeShelves());
+    }
+
+    @Test
+    @DisplayName("cloneBookshelf: generic check")
+    void cloneBookshelf() {
+        Bookshelf bookshelf = new Bookshelf(6, 5, 3);
+        bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, 0);
+        assertEquals(bookshelf.getMatrix()[5][0].getTileID(), bookshelf.cloneBookshelf()[5][0].getTileID());
+        assertEquals(bookshelf.getMatrix()[5][0].getType(), bookshelf.cloneBookshelf()[5][0].getTypeView());
     }
 
     @Test
@@ -362,13 +370,12 @@ class BookshelfTest {
         //Set the size of selectedTiles
         int size = 3; int tileID = 0;
         //Set the column you want to insert the tiles
-        bookshelf.setColumnSelected(0);
         ArrayList<ItemTile> selectedTiles = new ArrayList<>();
         for (int i = 0; i<size; i++) {
             selectedTiles.add(new ItemTile(Type.CAT, tileID));
             tileID++;
         }
-        bookshelf.insertTiles(selectedTiles);
+        bookshelf.insertTiles(selectedTiles, 0);
         assertEquals(0, bookshelf.getMatrix()[5][0].getTileID()); assertEquals(Type.CAT, bookshelf.getMatrix()[5][0].getType());
         assertEquals(1, bookshelf.getMatrix()[4][0].getTileID()); assertEquals(Type.CAT, bookshelf.getMatrix()[4][0].getType());
         assertEquals(2, bookshelf.getMatrix()[3][0].getTileID()); assertEquals(Type.CAT, bookshelf.getMatrix()[3][0].getType());
@@ -379,14 +386,13 @@ class BookshelfTest {
     void insertTilesCC1() throws Error {
         Bookshelf bookshelf = new Bookshelf(6,5,3);
         bookshelf.computeFreeShelves();
-        bookshelf.setColumnSelected(0);
         ArrayList<ItemTile> selectedTiles = new ArrayList<>();
         int size = 1; int tileID = 0;
         for (int i = 0; i<size; i++) {
             selectedTiles.add(new ItemTile(Type.CAT, tileID));
             tileID++;
         }
-        bookshelf.insertTiles(selectedTiles);
+        bookshelf.insertTiles(selectedTiles, 0);
         assertEquals(0, bookshelf.getMatrix()[5][0].getTileID()); assertEquals(Type.CAT, bookshelf.getMatrix()[5][0].getType());
     }
 
@@ -398,14 +404,13 @@ class BookshelfTest {
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, 1);
         bookshelf.getMatrix()[3][0] = new ItemTile(Type.CAT, 2);
         bookshelf.computeFreeShelves();
-        bookshelf.setColumnSelected(0);
         ArrayList<ItemTile> selectedTiles = new ArrayList<>();
         int size = 3; int tileID = 3;
         for (int i = 0; i<size; i++) {
             selectedTiles.add(new ItemTile(Type.CAT, tileID));
             tileID++;
         }
-        bookshelf.insertTiles(selectedTiles);
+        bookshelf.insertTiles(selectedTiles, 0);
         assertEquals(3, bookshelf.getMatrix()[2][0].getTileID()); assertEquals(Type.CAT, bookshelf.getMatrix()[2][0].getType());
         assertEquals(4, bookshelf.getMatrix()[1][0].getTileID()); assertEquals(Type.CAT, bookshelf.getMatrix()[1][0].getType());
         assertEquals(5, bookshelf.getMatrix()[0][0].getTileID()); assertEquals(Type.CAT, bookshelf.getMatrix()[0][0].getType());
@@ -421,14 +426,13 @@ class BookshelfTest {
         bookshelf.getMatrix()[2][0] = new ItemTile(Type.CAT, 3);
         bookshelf.getMatrix()[1][0] = new ItemTile(Type.CAT, 4);
         bookshelf.computeFreeShelves();
-        bookshelf.setColumnSelected(0);
         ArrayList<ItemTile> selectedTiles = new ArrayList<>();
         int size = 1; int tileID = 5;
         for (int i = 0; i<size; i++) {
             selectedTiles.add(new ItemTile(Type.CAT, tileID));
             tileID++;
         }
-        bookshelf.insertTiles(selectedTiles);
+        bookshelf.insertTiles(selectedTiles, 0);
         assertEquals(5, bookshelf.getMatrix()[0][0].getTileID()); assertEquals(Type.CAT, bookshelf.getMatrix()[0][0].getType());
     }
 
@@ -485,7 +489,7 @@ class BookshelfTest {
         bookshelf.getMatrix()[5][3] = new ItemTile(Type.FRAME, tileID); tileID++;
         bookshelf.getMatrix()[5][4] = new ItemTile(Type.TROPHY, tileID); tileID++;
         bookshelf.getMatrix()[4][4] = new ItemTile(Type.PLANT, tileID);
-        List<Integer> groupsSizes = new ArrayList<>();
+        ArrayList<Integer> groupsSizes = new ArrayList<>();
         groupsSizes.add(0, 1);
         groupsSizes.add(1, 1);
         groupsSizes.add(2, 1);
@@ -505,7 +509,7 @@ class BookshelfTest {
         bookshelf.getMatrix()[3][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[2][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[1][0] = new ItemTile(Type.CAT, tileID);
-        List<Integer> groupsSizes = new ArrayList<>();
+        ArrayList<Integer> groupsSizes = new ArrayList<>();
         groupsSizes.add(0, 5);
         assertIterableEquals(groupsSizes, bookshelf.findAdjacentTilesGroups());
     }
@@ -520,7 +524,7 @@ class BookshelfTest {
         bookshelf.getMatrix()[5][2] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][3] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][4] = new ItemTile(Type.CAT, tileID);
-        List<Integer> groupsSizes = new ArrayList<>();
+        ArrayList<Integer> groupsSizes = new ArrayList<>();
         groupsSizes.add(0, 5);
         assertIterableEquals(groupsSizes, bookshelf.findAdjacentTilesGroups());
     }
@@ -534,7 +538,7 @@ class BookshelfTest {
         bookshelf.getMatrix()[5][1] = new ItemTile(Type.BOOK, tileID); tileID++;
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.BOOK, tileID); tileID++;
         bookshelf.getMatrix()[4][2] = new ItemTile(Type.CAT, tileID);
-        List<Integer> groupsSizes = new ArrayList<>();
+        ArrayList<Integer> groupsSizes = new ArrayList<>();
         groupsSizes.add(0, 1);
         groupsSizes.add(1, 1);
         groupsSizes.add(2, 1);
@@ -577,7 +581,7 @@ class BookshelfTest {
         bookshelf.getMatrix()[0][2] = new ItemTile(Type.BOOK, tileID); tileID++;
         bookshelf.getMatrix()[0][3] = new ItemTile(Type.GAME, tileID); tileID++;
         bookshelf.getMatrix()[0][4] = new ItemTile(Type.CAT, tileID);
-        List<Integer> groupsSizes = new ArrayList<>();
+        ArrayList<Integer> groupsSizes = new ArrayList<>();
         groupsSizes.add(0, 1);
         groupsSizes.add(1, 1);
         groupsSizes.add(2, 1);
@@ -594,3 +598,4 @@ class BookshelfTest {
         assertIterableEquals(groupsSizes, bookshelf.findAdjacentTilesGroups());
     }
 }
+

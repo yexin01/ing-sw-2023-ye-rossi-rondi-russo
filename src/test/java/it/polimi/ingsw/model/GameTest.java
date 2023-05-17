@@ -1,74 +1,51 @@
 package it.polimi.ingsw.model;
 
 
-
 import it.polimi.ingsw.json.GameRules;
+import it.polimi.ingsw.listeners.ListenerManager;
 import it.polimi.ingsw.model.modelView.ModelView;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
 
     @Test
-    @DisplayName("addPlayer: generic check")
-    void addPlayer() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
+    @DisplayName("setNextPlayer: generic check")
+    void setNextPlayer() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
-        game.addPlayer("player1", modelView);
-        assertNotEquals(null, game.getPlayerByNickname("player1"));
-    }
-
-    /*
-    @Test
-    @DisplayName("insertNickname: 1st player to join")
-    void insertNickname() throws Exception {
-        Game game = new Game();
-        Assertions.assertTrue(game.insertNickname("player1"));
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
+        ArrayList<Player> players = new ArrayList<>();
+        players.add(new Player("player1", modelView));
+        players.add(new Player("player2", modelView));
+        game.setPlayers(players);
+        game.setNextPlayer(new boolean[] {true, false});
+        assertEquals(0, game.getTurnPlayer());
     }
 
     @Test
-    @DisplayName("insertNickname: 2nd player to join (legal nickname)")
-    void insertNicknameCC1() throws Exception {
-        Game game = new Game();
-        game.insertNickname("player1");
-        Assertions.assertTrue(game.insertNickname("player2"));
+    @DisplayName("addPlayers: generic check")
+    void addPlayers() throws Exception {
+        GameRules gameRules = new GameRules();
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
+        ArrayList<String> nicknames= new ArrayList<>();
+        nicknames.add("player1");
+        nicknames.add("player2");
+        game.addPlayers(nicknames);
+        assertEquals(nicknames.size(), modelView.getPlayersOrder().size());
     }
-
-    @Test
-    @DisplayName("insertNickname: stop at 2 players")
-    void insertNicknameCC2() throws Exception {
-        Game game = new Game();
-        game.insertNickname("player1");
-        game.insertNickname("player2");
-        Assertions.assertFalse(game.insertNickname("stop"));
-    }
-
-    @Test
-    @DisplayName("insertNickname: automatic start at player 4 added")
-    void insertNicknameCC3() throws Exception {
-        Game game = new Game();
-        game.insertNickname("player1");
-        game.insertNickname("player2");
-        game.insertNickname("player3");
-        Assertions.assertFalse(game.insertNickname("player4"));
-    }
-
-     */
 
     @Test
     @DisplayName("differentNickname: 2nd player has 1st player nickname")
     void differentNickname() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
         ArrayList<Player> players = new ArrayList<>();
         players.add(new Player("player1", modelView));
         game.setPlayers(players);
@@ -78,10 +55,9 @@ class GameTest {
     @Test
     @DisplayName("differentNickname: 2nd player nickname different from the first one's")
     void differentNicknameCC1() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
         ArrayList<Player> players = new ArrayList<>();
         players.add(new Player("player1", modelView));
         game.setPlayers(players);
@@ -91,10 +67,9 @@ class GameTest {
     @Test
     @DisplayName("differentNickname: 3rd player nickname different from the ones of the other two")
     void differentNicknameCC2() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
         ArrayList<Player> players = new ArrayList<>();
         players.add(new Player("player1", modelView));
         players.add(new Player("player2", modelView));
@@ -105,15 +80,14 @@ class GameTest {
     @Test
     @DisplayName("createCommonGoalCard: generic check for size and points")
     void createCommonGoalCard() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
         ArrayList<Player> players = new ArrayList<>();
         players.add(new Player("player1", modelView));
         players.add(new Player("player2", modelView));
         game.setPlayers(players);
-        game.createCommonGoalCard(gameRules, modelView);
+        game.createCommonGoalCard(gameRules);
         assertEquals(2, game.getCommonGoalCards().size());
         ArrayList<Integer> points = new ArrayList<>();
         points.add(4);
@@ -126,10 +100,9 @@ class GameTest {
     @Test
     @DisplayName("updateAdjacentPoints: one 5 tiles group")
     void updateAdjacentPoints() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         Bookshelf bookshelf = new Bookshelf(6,5,3);
         player.setBookshelf(bookshelf);
@@ -148,10 +121,9 @@ class GameTest {
     @Test
     @DisplayName("updateAdjacentPoints: one 7 tiles group")
     void updateAdjacentPointsCC1() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         Bookshelf bookshelf = new Bookshelf(6,5,3);
         player.setBookshelf(bookshelf);
@@ -172,10 +144,9 @@ class GameTest {
     @Test
     @DisplayName("updateAdjacentPoints: 3 two tiles groups")
     void updateAdjacentPointsCC2() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         Bookshelf bookshelf = new Bookshelf(6,5,3);
         player.setBookshelf(bookshelf);
@@ -195,10 +166,9 @@ class GameTest {
     @Test
     @DisplayName("updateAdjacentPoints: 3, 4, 5, 6 tiles groups")
     void updateAdjacentPointsCC3() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         Bookshelf bookshelf = new Bookshelf(6,5,3);
         player.setBookshelf(bookshelf);
@@ -230,10 +200,9 @@ class GameTest {
     @Test
     @DisplayName("updatePointsCommonGoals: generic check (2P)")
     void updatePointsCommonGoals() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
         Player player1 = new Player("player1", modelView);
         Player player2 = new Player("player2", modelView);
         Bookshelf bookshelf1 = new Bookshelf(6,5,3);
@@ -258,7 +227,7 @@ class GameTest {
         bookshelf1.getMatrix()[0][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf1.getMatrix()[0][4] = new ItemTile(Type.CAT, tileID);
         assertEquals(8, game.updatePointsCommonGoals());
-        game.setNextPlayer();
+        game.setNextPlayer(new boolean[] {false, true});
         Bookshelf bookshelf2 = new Bookshelf(6,5,3);
         player2.setBookshelf(bookshelf2);
         bookshelf2.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -271,10 +240,9 @@ class GameTest {
     @Test
     @DisplayName("updatePersonalGoalPoints: 6/6 tiles")
     void updatePersonalGoalPoints() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         ArrayList<Player> players = new ArrayList<>();
         players.add(player);
@@ -303,10 +271,9 @@ class GameTest {
     @Test
     @DisplayName("updatePersonalGoalPoints: 5/6 tiles")
     void updatePersonalGoalPointsCC1() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         ArrayList<Player> players = new ArrayList<>();
         players.add(player);
@@ -335,10 +302,9 @@ class GameTest {
     @Test
     @DisplayName("updatePersonalGoalPoints: 4/6 tiles")
     void updatePersonalGoalPointsCC2() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         ArrayList<Player> players = new ArrayList<>();
         players.add(player);
@@ -367,10 +333,9 @@ class GameTest {
     @Test
     @DisplayName("updatePersonalGoalPoints: 3/6 tiles")
     void updatePersonalGoalPointsCC3() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         ArrayList<Player> players = new ArrayList<>();
         players.add(player);
@@ -399,10 +364,9 @@ class GameTest {
     @Test
     @DisplayName("updatePersonalGoalPoints: 2/6 tiles")
     void updatePersonalGoalPointsCC4() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         ArrayList<Player> players = new ArrayList<>();
         players.add(player);
@@ -431,10 +395,9 @@ class GameTest {
     @Test
     @DisplayName("updatePersonalGoalPoints: 1/6 tiles")
     void updatePersonalGoalPointsCC5() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         ArrayList<Player> players = new ArrayList<>();
         players.add(player);
@@ -463,10 +426,9 @@ class GameTest {
     @Test
     @DisplayName("updatePersonalGoalPoints: 0/6 tiles")
     void updatePersonalGoalPointsCC6() throws Exception {
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         ArrayList<Player> players = new ArrayList<>();
         players.add(player);
@@ -491,4 +453,21 @@ class GameTest {
         player.setPersonalGoalCard(personalGoalCard);
         assertEquals(0, game.updatePersonalGoalPoints(gameRules));
     }
+
+    @Test
+    @DisplayName("checkWinner: generic check")
+    void checkWinner () throws Exception {
+        GameRules gameRules = new GameRules();
+        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        Game game = new Game(gameRules, 4, modelView);
+        ArrayList<String> nicknames = new ArrayList<>();
+        nicknames.add("player1"); nicknames.add("player2");
+        game.addPlayers(nicknames);
+        game.getPlayerByNickname("player1").setBookshelf(new Bookshelf(6,5,3));
+        game.getPlayerByNickname("player2").setBookshelf(new Bookshelf(6,5,3));
+        game.getPlayerByNickname("player1").setPlayerPoints(10);
+        game.getPlayerByNickname("player2").setPlayerPoints(15);
+        assertEquals("player2", game.checkWinner().get(0));
+     }
 }
+
