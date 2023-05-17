@@ -119,9 +119,9 @@ public class ClientHandler implements Runnable {
         managerHandlers.registerEventHandler(MessageType.CONNECTION,new ConnectionHandler(clientInterface,client));
         clientInterface.getClientView().setMessageToserverHandler(new MessageToserverHandlerTurn(clientInterface,client));
 
+        createMessageHandlerThread(client);
         System.out.println("creato messageHandlerThread...");
         System.out.println("provo a startare la connection di tipo " + connection + "...");
-        createMessageHandlerThread(client);
         client.startConnection();
 
     }

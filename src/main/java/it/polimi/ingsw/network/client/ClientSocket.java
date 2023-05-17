@@ -42,6 +42,7 @@ public class ClientSocket extends Client implements Runnable {
      */
     @Override
     public void startConnection() throws IOException {
+        System.out.println("Connecting to server from socket with ip: " + getIp() + " and port: " + getPort());
         socket = new Socket(getIp(), getPort());
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
@@ -62,7 +63,7 @@ public class ClientSocket extends Client implements Runnable {
      * @throws IOException if there are problems with the connection
      */
     @Override
-    public synchronized void sendMessageToServer(Message message) throws IOException {
+    public void sendMessageToServer(Message message) throws IOException {
         if (out != null) {
             out.writeObject(message);
             out.reset();

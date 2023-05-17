@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
  */
 public class Server implements Runnable{
     private final Object clientsLock = new Object();
-    private static int rmiPort = 1099;
-    private static int socketPort = 1100;
-    private static String ipAddress = "127.0.0.1";
+    private static int rmiPort;
+    private static int socketPort;
+    private static String ipAddress = null;
 
     private static Server instance = null;
     private RMIServer rmiServer;
@@ -41,13 +41,16 @@ public class Server implements Runnable{
         }
         Server.rmiPort = rmiPort;
         Server.socketPort = socketPort;
-        Server.ipAddress = ipAddress;
         synchronized (clientsLock) {
             this.clientsConnected = new ConcurrentHashMap<>();
         }
-        startServers();
+        startServers(ipAddress);
         executor = new ThreadPoolExecutor(4, 20, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
         globalLobby = new GlobalLobby();
+    }
+
+    private static void setIpAddress(String ipAddress) {
+        Server.ipAddress = ipAddress;
     }
 
     /*
@@ -79,7 +82,7 @@ public class Server implements Runnable{
         server.run();
     }
      */
-    //TODO: poi saranno da togliere i parametri di default dalla CLI e forse da fare un metodo per avviare il server da terminale
+    //TODO: da fare il jar per lanciare da terminale windows e mac
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int portRmi = 1099;
@@ -87,75 +90,79 @@ public class Server implements Runnable{
         String ipAddress = "127.0.0.1";
 
         boolean correctInput = false;
-        System.out.println("Insert the port Rmi (default 1099): (Press Enter button to use default port)");
+        System.out.println("Insert the RMI port (default "+portRmi+"): (Press Enter to use default port)");
         while (!correctInput) {
             try {
                 System.out.print("> ");
-                sc.reset();
-                if (sc.nextLine().equals("")) {
+                String input = sc.nextLine();
+                if (input.equals("")) {
                     portRmi = 1099;
                     break;
                 }
-                portRmi = Integer.parseInt(sc.next()); //did this because of InputMismatchException
-                if (portRmi < 1024 || portRmi > 65535) System.out.println("Port must be between 1024 and 65535, retry");
-                else correctInput = true;
+                portRmi = Integer.parseInt(input);
+                if (portRmi < 1024 || portRmi > 65535)
+                    System.out.println("Port must be between 1024 and 65535, retry");
+                else
+                    correctInput = true;
             } catch (NumberFormatException e) {
                 System.out.println("Port must be a number, retry");
             }
         }
 
         correctInput = false;
-        System.out.println("Insert the port Socket (default 1100): (Press Enter button to use default port)");
+        System.out.println("Insert the Socket port (default "+portSocket+"): (Press Enter to use default port)");
         while (!correctInput) {
             try {
                 System.out.print("> ");
-
-                sc.reset();
-                if (sc.nextLine().equals("")) {
+                String input = sc.nextLine();
+                if (input.equals("")) {
                     portSocket = 1100;
                     break;
                 }
-
-                portSocket = Integer.parseInt(sc.next()); //did this because of InputMismatchException
-                if (portSocket < 1024 || portSocket > 65535) System.out.println("Port must be between 1024 and 65535, retry");
-                else if (portSocket == portRmi) System.out.println("Port already in use, retry");
-                else correctInput = true;
+                portSocket = Integer.parseInt(input);
+                if (portSocket < 1024 || portSocket > 65535)
+                    System.out.println("Port must be between 1024 and 65535, retry");
+                else if (portSocket == portRmi)
+                    System.out.println("Port already in use, retry");
+                else
+                    correctInput = true;
             } catch (NumberFormatException e) {
                 System.out.println("Port must be a number, retry");
             }
         }
 
         correctInput = false;
-        System.out.println("Insert the IP address (default " + ipAddress + "): (Press button Enter to use default IP)");
+        System.out.println("Insert the IP address (default " + ipAddress + "): (Press Enter to use default IP)");
         while (!correctInput) {
             try {
                 System.out.print("> ");
-
-                sc.reset();
-                if (sc.nextLine().equals("")) {
+                String input = sc.nextLine();
+                if (input.equals("")) {
                     ipAddress = "127.0.0.1";
                     break;
                 }
-
-                ipAddress = sc.next();
+                ipAddress = input;
                 if (!ipAddress.matches("^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
                         "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
                         "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
-                        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$")) System.out.println("IP address not valid, retry");
-                else correctInput = true;
+                        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$"))
+                    System.out.println("Invalid IP address, retry");
+                else
+                    correctInput = true;
             } catch (InputMismatchException e) {
-                System.out.println("IP address not valid, retry");
+                System.out.println("Invalid IP address, retry");
             }
         }
+        System.out.println("Starting server with RMI port: " + portRmi + ", Socket port: " + portSocket + ", IP address: " + ipAddress + "\n");
 
-        Server server = new Server(portRmi,portSocket,ipAddress);
+        Server server = new Server(portRmi, portSocket, ipAddress);
         server.run();
     }
 
     /**
      * Starts the server (RMI and Socket) and prints the IP address of the server on the console
      */
-    private void startServers(){
+    private void startServers(String ipAddress){
         if (instance != null) {
             System.out.println("Servers already started");
             return;
@@ -168,6 +175,8 @@ public class Server implements Runnable{
         instance.socketServer = new SocketServer(this, socketPort);
         instance.socketServer.startServer();
         System.out.println("Socket Server started on port: " + socketPort + "\n");
+
+        setIpAddress(ipAddress);
 
         System.out.println("Server started successfully with IP address: " + ipAddress + "\n");
     }
