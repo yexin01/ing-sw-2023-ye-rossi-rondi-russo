@@ -100,7 +100,7 @@ public class App{
             b = bo.cloneBookshelf();
             PrinterBookshelfAndPersonal p = new PrinterBookshelfAndPersonal();
             ClientView c = new ClientView();
-            c.setIndexPersonal(2);
+
             c.setBookshelfView(b);
 
             p.printMatrixBookshelf(c, 3, 1, 60, false, false, 0);

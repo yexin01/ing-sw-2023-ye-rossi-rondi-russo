@@ -22,7 +22,7 @@ public class ClientMain {
         scanner.nextLine();
         if (n==0) {
             new CLI().askNicknameAndConnection();
-        } else {
+        }/* else {
             GUIApplication guiApplication=new GUIApplication();
             Platform.startup(()->{
                 try {
@@ -39,6 +39,7 @@ public class ClientMain {
 
             });
         }
+        */
 
     }
 }

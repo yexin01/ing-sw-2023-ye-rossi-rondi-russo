@@ -5,14 +5,20 @@ import java.util.ArrayList;
 
 
 public class PersonalGoalCard implements Serializable {
+    private final int idPersonal;
     private final ArrayList<PersonalGoalBox> cells;
 
-    public PersonalGoalCard(ArrayList<PersonalGoalBox> cells) {
+    public PersonalGoalCard(int idPersonal, ArrayList<PersonalGoalBox> cells) {
+        this.idPersonal = idPersonal;
         this.cells = cells;
     }
 
     public ArrayList<PersonalGoalBox> getCells() {
         return cells;
+    }
+
+    public int getIdPersonal() {
+        return idPersonal;
     }
 }
 

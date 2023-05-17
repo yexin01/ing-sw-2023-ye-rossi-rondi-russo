@@ -5,7 +5,6 @@ import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
-import it.polimi.ingsw.model.modelView.CommonGoalView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.network.client.Client;
@@ -35,19 +34,13 @@ public class StartAndEndGameHandler extends MessageHandler {
                 getClientInterface().getClientView().setBookshelfView(bookshelfView);
                 PersonalGoalCard personalGoalCard=((PersonalGoalCard)mes.getPayload().getContent(Data.PERSONAL_GOAL_CARD));
                 getClientInterface().getClientView().setPlayerPersonalGoal(personalGoalCard);
-                String[] players=((String[])mes.getPayload().getContent(Data.PLAYERS));
-                getClientInterface().getClientView().setPlayers(players);
-                int[] idCommon=((int[])mes.getPayload().getContent(Data.IDCOMMON));
-                getClientInterface().getClientView().setIdCommonGoals(idCommon);
-                int idPersonal=((int)mes.getPayload().getContent(Data.IDPERSONAL));
-                getClientInterface().getClientView().setIdPersonal(idPersonal);
-                CommonGoalView[] commonGoalViews=((CommonGoalView[])mes.getPayload().getContent(Data.COMMON_GOAL_CARD));
-                getClientInterface().getClientView().setCommonGoalViews(commonGoalViews);
-                PlayerPointsView playerPointsView=((PlayerPointsView)mes.getPayload().getContent(Data.POINTS));
-                getClientInterface().getClientView().setPlayerPoints(playerPointsView);
+                int[][] commonGoalsView=((int[][])mes.getPayload().getContent(Data.COMMON_GOAL));
+                getClientInterface().getClientView().setCommonGoalView(commonGoalsView);
+                PlayerPointsView[] playerPointsView=((PlayerPointsView[])mes.getPayload().getContent(Data.POINTS));
+                getClientInterface().getClientView().setPlayerPointsViews(playerPointsView);
                 System.out.println("I GIOCATORI SONO\n");
-                for (String str : players) {
-                    System.out.println(str);
+                for (PlayerPointsView str : playerPointsView) {
+                    System.out.println(str.getNickname());
                 }
                 //se si é disconnesso l'utente si troverà automaticamente nella fase end Turn, in piu se non e di turno non entrera in questo if
                 if(mes.getPayload().getContent(Data.WHO_CHANGE).equals(getClientInterface().getClientView().getNickname())){

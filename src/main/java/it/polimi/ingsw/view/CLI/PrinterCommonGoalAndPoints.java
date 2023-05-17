@@ -1,7 +1,5 @@
 package it.polimi.ingsw.view.CLI;
 
-import it.polimi.ingsw.model.modelView.CommonGoalView;
-import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.view.ClientView;
 
@@ -298,6 +296,7 @@ public class PrinterCommonGoalAndPoints {
     }
 
     public void printPoints(ClientView clientView){
+        /*
         //TODO pensavo di inserire una cornice con i vari punteggi e qualche disegno tipo di due tiles vicine se sono gli adjacentPoints...
         PlayerPointsView playerPoints=clientView.getPlayerPoints();
         System.out.println("POINTS ");
@@ -312,9 +311,12 @@ public class PrinterCommonGoalAndPoints {
             System.out.println(commonGoalp.getLastPointsLeft()+" This are TOKEN points that remain,"+whoChange);
         }
 
+         */
+
     }
 
     public  void printCommonGoalCards(ClientView clientView){
+        /*
         //int numOfCGC = clientView.getIdCommonGoals().length;
         int numOfRows = getCommonGoalCard(clientView.getIdCommonGoals()[0]).length;
         int[] cgcIndexes = clientView.getIdCommonGoals();
@@ -332,6 +334,8 @@ public class PrinterCommonGoalAndPoints {
 
             }
         }
+
+         */
     }
 
     /*

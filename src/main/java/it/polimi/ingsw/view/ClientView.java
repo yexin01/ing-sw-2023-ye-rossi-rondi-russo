@@ -19,20 +19,15 @@ public class ClientView {
     private int[] orderTiles;
     private ArrayList<Integer> coordinatesSelected;
 
-    private int[] idCommonGoals;
 
-    private int idPersonal;
-    private CommonGoalView[] commonGoalViews;
-    private int[] commonGoalPoints;
+    private int[][] commonGoalView;
 
-
-    private String[] players;
-    private String turnPlayer;
     private ItemTileView[][] bookshelfView;
     private ItemTileView[] tilesSelected;
-    private PlayerPointsView playerPoints;
+
+    private PlayerPointsView[] playerPointsViews;
     private PersonalGoalCard playerPersonalGoal;
-    private int indexPersonal;
+
     private String nickname;
     private int column;
 
@@ -56,30 +51,6 @@ public class ClientView {
         this.boardView=boardView;
     }
 
-    public CommonGoalView[] getCommonGoalViews() {
-        return commonGoalViews;
-    }
-
-    public void setCommonGoalViews(CommonGoalView[] commonGoalViews) {
-        this.commonGoalViews = commonGoalViews;
-    }
-
-    public int[] getCommonGoalPoints() {
-        return commonGoalPoints;
-    }
-
-    public void setCommonGoalPoints(int[] commonGoalPoints) {
-        this.commonGoalPoints = commonGoalPoints;
-    }
-
-    public String[] getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(String[] players) {
-        this.players = players;
-    }
-
     public ItemTileView[][] getBookshelfView() {
         return bookshelfView;
     }
@@ -96,13 +67,7 @@ public class ClientView {
         this.tilesSelected = tilesSelected;
     }
 
-    public PlayerPointsView getPlayerPoints() {
-        return playerPoints;
-    }
 
-    public void setPlayerPoints(PlayerPointsView playerPoints) {
-        this.playerPoints = playerPoints;
-    }
 
     public PersonalGoalCard getPlayerPersonalGoal() {
         return playerPersonalGoal;
@@ -136,15 +101,7 @@ public class ClientView {
         messageToserverHandlerTurn.handleMessageToServer(orderTiles,TurnPhase.SELECT_ORDER_TILES,nickname,MessageType.DATA);
     }
 
-    public int getIndexPersonal() {
-        return indexPersonal;
-    }
 
-    public void setIndexPersonal(int indexPersonal) throws Exception {
-        GameRules gameRules=new GameRules();
-        playerPersonalGoal=gameRules.getPersonalGoalCard(indexPersonal);
-        this.indexPersonal = indexPersonal;
-    }
 
     public int getColumn() {
         return column;
@@ -185,27 +142,19 @@ public class ClientView {
     }
 
 
-    public String getTurnPlayer() {
-        return turnPlayer;
+    public int[][] getCommonGoalView() {
+        return commonGoalView;
     }
 
-    public void setTurnPlayer(String turnPlayer) {
-        this.turnPlayer = turnPlayer;
+    public void setCommonGoalView(int[][] commonGoalView) {
+        this.commonGoalView = commonGoalView;
     }
 
-    public int[] getIdCommonGoals() {
-        return idCommonGoals;
+    public PlayerPointsView[] getPlayerPointsViews() {
+        return playerPointsViews;
     }
 
-    public void setIdCommonGoals(int[] idCommonGoals) {
-        this.idCommonGoals = idCommonGoals;
-    }
-
-    public int getIdPersonal() {
-        return idPersonal;
-    }
-
-    public void setIdPersonal(int idPersonal) {
-        this.idPersonal = idPersonal;
+    public void setPlayerPointsViews(PlayerPointsView[] playerPointsViews) {
+        this.playerPointsViews = playerPointsViews;
     }
 }

@@ -288,7 +288,7 @@ public class GameRules {
             //Type type = (Type) jsonType.get("type");
             cells.add(new PersonalGoalBox( type, x, y));
         }
-        PersonalGoalCard card = new PersonalGoalCard(cells);
+        PersonalGoalCard card = new PersonalGoalCard(index, cells);
         return card;
     }
 

@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.model.modelView.CommonGoalView;
 import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
 
@@ -190,7 +189,7 @@ public class Game {
             Class<?> clazz = Class.forName(className);
             Object obj = clazz.getDeclaredConstructor().newInstance();
             ((CommonGoalCard) obj).setModelView(modelview);
-            modelview.getIdCommon()[i]=number;
+            modelview.setIdCommon(0,i,number);
             commonGoalCards.add((CommonGoalCard) obj);
             i++;
         }
@@ -215,7 +214,6 @@ public class Game {
      */
     public void setCommonGoalCardsPoints(GameRules gameRules) throws Exception {
         ArrayList<Integer> points=gameRules.getCommonGoalPoints(players.size());
-        CommonGoalView common;
         int numCommonGoal=0;
         for(CommonGoalCard c: commonGoalCards){
             int[] pointsView= points.stream().mapToInt(Integer::intValue).toArray();
@@ -225,7 +223,7 @@ public class Game {
             for(int i=0;i<points.size();i++){
                 c.getPoints().add(points.get(i));
             }
-            modelview.getPointsLeftCommon()[numCommonGoal]=commonGoalCards.get(numCommonGoal).getLastPoint();
+            modelview.setIdCommon(1,numCommonGoal,commonGoalCards.get(numCommonGoal).getLastPoint());
             numCommonGoal++;
         }
     }
@@ -283,7 +281,6 @@ public class Game {
 
             PersonalGoalCard turnPersonal=gameRules.getPersonalGoalCard(numbers.get(i));
             p.setPersonalGoalCard(turnPersonal);
-            modelview.getIdPersonal()[i]=numbers.get(i);
             modelview.setPlayerPersonalGoal(turnPersonal,p.getNickname());
 
             Bookshelf bookshelf=new Bookshelf(rows,columns, maxSelectableTiles);

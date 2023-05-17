@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.modelView.CommonGoalView;
 import it.polimi.ingsw.model.modelView.ModelView;
 
 import java.util.ArrayList;
@@ -25,9 +24,9 @@ public abstract class CommonGoalCard {
         if(points.size()>0){
             int point=points.get(points.size()-1);
             points.remove(points.size()-1);
-            int pointsArray[]= points.stream().mapToInt(Integer::intValue).toArray();
+            //int pointsArray[]= points.stream().mapToInt(Integer::intValue).toArray();
             //CommonGoalView common=new CommonGoalView(nickname, point, pointsArray);
-            modelView.getPointsLeftCommon()[index]=getLastPoint();
+            modelView.setIdCommon(1,index,getLastPoint());
             return point;
         }
         return 0;

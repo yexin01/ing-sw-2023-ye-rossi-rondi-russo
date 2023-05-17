@@ -33,7 +33,6 @@ public class TurnHandler extends MessageHandler {
                BoardBoxView[][] boardBoxViews= (BoardBoxView[][]) mes.getPayload().getContent(Data.NEW_BOARD);
                getClientInterface().getClientView().setBoardView(boardBoxViews);
                String player= (String) mes.getPayload().getContent(Data.WHO_CHANGE);
-                getClientInterface().getClientView().setTurnPlayer(player);
                 //e il suo turno
                 if(player.equals(getClientInterface().getClientView().getNickname())){
                     getClientInterface().stop();

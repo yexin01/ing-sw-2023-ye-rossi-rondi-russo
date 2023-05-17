@@ -2,14 +2,10 @@ package it.polimi.ingsw.model.modelView;
 
 import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.listeners.EventListener;
-import it.polimi.ingsw.listeners.ListenerManager;
 
-import it.polimi.ingsw.message.KeyAbstractPayload;
 import it.polimi.ingsw.model.PersonalGoalCard;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
@@ -18,12 +14,11 @@ public class ModelView {
 
     private int turnPlayer;
 
-    private int[] idCommon;
-    private int[] pointsLeftCommon;
-    private int[] idPersonal;
+    private int[][] commonGoalView;
+
 
     private BoardBoxView[][] boardView;
-    //private CommonGoalView[] commonGoalViews;
+
     private TurnPhase turnPhase;
 
     private ItemTileView[][][] bookshelfView;
@@ -32,12 +27,12 @@ public class ModelView {
     private ItemTileView[] selectedItems;
 
     public ModelView(int numPlayers,GameRules gameRules){
-        pointsLeftCommon=new int[gameRules.getNumOfCommonGoals()];
+        //pointsLeftCommon=new int[gameRules.getNumOfCommonGoals()];
         bookshelfView=new ItemTileView[numPlayers][gameRules.getRowsBookshelf()][gameRules.getColumnsBookshelf()];
         playerPoints=new PlayerPointsView[numPlayers];
         playerPersonalGoal=new PersonalGoalCard[numPlayers];
-        idPersonal=new int[numPlayers];
-        idCommon=new int[gameRules.getNumOfCommonGoals()];
+
+        commonGoalView =new int[gameRules.getNumOfCommonGoals()][gameRules.getNumOfCommonGoals()];
     }
 
     public int getIntegerValue(String nickname) {
@@ -81,11 +76,8 @@ public class ModelView {
         this.bookshelfView[getIntegerValue(nickname)] = bookshelfView;
     }
 
-    public PlayerPointsView getPlayerPoints(String nickname) {
-        return playerPoints[getIntegerValue(nickname)];
-    }
-    public int getIdPersonal(String nickname) {
-        return idPersonal[getIntegerValue(nickname)];
+    public PlayerPointsView[] getPlayerPoints() {
+        return playerPoints;
     }
 
     public void setPlayerPoints(PlayerPointsView playerPoints,int index) {
@@ -145,21 +137,17 @@ public class ModelView {
 
 
 
-    public int[] getIdCommon() {
-        return idCommon;
+    public int[][] getCommonGoalView() {
+        return commonGoalView;
     }
 
-    public void setIdCommon(int[] idCommon) {
-        this.idCommon = idCommon;
+    public void setIdCommon(int row,int index,int pointsLeft) {
+        this.commonGoalView[row][index]= pointsLeft;
     }
 
-    public int[] getIdPersonal() {
-        return idPersonal;
-    }
 
-    public void setIdPersonal(int[] idPersonal) {
-        this.idPersonal = idPersonal;
-    }
+
+
 
     public int getTurnPlayer() {
         return turnPlayer;
@@ -169,22 +157,14 @@ public class ModelView {
         this.turnPlayer = turnPlayer;
     }
 
-    public int[] getPointsLeftCommon() {
-        return pointsLeftCommon;
-    }
 
-    public void setPointsLeftCommon(int[] pointsLeftCommon) {
-        this.pointsLeftCommon = pointsLeftCommon;
-    }
     public void setPlayersPoints(PlayerPointsView[] playerPoints){
         this.playerPoints=playerPoints;
     }
     public void setPlayerPersonalGoal(PersonalGoalCard[] playerPersonalGoal){
         this.playerPersonalGoal=playerPersonalGoal;
     }
-    public void idPersonal(int[] idPersonal){
-        this.idPersonal=idPersonal;
-    }
+
 
 }
 
