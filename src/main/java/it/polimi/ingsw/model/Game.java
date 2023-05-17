@@ -56,7 +56,7 @@ public class Game {
         return players.get(i).getNickname();
     }
     public Player getTurnPlayerOfTheGame() {
-        System.out.println("TURN PLAYER :"+players.get(turnPlayerInt()).getNickname());
+       // System.out.println("TURN PLAYER :"+players.get(turnPlayerInt()).getNickname());
         return players.get(turnPlayerInt());
     }
     public int getIntByNickname(String nickname) {
@@ -65,9 +65,7 @@ public class Game {
 
     public void setNextPlayer(boolean[] activePlayers) {
         // in case a player abandons the game and is the last one, index is > of players.size()-1
-        System.out.println(activePlayers[turnPlayerInt()]);
         do{
-            System.out.println("DENTRO "+activePlayers[turnPlayerInt()]);
             if(turnPlayerInt() >= (players.size() - 1))
                 setTurnPlayer(0);
             else setTurnPlayer(turnPlayerInt()+1);
@@ -75,22 +73,11 @@ public class Game {
         System.out.println("Il prossimo giocatore che deve giocare ed é attivo é: "+players.get(turnPlayerInt()).getNickname());
     }
     public boolean[] disconnectionAndReconnectionPlayer(boolean[] activePlayers,String nickname,boolean discOrRec) {
-        System.out.println("PRIMA" +nickname);
-        int j=0;
-        for(Player p:players){
-            System.out.println(p.getNickname()+" "+activePlayers[j++]);
-        }
         for(int i=0;i<players.size();i++){
-            System.out.println("il giocatore che sto esaminando "+players.get(i).getNickname());
             if(players.get(i).getNickname().equals(nickname)){
                 activePlayers[i]=discOrRec;
                 break;
             }
-        }
-        System.out.println("DOPO");
-        j=0;
-        for(Player p:players){
-            System.out.println(p.getNickname()+" "+activePlayers[j++]);
         }
         return activePlayers;
     }
@@ -188,7 +175,6 @@ public class Game {
             String className = gameRules.getCommonGoalCard(number);
             Class<?> clazz = Class.forName(className);
             Object obj = clazz.getDeclaredConstructor().newInstance();
-            ((CommonGoalCard) obj).setModelView(modelview);
             modelview.setIdCommon(0,i,number);
             commonGoalCards.add((CommonGoalCard) obj);
             i++;
@@ -208,7 +194,6 @@ public class Game {
     }
 
 
-
     /**
      * Match arraylist of scores based on number of players
      */
@@ -216,10 +201,6 @@ public class Game {
         ArrayList<Integer> points=gameRules.getCommonGoalPoints(players.size());
         int numCommonGoal=0;
         for(CommonGoalCard c: commonGoalCards){
-            int[] pointsView= points.stream().mapToInt(Integer::intValue).toArray();
-            //common=new CommonGoalView(null, 0, pointsView);
-            //modelview.setCommonGoalViews(common,numCommonGoal++,null);
-            //serverView.setCommonGoalViews(common,numCommonGoal++);
             for(int i=0;i<points.size();i++){
                 c.getPoints().add(points.get(i));
             }
@@ -233,34 +214,6 @@ public class Game {
     public void setTurnPlayer(int index){
         modelview.setTurnPlayer(index);
     }
-
-    /**
-     *
-     * inserts into the player's bookshelf if the tiles are less than the maximum
-     * number of insertable tiles and returns true
-     * @param
-     * @return
-     */
-
-
-
-
-/*
-    public void insertOnceATime(int numberTile,int column) {
-
-        for (int i = turnBookshelf().getMatrix().length - 1; i>=0; i--) {
-            if (turnBookshelf().getMatrix()[i][column].getTileID() == -1) {
-                turnBookshelf().setTile(selectedTiles().get(numberTile), i, column);
-                break;
-            }
-        }
-        selectedTiles().remove(numberTile);
-
-    }
-
- */
-
-
 
     /**
      *instantiates personalGoalCard based on the number of players
@@ -286,12 +239,6 @@ public class Game {
             Bookshelf bookshelf=new Bookshelf(rows,columns, maxSelectableTiles);
             p.setBookshelf(bookshelf);
             modelview.setBookshelfView(bookshelf.cloneBookshelf(),p.getNickname());
-
-
-            //Arrays.setAll(commonGoalsSetup, num -> 0);
-
-
-
             i++;
         }
     }
@@ -324,9 +271,12 @@ public class Game {
     public int updatePointsCommonGoals(){
         int points=0;
         for (int i = 0; i< getTurnPlayerOfTheGame().getCommonGoalPoints().length; i++){
-            if (getTurnPlayerOfTheGame().getCommonGoalPoints()[i]==0 && commonGoalCards.get(i).checkGoal(turnBookshelf().getMatrix())){
-                int num=commonGoalCards.get(i).removeToken(i);
-                getTurnPlayerOfTheGame().setToken(i,num);
+            CommonGoalCard c=commonGoalCards.get(i);
+            if (getTurnPlayerOfTheGame().getCommonGoalPoints()[i]==0 && true/*c).checkGoal(turnBookshelf().getMatrix())*/){
+                int pointsWon=commonGoalCards.get(i).removeToken(i);
+                modelview.getToken()[i]=pointsWon;
+                modelview.setIdCommon(1,i,c.getLastPoint());
+                getTurnPlayerOfTheGame().setToken(i,pointsWon);
             }
             points=points+ getTurnPlayerOfTheGame().getCommonGoalPoints(i);
         }

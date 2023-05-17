@@ -1,5 +1,5 @@
 package it.polimi.ingsw.controller;
-
+/*
 public class PhaseController<T extends Enum<T>> {
     private T currentPhase;
 
@@ -21,4 +21,6 @@ public class PhaseController<T extends Enum<T>> {
         this.currentPhase = currentPhase;
     }
 }
+
+ */
 

@@ -36,10 +36,13 @@ public class TurnHandler extends MessageHandler {
                getClientInterface().getClientView().setPlayerPointsViews(points);
                String player= (String) mes.getPayload().getContent(Data.WHO_CHANGE);
                int[] token= (int[]) mes.getPayload().getContent(Data.TOKEN);
+               int i=0;
                for(int num:token){
                    if(num!=0){
+                       //getClientInterface().displayMessage(num+"vinto da "+player+" della common goal numero "+(i+1)+" identita"+getClientInterface().getClientView().getCommonGoalView()[0][i]+"\n");
                        getClientInterface().displayToken(num,player);
                    }
+                   i++;
                 }
                 //é il suo turno
                 if(player.equals(getClientInterface().getClientView().getNickname())){
@@ -56,41 +59,5 @@ public class TurnHandler extends MessageHandler {
                 return;
             }
         }
-
-
     }
 }
- /*
-
-        switch(data){
-            case START_TURN->{
-                int[] selectionBoard=getClientInterface().askCoordinates();
-                messagePayload=new MessagePayload(KeyDataPayload.SELECTION_PHASE);
-                messagePayload.put(Data.VALUE_CLIENT,selectionBoard);
-            }
-            case SELECTION_PHASE ->{
-                System.out.println("SONO TURN HANDLER");
-              int[] orderTiles=  getClientInterface().askOrder();
-              messagePayload=new MessagePayload(KeyDataPayload.ORDER_PHASE);
-
-            }
-            case ORDER_PHASE -> {
-                int column=getClientInterface().askColumn();
-                messagePayload=new MessagePayload(KeyDataPayload.COLUMN);
-            }
-            case END_TURN ->{
-                //TODO se il nome e diverso la board cambia altrimenti no vedere come gestire questo caso
-                BoardBoxView[][] boardView= (BoardBoxView[][]) mes.getPayload().getContent(Data.NEW_BOARD);
-                getClientInterface().getClientView().setBoardView(boardView);
-                ItemTileView[][] bookshelfView= (ItemTileView[][]) mes.getPayload().getContent(Data.NEW_BOOKSHELF);
-                PlayerPointsView playerPointsView= (PlayerPointsView) mes.getPayload().getContent(Data.POINTS);
-                messagePayload=new MessagePayload(KeyDataPayload.END_TURN);
-            }
-            default -> {
-                startAndEndGameHandler.handleMessage(mes);
-                return;
-            }
-
-        }
-
-         */

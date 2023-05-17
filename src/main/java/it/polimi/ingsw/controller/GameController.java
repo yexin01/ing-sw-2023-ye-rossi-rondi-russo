@@ -20,14 +20,14 @@ import java.util.List;
 public class GameController {
 
     private ListenerManager listenerManager;
-    private PhaseController<TurnPhase> turnPhaseController;
+    //private PhaseController<TurnPhase> turnPhaseController;
     private boolean[] activePlayers;
     private Game game;
 
 
     public GameController(GameLobby gameLobby, ArrayList<String> nicknames,InfoAndEndGameListener infoAndEndGameListener) throws Exception {
         listenerManager=new ListenerManager();
-        turnPhaseController =new PhaseController<>(TurnPhase.SELECT_FROM_BOARD);
+        //turnPhaseController =new PhaseController<>(TurnPhase.SELECT_FROM_BOARD);
         listenerManager.addListener(KeyErrorPayload.ERROR_DATA,new ErrorListener(gameLobby));
         listenerManager.addListener(TurnPhase.ALL_INFO, infoAndEndGameListener);
         listenerManager.addListener(TurnPhase.END_GAME, infoAndEndGameListener);
@@ -62,6 +62,10 @@ public class GameController {
 
     public void receiveMessageFromClient(Message message){
         System.out.println("IL PROSSIMO GIOCATORE E: "+getModel().getIntByNickname(getTurnNickname()));
+        int i=0;
+        for(boolean p:activePlayers){
+            System.out.println("GIOCATORE: "+game.getPlayers().get(i).getNickname()+" attivo: "+activePlayers[i]);
+        }
         String nicknamePlayer= message.getHeader().getNickname();
         try{
             if (!nicknamePlayer.equals(game.getTurnPlayerOfTheGame().getNickname())) {
@@ -69,7 +73,7 @@ public class GameController {
 
             }
             illegalPhase((TurnPhase) message.getPayload().getKey());
-            switch (turnPhaseController.getCurrentPhase()) {
+            switch (getModel().getModelView().getTurnPhase()) {
                 case SELECT_FROM_BOARD ->  checkAndInsertBoardBox(message);
                 case SELECT_ORDER_TILES-> permutePlayerTiles(message);
                 case SELECT_COLUMN->selectingColumn(message);
@@ -84,9 +88,8 @@ public class GameController {
         int[] coordinates=(int[]) message.getPayload().getContent(Data.VALUE_CLIENT);
         int maxPlayerSelectableTiles=game.getTurnPlayerOfTheGame().getBookshelf().numSelectableTiles();
         if(!checkError(game.getBoard().checkSelectable(coordinates,maxPlayerSelectableTiles))){
-            System.out.println("Le asocia");
             game.getTurnPlayerOfTheGame().selection(game.getBoard());
-            turnPhaseController.setCurrentPhase(TurnPhase.SELECT_ORDER_TILES);
+            //turnPhaseController.setCurrentPhase(TurnPhase.SELECT_ORDER_TILES);
             game.getModelView().setTurnPhase(TurnPhase.SELECT_ORDER_TILES);
             System.out.println("CAMBIA FASE CONTROLLER");
             listenerManager.fireEvent(Data.PHASE,getTurnNickname(),TurnPhase.SELECT_ORDER_TILES);
@@ -104,15 +107,11 @@ public class GameController {
     }
     public void disconnectionPlayer(String nickname){
         //TODO disconnection
-        System.out.println(nickname.equals(getTurnNickname()));
-        System.out.println("I GIOCATORI SONO1\n");
         activePlayers=game.disconnectionAndReconnectionPlayer(activePlayers,nickname,false);
         if(nickname.equals(getTurnNickname())){
-            turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
+            //turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
             game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
-            System.out.println("I GIOCATORI SONO2\n");
             game.setNextPlayer(activePlayers);
-            System.out.println("I GIOCATORI SONO3\n");
             int i=0;
             for (Player str : game.getPlayers()) {
                 System.out.print(str.getNickname());
@@ -135,7 +134,7 @@ public class GameController {
             checkError(errorType);
         }else {
             game.getTurnPlayerOfTheGame().permuteSelection(orderTiles);
-            turnPhaseController.setCurrentPhase(TurnPhase.SELECT_COLUMN);
+            //turnPhaseController.setCurrentPhase(TurnPhase.SELECT_COLUMN);
             game.getModelView().setTurnPhase(TurnPhase.SELECT_COLUMN);
             System.out.println("CAMBIA FASE");
             listenerManager.fireEvent(Data.PHASE,getTurnNickname(),TurnPhase.SELECT_COLUMN);
@@ -149,16 +148,14 @@ public class GameController {
         if(errorType!=null){
             checkError(errorType);
         }else{
-            turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
+            //turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
             game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
             game.getTurnPlayerOfTheGame().insertBookshelf(column);
             System.out.println("finish1");
             if(game.getTurnPlayerOfTheGame().getBookshelf().isFull()){
                 game.setEndGame(true);
             }
-            System.out.println("finish2");
             game.updateAllPoints();
-            System.out.println("finish3");
             finishTurn();
         }
     }
@@ -168,7 +165,7 @@ public class GameController {
         game.getBoard().resetBoard();
         System.out.println("ULTIMO GIOCATORE CONNESSO ATTIVO è:"+game.getLastPlayer(activePlayers));
         if(game.isEndGame() && getTurnNickname().equals(game.getLastPlayer(activePlayers))){
-            listenerManager.fireEvent(TurnPhase.END_GAME,getTurnNickname(),game.getModelView());
+            endGame();
         }else{
             if(game.getBoard().checkRefill()){
                 game.getBoard().refill();
@@ -178,10 +175,16 @@ public class GameController {
             listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
         }
     }
+    public void endGame(){
+        //TODO endGame
+        //List<String> ranking=game.checkWinner();
+        Arrays.fill(activePlayers, true);
+        listenerManager.fireEvent(TurnPhase.END_GAME,getTurnNickname(),game.getModelView());
+    }
 
 
     public void illegalPhase(TurnPhase phase) throws Exception {
-        if(!turnPhaseController.getCurrentPhase().equals(phase)){
+        if(!getModel().getModelView().getTurnPhase().equals(phase)){
             listenerManager.fireEvent(KeyErrorPayload.ERROR_DATA,getTurnNickname(),ErrorType.ILLEGAL_PHASE);
             throw new Exception();
         }

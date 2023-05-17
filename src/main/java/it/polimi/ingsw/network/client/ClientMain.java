@@ -14,7 +14,6 @@ import java.util.Scanner;
  */
 public class ClientMain {
     public static void main(String[] args) throws Exception {
-        //
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("CLI 0 GUI 1: ");
@@ -22,7 +21,7 @@ public class ClientMain {
         scanner.nextLine();
         if (n==0) {
             new CLI().askNicknameAndConnection();
-        }/* else {
+        } else {
             GUIApplication guiApplication=new GUIApplication();
             Platform.startup(()->{
                 try {
@@ -39,7 +38,6 @@ public class ClientMain {
 
             });
         }
-        */
 
     }
 }

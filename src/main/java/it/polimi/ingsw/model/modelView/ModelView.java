@@ -106,7 +106,6 @@ public class ModelView {
     }
 
     public void setSelectedItems(ItemTileView[] selectedItems) {
-        token=new int [commonGoalView[0].length];
         this.selectedItems = selectedItems;
     }
 

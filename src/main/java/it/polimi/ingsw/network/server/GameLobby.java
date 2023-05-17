@@ -191,7 +191,13 @@ public class GameLobby {
      * @param message the message received from the player
      */
     public synchronized void handleTurn(Message message) throws IOException {
-        if(messageEndGame==null){
+        for(String playersD:playersDisconnected){
+            System.out.println("DISCONNESSO "+playersD);
+        }
+        if(playersDisconnected.size()==1){
+            gameController.endGame();
+        }
+        else if(messageEndGame==null){
             gameController.receiveMessageFromClient(message);
         }else {
             int index=gameController.getModel().getIntByNickname(message.getHeader().getNickname());
@@ -204,7 +210,8 @@ public class GameLobby {
                     break;
                 }
             }
-            if(allFalse && playersDisconnected.size()==0){
+
+            if(allFalse){
                 infoAndEndGameListener.endGame();
             }
         }
@@ -240,7 +247,7 @@ public class GameLobby {
             gameController.reconnectionPlayer(nickname);
             MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
             MessagePayload payload=new MessagePayload(KeyConnectionPayload.RECONNECTION);
-            String content="YOU reconnected to Game Lobby "+ idGameLobby + "!";
+            String content=nickname+" reconnected to Game Lobby "+ idGameLobby + "!";
             payload.put(Data.CONTENT,content);
             payload.put(Data.WHO_CHANGE,nickname);
             Message message = new Message(header,payload);

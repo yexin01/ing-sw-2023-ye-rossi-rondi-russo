@@ -25,15 +25,9 @@ public class InfoAndEndGameListener extends EventListener{
         switch((TurnPhase)event){
             case ALL_INFO ->{
                 ModelView modelView=(ModelView) newValue;
-                //TODO questa sarbbe una funzionalità in piu nel caso in cui vengano corrotti i dati
                 if(playerNickname!=null){
                     Message message=creationMessageInfo(playerNickname,modelView);
-                    if(!modelView.getTurnPhase().equals(TurnPhase.SELECT_FROM_BOARD) && playerNickname.equals(modelView.getTurnPlayer())){
-                        MessagePayload payload=message.getPayload();
-                        payload.put(Data.SELECTED_ITEMS,modelView.getSelectedItems());
-                        Message message1=new Message(message.getHeader(),payload);
-                        getGameLobby().sendMessageToSpecificPlayer(message1,playerNickname);
-                    }else  getGameLobby().sendMessageToSpecificPlayer(creationMessageInfo(playerNickname,modelView),playerNickname) ;
+                    getGameLobby().sendMessageToSpecificPlayer(message,playerNickname) ;
              }else{
                     for(PlayerPointsView nickname: modelView.getPlayerPoints()){
                         getGameLobby().sendMessageToSpecificPlayer(creationMessageInfo(nickname.getNickname(),modelView),nickname.getNickname()) ;
@@ -43,7 +37,7 @@ public class InfoAndEndGameListener extends EventListener{
             case END_GAME ->{
                 MessageHeader header=new MessageHeader(MessageType.DATA,null);
                 MessagePayload payload=new MessagePayload(TurnPhase.END_GAME);
-                payload.put(Data.RANKING,newValue);
+                //payload.put(Data.RANKING,newValue);
                 Message message=new Message(header,payload);
                 getGameLobby().sendMessageToAllPlayers(message);
                 getGameLobby().setMessageEndGame(message);
@@ -64,7 +58,7 @@ public class InfoAndEndGameListener extends EventListener{
         payload.put(Data.PERSONAL_GOAL_CARD,personalGoalCard);
         PlayerPointsView[] playerPointsView=modelView.getPlayerPoints();
         payload.put(Data.POINTS,playerPointsView);
-        payload.put(Data.WHO_CHANGE,playerPointsView[0].getNickname());
+        payload.put(Data.WHO_CHANGE,playerPointsView[modelView.getTurnPlayer()].getNickname());
         payload.put(Data.PHASE,modelView.getTurnPhase());
         Message m=new Message(header,payload);
        return m;
@@ -75,5 +69,6 @@ public class InfoAndEndGameListener extends EventListener{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 }

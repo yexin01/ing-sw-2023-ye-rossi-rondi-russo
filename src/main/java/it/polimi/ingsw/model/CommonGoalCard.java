@@ -5,10 +5,6 @@ import it.polimi.ingsw.model.modelView.ModelView;
 import java.util.ArrayList;
 
 public abstract class CommonGoalCard {
-   // private GameInfo gameInfo;
-
-
-    private ModelView modelView;
 
     public int getLastPoint(){
         if(points.size()==0){
@@ -24,10 +20,6 @@ public abstract class CommonGoalCard {
         if(points.size()>0){
             int point=points.get(points.size()-1);
             points.remove(points.size()-1);
-            //int pointsArray[]= points.stream().mapToInt(Integer::intValue).toArray();
-            //CommonGoalView common=new CommonGoalView(nickname, point, pointsArray);
-            modelView.setIdCommon(1,index,getLastPoint());
-            modelView.getToken()[index]=point;
             return point;
         }
         return 0;
@@ -52,7 +44,4 @@ public abstract class CommonGoalCard {
     }
 
 
-    public void setModelView(ModelView modelView) {
-        this.modelView = modelView;
-    }
 }
