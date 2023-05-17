@@ -8,13 +8,15 @@ public class PlayerPointsView implements Serializable {
     private final int[] commonGoalPoints;
     private final int personalGoalPoints;
     private final int adjacentPoints;
+    private final String nickname;
 
 
-    public PlayerPointsView(int points, int[] commonGoalPoints, int personalGoalPoints, int adjacentPoints) {
+    public PlayerPointsView(int points, int[] commonGoalPoints, int personalGoalPoints, int adjacentPoints, String nickname) {
         this.points = points;
         this.commonGoalPoints = commonGoalPoints;
         this.personalGoalPoints = personalGoalPoints;
         this.adjacentPoints = adjacentPoints;
+        this.nickname = nickname;
     }
 
     public int getHowManyTokenYouHave(){
@@ -40,5 +42,9 @@ public class PlayerPointsView implements Serializable {
 
     public int getAdjacentPoints() {
         return adjacentPoints;
+    }
+
+    public String getNickname() {
+        return nickname;
     }
 }

@@ -26,8 +26,8 @@ public abstract class CommonGoalCard {
             int point=points.get(points.size()-1);
             points.remove(points.size()-1);
             int pointsArray[]= points.stream().mapToInt(Integer::intValue).toArray();
-            CommonGoalView common=new CommonGoalView(nickname, point, pointsArray);
-            modelView.setCommonGoalViews(common,index,nickname);
+            //CommonGoalView common=new CommonGoalView(nickname, point, pointsArray);
+            modelView.getPointsLeftCommon()[index]=getLastPoint();
             return point;
         }
         return 0;

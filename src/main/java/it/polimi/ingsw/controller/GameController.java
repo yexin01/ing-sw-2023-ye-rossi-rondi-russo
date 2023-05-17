@@ -37,7 +37,7 @@ public class GameController {
         activePlayers=new boolean[nicknames.size()];
         Arrays.fill(activePlayers, true);
         GameRules gameRules=new GameRules();
-        ModelView modelView=new ModelView(nicknames.size(), gameRules,listenerManager);
+        ModelView modelView=new ModelView(nicknames.size(), gameRules);
         modelView.setTurnPhase(TurnPhase.ALL_INFO);
         game=new Game(gameRules, nicknames.size(),modelView);
         game.addPlayers(nicknames);

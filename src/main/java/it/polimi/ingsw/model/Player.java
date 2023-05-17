@@ -123,8 +123,8 @@ public class Player {
     public void setPlayerPoints(int playerPoints) {
         this.playerPoints = playerPoints;
         modelView.setBookshelfView(bookshelf.cloneBookshelf(),nickname);
-        PlayerPointsView playerPointsView =new PlayerPointsView(playerPoints,commonGoalPoints,personalGoalPoints,adjacentPoints);
-        modelView.setPlayerPoints(playerPointsView,nickname);
+        PlayerPointsView playerPointsView =new PlayerPointsView(playerPoints,commonGoalPoints,personalGoalPoints,adjacentPoints, nickname);
+        modelView.setPlayerPoints(playerPointsView,modelView.getIntegerValue(nickname));
     }
     //PERSONALGOAL
     private int personalGoalPoints;

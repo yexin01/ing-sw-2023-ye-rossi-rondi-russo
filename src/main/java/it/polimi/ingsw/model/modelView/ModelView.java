@@ -10,17 +10,20 @@ import it.polimi.ingsw.model.PersonalGoalCard;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 public class ModelView {
     private int indexRemoveToken;
-    private ArrayList<String> playersOrder;
+
     private int turnPlayer;
 
     private int[] idCommon;
+    private int[] pointsLeftCommon;
     private int[] idPersonal;
 
     private BoardBoxView[][] boardView;
-    private CommonGoalView[] commonGoalViews;
+    //private CommonGoalView[] commonGoalViews;
     private TurnPhase turnPhase;
 
     private ItemTileView[][][] bookshelfView;
@@ -28,9 +31,8 @@ public class ModelView {
     private PersonalGoalCard[] playerPersonalGoal;
     private ItemTileView[] selectedItems;
 
-    public ModelView(int numPlayers,GameRules gameRules,ListenerManager listenerManager){
-        playersOrder=new ArrayList<>();
-        commonGoalViews=new CommonGoalView[gameRules.getNumOfCommonGoals()];
+    public ModelView(int numPlayers,GameRules gameRules){
+        pointsLeftCommon=new int[gameRules.getNumOfCommonGoals()];
         bookshelfView=new ItemTileView[numPlayers][gameRules.getRowsBookshelf()][gameRules.getColumnsBookshelf()];
         playerPoints=new PlayerPointsView[numPlayers];
         playerPersonalGoal=new PersonalGoalCard[numPlayers];
@@ -39,7 +41,10 @@ public class ModelView {
     }
 
     public int getIntegerValue(String nickname) {
-        return playersOrder.indexOf(nickname);
+        OptionalInt index = IntStream.range(0, playerPoints.length)
+                .filter(i -> playerPoints[i].getNickname().equals(nickname))
+                .findFirst();
+        return index.orElse(-1);
     }
     public <T> T[] deleteObjectByIndex(T[] array, int indexToDelete) {
         int length = array.length;
@@ -61,18 +66,12 @@ public class ModelView {
         playerPoints = deleteObjectByIndex(playerPoints, index);
         playerPersonalGoal=deleteObjectByIndex(playerPersonalGoal,index);
         bookshelfView=deleteObjectByIndex(bookshelfView,index);
-        playersOrder.remove(nickname);
+        //playersOrder.remove(nickname);
         return index;
 
     }
 
-    public CommonGoalView[] getCommonGoalViews() {
-        return commonGoalViews;
-    }
 
-    public void setCommonGoalViews(CommonGoalView commonGoalViews, int index, java.lang.String nickname) {
-        this.commonGoalViews[index] = commonGoalViews;
-    }
 
     public ItemTileView[][] getBookshelfView(String nickname) {
         return bookshelfView[getIntegerValue(nickname)];
@@ -89,21 +88,21 @@ public class ModelView {
         return idPersonal[getIntegerValue(nickname)];
     }
 
-    public void setPlayerPoints(PlayerPointsView playerPersonalGoal,String nickname) {
-        this.playerPoints[getIntegerValue(nickname)] = playerPersonalGoal;
+    public void setPlayerPoints(PlayerPointsView playerPoints,int index) {
+        this.playerPoints[index] = playerPoints;
     }
 
 
 
 
-    public PersonalGoalCard getPlayerPersonalGoal(java.lang.String nickname) {
+    public PersonalGoalCard getPlayerPersonalGoal(String nickname) {
         return playerPersonalGoal[getIntegerValue(nickname)];
     }
-    public void setPlayerPersonalGoal(PersonalGoalCard playerPersonalGoal, java.lang.String nickname) {
+    public void setPlayerPersonalGoal(PersonalGoalCard playerPersonalGoal, String nickname) {
         this.playerPersonalGoal[getIntegerValue(nickname)] = playerPersonalGoal;
     }
 
-    public PersonalGoalCard getPlayerPersonal(java.lang.String nickname) {
+    public PersonalGoalCard getPlayerPersonal(String nickname) {
         return playerPersonalGoal[getIntegerValue(nickname)] ;
     }
 
@@ -133,13 +132,7 @@ public class ModelView {
     public void setBoardView(BoardBoxView[][] boardView) {
         this.boardView = boardView;
     }
-    public ArrayList<String> getPlayersOrder() {
-        return playersOrder;
-    }
 
-    public void setPlayersOrder(ArrayList<String> playersOrder) {
-        this.playersOrder = playersOrder;
-    }
 
     public TurnPhase getTurnPhase() {
         return turnPhase;
@@ -175,6 +168,24 @@ public class ModelView {
     public void setTurnPlayer(int turnPlayer) {
         this.turnPlayer = turnPlayer;
     }
+
+    public int[] getPointsLeftCommon() {
+        return pointsLeftCommon;
+    }
+
+    public void setPointsLeftCommon(int[] pointsLeftCommon) {
+        this.pointsLeftCommon = pointsLeftCommon;
+    }
+    public void setPlayersPoints(PlayerPointsView[] playerPoints){
+        this.playerPoints=playerPoints;
+    }
+    public void setPlayerPersonalGoal(PersonalGoalCard[] playerPersonalGoal){
+        this.playerPersonalGoal=playerPersonalGoal;
+    }
+    public void idPersonal(int[] idPersonal){
+        this.idPersonal=idPersonal;
+    }
+
 }
 
 

@@ -121,7 +121,7 @@ public class Game {
         for(Integer player:orderPlayers){
             String nickname=nicknames.get(player);
             players.add(new Player(nickname,modelview));
-            modelview.getPlayersOrder().add(nickname);
+            //modelview.getPlayersOrder().add(nickname);
         }
         //modelview.setPlayersOrder(players);
 
@@ -190,8 +190,9 @@ public class Game {
             Class<?> clazz = Class.forName(className);
             Object obj = clazz.getDeclaredConstructor().newInstance();
             ((CommonGoalCard) obj).setModelView(modelview);
-            modelview.getIdCommon()[i++]=number;
+            modelview.getIdCommon()[i]=number;
             commonGoalCards.add((CommonGoalCard) obj);
+            i++;
         }
 
         setCommonGoalCardsPoints(gameRules);
@@ -218,12 +219,14 @@ public class Game {
         int numCommonGoal=0;
         for(CommonGoalCard c: commonGoalCards){
             int[] pointsView= points.stream().mapToInt(Integer::intValue).toArray();
-            common=new CommonGoalView(null, 0, pointsView);
-            modelview.setCommonGoalViews(common,numCommonGoal++,null);
+            //common=new CommonGoalView(null, 0, pointsView);
+            //modelview.setCommonGoalViews(common,numCommonGoal++,null);
             //serverView.setCommonGoalViews(common,numCommonGoal++);
             for(int i=0;i<points.size();i++){
                 c.getPoints().add(points.get(i));
             }
+            modelview.getPointsLeftCommon()[numCommonGoal]=commonGoalCards.get(numCommonGoal).getLastPoint();
+            numCommonGoal++;
         }
     }
     public int turnPlayerInt(){
@@ -273,18 +276,25 @@ public class Game {
         int[] commonGoalsSetup;
         int i = 0;
         for (Player p : players) {
+            commonGoalsSetup=new int[commonGoalCards.size()];
+            Arrays.fill(commonGoalsSetup, 0);
+            PlayerPointsView setupPoints=new PlayerPointsView(0,commonGoalsSetup,0, 0, p.getNickname());
+            modelview.setPlayerPoints(setupPoints,i);
+
             PersonalGoalCard turnPersonal=gameRules.getPersonalGoalCard(numbers.get(i));
             p.setPersonalGoalCard(turnPersonal);
+            modelview.getIdPersonal()[i]=numbers.get(i);
             modelview.setPlayerPersonalGoal(turnPersonal,p.getNickname());
+
             Bookshelf bookshelf=new Bookshelf(rows,columns, maxSelectableTiles);
             p.setBookshelf(bookshelf);
             modelview.setBookshelfView(bookshelf.cloneBookshelf(),p.getNickname());
-            commonGoalsSetup=new int[commonGoalCards.size()];
-            modelview.getIdPersonal()[i]=numbers.get(i);
+
+
             //Arrays.setAll(commonGoalsSetup, num -> 0);
-            Arrays.fill(commonGoalsSetup, 0);
-            PlayerPointsView setupPoints=new PlayerPointsView(0,commonGoalsSetup,0, 0);
-            modelview.setPlayerPoints(setupPoints,p.getNickname());
+
+
+
             i++;
         }
     }

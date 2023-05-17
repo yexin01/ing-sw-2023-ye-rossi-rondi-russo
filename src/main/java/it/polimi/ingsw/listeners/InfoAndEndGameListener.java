@@ -9,6 +9,7 @@ import it.polimi.ingsw.network.server.GlobalLobby;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class InfoAndEndGameListener extends EventListener{
     private final GlobalLobby globalLobby;
@@ -24,7 +25,7 @@ public class InfoAndEndGameListener extends EventListener{
         switch((TurnPhase)event){
             case ALL_INFO ->{
                 ModelView modelView=(ModelView) newValue;
-                ArrayList<String> nicknames=modelView.getPlayersOrder();
+                ArrayList<String> nicknames = new ArrayList<>(List.of("TIZIO", "CAIO", "SEMPRONIO", "PIPPO"));
                 //TODO questa sarbbe una funzionalità in piu nel caso in cui vengano corrotti i dati
                 if(playerNickname!=null){
                     Message message=creationMessageInfo(playerNickname,modelView,nicknames);
@@ -66,10 +67,10 @@ public class InfoAndEndGameListener extends EventListener{
         payload.put(Data.PERSONAL_GOAL_CARD,personalGoalCard);
         PlayerPointsView playerPointsView=modelView.getPlayerPoints(nickname);
         payload.put(Data.POINTS,playerPointsView);
-        String turnPlayer= modelView.getPlayersOrder().get(modelView.getTurnPlayer());
-        payload.put(Data.WHO_CHANGE,turnPlayer);
-        CommonGoalView[] commonGoalViews=modelView.getCommonGoalViews();
-        payload.put(Data.COMMON_GOAL_CARD,commonGoalViews);
+        //String turnPlayer= modelView.getPlayersOrder().get(modelView.getTurnPlayer());
+        //payload.put(Data.WHO_CHANGE,turnPlayer);
+        //CommonGoalView[] commonGoalViews=modelView.getCommonGoalViews();
+        //payload.put(Data.COMMON_GOAL_CARD,commonGoalViews);
         payload.put(Data.PHASE,modelView.getTurnPhase());
         payload.put(Data.PLAYERS,nicknames.toArray(new String[nicknames.size()]));
         Message m=new Message(header,payload);
