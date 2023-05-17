@@ -12,12 +12,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
 
-import static java.lang.System.out;
-
 public class LobbyPanel extends BasePanel{
 
     private String nickname;
-    private String connection;
+    private String port;
+    private String ip;
     private String defaultIp = "127.0.0.1";
     public LobbyPanel(ClientView clientView) {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
@@ -37,7 +36,7 @@ public class LobbyPanel extends BasePanel{
         setAlignment(publisherView, Pos.BOTTOM_RIGHT);
 
         TextField textField = new TextField("Insert your nickname here");
-        textField.setPrefSize(400, 35);
+        textField.setPrefSize(220, 35);
         Button confirmButton = new Button("Set Nickname");
         confirmButton.setOnAction(actionEvent -> {
             nickname = textField.getText();
@@ -52,13 +51,26 @@ public class LobbyPanel extends BasePanel{
             }
         });
         HBox hBox = new HBox(textField, confirmButton);
+        hBox.setSpacing(5);
 
-        TextField textField1 = new TextField("0->Socket, 1->RMI");
-        textField.setPrefSize(400, 35);
-        Button confirmButton1 = new Button("Set Connection");
+        TextField textField1 = new TextField("Insert port (Leave empty for default)");
+        textField1.setPrefSize(220, 35);
+        TextField textField2 = new TextField("Insert ip (Leave empty for default)");
+        textField2.setPrefSize(220, 35);
+        Button confirmButton1 = new Button("Set Socket Connection");
         confirmButton1.setOnAction(actionEvent -> {
-            connection = textField1.getText();
-            if (connection.isEmpty() || (!connection.equals("0") && !connection.equals("1"))) {
+                    port = textField1.getText();
+                    ip = textField2.getText();
+                    int chosenPort = (port.isEmpty() ? 1100 : Integer.parseInt(port));
+                    String chosenIp = (ip.isEmpty() ? defaultIp : ip);
+                    ClientHandler clientHandler = new ClientHandler();
+                    try {
+                        clientHandler.createConnection(0, chosenIp, chosenPort, GUIApplication.guiApplicationStatic);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            /*if (port.isEmpty() && ip.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Error!");
                 alert.setHeaderText("No connection founded");
@@ -76,11 +88,36 @@ public class LobbyPanel extends BasePanel{
                 }
             }
         });
-        HBox hBox1 = new HBox(textField1, confirmButton1);
-        VBox vBox = new VBox(hBox, hBox1);
+
+             */
+        HBox hBox1 = new HBox(textField1, textField2, confirmButton1);
+        hBox1.setSpacing(5);
+
+        TextField textField3 = new TextField("Insert port (Leave empty for default)");
+        textField3.setPrefSize(220, 35);
+        TextField textField4 = new TextField("Insert ip (Leave empty for default)");
+        textField4.setPrefSize(220, 35);
+        Button confirmButton2 = new Button("Set RMI Connection");
+        confirmButton2.setOnAction(actionEvent -> {
+            port = textField3.getText();
+            ip = textField4.getText();
+            int chosenPort = (port.isEmpty() ? 1099 : Integer.parseInt(port));
+            String chosenIp = (ip.isEmpty() ? defaultIp : ip);
+            ClientHandler clientHandler = new ClientHandler();
+            try {
+                clientHandler.createConnection(1, chosenIp, chosenPort, GUIApplication.guiApplicationStatic);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        HBox hBox2 = new HBox(textField3, textField4, confirmButton2);
+        hBox2.setSpacing(5);
+
+        VBox vBox = new VBox(hBox, hBox1, hBox2);
         vBox.setSpacing(10);
         hBox.setAlignment(Pos.CENTER);
         hBox1.setAlignment(Pos.CENTER);
+        hBox2.setAlignment(Pos.CENTER);
         getChildren().add(vBox);
         vBox.setAlignment(Pos.CENTER);
     }
