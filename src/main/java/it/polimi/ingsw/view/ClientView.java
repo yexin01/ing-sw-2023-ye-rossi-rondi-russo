@@ -181,6 +181,7 @@ public class ClientView {
         messageToserverHandlerTurn.handleMessageToServer(null, KeyErrorPayload.ERROR_DATA,nickname,MessageType.ERROR);
     }
 
+
     public String getTurnPlayer() {
         return turnPlayer;
     }

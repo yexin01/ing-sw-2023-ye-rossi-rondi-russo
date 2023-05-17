@@ -215,6 +215,7 @@ public class GameLobby {
      */
     public synchronized void changePlayerInActive(String nickname, Connection connection) throws IOException {
         players.put(nickname,connection);
+        playersDisconnected.remove(nickname);
 /*
         MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
         MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);

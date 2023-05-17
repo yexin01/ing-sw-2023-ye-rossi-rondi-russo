@@ -50,13 +50,17 @@ public class Game {
         return players.get(0);
     }
 
-    public Player getLastPlayer() {
-        return players.get(players.size()-1);
+    public String getLastPlayer(boolean[] activePlayers) {
+        int i;
+        for(i=players.size()-1; !activePlayers[i];i--){
+        }
+        return players.get(i).getNickname();
     }
 
 
 
     public Player getTurnPlayerOfTheGame() {
+        System.out.println("TURN PLAYER :"+players.get(turnPlayer).getNickname());
         return players.get(turnPlayer);
     }
 
@@ -66,12 +70,13 @@ public class Game {
     public void setNextPlayer(boolean[] activePlayers) {
         // in case a player abandons the game and is the last one, index is > of players.size()-1
         System.out.println(activePlayers[getTurnPlayer()]);
-        while(!activePlayers[getTurnPlayer()]){
+        do{
             System.out.println("DENTRO "+activePlayers[getTurnPlayer()]);
             if(turnPlayer >= (players.size() - 1))
                 turnPlayer=0;
             else turnPlayer++;
-        }
+        }while(!activePlayers[getTurnPlayer()]);
+        modelview.setTurnPlayer(players.get(getTurnPlayer()).getNickname());
         System.out.println("Il prossimo giocatore che deve giocare ed é attivo é: "+players.get(getTurnPlayer()).getNickname());
     }
     public boolean[] disconnectionAndReconnectionPlayer(boolean[] activePlayers,String nickname,boolean discOrRec) {

@@ -28,7 +28,7 @@ public class InfoAndEndGameListener extends EventListener{
                 //TODO questa sarbbe una funzionalità in piu nel caso in cui vengano corrotti i dati
                 if(playerNickname!=null){
                     Message message=creationMessageInfo(playerNickname,modelView,nicknames);
-                    if(!modelView.getTurnPhase().equals(TurnPhase.SELECT_FROM_BOARD)){
+                    if(!modelView.getTurnPhase().equals(TurnPhase.SELECT_FROM_BOARD) && playerNickname.equals(modelView.getTurnPlayer())){
                         MessagePayload payload=message.getPayload();
                         payload.put(Data.SELECTED_ITEMS,modelView.getSelectedItems());
                         Message message1=new Message(message.getHeader(),payload);
@@ -44,10 +44,10 @@ public class InfoAndEndGameListener extends EventListener{
             case END_GAME ->{
                 MessageHeader header=new MessageHeader(MessageType.DATA,null);
                 MessagePayload payload=new MessagePayload(TurnPhase.END_GAME);
-                payload.put(Data.RANKING,newValue);
+                //payload.put(Data.RANKING,newValue);
                 Message message=new Message(header,payload);
                 getGameLobby().sendMessageToAllPlayers(message);
-                globalLobby.endGameLobbyFromGlobalLobby(getGameLobby().getIdGameLobby());
+                //globalLobby.endGameLobbyFromGlobalLobby(getGameLobby().getIdGameLobby());
             }
         }
     }

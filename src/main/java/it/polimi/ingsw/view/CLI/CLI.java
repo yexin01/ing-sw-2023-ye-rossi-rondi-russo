@@ -615,7 +615,7 @@ public class CLI implements ClientInterface {
     public boolean endGame() throws Exception {
         PrinterLogo.printWinnerLogo();
         askLobbyDecision();
-        printerStartAndEndTurn.endGame(getClientView());
+        //printerStartAndEndTurn.endGame(getClientView());
         return false;
     }
 

@@ -30,6 +30,7 @@ public class GameController {
         turnPhaseController =new PhaseController<>(TurnPhase.SELECT_FROM_BOARD);
         listenerManager.addListener(KeyErrorPayload.ERROR_DATA,new ErrorListener(gameLobby));
         listenerManager.addListener(TurnPhase.ALL_INFO, infoAndEndGameListener);
+        listenerManager.addListener(TurnPhase.END_GAME, infoAndEndGameListener);
         listenerManager.addListener(TurnPhase.END_TURN,new EndTurnListener(gameLobby));
         listenerManager.addListener(Data.PHASE,new TurnListener(gameLobby));
         gameLobby.setStartAndEndGameListener(infoAndEndGameListener);
@@ -78,16 +79,7 @@ public class GameController {
         }
     }
 
-    public void removePlayer(String nicknameSender) {
-        int index=game.deletePlayer(nicknameSender);
-        if(index==game.getPlayers().size()){
-            game.setTurnPlayer(0);
-            if(game.isEndGame()){
-                endGame();
-                return;
-            }
-        }
-    }
+
 
     public void checkAndInsertBoardBox(Message message) throws Exception {
         int[] coordinates=(int[]) message.getPayload().getContent(Data.VALUE_CLIENT);
@@ -182,34 +174,19 @@ public class GameController {
 
     public void finishTurn() {
         game.getBoard().resetBoard();
-        if(game.isEndGame() && game.getTurnPlayerOfTheGame().equals(game.getLastPlayer())){
-            endGame();
-            listenerManager.fireEvent(TurnPhase.ALL_INFO,getTurnNickname(),game.getModelView());
+        System.out.println("ULTIMO GIOCATORE CONNESSO ATTIVO è:"+game.getLastPlayer(activePlayers));
+        if(game.isEndGame() && getTurnNickname().equals(game.getLastPlayer(activePlayers))){
+            listenerManager.fireEvent(TurnPhase.END_GAME,getTurnNickname(),game.getModelView());
         }else{
             if(game.getBoard().checkRefill()){
                 game.getBoard().refill();
             }
-
             game.setNextPlayer(activePlayers);
-            System.out.println("Il prossimo giocatore é "+game.getTurnPlayerOfTheGame().getNickname());
-            game.getModelView().setTurnPlayer(game.getTurnPlayerOfTheGame().getNickname());
+            System.out.println("Il prossimo giocatore é "+getTurnNickname());
             listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
         }
-
     }
 
-    public void endGame() {
-        //TODO change END GAME
-        List<String> ranking=  game.checkWinner();
-        MessagePayload payload=new MessagePayload();
-        //TODO da finire in base alla parte di rete
-        //payload.put(KeyPayload.PLAYERS,ranking);
-        //serverView.sendAllMessage(payload,MessageFromServerType.END_GAME);
-        //TODO set GamePhase a END_GAME
-        //sendMessages.sendAll(payload,MessageFromServerType.END_GAME);
-        //sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null,MessageFromServerType.END_GAME);
-        //endGameListener.endGame(ranking);
-    }
 
     public void illegalPhase(TurnPhase phase) throws Exception {
         if(!turnPhaseController.getCurrentPhase().equals(phase)){
@@ -219,7 +196,7 @@ public class GameController {
         return;
     }
     public String getTurnNickname() {
-        return game.getTurnPlayerOfTheGame().getNickname();
+        return game.getModelView().getTurnPlayer();
     }
 
     public ListenerManager getListenerManager() {
@@ -233,48 +210,4 @@ public class GameController {
     public boolean[] getActivePlayers(){return activePlayers;};
     public void setActivePlayers(boolean[] activePlayers){this.activePlayers=activePlayers;};
 
-
-    /*
-    public void sendMessage(String nickname,MessageFromServerType messageFromServerType){
-        sendMessages.sendMessage(game.getTurnPlayer().getNickname(),null, messageFromServerType);
-    }
-
-     */
-
-
-    /*
-    public void addListener(EventType eventType, EventListener listener) {
-        this.listenerManager.addListener(eventType,listener);
-    }
-
-    public void removeListener(EventType eventType, EventListener listener) {
-        this.listenerManager.removeListener(eventType, listener);
-    }
-
-    /*
-    public HashMap<String, Client> getPlayerMap() {
-        return playerMap;
-    }
-
-    public void setPlayerMap(HashMap<String, Client> playerMap) {
-        this.playerMap = playerMap;
-    }
-    protected void addClient(String nickname, Client player) {
-        this.playerMap.put(nickname, player);
-    }
-
-    protected void removeClient(String nickname) {
-        this.playerMap.remove(nickname);
-    }
-
-
-    public SendMessages getSendMessages() {
-        return sendMessages;
-    }
-
-    public void setSendMessages(SendMessages sendMessages) {
-        this.sendMessages = sendMessages;
-    }
-
-     */
 }
