@@ -22,6 +22,15 @@ public class GameRules {
     public int getMaxSelectableTiles() {
         return ((Long) json.get("max_selectable_tiles")).intValue();
     }
+    public int getMaxCharactersPlayers() {
+        return ((Long) json.get("max_characters_players")).intValue();
+    }
+    public int getMinCharactersPlayers() {
+        return ((Long) json.get("min_characters_players")).intValue();
+    }
+    public int getMinPlayers() {
+        return ((Long) json.get("min_players")).intValue();
+    }
     public int[] getNumTilesPerType() {
         JSONArray numTilesArr = (JSONArray) json.get("num_tiles_per_type");
         int[] numTiles = new int[numTilesArr.size()];

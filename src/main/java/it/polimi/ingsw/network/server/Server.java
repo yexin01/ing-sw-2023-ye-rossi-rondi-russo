@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.server;
 
+import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.message.*;
 
 import java.io.IOException;
@@ -25,8 +26,10 @@ public class Server implements Runnable{
     private ConcurrentHashMap<String, Connection> clientsConnected; //map of all the clients with an active connection, for the disconnected ones there is the list of disconnected in the gameLobby
     private GlobalLobby globalLobby;
 
-    private final static int MAX_PLAYERS = 4;
-    private final static int MIN_PLAYERS = 2;
+    private static int MAX_PLAYERS;
+    private static int MIN_PLAYERS;
+    static int MAX_LENGTH_NICKNAME;
+    static int MIN_LENGTH_NICKNAME;
 
     /**
      * Constructor of the server
@@ -36,6 +39,16 @@ public class Server implements Runnable{
      */
     public Server(int rmiPort, int socketPort, String ipAddress) {
         // it checks if there is already an instance of the server
+        GameRules gameRules= null;
+        try {
+            gameRules = new GameRules();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        MAX_PLAYERS= gameRules.getMaxPlayers();
+        MIN_PLAYERS= gameRules.getMinPlayers();
+        MAX_LENGTH_NICKNAME= gameRules.getMaxCharactersPlayers();
+        MIN_LENGTH_NICKNAME= gameRules.getMinCharactersPlayers();
         if (instance != null) {
             return;
         }
@@ -318,14 +331,13 @@ public class Server implements Runnable{
         }
     }
 
+
     /**
      * Method that checks if the nickname is valid (not too long or too short)
      * @param nickname of the player
      * @return true if the nickname is valid, false otherwise
      */
     private boolean checkNickname(String nickname) {
-        final int MAX_LENGTH_NICKNAME = 20;
-        final int MIN_LENGTH_NICKNAME = 2;
         return nickname.length() <= MAX_LENGTH_NICKNAME && nickname.length() >= MIN_LENGTH_NICKNAME;
     }
 
