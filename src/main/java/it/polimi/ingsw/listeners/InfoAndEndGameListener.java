@@ -66,7 +66,7 @@ public class InfoAndEndGameListener extends EventListener{
         payload.put(Data.PERSONAL_GOAL_CARD,personalGoalCard);
         PlayerPointsView playerPointsView=modelView.getPlayerPoints(nickname);
         payload.put(Data.POINTS,playerPointsView);
-        String turnPlayer= modelView.getTurnPlayer();
+        String turnPlayer= modelView.getPlayersOrder().get(modelView.getTurnPlayer());
         payload.put(Data.WHO_CHANGE,turnPlayer);
         CommonGoalView[] commonGoalViews=modelView.getCommonGoalViews();
         payload.put(Data.COMMON_GOAL_CARD,commonGoalViews);

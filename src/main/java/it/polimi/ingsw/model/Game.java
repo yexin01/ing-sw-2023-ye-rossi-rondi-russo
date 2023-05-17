@@ -14,7 +14,7 @@ public class Game {
     private final ModelView modelview;
     private Board board;
     private int numMaxPlayers;
-    private int turnPlayer;
+
     private ArrayList<CommonGoalCard> commonGoalCards;
     private boolean endGame;
 
@@ -57,26 +57,23 @@ public class Game {
         return players.get(i).getNickname();
     }
     public Player getTurnPlayerOfTheGame() {
-        System.out.println("TURN PLAYER :"+players.get(turnPlayer).getNickname());
-        return players.get(turnPlayer);
+        System.out.println("TURN PLAYER :"+players.get(turnPlayerInt()).getNickname());
+        return players.get(turnPlayerInt());
     }
     public int getIntByNickname(String nickname) {
         return modelview.getIntegerValue(nickname);
     }
-    public int getTurnPlayer() {
-        return turnPlayer;
-    }
+
     public void setNextPlayer(boolean[] activePlayers) {
         // in case a player abandons the game and is the last one, index is > of players.size()-1
-        System.out.println(activePlayers[getTurnPlayer()]);
+        System.out.println(activePlayers[turnPlayerInt()]);
         do{
-            System.out.println("DENTRO "+activePlayers[getTurnPlayer()]);
-            if(turnPlayer >= (players.size() - 1))
-                turnPlayer=0;
-            else turnPlayer++;
-        }while(!activePlayers[getTurnPlayer()]);
-        modelview.setTurnPlayer(players.get(getTurnPlayer()).getNickname());
-        System.out.println("Il prossimo giocatore che deve giocare ed é attivo é: "+players.get(getTurnPlayer()).getNickname());
+            System.out.println("DENTRO "+activePlayers[turnPlayerInt()]);
+            if(turnPlayerInt() >= (players.size() - 1))
+                setTurnPlayer(0);
+            else setTurnPlayer(turnPlayerInt()+1);
+        }while(!activePlayers[turnPlayerInt()]);
+        System.out.println("Il prossimo giocatore che deve giocare ed é attivo é: "+players.get(turnPlayerInt()).getNickname());
     }
     public boolean[] disconnectionAndReconnectionPlayer(boolean[] activePlayers,String nickname,boolean discOrRec) {
         System.out.println("PRIMA" +nickname);
@@ -229,6 +226,12 @@ public class Game {
             }
         }
     }
+    public int turnPlayerInt(){
+        return modelview.getTurnPlayer();
+    }
+    public void setTurnPlayer(int index){
+        modelview.setTurnPlayer(index);
+    }
 
     /**
      *
@@ -371,9 +374,7 @@ public class Game {
     public void setEndGame(boolean endGame) {
         this.endGame = endGame;
     }
-    public void setTurnPlayer(int num) {
-        this.turnPlayer=num;
-    }
+
 
     public ModelView getModelView() {
         return modelview;

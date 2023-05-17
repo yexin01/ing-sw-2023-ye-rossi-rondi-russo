@@ -14,7 +14,8 @@ import java.util.ArrayList;
 public class ModelView {
     private int indexRemoveToken;
     private ArrayList<String> playersOrder;
-    private String turnPlayer;
+    private int turnPlayer;
+
     private int[] idCommon;
     private int[] idPersonal;
 
@@ -148,13 +149,8 @@ public class ModelView {
         this.turnPhase = turnPhase;
     }
 
-    public String getTurnPlayer() {
-        return turnPlayer;
-    }
 
-    public void setTurnPlayer(String turnPlayer) {
-        this.turnPlayer = turnPlayer;
-    }
+
 
     public int[] getIdCommon() {
         return idCommon;
@@ -172,6 +168,13 @@ public class ModelView {
         this.idPersonal = idPersonal;
     }
 
+    public int getTurnPlayer() {
+        return turnPlayer;
+    }
+
+    public void setTurnPlayer(int turnPlayer) {
+        this.turnPlayer = turnPlayer;
+    }
 }
 
 

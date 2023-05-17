@@ -47,7 +47,6 @@ public class GameController {
 
         game.createCommonGoalCard(gameRules);
         game.createPersonalGoalCard(gameRules);
-        modelView.setTurnPlayer(game.getPlayers().get(0).getNickname());
         listenerManager.fireEvent(TurnPhase.ALL_INFO,null,game.getModelView());
         modelView.setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
     }
@@ -62,6 +61,7 @@ public class GameController {
 
 
     public void receiveMessageFromClient(Message message){
+        System.out.println("IL PROSSIMO GIOCATORE E: "+getModel().getIntByNickname(getTurnNickname()));
         String nicknamePlayer= message.getHeader().getNickname();
         try{
             if (!nicknamePlayer.equals(game.getTurnPlayerOfTheGame().getNickname())) {
@@ -118,7 +118,6 @@ public class GameController {
                 System.out.print(str.getNickname());
                 System.out.println(activePlayers[i++]);
             }
-            game.getModelView().setTurnPlayer(game.getTurnPlayerOfTheGame().getNickname());
             listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
         }
 
@@ -159,6 +158,7 @@ public class GameController {
             }
             System.out.println("finish2");
             game.updateAllPoints();
+            System.out.println("finish3");
             finishTurn();
         }
     }
@@ -188,7 +188,7 @@ public class GameController {
         return;
     }
     public String getTurnNickname() {
-        return game.getModelView().getTurnPlayer();
+        return game.getTurnPlayerOfTheGame().getNickname();
     }
 
     public ListenerManager getListenerManager() {
