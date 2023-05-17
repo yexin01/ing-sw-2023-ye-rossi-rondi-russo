@@ -56,14 +56,13 @@ public class Game {
         }
         return players.get(i).getNickname();
     }
-
-
-
     public Player getTurnPlayerOfTheGame() {
         System.out.println("TURN PLAYER :"+players.get(turnPlayer).getNickname());
         return players.get(turnPlayer);
     }
-
+    public int getIntByNickname(String nickname) {
+        return modelview.getIntegerValue(nickname);
+    }
     public int getTurnPlayer() {
         return turnPlayer;
     }
@@ -131,110 +130,6 @@ public class Game {
 
 
     }
-
-    /*
-    public void addPlayer(String nickname, ModelView modelView,int index) throws Exception {
-        if (players.size() < numMaxPlayers) {
-            //Player p = new Player(nickname, modelView);
-            players.set(index, new Player(nickname, modelView));
-        }
-    }
-    /*
-    public void addPlayer(String nickname, ModelView modelView) throws Exception {
-        if (players.size() < numMaxPlayers) {
-            Player p = new Player(nickname, modelView);
-
-            //p.addListener(EventType.BOARD_SELECTION, new BoardListener());
-            //p.addListener(EventType.BOOKSHELF_INSERTION, new BookshelfListener());
-            //p.addListener(EventType.POINTS, new PointsListener());
-            players.add(p);
-        }
-    }
-
-     */
-
-
-
-
-    /*
-    public void addPlayers(String nickname, RemoteView remoteView) throws Exception {
-        if (players.size() < 3) {
-            Player p = new Player(nickname);
-            Listener listener=new Listener(remoteView);
-            p.addListener(EventType.BOARD_SELECTION,listener);
-            //p.addListener(EventType.BOOKSHELF_INSERTION_AND_POINTS, new BookshelfListener(playerMap));
-            p.addListener(EventType.END_TURN,listener);
-            players.add(p);
-        }
-    }
-
-     */
-
-
-
-/*
-    public void addPlayers(String nickname,HashMap<String,Client> playerMap) throws Exception {
-        if (players.size() < 3) {
-            Player p = new Player(nickname);
-            p.addListener(EventType.BOARD_SELECTION,new BoardListener(playerMap));
-            //p.addListener(EventType.BOOKSHELF_INSERTION_AND_POINTS, new BookshelfListener(playerMap));
-            p.addListener(EventType.END_TURN, new EndTurnListener(playerMap));
-            players.add(p);
-        }
-    }
-
- */
-
-
-
-
-
-
-    /*
-
-    public void addPlayer(String nickname) throws Exception {
-        if (players.size() < numPlayers) {
-            Player p=new Player(nickname);
-            PlayerListener listener=new PlayerListener();
-            p.addListener("BoardSelection",new BoardListener());
-            p.addListener("BookshelfInsertion",new BookshelfListener());
-            p.addListener("Points",new PointsListener());
-            players.add(p);
-        }
-    }
-
-     */
-
-    /**
-     *
-     * @param nickname
-     * @return
-     */
-    //TODO insertNickname it depends on how we implement the controller in the future it could change
-    /*
-    public boolean insertNickname(String nickname) throws Exception {
-        GameRules playersJson = new GameRules();
-        int numMaxPlayer = playersJson.getMaxPlayers();
-        if(!nickname.equals("stop") && players.size() < numMaxPlayer) {
-            if(differentNickname(nickname)) {
-                Player player = new Player(nickname, serverView);
-                players.add(player);
-                setNumPlayers(numPlayers + 1);
-                if(players.size() == numMaxPlayer) {
-                    System.out.println("START THE GAME with " + players.size() + " players");
-                    return false;
-                }
-            } else {
-                throw new IllegalArgumentException("Invalid name already used");
-            }
-        } else {
-            System.out.println("START THE GAME with " + players.size() + " players");
-            return false;
-        }
-        return true;
-    }
-
-     */
 
     /**
      * check that the string passed as a parameter is not already present in the usedNames set

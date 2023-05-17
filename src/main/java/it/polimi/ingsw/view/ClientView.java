@@ -180,6 +180,9 @@ public class ClientView {
     public void somethingWrong() throws Exception {
         messageToserverHandlerTurn.handleMessageToServer(null, KeyErrorPayload.ERROR_DATA,nickname,MessageType.ERROR);
     }
+    public void receiveEndGame() throws Exception {
+        messageToserverHandlerTurn.handleMessageToServer(null, TurnPhase.END_GAME,nickname,MessageType.DATA);
+    }
 
 
     public String getTurnPlayer() {

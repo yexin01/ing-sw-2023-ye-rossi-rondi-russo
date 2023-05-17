@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.modelView.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -22,6 +23,7 @@ public class GameLobby {
     private GameController gameController;
     private ModelView modelView;
     private InfoAndEndGameListener infoAndEndGameListener;
+    private Message messageEndGame=null;
 
 
     private ConcurrentHashMap<String, Connection> players; //maps of all the active players of the game
@@ -188,10 +190,24 @@ public class GameLobby {
      * Method that sends a message to the game controller to handle the turn of the player
      * @param message the message received from the player
      */
-    public synchronized void handleTurn(Message message){
-        if(message.getHeader().getMessageType().equals(MessageType.DATA)&& !playersDisconnected.contains(gameController.getTurnNickname())){
+    public synchronized void handleTurn(Message message) throws IOException {
+        if(messageEndGame==null){
             gameController.receiveMessageFromClient(message);
-        }else gameController.disconnectionPlayer(gameController.getTurnNickname());
+        }else {
+            int index=gameController.getModel().getIntByNickname(message.getHeader().getNickname());
+            boolean[] activePlayers = gameController.getActivePlayers();
+            activePlayers[index]=false;
+            boolean allFalse = true;
+            for (boolean value : activePlayers) {
+                if (value) {
+                    allFalse = false;
+                    break;
+                }
+            }
+            if(allFalse && playersDisconnected.size()==0){
+                infoAndEndGameListener.endGame();
+            }
+        }
     }
 
     /**
@@ -200,9 +216,12 @@ public class GameLobby {
      * @throws IOException if there are problems with the connection
      */
     public synchronized void handleErrorFromClient(Message message) throws IOException {
-        if(message.getHeader().getMessageType().equals(MessageType.ERROR)){
+        if(messageEndGame==null){
             infoAndEndGameListener.fireEvent(TurnPhase.ALL_INFO,message.getHeader().getNickname(),modelView);
             System.out.println("SONO NELLA GAME LOBBY l'utente ha segnalato un error:"+message.getHeader().getNickname());
+        }else{
+            sendMessageToSpecificPlayer(messageEndGame,message.getHeader().getNickname());
+            System.out.println("END GAME l'utente ha segnalato un error:"+message.getHeader().getNickname());
         }
     }
 
@@ -216,34 +235,17 @@ public class GameLobby {
     public synchronized void changePlayerInActive(String nickname, Connection connection) throws IOException {
         players.put(nickname,connection);
         playersDisconnected.remove(nickname);
-/*
-        MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
-        MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
-        String content = "Player "+nickname+" reconnected to Game Lobby "+ idGameLobby + "!";
-        payload.put(Data.CONTENT,content);
-        Message message = new Message(header,payload);
-        sendMessageToAllPlayersExceptOne(message, nickname);
 
- */
-        gameController.reconnectionPlayer(nickname);
-        MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
-        MessagePayload payload=new MessagePayload(KeyConnectionPayload.RECONNECTION);
-        String content="YOU reconnected to Game Lobby "+ idGameLobby + "!";
-        payload.put(Data.CONTENT,content);
-        payload.put(Data.WHO_CHANGE,nickname);
-        Message message = new Message(header,payload);
-        sendMessageToAllPlayers(message);
-/*
-        //sse il gameController punta alle liste del gameLobby, deve solo stampare il broadcast e non fare altro
-        gameController.reconnectionPlayer(nickname);
-        MessageHeader header1=new MessageHeader(MessageType.ERROR, nickname);
-        MessagePayload payload1=new MessagePayload(KeyErrorPayload.ERROR_DATA);
-        payload.put(Data.VALUE_CLIENT,null);
-        Message message1=new Message(header1,payload1);
-        handleErrorFromClient(message1);
-
- */
-
+        if(messageEndGame==null){
+            gameController.reconnectionPlayer(nickname);
+            MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
+            MessagePayload payload=new MessagePayload(KeyConnectionPayload.RECONNECTION);
+            String content="YOU reconnected to Game Lobby "+ idGameLobby + "!";
+            payload.put(Data.CONTENT,content);
+            payload.put(Data.WHO_CHANGE,nickname);
+            Message message = new Message(header,payload);
+            sendMessageToAllPlayers(message);
+        }else sendMessageToSpecificPlayer(messageEndGame,nickname);
 
         System.out.println("Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in attivo");
     }
@@ -257,16 +259,17 @@ public class GameLobby {
     public synchronized void changePlayerInDisconnected(String nickname) throws IOException {
         System.out.println("Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in disconnesso");
         playersDisconnected.add(nickname);
-        players.remove(nickname);
-        gameController.disconnectionPlayer(nickname);
-        MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
-        MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
-        String content = "Player "+nickname+" disconnected to Game Lobby "+ idGameLobby + "!";
-        payload.put(Data.CONTENT,content);
-        Message message = new Message(header,payload);
-        sendMessageToAllPlayers(message);
-
-        System.out.println(content);
+        if(messageEndGame==null){
+            players.remove(nickname);
+            gameController.disconnectionPlayer(nickname);
+            MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
+            MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
+            String content = "Player "+nickname+" disconnected to Game Lobby "+ idGameLobby + "!";
+            payload.put(Data.CONTENT,content);
+            Message message = new Message(header,payload);
+            sendMessageToAllPlayers(message);
+            System.out.println(content);
+        }
     }
 
     /**
@@ -325,4 +328,11 @@ public class GameLobby {
         players.get(nickname).sendMessageToClient(message);
     }
 
+    public Message getMessageEndGame() {
+        return messageEndGame;
+    }
+
+    public void setMessageEndGame(Message messageEndGame) {
+        this.messageEndGame = messageEndGame;
+    }
 }

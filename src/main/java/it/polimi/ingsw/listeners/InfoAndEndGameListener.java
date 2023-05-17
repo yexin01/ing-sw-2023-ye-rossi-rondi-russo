@@ -39,7 +39,6 @@ public class InfoAndEndGameListener extends EventListener{
                         getGameLobby().sendMessageToSpecificPlayer(creationMessageInfo(nickname,modelView,nicknames),nickname) ;
                     }
                 }
-
             }
             case END_GAME ->{
                 MessageHeader header=new MessageHeader(MessageType.DATA,null);
@@ -47,6 +46,7 @@ public class InfoAndEndGameListener extends EventListener{
                 //payload.put(Data.RANKING,newValue);
                 Message message=new Message(header,payload);
                 getGameLobby().sendMessageToAllPlayers(message);
+                getGameLobby().setMessageEndGame(message);
                 //globalLobby.endGameLobbyFromGlobalLobby(getGameLobby().getIdGameLobby());
             }
         }
@@ -74,5 +74,12 @@ public class InfoAndEndGameListener extends EventListener{
         payload.put(Data.PLAYERS,nicknames.toArray(new String[nicknames.size()]));
         Message m=new Message(header,payload);
        return m;
+    }
+    public void endGame(){
+        try {
+            globalLobby.endGameLobbyFromGlobalLobby(getGameLobby().getIdGameLobby());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

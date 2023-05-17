@@ -48,7 +48,6 @@ public class GameController {
         game.createCommonGoalCard(gameRules);
         game.createPersonalGoalCard(gameRules);
         modelView.setTurnPlayer(game.getPlayers().get(0).getNickname());
-
         listenerManager.fireEvent(TurnPhase.ALL_INFO,null,game.getModelView());
         modelView.setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
     }
@@ -86,18 +85,11 @@ public class GameController {
         int maxPlayerSelectableTiles=game.getTurnPlayerOfTheGame().getBookshelf().numSelectableTiles();
         if(!checkError(game.getBoard().checkSelectable(coordinates,maxPlayerSelectableTiles))){
             System.out.println("Le asocia");
-            //ErrorType errorType=game.getBoard().checkFinishChoice();
-
-            //if(errorType!=null){
-             //   checkError(errorType);
-           // }else{
-              game.getTurnPlayerOfTheGame().selection(game.getBoard());
-                //game.getBoard().resetBoard();
-                turnPhaseController.setCurrentPhase(TurnPhase.SELECT_ORDER_TILES);
-                game.getModelView().setTurnPhase(TurnPhase.SELECT_ORDER_TILES);
-                System.out.println("CAMBIA FASE CONTROLLER");
-                listenerManager.fireEvent(Data.PHASE,getTurnNickname(),TurnPhase.SELECT_ORDER_TILES);
-            //}
+            game.getTurnPlayerOfTheGame().selection(game.getBoard());
+            turnPhaseController.setCurrentPhase(TurnPhase.SELECT_ORDER_TILES);
+            game.getModelView().setTurnPhase(TurnPhase.SELECT_ORDER_TILES);
+            System.out.println("CAMBIA FASE CONTROLLER");
+            listenerManager.fireEvent(Data.PHASE,getTurnNickname(),TurnPhase.SELECT_ORDER_TILES);
         }
     }
     public boolean checkError(ErrorType possibleInvalidArgoment) throws Exception {

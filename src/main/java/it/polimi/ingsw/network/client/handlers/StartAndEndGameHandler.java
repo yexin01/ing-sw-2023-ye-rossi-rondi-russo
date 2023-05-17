@@ -75,6 +75,7 @@ public class StartAndEndGameHandler extends MessageHandler {
             }
             case END_GAME ->{
                 getClientInterface().endGame();
+                getClientInterface().askLobbyDecision();
             }
         }
 

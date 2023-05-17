@@ -614,7 +614,8 @@ public class CLI implements ClientInterface {
     @Override
     public boolean endGame() throws Exception {
         PrinterLogo.printWinnerLogo();
-        askLobbyDecision();
+        clientView.receiveEndGame();
+       // askLobbyDecision();
         //printerStartAndEndTurn.endGame(getClientView());
         return false;
     }
@@ -633,6 +634,8 @@ public class CLI implements ClientInterface {
     @Override
     public void start() throws Exception {
         PrinterLogo.printWaitingTurnPhase();
+        Colors.colorize(Colors.GAME_INSTRUCTION, "This is the board\n ");
+        printerBoard.printMatrixBoard(clientView.getBoardView(), null);
     }
 
     @Override

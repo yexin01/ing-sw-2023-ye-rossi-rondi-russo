@@ -278,7 +278,7 @@ public class Server implements Runnable{
             System.out.println(nickname + " connected to server!");
             System.out.println("Sono il server.. ora passo alla fase nella globalLobby...");
 
-            this.globalLobby.addPlayerToWaiting(nickname, connection);
+            this.globalLobby.addPlayerToWaiting(nickname, connection,false);
 
         } else { // nickname not legit
 

@@ -40,16 +40,18 @@ public class GlobalLobby {
      * @param connection the connection of the player that wants to be added to the waiting list of the global lobby of the server
      * @throws IOException if there are problems with the connection
      */
-    public synchronized void addPlayerToWaiting(String nickname, Connection connection) throws IOException {
+    public synchronized void addPlayerToWaiting(String nickname, Connection connection,boolean afterEndGame) throws IOException {
         System.out.println("Player "+nickname+" added to server's global lobby!");
         waitingPlayersWithNoGame.put(nickname,connection);
         System.out.println("Player "+nickname+" added to the waiting list in global lobby!");
+        if(!afterEndGame){
+            MessageHeader header = new MessageHeader(MessageType.LOBBY, nickname);
+            MessagePayload payload = new MessagePayload(KeyLobbyPayload.GLOBAL_LOBBY_DECISION);
+            //String content = "Welcome to the Global Lobby!";
+            //payload.put(Data.CONTENT,content);
+            connection.sendMessageToClient(new Message(header,payload));
+        }
 
-        MessageHeader header = new MessageHeader(MessageType.LOBBY, nickname);
-        MessagePayload payload = new MessagePayload(KeyLobbyPayload.GLOBAL_LOBBY_DECISION);
-        //String content = "Welcome to the Global Lobby!";
-        //payload.put(Data.CONTENT,content);
-        connection.sendMessageToClient(new Message(header,payload));
     }
 
     /**
@@ -294,7 +296,7 @@ public class GlobalLobby {
         GameLobby gameLobby = findGameLobbyById(gameId);
         ConcurrentHashMap<String, Connection> players = gameLobby.getPlayersInGameLobby();
         for (String nickname : players.keySet()) {
-            addPlayerToWaiting(nickname,players.get(nickname));
+            addPlayerToWaiting(nickname,players.get(nickname),true);
         }
 
         System.out.println("All players in game lobby "+gameId+" have been moved to waitingList in the global lobby!");
