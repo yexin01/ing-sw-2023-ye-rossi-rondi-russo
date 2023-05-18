@@ -62,7 +62,7 @@ public class GUIApplication extends Application implements ClientInterface {
             content.getChildren().addAll(imageView, new Label(nickname+" won "+num+" points token"));
             DialogPane dialogPane = alert.getDialogPane();
             dialogPane.setContent(content);
-            alert.showAndWait();
+            alert.show();
         });
     }
 
@@ -139,8 +139,13 @@ public class GUIApplication extends Application implements ClientInterface {
     }
 
     @Override
-    public boolean endGame() {
-        return false;
+    public void endGame() {
+        Platform.runLater(()-> {
+            FinalRankingPanel finalRankingPanel = new FinalRankingPanel(clientView);
+            Scene scene = new Scene(finalRankingPanel, screenBounds.getWidth(), screenBounds.getHeight());
+            stage.setScene(scene);
+            stage.show();
+        });
     }
 
     @Override
