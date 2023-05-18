@@ -299,6 +299,10 @@ public class PrinterCommonGoalAndPoints {
     }
 
     public void printPoints(ClientView clientView){
+        //i playerpoints view della clientView saranno ordinati dal piu basso al piu alto leggerli al contrario
+        //durante il turno per i personal point degli altri andrebbe messo ?, in modo tale che all utente non venga mostrato i punteggi personal degli altri
+        //la classifica si basa solo sui common e adjacent mentre i personal sono mandati singolarmente , cosi da non vedere quelli degli altri
+        PlayerPointsView[] playerPoints=clientView.getPlayerPointsViews();
         /*
         //TODO pensavo di inserire una cornice con i vari punteggi e qualche disegno tipo di due tiles vicine se sono gli adjacentPoints...
         PlayerPointsView playerPoints=clientView.getPlayerPoints();
@@ -316,6 +320,30 @@ public class PrinterCommonGoalAndPoints {
 
          */
 
+    }
+    public  void printEndGame(ClientView clientView,int[] personalPoints){
+        //i playerpoints saranno ordinati dal basso verso l alto leggerli al contrario e per il punteggio totale sommare quello in posizione index dell array personal
+        //sono gia associati ai rispettivi giocatori ma non potevo mostrare i personal points prima
+        /*
+        //int numOfCGC = clientView.getIdCommonGoals().length;
+        int numOfRows = getCommonGoalCard(clientView.getIdCommonGoals()[0]).length;
+        int[] cgcIndexes = clientView.getIdCommonGoals();
+
+        for (int i=0; i<numOfRows; i++){
+            if(i==0 || i==numOfRows-1){
+                Colors.printSize2(getCommonGoalCard(cgcIndexes[0])[i]+getCommonGoalCardDescription(cgcIndexes[0])[i], 432+60);
+                Colors.printSize2(getCommonGoalCard(cgcIndexes[1])[i]+getCommonGoalCardDescription(cgcIndexes[1])[i], 432+60);
+                System.out.println("");
+            }
+            else {
+                Colors.printSize2(getCommonGoalCard(cgcIndexes[0])[i]+getCommonGoalCardDescription(cgcIndexes[0])[i], 124);
+                Colors.printSize2(getCommonGoalCard(cgcIndexes[1])[i]+getCommonGoalCardDescription(cgcIndexes[1])[i], 124);
+                System.out.println("");
+
+            }
+        }
+
+         */
     }
 
     public  void printCommonGoalCards(ClientView clientView){

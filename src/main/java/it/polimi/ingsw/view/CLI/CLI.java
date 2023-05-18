@@ -612,8 +612,9 @@ public class CLI implements ClientInterface {
     }
 
     @Override
-    public void endGame() throws Exception {
+    public void endGame(int[] personalPoints) throws Exception {
         PrinterLogo.printWinnerLogo();
+        printerCommonGoalAndPoints.printEndGame(clientView,personalPoints);
         clientView.receiveEndGame();
        // askLobbyDecision();
         //printerStartAndEndTurn.endGame(getClientView());

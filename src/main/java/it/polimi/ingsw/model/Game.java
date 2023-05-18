@@ -17,7 +17,7 @@ public class Game {
     private ArrayList<CommonGoalCard> commonGoalCards;
     private boolean endGame;
 
-
+//TODO cambiare creazione senza numMaxPlayer controllo gia effettuato prima
     public Game(GameRules gameRules,int numMaxPlayers,ModelView modelview){
         //players=new ArrayList<>();
         commonGoalCards=new ArrayList<>();
