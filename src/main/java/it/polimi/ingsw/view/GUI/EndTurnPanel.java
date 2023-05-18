@@ -81,22 +81,28 @@ public class EndTurnPanel extends BasePanel {
         //bookshelf.setMaxSize(z*5, w*6);
         //bookshelf.setPadding(new Insets(screenBounds.getHeight()-w*6, 100, 100, screenBounds.getWidth()-z*5));
 
-        Font font = new Font("Poor Richard", 22);
+        Font font = new Font("Poor Richard", 25);
+        Font font1 = new Font("Poor Richard", 22);
         VBox vBox3 = new VBox();
         vBox3.setMaxSize(450, 200);
-        Label label2 = new Label(clientView.getNickname().toUpperCase()+":"); label2.setFont(new Font("Poor Richard", 26)); label2.setTextFill(Color.YELLOW);
-        Label label3 = new Label("Total points:    "+clientView.getPlayerPoints().getPoints()); label3.setFont(font); label3.setTextFill(Color.WHITE);
-        Label label4 = new Label("Personal Goal points:    "+clientView.getPlayerPoints().getPersonalGoalPoints()); label4.setFont(font); label4.setTextFill(Color.WHITE);
-        Label label5 = new Label("Adjacent tiles points:    "+clientView.getPlayerPoints().getAdjacentPoints()); label5.setFont(font); label5.setTextFill(Color.WHITE);
-        Label label6 = new Label("Common Goal Card 1 points left:    "+clientView.getCommonGoalViews()[0].getLastPointsLeft()); label6.setFont(font); label6.setTextFill(Color.RED);
-        Label label7 = new Label("Common Goal Card 2 points left:    "+clientView.getCommonGoalViews()[1].getLastPointsLeft()); label7.setFont(font); label7.setTextFill(Color.RED);
+        for (int i=0; i<clientView.getPlayerPointsViews().length; i++) {
+            Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname()+"   points:    "+clientView.getPlayerPointsViews()[i].getPoints());
+            label.setFont(font); label.setTextFill(Color.YELLOW);
+            vBox3.getChildren().add(label);
+        }
+        //Label label2 = new Label(clientView.getNickname().toUpperCase()+":"); label2.setFont(new Font("Poor Richard", 26)); label2.setTextFill(Color.YELLOW);
+        //Label label3 = new Label("Total points:    "+clientView.getPlayerPointsViews().getPoints()); label3.setFont(font); label3.setTextFill(Color.WHITE);
+        //Label label4 = new Label("Personal Goal points:    "+clientView.getPlayerPoints().getPersonalGoalPoints()); label4.setFont(font); label4.setTextFill(Color.WHITE);
+        //Label label5 = new Label("Adjacent tiles points:    "+clientView.getPlayerPoints().getAdjacentPoints()); label5.setFont(font); label5.setTextFill(Color.WHITE);
+        Label label6 = new Label("Common Goal Card 1 points left:    "+clientView.getCommonGoalView()[1][0]); label6.setFont(font1); label6.setTextFill(Color.RED);
+        Label label7 = new Label("Common Goal Card 2 points left:    "+clientView.getCommonGoalView()[1][1]); label7.setFont(font1); label7.setTextFill(Color.RED);
         vBox3.setSpacing(15);
-        vBox3.getChildren().addAll(label2, label3, label4, label5, label6, label7);
+        vBox3.getChildren().addAll(label6, label7);
         vBox3.setAlignment(Pos.CENTER);
-        label2.setAlignment(Pos.TOP_CENTER);
-        label3.setAlignment(Pos.CENTER);
-        label4.setAlignment(Pos.CENTER);
-        label5.setAlignment(Pos.CENTER);
+        //label2.setAlignment(Pos.TOP_CENTER);
+        //label3.setAlignment(Pos.CENTER);
+        //label4.setAlignment(Pos.CENTER);
+        //label5.setAlignment(Pos.CENTER);
         getChildren().add(vBox3);
         setAlignment(vBox3, Pos.BOTTOM_CENTER);
         vBox3.setTranslateY(-190);
@@ -124,13 +130,13 @@ public class EndTurnPanel extends BasePanel {
         VBox vBox2 = createCardsBox(clientView, screenBounds);
         getChildren().add(getParquet());
         getChildren().add(getPersonalGoalCardImage());
-        getChildren().add(getCommonGoalCard1Image());
-        getChildren().add(getCommonGoalCard2Image());
+        //getChildren().add(getCommonGoalCard1Image());
+        //getChildren().add(getCommonGoalCard2Image());
         getChildren().add(getBookshelf());
         getParquet().setVisible(false);
         getPersonalGoalCardImage().setVisible(false);
-        getCommonGoalCard1Image().setVisible(false);
-        getCommonGoalCard2Image().setVisible(false);
+        //getCommonGoalCard1Image().setVisible(false);
+        //getCommonGoalCard2Image().setVisible(false);
         getBookshelf().setVisible(false);
         getBookshelf().setAlignment(Pos.CENTER);
         vBox2.setAlignment(Pos.TOP_RIGHT);

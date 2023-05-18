@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.listeners.ListenerManager;
 import it.polimi.ingsw.message.ErrorType;
 import it.polimi.ingsw.model.modelView.ModelView;
 import org.junit.jupiter.api.Assertions;
@@ -19,7 +18,7 @@ class BoardTest {
     @DisplayName("cloneBoard: generic check")
     void cloneBoard () throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         board.fillBag(gameRules);
         board.firstFillBoard(2, gameRules);
@@ -30,7 +29,7 @@ class BoardTest {
     @DisplayName("checkCoordinates: check for not occupiable tile")
     void checkCoordinates() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int numPlayers = 2;
         board.fillBag(gameRules);
@@ -43,7 +42,7 @@ class BoardTest {
     @DisplayName("checkCoordinates: check for out of bound tile")
     void checkCoordinatesCC1() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int numPlayers = 2;
         board.fillBag(gameRules);
@@ -56,7 +55,7 @@ class BoardTest {
     @DisplayName("firstFill: check for starting fill box 0,0 (2P)")
     void firstFillBoard() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         //Set the matrix of the number of players you want to test
         int numPlayers = 2;
@@ -72,7 +71,7 @@ class BoardTest {
     @DisplayName("setFreeEdges: check for tile 7,3 (2P)")
     void setFreeEdges() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         //Set the matrix of the number of players you want to test
         int numPlayers = 2;
@@ -88,7 +87,7 @@ class BoardTest {
     @DisplayName("setFreeEdges: check for tile 2,3 (2P)")
     void setFreeEdgesCC1() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int numPlayers = 2;
         board.fillBag(gameRules);
@@ -101,7 +100,7 @@ class BoardTest {
     @DisplayName("setFreeEdges: check for tile 3,3 (2P)")
     void setFreeEdgesCC2() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int numPlayers = 2;
         board.fillBag(gameRules);
@@ -114,7 +113,7 @@ class BoardTest {
     @DisplayName("increaseNear: removing tile 7,3 (Based on 2P matrix)")
     void increaseNear() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         //Set the matrix of the number of players you want to test
         int numPlayers = 2;
@@ -132,7 +131,7 @@ class BoardTest {
     @DisplayName("increaseNear: removing tile 7,4 (Based on 2P matrix)")
     void increaseNearCC1() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int numPlayers = 2;
         board.fillBag(gameRules);
@@ -148,7 +147,7 @@ class BoardTest {
     @DisplayName("increaseNear: removing tile 2,3 ; 2,4 (Based on 2P matrix)")
     void increaseNearCC2() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int numPlayers = 2;
         board.fillBag(gameRules);
@@ -165,7 +164,7 @@ class BoardTest {
     @DisplayName("allAdjacent: selected tiles on the same row")
     void allAdjacent() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         //Set the coordinates of the 3 selected tiles
         int a=1; int b=3;  int c=1; int d=4;  int e=1; int f=5;
@@ -177,7 +176,7 @@ class BoardTest {
     @DisplayName("allAdjacent: selected tiles on the same column")
     void allAdjacentCC1() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int a=1; int b=3;  int c=2; int d=3;  int e=3; int f=3;
         int[] coordinatesSelected = new int[] {a,b,c,d,e,f};
@@ -188,7 +187,7 @@ class BoardTest {
     @DisplayName("allAdjacent: L-shape pattern selected tiles")
     void allAdjacentCC2() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int a=1; int b=3;  int c=2; int d=3;  int e=2; int f=4;
         int[] coordinatesSelected = new int[] {a,b,c,d,e,f};
@@ -199,7 +198,7 @@ class BoardTest {
     @DisplayName("allAdjacent: selected tiles on the same row but not adjacent")
     void allAdjacentCC3() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int a=1; int b=2;  int c=1; int d=3;  int e=1; int f=5;
         int[] coordinatesSelected = new int[] {a,b,c,d,e,f};
@@ -210,7 +209,7 @@ class BoardTest {
     @DisplayName("allSameRowOrSameColumn: tiles on the same row")
     void allSameRowOrSameColumn() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         //Set the coordinates of the 3 selected tiles
         int a=1; int b=3;  int c=1; int d=4;  int e=1; int f=5;
@@ -222,7 +221,7 @@ class BoardTest {
     @DisplayName("allSameRowOrSameColumn: tiles on the same column")
     void allSameRowOrSameColumnCC1() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int a=1; int b=3;  int c=2; int d=3;  int e=3; int f=3;
         int[] coordinatesSelected = new int[] {a,b,c,d,e,f};
@@ -233,7 +232,7 @@ class BoardTest {
     @DisplayName("allSameRowOrSameColumn: L-shape pattern tiles")
     void allSameRowOrSameColumnCC2() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int a=2; int b=3;  int c=3; int d=3;  int e=3; int f=4;
         int[] coordinatesSelected = new int[] {a,b,c,d,e,f};
@@ -244,7 +243,7 @@ class BoardTest {
     @DisplayName("allSameRowOrSameColumn: tiles on the same column but not adjacent")
     void allSameRowOrSameColumnCC3() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int a=2; int b=3;  int c=3; int d=3;  int e=5; int f=3;
         int[] coordinatesSelected = new int[] {a,b,c,d,e,f};
@@ -255,7 +254,7 @@ class BoardTest {
     @DisplayName("checkSelectable: generic check")
     void checkSelectable() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int numPlayers = 2;
         board.fillBag(gameRules);
@@ -268,7 +267,7 @@ class BoardTest {
     @DisplayName("checkSelectable: only 1 coordinate")
     void checkSelectableCC1() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int numPlayers = 2;
         board.fillBag(gameRules);
@@ -281,7 +280,7 @@ class BoardTest {
     @DisplayName("checkSelectable: 8 coordinate")
     void checkSelectableCC2() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int numPlayers = 2;
         board.fillBag(gameRules);
@@ -294,7 +293,7 @@ class BoardTest {
     @DisplayName("selected: 3 different tiles")
     void selected() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         board.fillBag(gameRules);
         board.firstFillBoard(2, gameRules);
@@ -321,7 +320,7 @@ class BoardTest {
     @DisplayName("resetBoard: generic check")
     void resetBoard() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         board.fillBag(gameRules);
         board.firstFillBoard(2, gameRules);
@@ -339,7 +338,7 @@ class BoardTest {
     @DisplayName("checkRefill: generic false check matrix")
     void checkRefill() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         //Initialize the matrix as you want
         int[][] matrix = {
@@ -379,7 +378,7 @@ class BoardTest {
     @DisplayName("checkRefill: generic true check matrix")
     void checkRefillCC1() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int[][] matrix = {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -417,7 +416,7 @@ class BoardTest {
     @DisplayName("checkRefill: 1 row of tiles remained")
     void checkRefillCC2() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int[][] matrix = {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -455,7 +454,7 @@ class BoardTest {
     @DisplayName("checkRefill: 1 tile remained")
     void checkRefillCC3() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int[][] matrix = {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -493,7 +492,7 @@ class BoardTest {
     @DisplayName("checkRefill: blank board")
     void checkRefillCC4() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         int[][] matrix = {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -531,7 +530,7 @@ class BoardTest {
     @DisplayName("refill: check for box 0,0 (2P)")
     void refill() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         //Set the matrix of the number of players you want to test
         int numPlayers = 2;
@@ -547,7 +546,7 @@ class BoardTest {
     @DisplayName("refill: check for box 6,2 (2P)")
     void refillCC1() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Board board = new Board(modelView);
         //Set the matrix of the number of players you want to test
         int numPlayers = 2;

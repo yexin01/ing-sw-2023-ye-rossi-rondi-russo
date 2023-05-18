@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.listeners.ListenerManager;
 import it.polimi.ingsw.model.modelView.ModelView;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,7 @@ class GameTest {
     @DisplayName("setNextPlayer: generic check")
     void setNextPlayer() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         ArrayList<Player> players = new ArrayList<>();
         players.add(new Player("player1", modelView));
@@ -31,20 +30,20 @@ class GameTest {
     @DisplayName("addPlayers: generic check")
     void addPlayers() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         ArrayList<String> nicknames= new ArrayList<>();
         nicknames.add("player1");
         nicknames.add("player2");
         game.addPlayers(nicknames);
-        assertEquals(nicknames.size(), modelView.getPlayersOrder().size());
+        assertEquals(nicknames.size(), modelView.getPlayerPoints().length);
     }
 
     @Test
     @DisplayName("differentNickname: 2nd player has 1st player nickname")
     void differentNickname() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         ArrayList<Player> players = new ArrayList<>();
         players.add(new Player("player1", modelView));
@@ -56,7 +55,7 @@ class GameTest {
     @DisplayName("differentNickname: 2nd player nickname different from the first one's")
     void differentNicknameCC1() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         ArrayList<Player> players = new ArrayList<>();
         players.add(new Player("player1", modelView));
@@ -68,7 +67,7 @@ class GameTest {
     @DisplayName("differentNickname: 3rd player nickname different from the ones of the other two")
     void differentNicknameCC2() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         ArrayList<Player> players = new ArrayList<>();
         players.add(new Player("player1", modelView));
@@ -81,7 +80,7 @@ class GameTest {
     @DisplayName("createCommonGoalCard: generic check for size and points")
     void createCommonGoalCard() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         ArrayList<Player> players = new ArrayList<>();
         players.add(new Player("player1", modelView));
@@ -101,7 +100,7 @@ class GameTest {
     @DisplayName("updateAdjacentPoints: one 5 tiles group")
     void updateAdjacentPoints() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         Bookshelf bookshelf = new Bookshelf(6,5,3);
@@ -122,7 +121,7 @@ class GameTest {
     @DisplayName("updateAdjacentPoints: one 7 tiles group")
     void updateAdjacentPointsCC1() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         Bookshelf bookshelf = new Bookshelf(6,5,3);
@@ -145,7 +144,7 @@ class GameTest {
     @DisplayName("updateAdjacentPoints: 3 two tiles groups")
     void updateAdjacentPointsCC2() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         Bookshelf bookshelf = new Bookshelf(6,5,3);
@@ -167,7 +166,7 @@ class GameTest {
     @DisplayName("updateAdjacentPoints: 3, 4, 5, 6 tiles groups")
     void updateAdjacentPointsCC3() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         Bookshelf bookshelf = new Bookshelf(6,5,3);
@@ -201,7 +200,7 @@ class GameTest {
     @DisplayName("updatePointsCommonGoals: generic check (2P)")
     void updatePointsCommonGoals() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         Player player1 = new Player("player1", modelView);
         Player player2 = new Player("player2", modelView);
@@ -213,9 +212,9 @@ class GameTest {
         game.setPlayers(players);
         ArrayList<CommonGoalCard> commonGoalCards = new ArrayList<>();
         CommonGoalCard8 commonGoalCard8 = new CommonGoalCard8();
-        commonGoalCard8.setModelView(modelView);
+        modelView.setIdCommon(0,0,7);
         CommonGoalCard9 commonGoalCard9 = new CommonGoalCard9();
-        commonGoalCard9.setModelView(modelView);
+        modelView.setIdCommon(0,1,8);
         commonGoalCards.add(commonGoalCard8);
         commonGoalCards.add(commonGoalCard9);
         game.setCommonGoalCards(commonGoalCards);
@@ -241,7 +240,7 @@ class GameTest {
     @DisplayName("updatePersonalGoalPoints: 6/6 tiles")
     void updatePersonalGoalPoints() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         ArrayList<Player> players = new ArrayList<>();
@@ -256,7 +255,7 @@ class GameTest {
         personalGoalBoxes.add(new PersonalGoalBox(Type.FRAME, 5, 3));
         personalGoalBoxes.add(new PersonalGoalBox(Type.TROPHY, 5, 4));
         personalGoalBoxes.add(new PersonalGoalBox(Type.PLANT, 4, 0));
-        PersonalGoalCard personalGoalCard = new PersonalGoalCard(personalGoalBoxes);
+        PersonalGoalCard personalGoalCard = new PersonalGoalCard(0, personalGoalBoxes);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][1] = new ItemTile(Type.BOOK, tileID); tileID++;
@@ -272,7 +271,7 @@ class GameTest {
     @DisplayName("updatePersonalGoalPoints: 5/6 tiles")
     void updatePersonalGoalPointsCC1() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         ArrayList<Player> players = new ArrayList<>();
@@ -287,7 +286,7 @@ class GameTest {
         personalGoalBoxes.add(new PersonalGoalBox(Type.FRAME, 5, 3));
         personalGoalBoxes.add(new PersonalGoalBox(Type.TROPHY, 5, 4));
         personalGoalBoxes.add(new PersonalGoalBox(Type.PLANT, 4, 0));
-        PersonalGoalCard personalGoalCard = new PersonalGoalCard(personalGoalBoxes);
+        PersonalGoalCard personalGoalCard = new PersonalGoalCard(0, personalGoalBoxes);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][1] = new ItemTile(Type.BOOK, tileID); tileID++;
@@ -303,7 +302,7 @@ class GameTest {
     @DisplayName("updatePersonalGoalPoints: 4/6 tiles")
     void updatePersonalGoalPointsCC2() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         ArrayList<Player> players = new ArrayList<>();
@@ -318,7 +317,7 @@ class GameTest {
         personalGoalBoxes.add(new PersonalGoalBox(Type.FRAME, 5, 3));
         personalGoalBoxes.add(new PersonalGoalBox(Type.TROPHY, 5, 4));
         personalGoalBoxes.add(new PersonalGoalBox(Type.PLANT, 4, 0));
-        PersonalGoalCard personalGoalCard = new PersonalGoalCard(personalGoalBoxes);
+        PersonalGoalCard personalGoalCard = new PersonalGoalCard(0, personalGoalBoxes);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][1] = new ItemTile(Type.BOOK, tileID); tileID++;
@@ -334,7 +333,7 @@ class GameTest {
     @DisplayName("updatePersonalGoalPoints: 3/6 tiles")
     void updatePersonalGoalPointsCC3() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         ArrayList<Player> players = new ArrayList<>();
@@ -349,7 +348,7 @@ class GameTest {
         personalGoalBoxes.add(new PersonalGoalBox(Type.FRAME, 5, 3));
         personalGoalBoxes.add(new PersonalGoalBox(Type.TROPHY, 5, 4));
         personalGoalBoxes.add(new PersonalGoalBox(Type.PLANT, 4, 0));
-        PersonalGoalCard personalGoalCard = new PersonalGoalCard(personalGoalBoxes);
+        PersonalGoalCard personalGoalCard = new PersonalGoalCard(0, personalGoalBoxes);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][1] = new ItemTile(Type.BOOK, tileID); tileID++;
@@ -365,7 +364,7 @@ class GameTest {
     @DisplayName("updatePersonalGoalPoints: 2/6 tiles")
     void updatePersonalGoalPointsCC4() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         ArrayList<Player> players = new ArrayList<>();
@@ -380,7 +379,7 @@ class GameTest {
         personalGoalBoxes.add(new PersonalGoalBox(Type.FRAME, 5, 3));
         personalGoalBoxes.add(new PersonalGoalBox(Type.TROPHY, 5, 4));
         personalGoalBoxes.add(new PersonalGoalBox(Type.PLANT, 4, 0));
-        PersonalGoalCard personalGoalCard = new PersonalGoalCard(personalGoalBoxes);
+        PersonalGoalCard personalGoalCard = new PersonalGoalCard(0, personalGoalBoxes);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][1] = new ItemTile(Type.BOOK, tileID); tileID++;
@@ -396,7 +395,7 @@ class GameTest {
     @DisplayName("updatePersonalGoalPoints: 1/6 tiles")
     void updatePersonalGoalPointsCC5() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         ArrayList<Player> players = new ArrayList<>();
@@ -411,7 +410,7 @@ class GameTest {
         personalGoalBoxes.add(new PersonalGoalBox(Type.FRAME, 5, 3));
         personalGoalBoxes.add(new PersonalGoalBox(Type.TROPHY, 5, 4));
         personalGoalBoxes.add(new PersonalGoalBox(Type.PLANT, 4, 0));
-        PersonalGoalCard personalGoalCard = new PersonalGoalCard(personalGoalBoxes);
+        PersonalGoalCard personalGoalCard = new PersonalGoalCard(0, personalGoalBoxes);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][1] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -427,7 +426,7 @@ class GameTest {
     @DisplayName("updatePersonalGoalPoints: 0/6 tiles")
     void updatePersonalGoalPointsCC6() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         Player player = new Player("player1", modelView);
         ArrayList<Player> players = new ArrayList<>();
@@ -442,7 +441,7 @@ class GameTest {
         personalGoalBoxes.add(new PersonalGoalBox(Type.FRAME, 5, 3));
         personalGoalBoxes.add(new PersonalGoalBox(Type.TROPHY, 5, 4));
         personalGoalBoxes.add(new PersonalGoalBox(Type.PLANT, 4, 0));
-        PersonalGoalCard personalGoalCard = new PersonalGoalCard(personalGoalBoxes);
+        PersonalGoalCard personalGoalCard = new PersonalGoalCard(0, personalGoalBoxes);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.BOOK, tileID); tileID++;
         bookshelf.getMatrix()[5][1] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -458,7 +457,7 @@ class GameTest {
     @DisplayName("checkWinner: generic check")
     void checkWinner () throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(gameRules, 4, modelView);
         ArrayList<String> nicknames = new ArrayList<>();
         nicknames.add("player1"); nicknames.add("player2");

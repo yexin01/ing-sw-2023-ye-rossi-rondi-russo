@@ -59,6 +59,7 @@ public class LobbyDecisionPanel extends BasePanel{
                     alert.setHeaderText(null);
                     alert.setContentText("Wait until other players join");
                     alert.show();
+
                 }
             });
             HBox hBox = new HBox(textField, confirmButton);
@@ -84,6 +85,8 @@ public class LobbyDecisionPanel extends BasePanel{
                     alert1.setTitle("You joined the lobby");
                     alert1.setHeaderText(null);
                     alert1.setContentText("Wait until the game starts");
+
+
                 }
             });
             HBox hBox1 = new HBox(textField1, confirmButton1);
@@ -99,6 +102,8 @@ public class LobbyDecisionPanel extends BasePanel{
                 alert2.setTitle("You joined a random lobby");
                 alert2.setHeaderText(null);
                 alert2.setContentText("Wait until the game starts");
+
+
             });
 
             Button quit = new Button("Quit server");

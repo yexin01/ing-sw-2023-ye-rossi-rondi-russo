@@ -24,8 +24,8 @@ public class FinalRankingPanel extends BasePanel{
         getChildren().add(label1); setAlignment(label1, Pos.TOP_CENTER); label1.setTranslateY(80);
         VBox box = new VBox();
         //box.setMaxSize(500, 200);
-        for ( int i=0; i < clientView.getPlayers().length; i++) {
-            Label label = new Label(clientView.getPlayers()[i]); label.setFont(font2); label.setTextFill(Color.YELLOW);
+        for ( int i=0; i < clientView.getPlayerPointsViews().length; i++) {
+            Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname()+"  points:  "+clientView.getPlayerPointsViews()[i].getPoints()); label.setFont(font2); label.setTextFill(Color.YELLOW);
             box.getChildren().add(label);
         }
         box.setSpacing(60);

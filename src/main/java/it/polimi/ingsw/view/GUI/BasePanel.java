@@ -3,9 +3,12 @@ package it.polimi.ingsw.view.GUI;
 import it.polimi.ingsw.view.ClientView;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -56,6 +59,7 @@ public abstract class BasePanel extends StackPane {
         button.setGraphic(imageView);
         x = imageView.getFitWidth();
         y = imageView.getFitHeight();
+        button.setPadding(new Insets(boardWidth/18));
         return button;
     }
 
@@ -157,7 +161,7 @@ public abstract class BasePanel extends StackPane {
             }
         });
 
-        ImageView personalGoalCard = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\personal goal cards\\Personal_Goals"+(clientView.getIdPersonal()+1)+".png"));
+        ImageView personalGoalCard = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\personal goal cards\\Personal_Goals"+(clientView.getPlayerPersonalGoal().getIdPersonal()+1)+".png"));
         personalGoalCard.setFitWidth(screenBounds.getWidth()*0.5);
         personalGoalCard.setFitHeight(screenBounds.getHeight()*0.5);
         personalGoalCard.setPreserveRatio(true);
@@ -179,7 +183,7 @@ public abstract class BasePanel extends StackPane {
             }
         });
 
-        ImageView commonGoalCard1 = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\common goal cards\\"+(clientView.getIdCommonGoals()[0]+1)+".jpg"));
+        ImageView commonGoalCard1 = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\common goal cards\\"+(clientView.getCommonGoalView()[0][0]+1)+".jpg"));
         commonGoalCard1.setFitWidth(screenBounds.getWidth()*0.35);
         commonGoalCard1.setFitHeight(screenBounds.getHeight()*0.35);
         commonGoalCard1.setPreserveRatio(true);
@@ -201,7 +205,7 @@ public abstract class BasePanel extends StackPane {
             }
         });
 
-        ImageView commonGoalCard2 = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\common goal cards\\"+(clientView.getIdCommonGoals()[1]+1)+".jpg"));
+        ImageView commonGoalCard2 = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\common goal cards\\"+(clientView.getCommonGoalView()[0][1]+1)+".jpg"));
         commonGoalCard2.setFitWidth(screenBounds.getWidth()*0.35);
         commonGoalCard2.setFitHeight(screenBounds.getHeight()*0.35);
         commonGoalCard2.setPreserveRatio(true);
@@ -209,10 +213,12 @@ public abstract class BasePanel extends StackPane {
 
         StackPane stackPane1 = new StackPane(personalGoalCard);
         this.personalGoalCardImage = stackPane1;
-        StackPane stackPane2 = new StackPane(commonGoalCard1);
+        /*StackPane stackPane2 = new StackPane(commonGoalCard1);
         this.commonGoalCard1Image = stackPane2;
         StackPane stackPane3 = new StackPane(commonGoalCard2);
         this.commonGoalCard2Image = stackPane3;
+
+         */
         ImageView parquet = new ImageView("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\misc\\sfondo parquet.jpg");
         parquet.setFitWidth(screenBounds.getWidth()*0.65);
         parquet.setFitHeight(screenBounds.getHeight()*0.65);
@@ -234,28 +240,44 @@ public abstract class BasePanel extends StackPane {
         });
         common1.setOnMouseClicked(mouseEvent -> {
             Platform.runLater(()->{
-                parquet.setVisible(true);
-                stackPane2.setVisible(true);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Common Goal Card 1");
+                alert.setHeaderText(null);
+                VBox content = new VBox(10);
+                content.getChildren().addAll(commonGoalCard1, new Label(commonDescription(clientView.getCommonGoalView()[0][0])));
+                DialogPane dialogPane = alert.getDialogPane();
+                dialogPane.setContent(content);
+                alert.showAndWait();
             });
         });
-        stackPane2.setOnMouseClicked(mouseEvent -> {
+        /*stackPane2.setOnMouseClicked(mouseEvent -> {
             Platform.runLater(()-> {
                 parquet.setVisible(false);
                 stackPane2.setVisible(false);
             });
         });
+
+         */
         common2.setOnMouseClicked(mouseEvent -> {
             Platform.runLater(()->{
-                parquet.setVisible(true);
-                stackPane3.setVisible(true);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Common Goal Card 2");
+                alert.setHeaderText(null);
+                VBox content = new VBox(10);
+                content.getChildren().addAll(commonGoalCard2, new Label(commonDescription(clientView.getCommonGoalView()[0][1])));
+                DialogPane dialogPane = alert.getDialogPane();
+                dialogPane.setContent(content);
+                alert.showAndWait();
             });
         });
-        stackPane3.setOnMouseClicked(mouseEvent -> {
+        /*stackPane3.setOnMouseClicked(mouseEvent -> {
             Platform.runLater(()-> {
                 parquet.setVisible(false);
                 stackPane3.setVisible(false);
             });
         });
+
+         */
 
         Button restore = new Button("Restore info");
         restore.setFont(font);
@@ -383,5 +405,45 @@ public abstract class BasePanel extends StackPane {
         return vBox;
     }
 
-
+    public String commonDescription (int id) {
+        switch (id) {
+            case 0 -> {
+                return "Two groups each containing 4 tiles of the same type in a 2x2 square.\n The tiles of one square can be different from those of the other square.";
+            }
+            case 1 -> {
+                return "Two columns each formed by 6 different types of tiles";
+            }
+            case 2 -> {
+                return "Four groups each containing at least 4 tiles of the same type (not necessarily in the depicted shape).\n The tiles of one group can be different from those of another group";
+            }
+            case 3 -> {
+                return "Six separate groups, each formed by two adjacent tiles of the same type (not necessarily as shown in the figure).\n The tiles of one group can be different from those of another group";
+            }
+            case 4 -> {
+                return "Three columns each formed by 6 tiles of maximum three different types.\n One column can show the same or a different combination of another column";
+            }
+            case 5 -> {
+                return "Two lines each formed by 5 different types of tiles.\n One line can show the same or a different combination of the other line";
+            }
+            case 6 -> {
+                return "Four lines each formed by 5 tiles of maximum three different types.\n One line can show the same or a different combination of another line";
+            }
+            case 7 -> {
+                return "Four tiles of the same type in the four corners of the bookshelf";
+            }
+            case 8 -> {
+                return "Eight tiles of the same type. There’s no restriction about the position of these tiles";
+            }
+            case 9 -> {
+                return "Five tiles of the same type forming an X";
+            }
+            case 10 -> {
+                return "Five tiles of the same type forming a diagonal";
+            }
+            case 11 -> {
+                return "Five columns of increasing or decreasing height. Starting from the first column on the left or on the right,\n each next column must be made of exactly one more tile. Tiles can be of any type";
+            }
+        }
+        return "Error";
+    }
 }

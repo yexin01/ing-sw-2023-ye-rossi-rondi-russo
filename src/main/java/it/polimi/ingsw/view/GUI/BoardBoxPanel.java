@@ -92,10 +92,12 @@ public class BoardBoxPanel extends BasePanel {
                 gridPane.add(button, j, i);
             }
         }
+        gridPane.setBorder(null);
         //gridPane.setMaxSize(x*9, y*9);
 
         getChildren().add(background);
         getChildren().add(gridPane);
+        gridPane.setTranslateX(-3);
 
         VBox box1 = createChoiceBox();
         box1.setPickOnBounds(false);
@@ -126,13 +128,13 @@ public class BoardBoxPanel extends BasePanel {
         VBox vBox2 = createCardsBox(clientView, screenBounds);
         getChildren().add(getParquet());
         getChildren().add(getPersonalGoalCardImage());
-        getChildren().add(getCommonGoalCard1Image());
-        getChildren().add(getCommonGoalCard2Image());
+        //getChildren().add(getCommonGoalCard1Image());
+        //getChildren().add(getCommonGoalCard2Image());
         getChildren().add(getBookshelf());
         getParquet().setVisible(false);
         getPersonalGoalCardImage().setVisible(false);
-        getCommonGoalCard1Image().setVisible(false);
-        getCommonGoalCard2Image().setVisible(false);
+        //getCommonGoalCard1Image().setVisible(false);
+        //getCommonGoalCard2Image().setVisible(false);
         getBookshelf().setVisible(false);
         getBookshelf().setAlignment(Pos.CENTER);
         vBox2.setAlignment(Pos.TOP_RIGHT);

@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.listeners.ListenerManager;
 import it.polimi.ingsw.message.ErrorType;
 import it.polimi.ingsw.model.modelView.ModelView;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +18,7 @@ class PlayerTest {
     @DisplayName("selection: generic 3 tiles check")
     void selection() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Player player = new Player("player1", modelView);
         Board board = new Board(modelView);
         board.fillBag(gameRules);
@@ -44,7 +43,7 @@ class PlayerTest {
     @DisplayName("checkPermuteSelection: out of bounds order index")
     void checkPermuteSelection() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Player player = new Player("player1", modelView);
         Board board = new Board(modelView);
         board.fillBag(gameRules);
@@ -68,7 +67,7 @@ class PlayerTest {
     @DisplayName("checkPermuteSelection: repeated order index")
     void checkPermuteSelectionCC1() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Player player = new Player("player1", modelView);
         Board board = new Board(modelView);
         board.fillBag(gameRules);
@@ -92,7 +91,7 @@ class PlayerTest {
     @DisplayName("permuteSelection: generic check with 3 tiles")
     void permuteSelection() throws Exception {
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(2, gameRules, new ListenerManager());
+        ModelView modelView = new ModelView(2, gameRules);
         Player player = new Player("player1", modelView);
         Board board = new Board(modelView);
         board.fillBag(gameRules);

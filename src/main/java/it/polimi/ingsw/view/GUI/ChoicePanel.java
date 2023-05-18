@@ -74,13 +74,13 @@ public class ChoicePanel extends BasePanel{
         VBox vBox2 = createCardsBox(clientView, screenBounds);
         getChildren().add(getParquet());
         getChildren().add(getPersonalGoalCardImage());
-        getChildren().add(getCommonGoalCard1Image());
-        getChildren().add(getCommonGoalCard2Image());
+        //getChildren().add(getCommonGoalCard1Image());
+        //getChildren().add(getCommonGoalCard2Image());
         getChildren().add(getBookshelf());
         getParquet().setVisible(false);
         getPersonalGoalCardImage().setVisible(false);
-        getCommonGoalCard1Image().setVisible(false);
-        getCommonGoalCard2Image().setVisible(false);
+        //getCommonGoalCard1Image().setVisible(false);
+        //getCommonGoalCard2Image().setVisible(false);
         getBookshelf().setVisible(false);
         getBookshelf().setAlignment(Pos.CENTER);
         vBox2.setAlignment(Pos.TOP_RIGHT);

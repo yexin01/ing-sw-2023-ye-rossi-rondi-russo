@@ -6,6 +6,12 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -41,7 +47,24 @@ public class GUIApplication extends Application implements ClientInterface {
         });
     }
 
-
+    @Override
+    public void displayToken(int num, String nickname) {
+        Platform.runLater(()-> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("ATTENTION");
+            alert.setHeaderText("Token won");
+            Image image = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\scoring tokens\\scoring_"+num+".jpg");
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(200);
+            imageView.setFitHeight(200);
+            imageView.setPreserveRatio(true);
+            VBox content = new VBox(10);
+            content.getChildren().addAll(imageView, new Label(nickname+" won "+num+" points token"));
+            DialogPane dialogPane = alert.getDialogPane();
+            dialogPane.setContent(content);
+            alert.showAndWait();
+        });
+    }
 
 
     @Override
