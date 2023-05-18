@@ -3,6 +3,7 @@ package it.polimi.ingsw.listeners;
 
 import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.message.*;
+import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.*;
 import it.polimi.ingsw.network.server.GameLobby;
 
@@ -18,15 +19,23 @@ public class EndTurnListener extends EventListener{
         System.out.println("STO INVIANDO END, PROSSIMO GIOCATORE");
         System.out.println(playerNickname);
         ModelView model=(ModelView) newValue;
-        BoardBoxView[][] boardView= model.getBoardView();
-        MessageHeader header=new MessageHeader(MessageType.DATA,playerNickname);
+        boolean[] activePlayers=model.getActivePlayers();
+        for(PlayerPointsView nickname: model.getPlayerPoints()){
+            if(activePlayers[model.getIntegerValue(nickname.getNickname())]){
+                getGameLobby().sendMessageToSpecificPlayer(creationMessageEndTurn(nickname.getNickname(),model),nickname.getNickname()) ;
+            }
+        }
+    }
+    public Message creationMessageEndTurn(String nickname,ModelView modelView){
+        BoardBoxView[][] boardView= modelView.getBoardView();
+        MessageHeader header=new MessageHeader(MessageType.DATA,nickname);
         MessagePayload payload=new MessagePayload(TurnPhase.END_TURN);
         payload.put(Data.NEW_BOARD,boardView);
-        payload.put(Data.WHO_CHANGE,playerNickname);
-        payload.put(Data.TOKEN,model.getToken());
-        payload.put(Data.POINTS,model.getPlayerPoints());
-        Message message=new Message(header,payload);
-        getGameLobby().sendMessageToAllPlayers(message);
-
+        payload.put(Data.WHO_CHANGE,modelView.getTurnNickname());
+        payload.put(Data.TOKEN,modelView.getToken());
+        payload.put(Data.POINTS,modelView.checkWinner());
+        payload.put(Data.PERSONAL_POINTS,modelView.getPersonalPoint(nickname));
+        Message m=new Message(header,payload);
+        return m;
     }
 }

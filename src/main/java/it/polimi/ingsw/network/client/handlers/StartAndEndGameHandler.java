@@ -34,6 +34,7 @@ public class StartAndEndGameHandler extends MessageHandler {
                 getClientInterface().getClientView().setBookshelfView(bookshelfView);
                 PersonalGoalCard personalGoalCard=((PersonalGoalCard)mes.getPayload().getContent(Data.PERSONAL_GOAL_CARD));
                 getClientInterface().getClientView().setPlayerPersonalGoal(personalGoalCard);
+                getClientInterface().getClientView().setPersonalPoints((int)mes.getPayload().getContent(Data.PERSONAL_POINTS));
                 int[][] commonGoalsView=((int[][])mes.getPayload().getContent(Data.COMMON_GOAL));
                 getClientInterface().getClientView().setCommonGoalView(commonGoalsView);
                 PlayerPointsView[] playerPointsView=((PlayerPointsView[])mes.getPayload().getContent(Data.POINTS));

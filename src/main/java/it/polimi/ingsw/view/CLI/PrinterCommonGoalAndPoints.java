@@ -295,7 +295,7 @@ public class PrinterCommonGoalAndPoints {
         return cgcDescriptions[i-1];
     }
     public void printToken(int num,String player){
-
+        System.out.println("il token "+num+"   nome  "+player);
     }
 
     public void printPoints(ClientView clientView){

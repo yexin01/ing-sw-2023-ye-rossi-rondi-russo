@@ -35,6 +35,7 @@ public class TurnHandler extends MessageHandler {
                PlayerPointsView[] points=(PlayerPointsView[]) mes.getPayload().getContent(Data.POINTS);
                getClientInterface().getClientView().setPlayerPointsViews(points);
                String player= (String) mes.getPayload().getContent(Data.WHO_CHANGE);
+               getClientInterface().getClientView().setPersonalPoints((int)mes.getPayload().getContent(Data.PERSONAL_POINTS));
                int[] token= (int[]) mes.getPayload().getContent(Data.TOKEN);
                int i=0;
                for(int num:token){
@@ -46,7 +47,6 @@ public class TurnHandler extends MessageHandler {
                 }
                 //é il suo turno
                 if(player.equals(getClientInterface().getClientView().getNickname())){
-                    getClientInterface().stop();
                     getClientInterface().askCoordinates();
                     //non é il suo turno
                 }else{

@@ -14,14 +14,13 @@ import it.polimi.ingsw.network.server.GameLobby;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 
 public class GameController {
 
     private ListenerManager listenerManager;
     //private PhaseController<TurnPhase> turnPhaseController;
-    private boolean[] activePlayers;
+
     private Game game;
 
 
@@ -34,8 +33,6 @@ public class GameController {
         listenerManager.addListener(TurnPhase.END_TURN,new EndTurnListener(gameLobby));
         listenerManager.addListener(Data.PHASE,new TurnListener(gameLobby));
         gameLobby.setStartAndEndGameListener(infoAndEndGameListener);
-        activePlayers=new boolean[nicknames.size()];
-        Arrays.fill(activePlayers, true);
         GameRules gameRules=new GameRules();
         ModelView modelView=new ModelView(nicknames.size(), gameRules);
         modelView.setTurnPhase(TurnPhase.ALL_INFO);
@@ -47,6 +44,7 @@ public class GameController {
 
         game.createCommonGoalCard(gameRules);
         game.createPersonalGoalCard(gameRules);
+        gameLobby.setModelView(modelView);
         listenerManager.fireEvent(TurnPhase.ALL_INFO,null,game.getModelView());
         modelView.setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
     }
@@ -63,8 +61,9 @@ public class GameController {
     public void receiveMessageFromClient(Message message){
         System.out.println("IL PROSSIMO GIOCATORE E: "+getModel().getIntByNickname(getTurnNickname()));
         int i=0;
+        boolean[] activePlayers=game.getModelView().getActivePlayers();
         for(boolean p:activePlayers){
-            System.out.println("GIOCATORE: "+game.getPlayers().get(i).getNickname()+" attivo: "+activePlayers[i]);
+            System.out.println("GIOCATORE: "+game.getPlayers().get(i).getNickname()+" attivo: "+activePlayers[i++]);
         }
         String nicknamePlayer= message.getHeader().getNickname();
         try{
@@ -107,7 +106,8 @@ public class GameController {
     }
     public void disconnectionPlayer(String nickname){
         //TODO disconnection
-        activePlayers=game.disconnectionAndReconnectionPlayer(activePlayers,nickname,false);
+        boolean[] activePlayers=game.getModelView().getActivePlayers();
+        game.getModelView().setActivePlayers(game.disconnectionAndReconnectionPlayer(activePlayers,nickname,false));
         if(nickname.equals(getTurnNickname())){
             //turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
             game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
@@ -123,8 +123,8 @@ public class GameController {
     }
     public void reconnectionPlayer(String nickname){
         System.out.println(nickname.equals(getTurnNickname()));
-        activePlayers=game.disconnectionAndReconnectionPlayer(activePlayers,nickname,true);
-
+        boolean[] activePlayers=game.getModelView().getActivePlayers();
+        game.getModelView().setActivePlayers(game.disconnectionAndReconnectionPlayer(activePlayers,nickname,true));
     }
 
     public void permutePlayerTiles(Message message) throws Exception {
@@ -148,7 +148,6 @@ public class GameController {
         if(errorType!=null){
             checkError(errorType);
         }else{
-            //turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
             game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
             game.getTurnPlayerOfTheGame().insertBookshelf(column);
             System.out.println("finish1");
@@ -163,6 +162,7 @@ public class GameController {
 
     public void finishTurn() {
         game.getBoard().resetBoard();
+        boolean[] activePlayers=game.getModelView().getActivePlayers();
         System.out.println("ULTIMO GIOCATORE CONNESSO ATTIVO è:"+game.getLastPlayer(activePlayers));
         if(game.isEndGame() && getTurnNickname().equals(game.getLastPlayer(activePlayers))){
             endGame();
@@ -171,11 +171,12 @@ public class GameController {
                 game.getBoard().refill();
             }
             game.setNextPlayer(activePlayers);
-            System.out.println("Il prossimo giocatore é "+getTurnNickname());
+            System.out.println("Il prossimo giocatore é "+game.getModelView().getTurnNickname());
             listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
         }
     }
     public void endGame(){
+        boolean[] activePlayers=game.getModelView().getActivePlayers();
         //TODO endGame
         //List<String> ranking=game.checkWinner();
         Arrays.fill(activePlayers, true);
@@ -202,7 +203,8 @@ public class GameController {
         this.listenerManager = listenerManager;
     }
 
-    public boolean[] getActivePlayers(){return activePlayers;};
-    public void setActivePlayers(boolean[] activePlayers){this.activePlayers=activePlayers;};
+    public boolean[] getActivePlayers() {
+        return game.getModelView().getActivePlayers();
+    }
 
 }

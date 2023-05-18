@@ -69,14 +69,7 @@ public class Player {
     public ArrayList<ItemTile> getSelectedItems() {
         return selectedItems;
     }
-    /*
-    public void setSelectedItems(ArrayList<ItemTile> selectedItems) {
-        ArrayList<ItemTile> oldItems=this.selectedItems;
-        this.selectedItems = selectedItems;
-        listeners.firePropertyChange(new PropertyChangeEvent(nickname, "BoardSelection", oldItems, this.selectedItems));
-    }
 
-     */
 
     public void selection(Board board) {
         selectedItems=board.selected();
@@ -114,16 +107,12 @@ public class Player {
 
 
     //SUM OF ALL POINTS
-    private int playerPoints;
-    public int getPlayerPoints() {
-        return playerPoints;
-    }
 
 
-    public void setPlayerPoints(int playerPoints) {
-        this.playerPoints = playerPoints;
+
+    public void setPlayerPoints() {
         modelView.setBookshelfView(bookshelf.cloneBookshelf(),nickname);
-        PlayerPointsView playerPointsView =new PlayerPointsView(playerPoints,commonGoalPoints,personalGoalPoints,adjacentPoints, nickname);
+        PlayerPointsView playerPointsView =new PlayerPointsView(commonGoalPoints,adjacentPoints, nickname);
         modelView.setPlayerPoints(playerPointsView,modelView.getIntegerValue(nickname));
     }
     //PERSONALGOAL

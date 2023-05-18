@@ -42,6 +42,7 @@ public class GameLobby {
         players = new ConcurrentHashMap<>();
         infoAndEndGameListener=new InfoAndEndGameListener(this,globalLobby);
         playersDisconnected = new CopyOnWriteArrayList<>();
+        messageEndGame=null;
     }
 
     /**
@@ -194,23 +195,22 @@ public class GameLobby {
         for(String playersD:playersDisconnected){
             System.out.println("DISCONNESSO "+playersD);
         }
-        if(playersDisconnected.size()==1){
+        if(players.size()==1 && messageEndGame==null ){
             gameController.endGame();
         }
         else if(messageEndGame==null){
             gameController.receiveMessageFromClient(message);
         }else {
             int index=gameController.getModel().getIntByNickname(message.getHeader().getNickname());
-            boolean[] activePlayers = gameController.getActivePlayers();
-            activePlayers[index]=false;
+            gameController.getActivePlayers()[index]=false;
+            System.out.println(message.getHeader().getNickname()+"SETTATO "+gameController.getActivePlayers()[index]);
             boolean allFalse = true;
-            for (boolean value : activePlayers) {
+            for (boolean value : gameController.getActivePlayers()) {
                 if (value) {
                     allFalse = false;
                     break;
                 }
             }
-
             if(allFalse){
                 infoAndEndGameListener.endGame();
             }

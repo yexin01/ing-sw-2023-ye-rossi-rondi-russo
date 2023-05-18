@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
 
 import java.util.*;
-//TODO CAMBIARE LA CREAZIONE DELLE PERSONAL GIAL DIRETTAMENTE DI ITEMTILEVIEW
+//TODO verrà cambiata la gestione degli active players, l'array verrà letto direttamente dalla modelView
 public class Game {
     //private GameInfo gameInfo;
     private ArrayList<Player> players;
@@ -228,8 +228,7 @@ public class Game {
         int i = 0;
         for (Player p : players) {
             commonGoalsSetup=new int[commonGoalCards.size()];
-            Arrays.fill(commonGoalsSetup, 0);
-            PlayerPointsView setupPoints=new PlayerPointsView(0,commonGoalsSetup,0, 0, p.getNickname());
+            PlayerPointsView setupPoints=new PlayerPointsView(commonGoalsSetup,0,p.getNickname());
             modelview.setPlayerPoints(setupPoints,i);
 
             PersonalGoalCard turnPersonal=gameRules.getPersonalGoalCard(numbers.get(i));
@@ -251,25 +250,25 @@ public class Game {
     }
 
 
-    public int updateAdjacentPoints(GameRules gameRules) throws Exception{
+    public void updateAdjacentPoints(GameRules gameRules) throws Exception{
         int[] points= gameRules.getAdjacentArray();
         List<Integer> adjacent= turnBookshelf().findAdjacentTilesGroups();
         if(adjacent.isEmpty()){
-            return 0;
-        }
-        int sum=0;
-        for(int groupSize : adjacent){
-            if (groupSize<2) continue;
-            if((groupSize)>points.length){
-                groupSize=points.length+1;
+            getTurnPlayerOfTheGame().setAdjacentPoints(0);
+        }else{
+            int sum=0;
+            for(int groupSize : adjacent){
+                if (groupSize<2) continue;
+                if((groupSize)>points.length){
+                    groupSize=points.length+1;
+                }
+                sum += points[groupSize-2];
             }
-            sum += points[groupSize-2];
+            getTurnPlayerOfTheGame().setAdjacentPoints(sum);
         }
-        getTurnPlayerOfTheGame().setAdjacentPoints(sum);
-        return sum;
+
     }
-    public int updatePointsCommonGoals(){
-        int points=0;
+    public void updatePointsCommonGoals(){
         for (int i = 0; i< getTurnPlayerOfTheGame().getCommonGoalPoints().length; i++){
             CommonGoalCard c=commonGoalCards.get(i);
             if (getTurnPlayerOfTheGame().getCommonGoalPoints()[i]==0 && true/*c).checkGoal(turnBookshelf().getMatrix())*/){
@@ -278,11 +277,9 @@ public class Game {
                 modelview.setIdCommon(1,i,c.getLastPoint());
                 getTurnPlayerOfTheGame().setToken(i,pointsWon);
             }
-            points=points+ getTurnPlayerOfTheGame().getCommonGoalPoints(i);
         }
-        return points;
     }
-    public int updatePersonalGoalPoints(GameRules gameRules) throws Exception {
+    public void updatePersonalGoalPoints(GameRules gameRules) throws Exception {
         int[] points= gameRules.getPersonalGoalPoints();
         int numScored = 0;
         for (PersonalGoalBox box : turnPersonalGoal().getCells()){
@@ -291,31 +288,24 @@ public class Game {
             }
         }
         getTurnPlayerOfTheGame().setPersonalGoalPoints(points[numScored]);
-        return getTurnPlayerOfTheGame().getPersonalGoalPoints();
     }
 
     public void updateAllPoints() throws Exception {
         GameRules gameRules=new GameRules();
-        getTurnPlayerOfTheGame().setPlayerPoints(updateAdjacentPoints(gameRules)+updatePointsCommonGoals()+ updatePersonalGoalPoints(gameRules));
+        updateAdjacentPoints(gameRules);
+        updatePointsCommonGoals();
+        updatePersonalGoalPoints(gameRules);
+        Player player=getTurnPlayerOfTheGame();
+        PlayerPointsView playerPoints=new PlayerPointsView(player.getCommonGoalPoints(),player.getAdjacentPoints(),player.getNickname());
+        modelview.getPersonalPoints()[modelview.getTurnPlayer()]=player.getPersonalGoalPoints();
+        modelview.getPlayerPoints()[modelview.getTurnPlayer()]=playerPoints;
     }
-
-
 
     public PersonalGoalCard turnPersonalGoal(){return getTurnPlayerOfTheGame().getPersonalGoalCard();}
 
     public Bookshelf turnBookshelf(){return getTurnPlayerOfTheGame().getBookshelf();}
 
-    public List<String> checkWinner() {
-        List<String> ranking = Collections.unmodifiableList(
-                players.stream()
-                        .sorted(Comparator.comparingInt(Player::getPlayerPoints).reversed())
-                        .map(Player::getNickname)
-                        .toList());
 
-        return ranking;
-        //TODO: check exception error when using List instead of ArrayList
-        //throw new RuntimeException();
-    }
     public int deletePlayer(String nickname) {
         int index=modelview.deleteAllObjectByIndex(nickname);
         players.remove(index);

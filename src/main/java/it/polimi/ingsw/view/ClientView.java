@@ -18,6 +18,7 @@ public class ClientView {
     private BoardBoxView[][] boardView;
     private int[] orderTiles;
     private ArrayList<Integer> coordinatesSelected;
+    private int personalPoints;
 
 
     private int[][] commonGoalView;
@@ -31,13 +32,8 @@ public class ClientView {
     private String nickname;
     private int column;
 
-    public ClientView(){
-
-
-    }
 
     public String getNickname(){
-
         return nickname;
     }
 
@@ -156,5 +152,13 @@ public class ClientView {
 
     public void setPlayerPointsViews(PlayerPointsView[] playerPointsViews) {
         this.playerPointsViews = playerPointsViews;
+    }
+
+    public int getPersonalPoints() {
+        return personalPoints;
+    }
+
+    public void setPersonalPoints(int personalPoints) {
+        this.personalPoints = personalPoints;
     }
 }

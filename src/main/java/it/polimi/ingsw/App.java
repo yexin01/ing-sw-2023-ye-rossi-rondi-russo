@@ -3,11 +3,15 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.controller.GameController;
 
 import it.polimi.ingsw.controller.TurnPhase;
+import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.Bookshelf;
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Type;
 import it.polimi.ingsw.model.modelView.ItemTileView;
+import it.polimi.ingsw.model.modelView.ModelView;
+import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.network.server.GameLobby;
 import it.polimi.ingsw.view.CLI.CLI;
 import it.polimi.ingsw.view.CLI.Colors;
@@ -22,15 +26,27 @@ public class App{
 
         public static void main(String[] args) throws Exception {
             CLI cli=new CLI();
-            //cli.endGame();
-
-
+            ArrayList<String> playerNames = new ArrayList<>(List.of("TIZIO", "CAIO", "SEMPRONIO", "PIPPO"));
+         ModelView mo=new ModelView(4,new GameRules());
+         PlayerPointsView[] pl=new PlayerPointsView[4];
+         pl[0]=new PlayerPointsView(new int[]{0,1},0,"TIZIO1");
+         pl[0].getPoints();
+         pl[1]=new PlayerPointsView(new int[]{2,1},3,"TIZIO2");
+         pl[1].getPoints();
+         pl[2]=new PlayerPointsView(new int[]{0,1},4,"TIZIO3");
+         pl[2].getPoints();
+         pl[3]=new PlayerPointsView(new int[]{5,1},5,"TIZIO4");
+         mo.setPlayersPoints(pl);
+         mo.checkWinner();
+         int[] personal=new int[]{1,2,3,4};
+         mo.setPersonalPoints(personal);
+         mo.winnerEndGame();
 
 
 
 
             GameLobby gameLobby = new GameLobby(3, 3,null);
-            ArrayList<String> playerNames = new ArrayList<>(List.of("TIZIO", "CAIO", "SEMPRONIO", "PIPPO"));
+
             GameController gameController = new GameController(gameLobby, playerNames,null);
             //gameLobby.handleErrorFromClient(new Message(new MessageHeader(MessageType.ERROR,"TIZIO"),null));
            MessageHeader header=new MessageHeader(MessageType.DATA, gameController.getTurnNickname());

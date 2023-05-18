@@ -6,15 +6,19 @@ import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.model.PersonalGoalCard;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
 public class ModelView {
 
     private int turnPlayer;
+    private boolean[] activePlayers;
 
     private int[][] commonGoalView;
     private int[] token;
+    private int[] personalPoints;
 
     private BoardBoxView[][] boardView;
 
@@ -30,8 +34,11 @@ public class ModelView {
         bookshelfView=new ItemTileView[numPlayers][gameRules.getRowsBookshelf()][gameRules.getColumnsBookshelf()];
         playerPoints=new PlayerPointsView[numPlayers];
         playerPersonalGoal=new PersonalGoalCard[numPlayers];
+        activePlayers=new boolean[numPlayers];
+        Arrays.fill(activePlayers, true);
         commonGoalView =new int[gameRules.getNumOfCommonGoals()][2];
         token=new int[gameRules.getNumOfCommonGoals()];
+        personalPoints=new int[numPlayers];
     }
 
     public int getIntegerValue(String nickname) {
@@ -57,6 +64,7 @@ public class ModelView {
 
     public int deleteAllObjectByIndex(String nickname){
         int index=getIntegerValue(nickname);
+
         playerPoints = deleteObjectByIndex(playerPoints, index);
         playerPersonalGoal=deleteObjectByIndex(playerPersonalGoal,index);
         bookshelfView=deleteObjectByIndex(bookshelfView,index);
@@ -64,6 +72,29 @@ public class ModelView {
         //playersOrder.remove(nickname);
         return index;
 
+    }
+    public void winnerEndGame() {
+        Integer[] indices = new Integer[playerPoints.length];
+        for (int i = 0; i < playerPoints.length; i++) {
+            indices[i] = i;
+        }
+
+        Arrays.sort(indices, Comparator.comparingInt(index -> playerPoints[index].getPoints() + personalPoints[index]));
+
+        PlayerPointsView[] sortedPlayerPoints = new PlayerPointsView[playerPoints.length];
+        int[] sortedPersonalPoints = new int[personalPoints.length];
+
+        for (int i = 0; i < playerPoints.length; i++) {
+            sortedPlayerPoints[i] = playerPoints[indices[i]];
+            sortedPersonalPoints[i] = personalPoints[indices[i]];
+        }
+
+        playerPoints = sortedPlayerPoints;
+        personalPoints = sortedPersonalPoints;
+        int i=0;
+        for (PlayerPointsView obj : playerPoints) {
+            System.out.println(obj.getPoints()+"  "+personalPoints[i++]+" "+obj.getNickname());
+        }
     }
 
 
@@ -84,7 +115,9 @@ public class ModelView {
         this.playerPoints[index] = playerPoints;
     }
 
-
+    public int getPersonalPoint(String nickname) {
+        return personalPoints[getIntegerValue(nickname)];
+    }
 
 
 
@@ -99,6 +132,25 @@ public class ModelView {
         return playerPersonalGoal[getIntegerValue(nickname)] ;
     }
 
+    public PlayerPointsView[] checkWinner() {
+        PlayerPointsView[] sortedObjects = Arrays.copyOf(playerPoints, playerPoints.length);
+
+        Arrays.sort(sortedObjects, Comparator.comparingInt(PlayerPointsView::getPoints));
+
+
+        for (PlayerPointsView obj : playerPoints) {
+            System.out.println(obj.getPoints()+" "+obj.getNickname());
+        }
+        for (PlayerPointsView obj : sortedObjects) {
+            System.out.println(obj.getPoints()+" "+obj.getNickname());
+        }
+        return sortedObjects;
+    }
+    public String getTurnNickname(){
+        return playerPoints[turnPlayer].getNickname();
+    }
+
+
 
 
     public ItemTileView[] getSelectedItems() {
@@ -106,6 +158,7 @@ public class ModelView {
     }
 
     public void setSelectedItems(ItemTileView[] selectedItems) {
+        this.token=new int[commonGoalView[0].length];
         this.selectedItems = selectedItems;
     }
 
@@ -164,6 +217,21 @@ public class ModelView {
 
     public void setToken(int[] token) {
         this.token = token;
+    }
+
+    public int[] getPersonalPoints() {
+        return personalPoints;
+    }
+
+    public void setPersonalPoints(int[] personalPoints) {
+        this.personalPoints = personalPoints;
+    }
+    public boolean[] getActivePlayers() {
+        return activePlayers;
+    }
+
+    public void setActivePlayers(boolean[] activePlayers) {
+        this.activePlayers = activePlayers;
     }
 }
 
