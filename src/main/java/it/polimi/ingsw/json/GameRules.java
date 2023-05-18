@@ -1,5 +1,6 @@
 package it.polimi.ingsw.json;
 
+import com.google.gson.Gson;
 import it.polimi.ingsw.model.PersonalGoalBox;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.Type;
@@ -8,13 +9,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class GameRules {
     private JSONObject json;
-    private String boardJsonFile="src/main/java/it/polimi/ingsw/json/gameRules.json";
+    private String boardJsonFile="gameRules.json";
     public GameRules() throws Exception {
         this.json = readJsonFromFile();
     }
@@ -141,6 +141,7 @@ public class GameRules {
     }
 
     private JSONObject readJsonFromFile() throws Exception {
+        /* questo di giulia
         JSONParser parser = new JSONParser();
         try {
             Object obj = parser.parse(new FileReader(boardJsonFile));
@@ -148,6 +149,40 @@ public class GameRules {
         } catch (IOException | ParseException e) {
             throw new Exception("Error reading JSON file: " + e.getMessage());
         }
+
+         */
+
+
+        /*
+        InputStream inputStream = getClass().getResourceAsStream(boardJsonFile);
+
+        // Create a reader from the input stream
+        Reader reader = new InputStreamReader(inputStream);
+
+        // Use org.json library to parse the JSON and create a JSONObject
+        JSONObject jsonObject = new JSONObject(new JSONTokener(reader));
+
+
+         */
+
+
+
+
+        JSONParser parser = new JSONParser();
+        try {
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(boardJsonFile);
+            if (inputStream != null) {
+                InputStreamReader reader = new InputStreamReader(inputStream);
+                Object obj = parser.parse(reader);
+                return (JSONObject) obj;
+            } else {
+                throw new Exception("JSON file not found in resources folder");
+            }
+        } catch (IOException | ParseException e) {
+            throw new Exception("Error reading JSON file: " + e.getMessage());
+        }
+
+
     }
 
     private int[][] parseMatrix(JSONArray matrixData) {
