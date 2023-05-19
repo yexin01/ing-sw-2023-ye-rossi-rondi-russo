@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
 
 import java.util.*;
-//TODO verrà cambiata la gestione degli active players, l'array verrà letto direttamente dalla modelView
+
 public class Game {
     private ArrayList<Player> players;
     private final ModelView modelview;
@@ -15,7 +15,7 @@ public class Game {
     private ArrayList<CommonGoalCard> commonGoalCards;
     private boolean endGame;
 
-//TODO cambiare creazione senza numMaxPlayer controllo gia effettuato prima
+
     public Game(ModelView modelview){
         commonGoalCards=new ArrayList<>();
         this.modelview=modelview;
@@ -51,8 +51,8 @@ public class Game {
         return modelview.getIntegerValue(nickname);
     }
 
-    public void setNextPlayer(boolean[] activePlayers) {
-        // in case a player abandons the game and is the last one, index is > of players.size()-1
+    public void setNextPlayer() {
+        boolean[] activePlayers=modelview.getActivePlayers();
         do{
             if(turnPlayerInt() >= (players.size() - 1))
                 setTurnPlayer(0);
@@ -60,7 +60,8 @@ public class Game {
         }while(!activePlayers[turnPlayerInt()]);
         System.out.println("Il prossimo giocatore che deve giocare ed é attivo é: "+players.get(turnPlayerInt()).getNickname());
     }
-    public boolean[] disconnectionAndReconnectionPlayer(boolean[] activePlayers,String nickname,boolean discOrRec) {
+    public boolean[] disconnectionAndReconnectionPlayer(String nickname,boolean discOrRec) {
+        boolean[] activePlayers=modelview.getActivePlayers();
         for(int i=0;i<players.size();i++){
             if(players.get(i).getNickname().equals(nickname)){
                 activePlayers[i]=discOrRec;

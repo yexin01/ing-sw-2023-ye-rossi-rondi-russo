@@ -106,25 +106,18 @@ public class GameController {
     }
     public void disconnectionPlayer(String nickname){
         //TODO disconnection
-        boolean[] activePlayers=game.getModelView().getActivePlayers();
-        game.getModelView().setActivePlayers(game.disconnectionAndReconnectionPlayer(activePlayers,nickname,false));
+        game.getModelView().setActivePlayers(game.disconnectionAndReconnectionPlayer(nickname,false));
         if(nickname.equals(getTurnNickname())){
             //turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
             game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
-            game.setNextPlayer(activePlayers);
-            int i=0;
-            for (Player str : game.getPlayers()) {
-                System.out.print(str.getNickname());
-                System.out.println(activePlayers[i++]);
-            }
+            game.setNextPlayer();
             listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
         }
 
     }
     public void reconnectionPlayer(String nickname){
         System.out.println(nickname.equals(getTurnNickname()));
-        boolean[] activePlayers=game.getModelView().getActivePlayers();
-        game.getModelView().setActivePlayers(game.disconnectionAndReconnectionPlayer(activePlayers,nickname,true));
+        game.getModelView().setActivePlayers(game.disconnectionAndReconnectionPlayer(nickname,true));
     }
 
     public void permutePlayerTiles(Message message) throws Exception {
@@ -170,12 +163,9 @@ public class GameController {
             if(game.getBoard().checkRefill()){
                 game.getBoard().refill();
             }
-            game.setNextPlayer(activePlayers);
+            game.setNextPlayer();
             System.out.println("Il prossimo giocatore é "+game.getModelView().getTurnNickname());
-            game.getModelView().winnerEndGame();
-            Arrays.fill(game.getModelView().getActivePlayers(), true);
-            listenerManager.fireEvent(TurnPhase.END_GAME,getTurnNickname(),game.getModelView());
-            //listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
+            listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
         }
     }
     public void endGame(){
