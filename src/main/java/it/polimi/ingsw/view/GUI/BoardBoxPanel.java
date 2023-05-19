@@ -35,6 +35,7 @@ public class BoardBoxPanel extends BasePanel {
         this.choicePanel = choicePanel;
 
         coordinatesSelected.clear();
+        choicePanel.clear();
         selectedCount = 0;
 
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();

@@ -139,9 +139,9 @@ public class GUIApplication extends Application implements ClientInterface {
     }
 
     @Override
-    public void endGame() {
+    public void endGame(int[] personalPoints) {
         Platform.runLater(()-> {
-            FinalRankingPanel finalRankingPanel = new FinalRankingPanel(clientView);
+            FinalRankingPanel finalRankingPanel = new FinalRankingPanel(clientView, personalPoints);
             Scene scene = new Scene(finalRankingPanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
             stage.show();

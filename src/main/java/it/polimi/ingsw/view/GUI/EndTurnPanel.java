@@ -13,15 +13,21 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
+import java.util.Objects;
+
 public class EndTurnPanel extends BasePanel {
     private ClientView clientView;
     private double x;
     private double y;
     private double z;
     private double w;
+    Color[] colors= new Color [] {Color.YELLOW, Color.SILVER, Color.SANDYBROWN, Color.WHITE};
+    private int counter;
+
 
     public EndTurnPanel(ClientView clientView) {
         this.clientView = clientView;
+        counter = 0;
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         Image backgroundImage = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\misc\\base_pagina2.jpg");
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, false, false);
@@ -45,9 +51,9 @@ public class EndTurnPanel extends BasePanel {
             for (int j = 0; j < 9; j++) {
                 Button button;
                 if (clientView.getBoardView()[i][j].getItemTileView().getTypeView() != null) {
-                    button = createBoardButton(clientView, screenBounds.getWidth() * 0.32 / 9, screenBounds.getHeight() * 0.32 / 9, i, j, true);
+                    button = createBoardButton(clientView, screenBounds.getWidth() * 0.35 / 9, screenBounds.getHeight() * 0.35 / 9, i, j, true);
                 } else {
-                    button = createBoardButton(clientView, screenBounds.getWidth() * 0.32 / 9, screenBounds.getHeight() * 0.32 / 9, i, j, false);
+                    button = createBoardButton(clientView, screenBounds.getWidth() * 0.35 / 9, screenBounds.getHeight() * 0.35 / 9, i, j, false);
                 }
                 board.add(button, j, i);
             }
@@ -83,20 +89,35 @@ public class EndTurnPanel extends BasePanel {
 
         Font font = new Font("Poor Richard", 25);
         Font font1 = new Font("Poor Richard", 22);
+        Font font2 = new Font("Poor Richard", 17);
         VBox vBox3 = new VBox();
         vBox3.setMaxSize(450, 200);
-        for (int i=0; i<clientView.getPlayerPointsViews().length; i++) {
-            Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname()+"   points:    "+clientView.getPlayerPointsViews()[i].getPoints());
-            label.setFont(font); label.setTextFill(Color.YELLOW);
-            vBox3.getChildren().add(label);
+        for (int i=(clientView.getPlayerPointsViews().length-1); i>-1; i--) {
+            VBox vBox = new VBox();
+            if (Objects.equals(clientView.getPlayerPointsViews()[i].getNickname(), clientView.getNickname())) {
+                Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname() + "   points:    " + clientView.getPlayerPointsViews()[i].getPoints());
+                label.setFont(font); label.setTextFill(colors[counter]);
+                Label label1 = new Label("Common goal points: "+(clientView.getPlayerPointsViews()[i].getPointsToken(0)+clientView.getPlayerPointsViews()[i].getPointsToken(1))+"   Adjacent tiles points: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal points: "+clientView.getPersonalPoints());
+                label1.setFont(font2); label1.setTextFill(colors[counter]);
+                vBox3.getChildren().addAll(label, label1);
+            } else {
+                Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname() + "   points:    " + clientView.getPlayerPointsViews()[i].getPoints());
+                label.setFont(font);
+                label.setTextFill(colors[counter]);
+                Label label1 = new Label("Common goal points: "+(clientView.getPlayerPointsViews()[i].getPointsToken(0)+clientView.getPlayerPointsViews()[i].getPointsToken(1))+"   Adjacent tiles points: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal points: ?");
+                label1.setFont(font2); label1.setTextFill(colors[counter]);
+                vBox3.getChildren().addAll(label, label1);
+            }
+            vBox3.getChildren().add(vBox);
+            counter++;
         }
         //Label label2 = new Label(clientView.getNickname().toUpperCase()+":"); label2.setFont(new Font("Poor Richard", 26)); label2.setTextFill(Color.YELLOW);
         //Label label3 = new Label("Total points:    "+clientView.getPlayerPointsViews().getPoints()); label3.setFont(font); label3.setTextFill(Color.WHITE);
         //Label label4 = new Label("Personal Goal points:    "+clientView.getPlayerPoints().getPersonalGoalPoints()); label4.setFont(font); label4.setTextFill(Color.WHITE);
         //Label label5 = new Label("Adjacent tiles points:    "+clientView.getPlayerPoints().getAdjacentPoints()); label5.setFont(font); label5.setTextFill(Color.WHITE);
-        Label label6 = new Label("Common Goal Card 1 points left:    "+clientView.getCommonGoalView()[1][0]); label6.setFont(font1); label6.setTextFill(Color.RED);
-        Label label7 = new Label("Common Goal Card 2 points left:    "+clientView.getCommonGoalView()[1][1]); label7.setFont(font1); label7.setTextFill(Color.RED);
-        vBox3.setSpacing(15);
+        Label label6 = new Label("Common Goal Card 1 points left:    "+clientView.getCommonGoalView()[1][0]); label6.setFont(font1); label6.setTextFill(Color.LIGHTGREEN);
+        Label label7 = new Label("Common Goal Card 2 points left:    "+clientView.getCommonGoalView()[1][1]); label7.setFont(font1); label7.setTextFill(Color.LIGHTGREEN);
+        vBox3.setSpacing(10);
         vBox3.getChildren().addAll(label6, label7);
         vBox3.setAlignment(Pos.CENTER);
         //label2.setAlignment(Pos.TOP_CENTER);
@@ -104,8 +125,8 @@ public class EndTurnPanel extends BasePanel {
         //label4.setAlignment(Pos.CENTER);
         //label5.setAlignment(Pos.CENTER);
         getChildren().add(vBox3);
-        setAlignment(vBox3, Pos.BOTTOM_CENTER);
-        vBox3.setTranslateY(-190);
+        setAlignment(vBox3, Pos.CENTER);
+        vBox3.setTranslateY(150);
 
         Label label = new Label("THE BOARD:"); label.setFont(font); label.setTextFill(Color.YELLOW);
         Label label1 = new Label("YOUR BOOKSHELF:"); label1.setFont(font); label1.setTextFill(Color.YELLOW);

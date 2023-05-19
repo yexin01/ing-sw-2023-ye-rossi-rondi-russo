@@ -408,40 +408,40 @@ public abstract class BasePanel extends StackPane {
     public String commonDescription (int id) {
         switch (id) {
             case 0 -> {
-                return "Two groups each containing 4 tiles of the same type in a 2x2 square.\n The tiles of one square can be different from those of the other square.";
+                return "Two groups each containing 4 tiles of the same type in a 2x2 square.\nThe tiles of one square can be different from those of the other square.";
             }
             case 1 -> {
-                return "Two columns each formed by 6 different types of tiles";
+                return "Two columns each formed by 6 different types of tiles.";
             }
             case 2 -> {
-                return "Four groups each containing at least 4 tiles of the same type (not necessarily in the depicted shape).\n The tiles of one group can be different from those of another group";
+                return "Four groups each containing at least 4 tiles of the same type (not necessarily in the depicted shape).\nThe tiles of one group can be different from those of another group.";
             }
             case 3 -> {
-                return "Six separate groups, each formed by two adjacent tiles of the same type (not necessarily as shown in the figure).\n The tiles of one group can be different from those of another group";
+                return "Six separate groups, each formed by two adjacent tiles of the same type (not necessarily as shown in the figure).\nThe tiles of one group can be different from those of another group.";
             }
             case 4 -> {
-                return "Three columns each formed by 6 tiles of maximum three different types.\n One column can show the same or a different combination of another column";
+                return "Three columns each formed by 6 tiles of maximum three different types.\nOne column can show the same or a different combination of another column.";
             }
             case 5 -> {
-                return "Two lines each formed by 5 different types of tiles.\n One line can show the same or a different combination of the other line";
+                return "Two lines each formed by 5 different types of tiles.\nOne line can show the same or a different combination of the other line.";
             }
             case 6 -> {
-                return "Four lines each formed by 5 tiles of maximum three different types.\n One line can show the same or a different combination of another line";
+                return "Four lines each formed by 5 tiles of maximum three different types.\nOne line can show the same or a different combination of another line.";
             }
             case 7 -> {
-                return "Four tiles of the same type in the four corners of the bookshelf";
+                return "Four tiles of the same type in the four corners of the bookshelf.";
             }
             case 8 -> {
-                return "Eight tiles of the same type. There’s no restriction about the position of these tiles";
+                return "Eight tiles of the same type. There’s no restriction about the position of these tiles.";
             }
             case 9 -> {
-                return "Five tiles of the same type forming an X";
+                return "Five tiles of the same type forming an X.";
             }
             case 10 -> {
-                return "Five tiles of the same type forming a diagonal";
+                return "Five tiles of the same type forming a diagonal.";
             }
             case 11 -> {
-                return "Five columns of increasing or decreasing height. Starting from the first column on the left or on the right,\n each next column must be made of exactly one more tile. Tiles can be of any type";
+                return "Five columns of increasing or decreasing height. Starting from the first column on the left or on the right,\neach next column must be made of exactly one more tile. Tiles can be of any type.";
             }
         }
         return "Error";

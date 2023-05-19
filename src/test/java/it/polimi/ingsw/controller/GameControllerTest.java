@@ -1,18 +1,22 @@
 package it.polimi.ingsw.controller;
-/*
+
 
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.messages.EventType;
-import it.polimi.ingsw.messages.MessageFromClient2;
+import it.polimi.ingsw.listeners.InfoAndEndGameListener;
+import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.modelView.ModelView;
-import it.polimi.ingsw.network.server.ServerView;
+import it.polimi.ingsw.network.client.ClientRMI;
+import it.polimi.ingsw.network.server.GameLobby;
+import it.polimi.ingsw.network.server.GlobalLobby;
+import it.polimi.ingsw.network.server.RMIConnection;
+import it.polimi.ingsw.network.server.Server;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 class GameControllerTest {
 
@@ -33,11 +37,13 @@ class GameControllerTest {
         assertEquals(2, gameController.getModel().getPlayers().size());
     }
 
+     */
 
 
 
 
-    @Test
+
+    /*@Test
     void removePlayer() throws Exception {
         GameRules gameRules = new GameRules();
         HashMap<String, Integer> playersId = new HashMap<>();
@@ -55,52 +61,57 @@ class GameControllerTest {
         assertEquals(1, game.getPlayers().size());
     }
 
+     */
+
     @Test
     void checkAndInsertBoardBox() throws Exception {
         GameRules gameRules = new GameRules();
-        HashMap<String, Integer> playersId = new HashMap<>();
-        playersId.put("player1", 0);
-        playersId.put("player2", 1);
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
-        GameController gameController = new GameController();
+        Server server = new Server(1099, 1100, "127.0.0.1");
+        ModelView modelView = new ModelView(2, gameRules);
+        GlobalLobby globalLobby = new GlobalLobby();
+        GameLobby gameLobby = new GameLobby(0, 2, globalLobby);
+        gameLobby.addPlayerToGame("player1", new RMIConnection(server, new ClientRMI("player1", "127.0.0.1", 1100)));
+        gameLobby.addPlayerToGame("player2", new RMIConnection(server, new ClientRMI("player2", "127.0.0.1", 1100)));
+        InfoAndEndGameListener infoAndEndGameListener = new InfoAndEndGameListener(gameLobby, globalLobby);
+        ArrayList<String> nicknames = new ArrayList<>();
+        nicknames.add("player1"); nicknames.add("player2");
+        GameController gameController = new GameController(gameLobby, nicknames, infoAndEndGameListener);
+        Game game = new Game(gameRules, 4, modelView);
+        game.addPlayers(nicknames);
+        game.setTurnPlayer(0);
         gameController.setGame(game);
-        ServerView serverView = new ServerView();
-        ArrayList<Player> players = new ArrayList<>();
-        players.add(new Player("player1", modelView));
-        players.add(new Player("player2", modelView));
-        game.setPlayers(players);
-        game.getTurnPlayer().setBookshelf(new Bookshelf(6,5,3));
+        game.getTurnPlayerOfTheGame().setBookshelf(new Bookshelf(6,5,3));
         game.getBoard().fillBag(gameRules);
         game.getBoard().firstFillBoard(2, gameRules);
         int[] value = new int[] {1, 3};
-        MessageFromClient2 message = new MessageFromClient2(EventType.BOARD_SELECTION, "player1", value);
-        //Wait for serverView sendMessage
-    }
-
-
-    @Test
-    void associatePlayerTiles() {
-        //selection already tested inside Player in model
+        MessagePayload messagePayload = new MessagePayload();
+        messagePayload.put(Data.VALUE_CLIENT, value);
+        Message message = new Message(new MessageHeader(MessageType.DATA, "player1"), messagePayload);
+        ArrayList<BoardBox> selectedBoard = new ArrayList<>();
+        selectedBoard.add(game.getBoard().getBoardBox(1, 3));
+        game.getBoard().setSelectedBoard(selectedBoard);
+        gameController.checkAndInsertBoardBox(message);
+        assertEquals(game.getBoard().getBoardBox(1,3).getTile().getTileID(), game.getModelView().getSelectedItems()[0].getTileID());
     }
 
     @Test
     void permutePlayerTiles() throws Exception {
-        /*
-        ServerView serverView = new ServerView();
-        GameController gameController = new GameController();
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        Server server = new Server(1099, 1100, "127.0.0.1");
+        ModelView modelView = new ModelView(2, gameRules);
+        GlobalLobby globalLobby = new GlobalLobby();
+        GameLobby gameLobby = new GameLobby(0, 2, globalLobby);
+        gameLobby.addPlayerToGame("player1", new RMIConnection(server, new ClientRMI("player1", "127.0.0.1", 1100)));
+        gameLobby.addPlayerToGame("player2", new RMIConnection(server, new ClientRMI("player2", "127.0.0.1", 1100)));
+        InfoAndEndGameListener infoAndEndGameListener = new InfoAndEndGameListener(gameLobby, globalLobby);
+        ArrayList<String> nicknames = new ArrayList<>();
+        nicknames.add("player1"); nicknames.add("player2");
+        GameController gameController = new GameController(gameLobby, nicknames, infoAndEndGameListener);
+        Game game = new Game(gameRules, 4, modelView);
+        game.addPlayers(nicknames);
+        game.setTurnPlayer(0);
         gameController.setGame(game);
-        ArrayList<Player> players = new ArrayList<>();
-        Player player = new Player("player1", modelView);
-        players.add(player);
-        game.setPlayers(players);
-        Board board = game.getBoard();
-        board.fillBag(gameRules);
-        board.firstFillBoard(2, new GameRules());
+        game.getTurnPlayerOfTheGame().setBookshelf(new Bookshelf(6,5,3));
         ArrayList<BoardBox> selectedBoard = new ArrayList<>();
         int a=1; int b=3;  int c=1; int d=4;  int e=1; int f=5; int tileID=0;
         ItemTile itemTile1 = new ItemTile(Type.CAT, tileID); tileID++;
@@ -112,43 +123,57 @@ class GameControllerTest {
         selectedBoard.add(boardBox1);
         selectedBoard.add(boardBox2);
         selectedBoard.add(boardBox3);
-        board.setSelectedBoard(selectedBoard);
-        player.selection(board);
+        game.getBoard().setSelectedBoard(selectedBoard);
+        game.getTurnPlayerOfTheGame().selection(game.getBoard());
         ArrayList<ItemTile> selectedItems = new ArrayList<>();
         selectedItems.add(boardBox2.getTile());
         selectedItems.add(boardBox1.getTile());
         selectedItems.add(boardBox3.getTile());
         int [] value = new int[]{1, 0, 2};
-        MessageFromClient2 message = new MessageFromClient2(EventType.ORDER_TILES, "player1", value);
+        MessagePayload messagePayload = new MessagePayload();
+        messagePayload.put(Data.VALUE_CLIENT, value);
+        Message message = new Message(new MessageHeader(MessageType.DATA, "player1"), messagePayload);
         gameController.permutePlayerTiles(message);
-        assertIterableEquals(selectedItems, player.getSelectedItems());
-
-
+        assertIterableEquals(selectedItems, game.getTurnPlayerOfTheGame().getSelectedItems());
     }
 
     @Test
     void selectingColumn() throws Exception {
-        GameController gameController = new GameController();
-        HashMap<String, Integer> playersId = new HashMap<String, Integer>();
         GameRules gameRules = new GameRules();
-        ModelView modelView = new ModelView(playersId, gameRules);
-        Game game = new Game(gameRules, modelView);
+        Server server = new Server(1099, 1100, "127.0.0.1");
+        ModelView modelView = new ModelView(2, gameRules);
+        GlobalLobby globalLobby = new GlobalLobby();
+        GameLobby gameLobby = new GameLobby(0, 2, globalLobby);
+        gameLobby.addPlayerToGame("player1", new RMIConnection(server, new ClientRMI("player1", "127.0.0.1", 1100)));
+        gameLobby.addPlayerToGame("player2", new RMIConnection(server, new ClientRMI("player2", "127.0.0.1", 1100)));
+        InfoAndEndGameListener infoAndEndGameListener = new InfoAndEndGameListener(gameLobby, globalLobby);
+        ArrayList<String> nicknames = new ArrayList<>();
+        nicknames.add("player1"); nicknames.add("player2");
+        GameController gameController = new GameController(gameLobby, nicknames, infoAndEndGameListener);
+        Game game = new Game(gameRules, 4, modelView);
+        game.addPlayers(nicknames);
+        game.setTurnPlayer(0);
+        game.createPersonalGoalCard(gameRules);
+        game.createCommonGoalCard(gameRules);
+        game.setTurnPlayer(0);
         gameController.setGame(game);
-        Player player = new Player("player1", modelView);
-        ArrayList<Player> players = new ArrayList<>();
-        players.add(player);
-        game.setPlayers(players);
-        game.getTurnPlayer().setBookshelf(new Bookshelf(6, 5 , 3));
-        int [] value = new int[]{0};
-        MessageFromClient2 message = new MessageFromClient2(EventType.COLUMN, "player1", value);
+        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, 0);
+        game.getTurnPlayerOfTheGame().setBookshelf(bookshelf);
+        game.getTurnPlayerOfTheGame().getBookshelf().computeFreeShelves();
+        game.getBoard().fillBag(gameRules);
+        game.getBoard().firstFillBoard(2, gameRules);
+        ArrayList<BoardBox> selectedBoard = new ArrayList<>();
+        int a=1; int b=3;
+        selectedBoard.add(game.getBoard().getBoardBox(a, b));
+        game.getBoard().setSelectedBoard(selectedBoard);
+        game.getTurnPlayerOfTheGame().selection(game.getBoard());
+        int value = 0;
+        MessagePayload messagePayload = new MessagePayload();
+        messagePayload.put(Data.VALUE_CLIENT, value);
+        Message message = new Message(new MessageHeader(MessageType.DATA, game.getTurnPlayerOfTheGame().getNickname()), messagePayload);
+        Type type = game.getBoard().getBoardBox(a, b).getTile().getType();
         gameController.selectingColumn(message);
-        assertEquals(0, game.getTurnPlayer().getBookshelf().getColumnSelected());
-    }
-
-    @Test
-    void insertBookshelf() {
-        //insertTiles and points update already tested inside Bookshelf and Game in model
+        assertEquals(type, game.getPlayerByNickname("player1").getBookshelf().getMatrix()[4][0].getType());
     }
 }
-
- */

@@ -1,8 +1,10 @@
 package it.polimi.ingsw.view.GUI;
 
 import it.polimi.ingsw.view.ClientView;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -12,7 +14,11 @@ import javafx.stage.Screen;
 
 public class FinalRankingPanel extends BasePanel{
 
-    public FinalRankingPanel(ClientView clientView) {
+    Color[] colors= new Color [] {Color.YELLOW, Color.SILVER, Color.SANDYBROWN, Color.WHITE};
+    private int counter;
+
+    public FinalRankingPanel(ClientView clientView, int[] personalPoints) {
+        counter = 0;
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         Image backgroundImage = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\misc\\base_pagina2.jpg");
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, false, false);
@@ -24,10 +30,22 @@ public class FinalRankingPanel extends BasePanel{
         getChildren().add(label1); setAlignment(label1, Pos.TOP_CENTER); label1.setTranslateY(80);
         VBox box = new VBox();
         //box.setMaxSize(500, 200);
-        for ( int i=0; i < clientView.getPlayerPointsViews().length; i++) {
-            Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname()+"  points:  "+clientView.getPlayerPointsViews()[i].getPoints()); label.setFont(font2); label.setTextFill(Color.YELLOW);
+        for ( int i=(clientView.getPlayerPointsViews().length-1); i >-1; i--) {
+            Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname()+"  points:   "+(clientView.getPlayerPointsViews()[i].getPoints()+personalPoints[i])); label.setFont(font2); label.setTextFill(colors[counter]);
             box.getChildren().add(label);
+            counter++;
         }
+        Button button = new Button("Return to Lobby");
+        box.getChildren().add(button);
+        button.setOnAction(actionEvent -> {
+            Platform.runLater(()-> {
+                try {
+                    clientView.receiveEndGame();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        });
         box.setSpacing(60);
         box.setAlignment(Pos.CENTER);
         getChildren().addAll(box);
