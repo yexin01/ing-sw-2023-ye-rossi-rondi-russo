@@ -51,9 +51,9 @@ public class EndTurnPanel extends BasePanel {
             for (int j = 0; j < 9; j++) {
                 Button button;
                 if (clientView.getBoardView()[i][j].getItemTileView().getTypeView() != null) {
-                    button = createBoardButton(clientView, screenBounds.getWidth() * 0.35 / 9, screenBounds.getHeight() * 0.35 / 9, i, j, true);
+                    button = createBoardButton(clientView, screenBounds.getWidth() * 0.35 / clientView.getBoardView().length, screenBounds.getHeight() * 0.35 / clientView.getBoardView()[0].length, i, j, true);
                 } else {
-                    button = createBoardButton(clientView, screenBounds.getWidth() * 0.35 / 9, screenBounds.getHeight() * 0.35 / 9, i, j, false);
+                    button = createBoardButton(clientView, screenBounds.getWidth() * 0.35 / clientView.getBoardView().length, screenBounds.getHeight() * 0.35 / clientView.getBoardView()[0].length, i, j, false);
                 }
                 board.add(button, j, i);
             }
@@ -67,9 +67,9 @@ public class EndTurnPanel extends BasePanel {
             for (int j = 0; j < 5; j++) {
                 Button button;
                 if (clientView.getBookshelfView()[i][j].getTypeView() != null) {
-                    button = createBookshelfButton(clientView, screenBounds.getWidth()*0.32/5, screenBounds.getHeight()*0.32/6, i, j, true);
+                    button = createBookshelfButton(clientView, screenBounds.getWidth()*0.32/clientView.getBoardView()[0].length, screenBounds.getHeight()*0.32/clientView.getBoardView().length, i, j, true);
                 } else {
-                    button = createBookshelfButton(clientView, screenBounds.getWidth()*0.32/5, screenBounds.getHeight()*0.32/6, i, j, false);
+                    button = createBookshelfButton(clientView, screenBounds.getWidth()*0.32/clientView.getBoardView()[0].length, screenBounds.getHeight()*0.32/clientView.getBoardView().length, i, j, false);
                 }
                 bookshelf.add(button, j+1, i);
             }
@@ -94,17 +94,22 @@ public class EndTurnPanel extends BasePanel {
         vBox3.setMaxSize(450, 200);
         for (int i=(clientView.getPlayerPointsViews().length-1); i>-1; i--) {
             VBox vBox = new VBox();
+            Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname() + "   points:    " + clientView.getPlayerPointsViews()[i].getPoints());
+            label.setFont(font); label.setTextFill(colors[counter]);
             if (Objects.equals(clientView.getPlayerPointsViews()[i].getNickname(), clientView.getNickname())) {
-                Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname() + "   points:    " + clientView.getPlayerPointsViews()[i].getPoints());
-                label.setFont(font); label.setTextFill(colors[counter]);
-                Label label1 = new Label("Common goal points: "+(clientView.getPlayerPointsViews()[i].getPointsToken()[0]+clientView.getPlayerPointsViews()[i].getPointsToken()[1])+"   Adjacent tiles points: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal points: "+clientView.getPersonalPoints());
+                int sumToken = 0;
+                for (int j =0; j<clientView.getCommonGoalView().length; j++) {
+                    sumToken += clientView.getPlayerPointsViews()[i].getPointsToken()[j];
+                }
+                Label label1 = new Label("Common goal points: "+sumToken+"   Adjacent tiles points: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal points: "+clientView.getPersonalPoints());
                 label1.setFont(font2); label1.setTextFill(colors[counter]);
                 vBox3.getChildren().addAll(label, label1);
             } else {
-                Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname() + "   points:    " + clientView.getPlayerPointsViews()[i].getPoints());
-                label.setFont(font);
-                label.setTextFill(colors[counter]);
-                Label label1 = new Label("Common goal points: "+(clientView.getPlayerPointsViews()[i].getPointsToken()[1]+clientView.getPlayerPointsViews()[i].getPointsToken()[1])+"   Adjacent tiles points: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal points: ?");
+                int sumToken = 0;
+                for (int j =0; j<clientView.getCommonGoalView().length; j++) {
+                    sumToken += clientView.getPlayerPointsViews()[i].getPointsToken()[j];
+                }
+                Label label1 = new Label("Common goal points: "+sumToken+"   Adjacent tiles points: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal points: ?");
                 label1.setFont(font2); label1.setTextFill(colors[counter]);
                 vBox3.getChildren().addAll(label, label1);
             }
@@ -115,10 +120,14 @@ public class EndTurnPanel extends BasePanel {
         //Label label3 = new Label("Total points:    "+clientView.getPlayerPointsViews().getPoints()); label3.setFont(font); label3.setTextFill(Color.WHITE);
         //Label label4 = new Label("Personal Goal points:    "+clientView.getPlayerPoints().getPersonalGoalPoints()); label4.setFont(font); label4.setTextFill(Color.WHITE);
         //Label label5 = new Label("Adjacent tiles points:    "+clientView.getPlayerPoints().getAdjacentPoints()); label5.setFont(font); label5.setTextFill(Color.WHITE);
-        Label label6 = new Label("Common Goal Card 1 points left:    "+clientView.getCommonGoalView()[1][0]); label6.setFont(font1); label6.setTextFill(Color.LIGHTGREEN);
-        Label label7 = new Label("Common Goal Card 2 points left:    "+clientView.getCommonGoalView()[1][1]); label7.setFont(font1); label7.setTextFill(Color.LIGHTGREEN);
+        //Label label6 = new Label("Common Goal Card 1 points left:    "+clientView.getCommonGoalView()[1][0]); label6.setFont(font1); label6.setTextFill(Color.LIGHTGREEN);
+        //Label label7 = new Label("Common Goal Card 2 points left:    "+clientView.getCommonGoalView()[1][1]); label7.setFont(font1); label7.setTextFill(Color.LIGHTGREEN);
+        for (int i = 0; i<clientView.getCommonGoalView().length; i++) {
+            Label label = new Label("Common Goal Card "+(i+1)+" points left:    "+clientView.getCommonGoalView()[1][i]); label.setFont(font1); label.setTextFill(Color.LIGHTGREEN);
+            vBox3.getChildren().add(label);
+        }
         vBox3.setSpacing(10);
-        vBox3.getChildren().addAll(label6, label7);
+        //vBox3.getChildren().addAll(label6, label7);
         vBox3.setAlignment(Pos.CENTER);
         //label2.setAlignment(Pos.TOP_CENTER);
         //label3.setAlignment(Pos.CENTER);

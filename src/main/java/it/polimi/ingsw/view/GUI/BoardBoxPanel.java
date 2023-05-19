@@ -56,7 +56,7 @@ public class BoardBoxPanel extends BasePanel {
             for (int j = 0; j < 9; j++) {
                 Button button;
                 if (clientView.getBoardView()[i][j].getItemTileView().getTypeView() != null) {
-                    button = createBoardButton(clientView, background.getFitWidth() * 0.75 / 9, background.getFitHeight() * 0.75 / 9, i, j, true);
+                    button = createBoardButton(clientView, background.getFitWidth() * 0.75 / clientView.getBoardView().length, background.getFitHeight() * 0.75 / clientView.getBoardView()[0].length, i, j, true);
                     int finalJ = j;
                     int finalI = i;
                     button.setOnAction(new EventHandler<ActionEvent>() {

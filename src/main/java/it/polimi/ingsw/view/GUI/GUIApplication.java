@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.GUI;
 
+import it.polimi.ingsw.view.Check;
 import it.polimi.ingsw.view.ClientInterface;
 import it.polimi.ingsw.view.ClientView;
 import javafx.application.Application;
@@ -76,7 +77,7 @@ public class GUIApplication extends Application implements ClientInterface {
     public void askCoordinates() throws Exception {
         Platform.runLater(()-> {
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-            ChoicePanel choicePanel = new ChoicePanel(clientView, screenBounds.getWidth()*0.28);
+            ChoicePanel choicePanel = new ChoicePanel(clientView, screenBounds.getWidth()*0.28*(3.0 / Check.MAX_SELECTABLE_TILES));
             this.choicePanel = choicePanel;
             BoardBoxPanel boardBoxPanel = new BoardBoxPanel(clientView, choicePanel);
             Scene scene = new Scene(boardBoxPanel, screenBounds.getWidth(), screenBounds.getHeight());

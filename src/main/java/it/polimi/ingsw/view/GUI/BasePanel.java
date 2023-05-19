@@ -166,7 +166,46 @@ public abstract class BasePanel extends StackPane {
         personalGoalCard.setFitHeight(screenBounds.getHeight()*0.5);
         personalGoalCard.setPreserveRatio(true);
 
-        Button common1 = new Button("Common Goal Card 1");
+        for (int i=0; i<clientView.getCommonGoalView().length;i++) {
+            Button button = new Button("Common Goal Card "+(i+1));
+            button.setFont(font);
+            button.setStyle(style1);
+            button.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    button.setStyle(style2);
+                }
+            });
+
+            button.setOnMouseExited(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    button.setStyle(style1);
+                }
+            });
+
+            ImageView commonGoalCard = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\common goal cards\\"+(clientView.getCommonGoalView()[0][i]+1)+".jpg"));
+            commonGoalCard.setFitWidth(screenBounds.getWidth()*0.35);
+            commonGoalCard.setFitHeight(screenBounds.getHeight()*0.35);
+            commonGoalCard.setPreserveRatio(true);
+
+            int finalI = i;
+            button.setOnMouseClicked(mouseEvent -> {
+                Platform.runLater(()->{
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Common Goal Card "+(finalI +1));
+                    alert.setHeaderText(null);
+                    VBox content = new VBox(10);
+                    content.getChildren().addAll(commonGoalCard, new Label(commonDescription(clientView.getCommonGoalView()[0][finalI])));
+                    DialogPane dialogPane = alert.getDialogPane();
+                    dialogPane.setContent(content);
+                    alert.showAndWait();
+                });
+            });
+            vBox.getChildren().add(button);
+        }
+
+        /*Button common1 = new Button("Common Goal Card 1");
         common1.setFont(font);
         common1.setStyle(style1);
         common1.setOnMouseEntered(new EventHandler<MouseEvent>() {
@@ -188,7 +227,22 @@ public abstract class BasePanel extends StackPane {
         commonGoalCard1.setFitHeight(screenBounds.getHeight()*0.35);
         commonGoalCard1.setPreserveRatio(true);
 
-        Button common2 = new Button("Common Goal Card 2");
+        common1.setOnMouseClicked(mouseEvent -> {
+            Platform.runLater(()->{
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Common Goal Card 1");
+                alert.setHeaderText(null);
+                VBox content = new VBox(10);
+                content.getChildren().addAll(commonGoalCard1, new Label(commonDescription(clientView.getCommonGoalView()[0][0])));
+                DialogPane dialogPane = alert.getDialogPane();
+                dialogPane.setContent(content);
+                alert.showAndWait();
+            });
+        });
+
+         */
+
+        /*Button common2 = new Button("Common Goal Card 2");
         common2.setFont(font);
         common2.setStyle(style1);
         common2.setOnMouseEntered(new EventHandler<MouseEvent>() {
@@ -210,6 +264,21 @@ public abstract class BasePanel extends StackPane {
         commonGoalCard2.setFitHeight(screenBounds.getHeight()*0.35);
         commonGoalCard2.setPreserveRatio(true);
 
+        common2.setOnMouseClicked(mouseEvent -> {
+            Platform.runLater(()->{
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Common Goal Card 2");
+                alert.setHeaderText(null);
+                VBox content = new VBox(10);
+                content.getChildren().addAll(commonGoalCard2, new Label(commonDescription(clientView.getCommonGoalView()[0][1])));
+                DialogPane dialogPane = alert.getDialogPane();
+                dialogPane.setContent(content);
+                alert.showAndWait();
+            });
+        });
+
+         */
+
 
         StackPane stackPane1 = new StackPane(personalGoalCard);
         this.personalGoalCardImage = stackPane1;
@@ -225,7 +294,7 @@ public abstract class BasePanel extends StackPane {
         parquet.setPreserveRatio(true);
         parquet.setEffect(new GaussianBlur());
         this.parquet = parquet;
-        vBox.getChildren().addAll(personal, common1, common2);
+        vBox.getChildren().addAll(personal);
         personal.setOnMouseClicked(mouseEvent -> {
             Platform.runLater(()->{
                 parquet.setVisible(true);
@@ -238,7 +307,7 @@ public abstract class BasePanel extends StackPane {
                 stackPane1.setVisible(false);
                 });
         });
-        common1.setOnMouseClicked(mouseEvent -> {
+        /*common1.setOnMouseClicked(mouseEvent -> {
             Platform.runLater(()->{
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Common Goal Card 1");
@@ -250,14 +319,6 @@ public abstract class BasePanel extends StackPane {
                 alert.showAndWait();
             });
         });
-        /*stackPane2.setOnMouseClicked(mouseEvent -> {
-            Platform.runLater(()-> {
-                parquet.setVisible(false);
-                stackPane2.setVisible(false);
-            });
-        });
-
-         */
         common2.setOnMouseClicked(mouseEvent -> {
             Platform.runLater(()->{
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -270,7 +331,9 @@ public abstract class BasePanel extends StackPane {
                 alert.showAndWait();
             });
         });
-        /*stackPane3.setOnMouseClicked(mouseEvent -> {
+
+
+        stackPane3.setOnMouseClicked(mouseEvent -> {
             Platform.runLater(()-> {
                 parquet.setVisible(false);
                 stackPane3.setVisible(false);
