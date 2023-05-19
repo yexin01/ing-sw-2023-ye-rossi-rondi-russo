@@ -29,7 +29,6 @@ public class ErrorHandler extends MessageHandler {
                     //mandato direttamente dal clientHandler ti sei disconnesso questa gestine potrà cambiare
                     case PING_NOT_RECEIVED -> {
                         getClientInterface().displayError(error.getErrorMessage());
-                        //getClientInterface().askNicknameAndConnection();
                     }
                     //errore nella login chiede di riconnettersi
                     case ERR_NICKNAME_LENGTH,ERR_NICKNAME_TAKEN ->{
@@ -37,7 +36,6 @@ public class ErrorHandler extends MessageHandler {
                     }
                     default->{
                         getClientInterface().displayMessage((String) mes.getPayload().getContent(Data.CONTENT));
-                        getClientInterface().endGame();
                     }
                 }
             }

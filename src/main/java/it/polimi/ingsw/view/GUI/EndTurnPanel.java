@@ -97,14 +97,14 @@ public class EndTurnPanel extends BasePanel {
             if (Objects.equals(clientView.getPlayerPointsViews()[i].getNickname(), clientView.getNickname())) {
                 Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname() + "   points:    " + clientView.getPlayerPointsViews()[i].getPoints());
                 label.setFont(font); label.setTextFill(colors[counter]);
-                Label label1 = new Label("Common goal points: "+(clientView.getPlayerPointsViews()[i].getPointsToken(0)+clientView.getPlayerPointsViews()[i].getPointsToken(1))+"   Adjacent tiles points: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal points: "+clientView.getPersonalPoints());
+                Label label1 = new Label("Common goal points: "+(clientView.getPlayerPointsViews()[i].getPointsToken()[0]+clientView.getPlayerPointsViews()[i].getPointsToken()[1])+"   Adjacent tiles points: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal points: "+clientView.getPersonalPoints());
                 label1.setFont(font2); label1.setTextFill(colors[counter]);
                 vBox3.getChildren().addAll(label, label1);
             } else {
                 Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname() + "   points:    " + clientView.getPlayerPointsViews()[i].getPoints());
                 label.setFont(font);
                 label.setTextFill(colors[counter]);
-                Label label1 = new Label("Common goal points: "+(clientView.getPlayerPointsViews()[i].getPointsToken(0)+clientView.getPlayerPointsViews()[i].getPointsToken(1))+"   Adjacent tiles points: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal points: ?");
+                Label label1 = new Label("Common goal points: "+(clientView.getPlayerPointsViews()[i].getPointsToken()[1]+clientView.getPlayerPointsViews()[i].getPointsToken()[1])+"   Adjacent tiles points: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal points: ?");
                 label1.setFont(font2); label1.setTextFill(colors[counter]);
                 vBox3.getChildren().addAll(label, label1);
             }

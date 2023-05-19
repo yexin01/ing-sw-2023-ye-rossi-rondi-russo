@@ -331,7 +331,7 @@ public class CLI implements ClientInterface {
         int x, y;
         ErrorType error= Check.checkNumTilesSelectedBoard(selection,clientView.getBookshelfView());
         if (error!=null) {
-            Colors.colorize(Colors.ERROR_MESSAGE,ErrorType.TOO_MANY_TILES.getErrorMessage());
+            Colors.colorize(Colors.ERROR_MESSAGE,error.getErrorMessage());
             out.println();
         }else{
             Colors.colorizeSize(Colors.GAME_INSTRUCTION, "Insert row",14);

@@ -16,7 +16,7 @@ public class Board{
 
     //private GameInfo gameInfo;
 
-
+    private static int MAX_SELECTABLE_TILES;
     private BoardBox[][] matrix;
 
     public Board(ModelView modelView) {
@@ -55,46 +55,7 @@ public class Board{
         this.selectedBoard = selectedBoard;
 
     }
-    /*
-    public ErrorType checkCoordinates(int x, int y) {
-        if (x < 0 || y<0 || x> matrix.length-1 || y> matrix[0].length-1 || !getBoardBox(x,y).isOccupiable() ) {
-            return ErrorType.INVALID_COORDINATES;
-            //throw new Error(ErrorType.INVALID_COORDINATES);
-        }
-        return null;
-    }
 
-     */
-/*
-    public ErrorType checkFinishChoice() {
-        if (selectedBoard.size()==0) {
-            return ErrorType.NOT_VALUE_SELECTED;
-            //throw new Error(ErrorType.INVALID_COORDINATES);
-        }
-        return null;
-    }
-
- */
-
-
-
-    private boolean finishPlayer;
-    //TODO it will be removed when the non-deprecated version is implemented
-
-    public void printMatrix(){
-        for (int i = 0; i < matrix.length; i++) {
-            System.out.printf("row"+i+" ");
-            for (int j = 0; j < matrix[i].length; j++) {
-                if (matrix[i][j].getTile()!=null) {
-                    System.out.printf("%-10s",+j+""+matrix[i][j].getTile().getType());
-                } else {
-                    System.out.printf("%-10s",+j+"EMPTY");
-                }
-            }
-            System.out.println("");
-        }
-
-    }
     public BoardBoxView[][] cloneBoard(){
         BoardBoxView[][] boardView=new BoardBoxView[matrix.length][matrix[0].length];
         ItemTile itemTile;
@@ -110,6 +71,7 @@ public class Board{
     }
 
     public void firstFillBoard(int numPlayers, GameRules gameRules) throws Exception {
+        MAX_SELECTABLE_TILES= gameRules.getMaxSelectableTiles();
         int[][] matrix = gameRules.getMatrix(numPlayers);
         this.matrix=new BoardBox[matrix.length][matrix[0].length];
         Random random=new Random();
@@ -261,10 +223,8 @@ public class Board{
      *
      * @return
      */
-
+//max selectable tiles puo cambiare a seconda di quanto é piena la bookshelf
     public ErrorType checkSelectable(int[] selection,int maxSelectebleTile) throws Error {
-        //TODO AGGIUNGERE 3 COME PARAMETRO
-        //TODO ricontrollare ill metodo
         selectedBoard=new ArrayList<>();
         ErrorType error;
         if(selection==null || selection.length%2!=0){

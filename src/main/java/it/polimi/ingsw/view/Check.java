@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.modelView.ItemTileView;
 import java.util.ArrayList;
 
 public class Check {
+    public static int MAX_SELECTABLE_TILES;
 
     public static ItemTileView[] createItemTileView(ArrayList<Integer> coordinates,BoardBoxView[][] boardBoxViews) throws Error {
         if(coordinates!=null){
@@ -23,8 +24,6 @@ public class Check {
         return null;
     }
     public static ItemTileView[][] insertTiles(int columnSelected,ItemTileView[][] bookshelf,ItemTileView[] selectedItemTiles) throws Error {
-        //ItemTileView[][] bookshelf=clientView.getBookshelfView();
-        //ItemTileView[] selectedItemTiles= clientView.getTilesSelected();
         int j = 0;
         for (int i = bookshelf.length - 1; j < selectedItemTiles.length; i--) {
             if (bookshelf[i][columnSelected].getTileID() == -1) {
@@ -47,12 +46,8 @@ public class Check {
      * @return check that each ItemTile of selectedBoard is adjacent to the previous one
      */
     public static boolean allAdjacent(ArrayList<Integer> coordinatesSelected) {
-        int dx;
-        int dy;
-        for (int i = 2; i <= coordinatesSelected.size()/2; i = i + 2) {
-            dx=Math.abs(coordinatesSelected.get(i) - coordinatesSelected.get(i - 2));
-            dy=Math.abs(coordinatesSelected.get(i + 1) - coordinatesSelected.get(i - 1));
-            if (!((dx == 1 && dy == 0) || (dx == 0 && dy == 1))) {
+        for (int i = 2; i < coordinatesSelected.size(); i = i + 2) {
+            if (Math.abs(coordinatesSelected.get(i) - coordinatesSelected.get(i-2)) != 1 && Math.abs(coordinatesSelected.get(i+1) - coordinatesSelected.get(i-1)) != 1) {
                 return false;
             }
         }
@@ -96,9 +91,6 @@ public class Check {
      */
 
     public static ErrorType checkSelectable(ArrayList<Integer> selection,BoardBoxView[][] board) throws Error {
-        //TODO AGGIUNGERE 3 COME PARAMETRO
-        //TODO ricontrollare ill metodo
-
         int x=selection.get(selection.size()-2);
         int y=selection.get(selection.size()-1);
         BoardBoxView boardBox = board[x][y];
@@ -119,12 +111,11 @@ public class Check {
 
     public static ErrorType checkNumTilesSelectedBoard(ArrayList<Integer> coordinatesSelected,ItemTileView[][] bookshelf){
         if(coordinatesSelected.size()>0){
-            int num=numSelectableTiles(bookshelf);
             if (coordinatesSelected.size() >= numSelectableTiles(bookshelf)*2) {
                 return ErrorType.TOO_MANY_TILES;
-            }else return null;
-
-        }else return null;
+            }
+        }
+        return null;
     }
     //TODO questi li cambiero
     public static ErrorType resetChoiceBoard(int lastOrAll,ArrayList<Integer> coordinatesSelected) throws Error{
@@ -152,12 +143,10 @@ public class Check {
     }
     public static int numSelectableTiles(ItemTileView[][] bookshelfView) {
         int[] freeShelves=computeFreeShelves(bookshelfView);
-        //TODO importare 3 come parametro attraverso gamerules
         int max = maxFreeShelves(freeShelves);
-        return (max > 3) ? 3 : max;
+        return (max > MAX_SELECTABLE_TILES) ? MAX_SELECTABLE_TILES : max;
     }
     public static int[] computeFreeShelves(ItemTileView[][] bookshelfView) {
-        //ItemTileView[][] bookshelfView= clientView.getBookshelfView();
         int[] freeShelves=new int[bookshelfView[0].length];
         for (int j = 0; j < bookshelfView[0].length; j++) {
             freeShelves[j] = 0;

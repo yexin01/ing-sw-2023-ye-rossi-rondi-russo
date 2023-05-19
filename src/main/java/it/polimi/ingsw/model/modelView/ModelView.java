@@ -15,6 +15,7 @@ public class ModelView {
 
     private int turnPlayer;
     private boolean[] activePlayers;
+    private int MAX_SELECTABLE_TILES;
 
     private int[][] commonGoalView;
     private int[] token;
@@ -39,6 +40,7 @@ public class ModelView {
         commonGoalView =new int[gameRules.getNumOfCommonGoals()][2];
         token=new int[gameRules.getNumOfCommonGoals()];
         personalPoints=new int[numPlayers];
+        MAX_SELECTABLE_TILES= gameRules.getMaxSelectableTiles();
     }
 
     public int getIntegerValue(String nickname) {
@@ -232,6 +234,14 @@ public class ModelView {
 
     public void setActivePlayers(boolean[] activePlayers) {
         this.activePlayers = activePlayers;
+    }
+
+    public int getMAX_SELECTABLE_TILES() {
+        return MAX_SELECTABLE_TILES;
+    }
+
+    public void setMAX_SELECTABLE_TILES(int MAX_SELECTABLE_TILES) {
+        this.MAX_SELECTABLE_TILES = MAX_SELECTABLE_TILES;
     }
 }
 

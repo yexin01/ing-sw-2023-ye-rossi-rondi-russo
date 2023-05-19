@@ -36,7 +36,7 @@ public class GameController {
         GameRules gameRules=new GameRules();
         ModelView modelView=new ModelView(nicknames.size(), gameRules);
         modelView.setTurnPhase(TurnPhase.ALL_INFO);
-        game=new Game(gameRules, nicknames.size(),modelView);
+        game=new Game(modelView);
         game.addPlayers(nicknames);
 
         game.getBoard().fillBag(gameRules);
@@ -172,14 +172,15 @@ public class GameController {
             }
             game.setNextPlayer(activePlayers);
             System.out.println("Il prossimo giocatore é "+game.getModelView().getTurnNickname());
-            listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
+            game.getModelView().winnerEndGame();
+            Arrays.fill(game.getModelView().getActivePlayers(), true);
+            listenerManager.fireEvent(TurnPhase.END_GAME,getTurnNickname(),game.getModelView());
+            //listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
         }
     }
     public void endGame(){
-        boolean[] activePlayers=game.getModelView().getActivePlayers();
-        //TODO endGame
-        //List<String> ranking=game.checkWinner();
-        Arrays.fill(activePlayers, true);
+        game.getModelView().winnerEndGame();
+        Arrays.fill(game.getModelView().getActivePlayers(), true);
         listenerManager.fireEvent(TurnPhase.END_GAME,getTurnNickname(),game.getModelView());
     }
 

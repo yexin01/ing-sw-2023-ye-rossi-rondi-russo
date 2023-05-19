@@ -118,10 +118,9 @@ public class PrinterBookshelfAndPersonal {
         System.out.println();
     }
     private boolean frame=true;
-    public int printPersonalGoalWithOrWithoutFrame(int personalLine, ClientView clientView, int spaceBetweenPersonal, boolean mediumSpaces, int fromBoardBookshelf,int sizeLenghtFromBord) throws Exception {
-        GameRules gameRules = new GameRules();
+    public int printPersonalGoalWithOrWithoutFrame(int personalLine, ClientView clientView, int spaceBetweenPersonal, boolean mediumSpaces, int fromBoardBookshelf,int sizeLenghtFromBord)  {
         ItemTileView[][] bookshelfView= clientView.getBookshelfView();
-        PersonalGoalCard q = gameRules.getPersonalGoalCard(clientView.getPlayerPersonalGoal().getIdPersonal());
+        PersonalGoalCard q = clientView.getPlayerPersonalGoal();
         int lineLength=1+spaceBetweenPersonal*2;
         String[] lineRepresentations = {
                 "┏" + "━".repeat(lineLength),

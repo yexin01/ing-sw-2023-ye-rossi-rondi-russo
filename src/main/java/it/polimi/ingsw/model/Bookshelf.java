@@ -70,26 +70,7 @@ public class Bookshelf {
         return (max > maxSelectableTiles) ? maxSelectableTiles : max;
     }
 
-    public void printFreeShelves() {
-        for (int i = 0; i < freeShelves.length; i++) {
-            System.out.print(freeShelves[i] + "  ");
-        }
-        System.out.println("");
-    }
 
-    public void printBookshelf() {
-        for (int i = 0; i < matrix.length; i++) {
-            System.out.printf("row" + i + " ");
-            for (int j = 0; j < matrix[i].length; j++) {
-                if (matrix[i][j].getTileID() != -1) {
-                    System.out.printf("%-10s", +j + "" + matrix[i][j].getType());
-                } else {
-                    System.out.printf("%-10s", +j + " EMPTY");
-                }
-            }
-            System.out.println("");
-        }
-    }
 
     public ItemTile[][] getMatrix() {
         return matrix;
@@ -132,11 +113,9 @@ public class Bookshelf {
     public ErrorType checkBookshelf(int column,int numSelectedTiles) throws Error {
         if (column < 0 || column > getMatrix()[0].length-1 ) {
             return ErrorType.INVALID_COLUMN;
-           // throw new Error();
         }
         if(numSelectedTiles > getMaxTilesColumn(column)){
             return ErrorType.NOT_ENOUGH_FREE_CELLS_COLUMN;
-            //throw new Error();
         }
         return null;
     }
@@ -205,32 +184,6 @@ public class Bookshelf {
         }
         return size;
     }
-
- /*
-    public void setColumnSelected(int column) {
-        try {
-            //TODO CHANGE COLUMN EXCEPTION
-            if (column < 0|| column >= matrix.length) {
-                throw new IllegalArgumentException(" value must be between 0 and " + (matrix.length - 1));
-            }
-            columnSelected = column;
-        } catch (IllegalArgumentException e) {
-            System.err.println("Invalid Column" + e.getMessage());
-        }
-    }
-
-  */
-
-
-
-    /* attribute checkable is no longer useful
-
-    public void resetCheckable(){
-    }
-
-     */
-
-
 
 
 }

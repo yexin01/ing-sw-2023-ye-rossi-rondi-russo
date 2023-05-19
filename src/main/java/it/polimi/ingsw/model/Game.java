@@ -8,33 +8,21 @@ import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import java.util.*;
 //TODO verrà cambiata la gestione degli active players, l'array verrà letto direttamente dalla modelView
 public class Game {
-    //private GameInfo gameInfo;
     private ArrayList<Player> players;
     private final ModelView modelview;
     private Board board;
-    private int numMaxPlayers;
 
     private ArrayList<CommonGoalCard> commonGoalCards;
     private boolean endGame;
 
 //TODO cambiare creazione senza numMaxPlayer controllo gia effettuato prima
-    public Game(GameRules gameRules,int numMaxPlayers,ModelView modelview){
-        //players=new ArrayList<>();
+    public Game(ModelView modelview){
         commonGoalCards=new ArrayList<>();
         this.modelview=modelview;
         board=new Board(modelview);
     }
+
       //PLAYERS
-
-
-    public int getNumMaxPlayers() {
-        return numMaxPlayers;
-    }
-
-    public void setNumMaxPlayersNumPlayers(int numMaxPlayers) {
-        this.numMaxPlayers = numMaxPlayers;
-    }
-
 
     public ArrayList<Player> getPlayers() {
         return players;

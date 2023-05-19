@@ -34,9 +34,9 @@ public class ChoicePanel extends BasePanel{
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, false, false);
         BackgroundImage background2 = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         setBackground(new Background(background2));
-        itemButtons = new Button[3];
+        itemButtons = new Button[4];
         //semaphore.acquire();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             itemButtons[i] = new Button();
             createEmptyButton(itemButtons[i], i);
             stackPane.getChildren().add(itemButtons[i]);
@@ -63,7 +63,7 @@ public class ChoicePanel extends BasePanel{
         box1.getChildren().get(1).setOnMouseClicked(mouseEvent ->  {
             Platform.runLater(() -> {
                 counter = 0;
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 4; i++) {
                     itemButtons[i].setDisable(false);
                     itemButtons[i].setOpacity(1);
                 }
@@ -141,7 +141,7 @@ public class ChoicePanel extends BasePanel{
     }
 
     public void clear () {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             itemButtons[i].setDisable(true);
             itemButtons[i].setOpacity(0);
         }

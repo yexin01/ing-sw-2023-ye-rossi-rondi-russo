@@ -303,6 +303,17 @@ public class PrinterCommonGoalAndPoints {
         //durante il turno per i personal point degli altri andrebbe messo ?, in modo tale che all utente non venga mostrato i punteggi personal degli altri
         //la classifica si basa solo sui common e adjacent mentre i personal sono mandati singolarmente , cosi da non vedere quelli degli altri
         PlayerPointsView[] playerPoints=clientView.getPlayerPointsViews();
+        for(int i=playerPoints.length-1;i>=0;i--){
+            System.out.print(playerPoints[i].getNickname()+"  ha ottenuto "+(playerPoints[i].getPoints()));
+            for(int j=0;j<playerPoints[i].getPointsToken().length;j++){
+                System.out.print("Punteggi token "+playerPoints[i].getPointsToken()[j]);
+            }
+            System.out.print("Punteggi adjacent "+playerPoints[i].getAdjacentPoints());
+            if(playerPoints[i].getNickname().equals(clientView.getNickname())){
+                System.out.print("Punteggi personal solo del piocatore "+clientView.getPersonalPoints());
+            }
+        }
+
         /*
         //TODO pensavo di inserire una cornice con i vari punteggi e qualche disegno tipo di due tiles vicine se sono gli adjacentPoints...
         PlayerPointsView playerPoints=clientView.getPlayerPoints();
@@ -324,6 +335,11 @@ public class PrinterCommonGoalAndPoints {
     public  void printEndGame(ClientView clientView,int[] personalPoints){
         //i playerpoints saranno ordinati dal basso verso l alto leggerli al contrario e per il punteggio totale sommare quello in posizione index dell array personal
         //sono gia associati ai rispettivi giocatori ma non potevo mostrare i personal points prima
+        PlayerPointsView[] playersRanking= clientView.getPlayerPointsViews();
+        for(int i=playersRanking.length-1;i>=0;i--){
+            System.out.print(playersRanking[i].getNickname()+"  ha ottenuto "+(playersRanking[i].getPoints()+personalPoints[i]));
+        }
+
         /*
         //int numOfCGC = clientView.getIdCommonGoals().length;
         int numOfRows = getCommonGoalCard(clientView.getIdCommonGoals()[0]).length;

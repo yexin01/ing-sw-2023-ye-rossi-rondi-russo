@@ -33,8 +33,8 @@ public class PlayerPointsView implements Serializable {
         int un=adjacentPoints+sum;
         return adjacentPoints+sum;
     }
-    public int getPointsToken(int token){
-        return commonGoalPoints[token];
+    public int[] getPointsToken(){
+        return commonGoalPoints;
     }
 
 
