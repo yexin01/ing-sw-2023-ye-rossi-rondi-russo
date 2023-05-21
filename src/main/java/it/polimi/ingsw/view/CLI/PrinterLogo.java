@@ -61,66 +61,66 @@ public class PrinterLogo {
 
         System.out.println(myShelfieLogo);
     }
+    public static void printLogo(String[] lines, int freeSpaces) {
+        out.println();
+        for (String line : lines) {
+            Colors.printFreeSpaces(freeSpaces);
+            Colors.colorize(Colors.GAME_INSTRUCTION,line);
+            System.out.println();
+        }
+    }
 
 
 
     // titles for the infos
-    public static void printBoardLogo() {
-        String boardLogo = """
+    public static void printBoardLogo(int freeSpaces) {
+        String boardLogo[] = {
 
-                ╔╦╗╦ ╦╔═╗  ╔╗ ╔═╗╔═╗╦═╗╔╦╗
-                 ║ ╠═╣║╣   ╠╩╗║ ║╠═╣╠╦╝ ║║
-                 ╩ ╩ ╩╚═╝  ╚═╝╚═╝╩ ╩╩╚══╩╝
-                                                                                                                      \s
-                """;
-        out.println(boardLogo);
+                "╔╦╗╦ ╦╔═╗  ╔╗ ╔═╗╔═╗╦═╗╔╦╗",
+                 "║ ╠═╣║╣   ╠╩╗║ ║╠═╣╠╦╝ ║║",
+                 "╩ ╩ ╩╚═╝  ╚═╝╚═╝╩ ╩╩╚══╩╝"};
+
+        printLogo(boardLogo,freeSpaces);
     }
 
-    public static void printBookshelfLogo() {
-        String myBookshelfLogo = """
+    public static void printBookshelfLogo(int freeSpaces) {
+        String[] bookshelfLogo = {
+                "╔╦╗╦ ╦  ╔╗ ╔═╗╔═╗╦╔═╔═╗╦ ╦╔═╗╦  ╔═╗",
+                "║║║╚╦╝  ╠╩╗║ ║║ ║╠╩╗╚═╗╠═╣║╣ ║  ╠╣",
+                "╩ ╩ ╩   ╚═╝╚═╝╚═╝╩ ╩╚═╝╩ ╩╚═╝╩═╝╚"
+        };
 
-                ╔╦╗╦ ╦  ╔╗ ╔═╗╔═╗╦╔═╔═╗╦ ╦╔═╗╦  ╔═╗
-                ║║║╚╦╝  ╠╩╗║ ║║ ║╠╩╗╚═╗╠═╣║╣ ║  ╠╣\s
-                ╩ ╩ ╩   ╚═╝╚═╝╚═╝╩ ╩╚═╝╩ ╩╚═╝╩═╝╚ \s
-                                                                                                                      \s
-                """;
-        out.println(myBookshelfLogo);
+        printLogo(bookshelfLogo, freeSpaces);
     }
 
-    public static void printGamesRulesLogo() {
-        String gamesRulesLogo = """
+    public static void printGamesRulesLogo(int freeSpaces) {
+        String[] gamesRulesLogo = {
+                "╔═╗╔═╗╔╦╗╔═╗╔═╗  ╦═╗╦ ╦╦  ╔═╗╔═╗",
+                "║ ╦╠═╣║║║║╣ ╚═╗  ╠╦╝║ ║║  ║╣ ╚═╗",
+                "╚═╝╩ ╩╩ ╩╚═╝╚═╝  ╩╚═╚═╝╩═╝╚═╝╚═╝"
+        };
 
-                ╔═╗╔═╗╔╦╗╔═╗╔═╗  ╦═╗╦ ╦╦  ╔═╗╔═╗
-                ║ ╦╠═╣║║║║╣ ╚═╗  ╠╦╝║ ║║  ║╣ ╚═╗
-                ╚═╝╩ ╩╩ ╩╚═╝╚═╝  ╩╚═╚═╝╩═╝╚═╝╚═╝
-                                                                                                                      \s
-                """;
-        out.println(gamesRulesLogo);
+        printLogo(gamesRulesLogo, freeSpaces);
     }
 
+    public static void printGlobalLobbyPhase(int freeSpaces) {
+        String[] globalLobbyPhaseLogo = {
+                "╔═╗╦  ╔═╗╔╗ ╔═╗╦    ╦  ╔═╗╔╗ ╔╗ ╦ ╦",
+                "║ ╦║  ║ ║╠╩╗╠═╣║    ║  ║ ║╠╩╗╠╩╗╚╦╝",
+                "╚═╝╩═╝╚═╝╚═╝╩ ╩╩═╝  ╩═╝╚═╝╚═╝╚═╝ ╩"
+        };
 
-
-    // titles for the phases of the game and the lobby
-    public static void printGlobalLobbyPhase() {
-        String globalLobbyPhaseLogo = """
-                
-                                            ╔═╗╦  ╔═╗╔╗ ╔═╗╦    ╦  ╔═╗╔╗ ╔╗ ╦ ╦
-                                            ║ ╦║  ║ ║╠╩╗╠═╣║    ║  ║ ║╠╩╗╠╩╗╚╦╝
-                                            ╚═╝╩═╝╚═╝╚═╝╩ ╩╩═╝  ╩═╝╚═╝╚═╝╚═╝ ╩\s
-                
-                """;
-        out.println(globalLobbyPhaseLogo);
+        printLogo(globalLobbyPhaseLogo, freeSpaces);
     }
 
-    public static void printGameLobbyPhase() {
-        String gameLobbyPhaseLogo = """
-                
-                                               ╔═╗╔═╗╔╦╗╔═╗  ╦  ╔═╗╔╗ ╔╗ ╦ ╦
-                                               ║ ╦╠═╣║║║║╣   ║  ║ ║╠╩╗╠╩╗╚╦╝
-                                               ╚═╝╩ ╩╩ ╩╚═╝  ╩═╝╚═╝╚═╝╚═╝ ╩\s
-                
-                """;
-        out.println(gameLobbyPhaseLogo);
+    public static void printGameLobbyPhase(int freeSpaces) {
+        String[] gameLobbyPhaseLogo = {
+                "╔═╗╔═╗╔╦╗╔═╗  ╦  ╔═╗╔╗ ╔╗ ╦ ╦",
+                "║ ╦╠═╣║║║║╣   ║  ║ ║╠╩╗╠╩╗╚╦╝",
+                "╚═╝╩ ╩╩ ╩╚═╝  ╩═╝╚═╝╚═╝╚═╝ ╩"
+        };
+
+        printLogo(gameLobbyPhaseLogo, freeSpaces);
     }
 
     public static void printYourTurnPhase() {
@@ -134,48 +134,45 @@ public class PrinterLogo {
         out.println(yourTurnPhaseLogo);
     }
 
-    public static void printWaitingTurnPhase() {
-        String waitingTurnPhaseLogo = """
-                
-                ╦ ╦╔═╗╦╔╦╗╦╔╗╔╔═╗  ╦ ╦╔═╗╦ ╦╦═╗  ╔╦╗╦ ╦╦═╗╔╗╔
-                ║║║╠═╣║ ║ ║║║║║ ╦  ╚╦╝║ ║║ ║╠╦╝   ║ ║ ║╠╦╝║║║
-                ╚╩╝╩ ╩╩ ╩ ╩╝╚╝╚═╝   ╩ ╚═╝╚═╝╩╚═   ╩ ╚═╝╩╚═╝╚╝\s
-                
-                """;
-        out.println(waitingTurnPhaseLogo);
-    } //+ printWaitingLogo
+    public static void printWaitingTurnPhase(int freeSpaces) {
+        String[] waitingTurnPhaseLogo = {
+                "╦ ╦╔═╗╦╔╦╗╦╔╗╔╔═╗  ╦ ╦╔═╗╦ ╦╦═╗  ╔╦╗╦ ╦╦═╗╔╗╔",
+                "║║║╠═╣║ ║ ║║║║║ ╦  ╚╦╝║ ║║ ║╠╦╝   ║ ║ ║╠╦╝║║║",
+                "╚╩╝╩ ╩╩ ╩ ╩╝╚╝╚═╝   ╩ ╚═╝╚═╝╩╚═   ╩ ╚═╝╩╚═╝╚╝"
+        };
 
-    public static void printBoardPhase() {
-        String boardPhaseLogo = """
-                
-                ╔╗ ╔═╗╔═╗╦═╗╔╦╗  ╔═╗╦ ╦╔═╗╔═╗╔═╗
-                ╠╩╗║ ║╠═╣╠╦╝ ║║  ╠═╝╠═╣╠═╣╚═╗║╣\s
-                ╚═╝╚═╝╩ ╩╩╚══╩╝  ╩  ╩ ╩╩ ╩╚═╝╚═╝
-                
-                """;
-        out.println(boardPhaseLogo);
+        printLogo(waitingTurnPhaseLogo, freeSpaces);
     }
 
-    public static void printOrderPhase() {
-        String orderPhaseLogo = """
-                
-                ╔═╗╦═╗╔╦╗╔═╗╦═╗  ╔═╗╦ ╦╔═╗╔═╗╔═╗
-                ║ ║╠╦╝ ║║║╣ ╠╦╝  ╠═╝╠═╣╠═╣╚═╗║╣\s
-                ╚═╝╩╚══╩╝╚═╝╩╚═  ╩  ╩ ╩╩ ╩╚═╝╚═╝
 
-                """;
-        out.println(orderPhaseLogo);
+    public static void printBoardPhase(int freeSpaces) {
+        String[] boardPhaseLogo = {
+                "╔╗ ╔═╗╔═╗╦═╗╔╦╗  ╔═╗╦ ╦╔═╗╔═╗╔═╗",
+                "╠╩╗║ ║╠═╣╠╦╝ ║║  ╠═╝╠═╣╠═╣╚═╗║╣",
+                "╚═╝╚═╝╩ ╩╩╚══╩╝  ╩  ╩ ╩╩ ╩╚═╝╚═╝"
+        };
+
+        printLogo(boardPhaseLogo, freeSpaces);
     }
 
-    public static void printColumnPhase() {
-        String columnPhaseLogo = """
-                
-                ╔═╗╔═╗╦  ╦ ╦╔╦╗╔╗╔  ╔═╗╦ ╦╔═╗╔═╗╔═╗
-                ║  ║ ║║  ║ ║║║║║║║  ╠═╝╠═╣╠═╣╚═╗║╣\s
-                ╚═╝╚═╝╩═╝╚═╝╩ ╩╝╚╝  ╩  ╩ ╩╩ ╩╚═╝╚═╝
-                
-                """;
-        out.println(columnPhaseLogo);
+    public static void printOrderPhase(int freeSpaces) {
+        String[] orderPhaseLogo = {
+                "╔═╗╦═╗╔╦╗╔═╗╦═╗  ╔═╗╦ ╦╔═╗╔═╗╔═╗",
+                "║ ║╠╦╝ ║║║╣ ╠╦╝  ╠═╝╠═╣╠═╣╚═╗║╣",
+                "╚═╝╩╚══╩╝╚═╝╩╚═  ╩  ╩ ╩╩ ╩╚═╝╚═╝"
+        };
+
+        printLogo(orderPhaseLogo, freeSpaces);
+    }
+
+    public static void printColumnPhase(int freeSpaces) {
+        String[] columnPhaseLogo = {
+                "╔═╗╔═╗╦  ╦ ╦╔╦╗╔╗╔  ╔═╗╦ ╦╔═╗╔═╗╔═╗",
+                "║  ║ ║║  ║ ║║║║║║║  ╠═╝╠═╣╠═╣╚═╗║╣",
+                "╚═╝╚═╝╩═╝╚═╝╩ ╩╝╚╝  ╩  ╩ ╩╩ ╩╚═╝╚═╝"
+        };
+
+        printLogo(columnPhaseLogo, freeSpaces);
     }
 
     public static void printFinalRankingPhase() {
@@ -192,122 +189,120 @@ public class PrinterLogo {
 
 
     // drawings :)
-    public static void printWinnerLogo() {
-        String winnerLogo = """
+    public static void printWinnerLogo(int m) {
+        out.println();
+        String[] winnerLogo = {
+                "                       ────────────█▄─█─▄▀▀▄─────▄█────────────",
+                "                       ────────────█─▀█─█──█──────█────────────",
+                "                       ────────────▀──▀──▀▀──▀────▀────────────",
+                "                       ________¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\s",
+                "                       ___¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\s",
+                "                       ¶¶¶_______¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶________¶¶¶\s",
+                "                       ¶¶¶_____¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶______¶¶¶\s",
+                "                       _¶¶¶___¶¶¶_¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶_¶¶¶____¶¶¶\s",
+                "                       ___¶¶¶¶__¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶_¶¶¶¶¶\s",
+                "                       ______¶¶¶¶¶¶__¶¶¶¶¶¶¶¶¶¶¶¶¶¶___¶¶¶¶¶\s",
+                "                       _______________¶¶¶¶¶¶¶¶¶¶¶¶\s",
+                "                       ___________________¶¶¶¶\s",
+                "                       _______________¶¶¶¶¶¶¶¶¶¶¶¶\s",
+                "                       ____________¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\s",
+                "                       ____________¶¶¶____________¶¶¶\s",
+                "                       ____________¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\s",
+                "                       _________¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶"
+        };
 
-
-                ────────────█▄─█─▄▀▀▄─────▄█────────────
-                ────────────█─▀█─█──█──────█────────────
-                ────────────▀──▀──▀▀──▀────▀────────────
-                ________¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\s
-                ___¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\s
-                ¶¶¶_______¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶________¶¶¶\s
-                ¶¶¶_____¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶______¶¶¶\s
-                _¶¶¶___¶¶¶_¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶_¶¶¶____¶¶¶\s
-                ___¶¶¶¶__¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶_¶¶¶¶¶\s
-                ______¶¶¶¶¶¶__¶¶¶¶¶¶¶¶¶¶¶¶¶¶___¶¶¶¶¶¶\s
-                _______________¶¶¶¶¶¶¶¶¶¶¶¶\s
-                ___________________¶¶¶¶\s
-                _______________¶¶¶¶¶¶¶¶¶¶¶¶\s
-                ____________¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\s
-                ____________¶¶¶____________¶¶¶\s
-                ____________¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\s
-                _________¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶
-                                                                                                                      \s
-                """;
-        out.println(winnerLogo);
+        printLogo(winnerLogo, m);
     }
 
-    private static void printDisconnectionForcedLogo() {
-        String disconnectionForcedLogo = """
 
-                ▒▒▒▒▒▒▒▒▒▒▒▄▄▄▄░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-                ▒▒▒▒▒▒▒▄██▀░░▀██▄▒▒▒▒████████▄▒▒▒▒▒▒
-                ▒▒▒▒▒▒███░░░░░░██▒▒▒▒▒▒█▀▀▀▀▀██▄▄▒▒▒
-                ▒▒▒▒▒███░░▐█░█▌░██▒▒▒▒█▌▒▒▒▒▒▒▒▒▒▒▀▌
-                ▒▒▒▒████░▐█▌░▐█▌██▒▒▒██▒▒▒▒▒▒▒▒▒▒▒▒▒
-                ▒▒▒▐████░▐░░░░░▌██▒▒▒█▌▒▒▒▒▒▒▒▒▒▒▒▒▒
-                ▒▒▒▒████░░░▄█░░░██▒▒▐█▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-                ▒▒▒▒████▌░▐█░░███▒▒▒█▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-                ▒▒▒▒▐████░░▌░███▒▒▒██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-                ▒▒▒██████▌░████▒▒▒██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-                ▒▐████████████▒▒███▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-                ▒█████████████▄████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-                █████████████████▀▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-                ████████████████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-                                                                                                                      \s
-                """;
-        out.println(disconnectionForcedLogo);
+    private static void printDisconnectionForcedLogo(int freeSpaces) {
+        String disconnectionForcedLogo[] = {
+
+                "▒▒▒▒▒▒▒▒▒▒▒▄▄▄▄░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒",
+                "▒▒▒▒▒▒▒▄██▀░░▀██▄▒▒▒▒████████▄▒▒▒▒▒▒",
+                "▒▒▒▒▒▒███░░░░░░██▒▒▒▒▒▒█▀▀▀▀▀██▄▄▒▒▒",
+                "▒▒▒▒▒███░░▐█░█▌░██▒▒▒▒█▌▒▒▒▒▒▒▒▒▒▒▀▌",
+                "▒▒▒▒████░▐█▌░▐█▌██▒▒▒██▒▒▒▒▒▒▒▒▒▒▒▒▒",
+                "▒▒▒▐████░▐░░░░░▌██▒▒▒█▌▒▒▒▒▒▒▒▒▒▒▒▒▒",
+                "▒▒▒▒████░░░▄█░░░██▒▒▐█▒▒▒▒▒▒▒▒▒▒▒▒▒▒",
+                "▒▒▒▒████▌░▐█░░███▒▒▒█▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒",
+                "▒▒▒▒▐████░░▌░███▒▒▒██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒",
+                "▒▒▒██████▌░████▒▒▒██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒",
+                "▒▐████████████▒▒███▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒",
+                "▒█████████████▄████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒",
+                "█████████████████▀▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒",
+                "████████████████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒"};
+
+
+        printLogo(disconnectionForcedLogo, freeSpaces);
     }
 
-    public static void printLostConnectionLogo() {
-        String lostConnectionLogo = """
+    public static void printLostConnectionLogo(int freeSpaces) {
+        String[] lostConnectionLogo = {
+                "            ──▄────▄▄▄▄▄▄▄────▄───",
+                "            ─▀▀▄─▄█████████▄─▄▀▀──",
+                "            ─────██─▀███▀─██──────",
+                "            ───▄─▀████▀████▀─▄────",
+                "            ─▀█────██▀█▀██────█▀──"
+        };
 
-                ──▄────▄▄▄▄▄▄▄────▄───
-                ─▀▀▄─▄█████████▄─▄▀▀──
-                ─────██─▀███▀─██──────
-                ───▄─▀████▀████▀─▄────
-                ─▀█────██▀█▀██────█▀──
-                                                                                                           \s
-                """;
-        out.println(lostConnectionLogo);
+        printLogo(lostConnectionLogo, freeSpaces);
     }
 
-    public static void printErrorLogo() {
-        String errorLogo = """
 
-                ░░░░░░░▄▄▄▄▄▄░░░░░░░░░░░░░░░░░░░
-                ░░░░░▄█████████▄▄░░░░░░░░▄▄░░░░░
-                ░░░░███████████████▄▄░░░░▄██▄░░░
-                ░▄██████████████████████████▀░░░
-                ░███░░░░░░░░░░░░░░░░░░░█░░░░░░░░
-                ░███░███████████████████░░░░░░░░
-                ░███░░▀████───████────█▀░░░░░░░░
-                ░███░░░▀▄▄▄▄▄▀░▀▄▄▄▄▄▀▀▀▄░░░░░░░
-                ░░██░░░░░░░░░░░░░░░░░░░░░▀▄░░░░░
-                ░░▄█░░░░░▄▀█▀▀▀▄▄▄░░░░░▄▀░░▀▄░░░
-                ░█░░░░░▄▀──█───█──▀█▄▄░▀▀░░░░▀▄░
-                ░▀▄▄░░█────█───█───█──▀▀▄░░▄▀▀▀░
-                ░░░█░██▄▄▄▄█▄▄▄█▄▄▄█▄▄▄▄▄█▄▄▀░░░
-                ░░░█░█████████████▄▄░░░░░░░░░░░░
-                ░░░█░█████████████████████████▄░
-                ░░░█░██████████▀▀░░░░░░░░░░░░░█░
-                ░░░█░███▀░░░░░░░░░░░░░░░░░░░░░█░
-                ░░░█░░░░░░░░░░░░░░▀▄░▀▄░░░░░░░█░
-                ░░░█░░░░░░░░░░░░▄▄▄▀▄▄▀░░░░░░░█░
-                ░░░█░░░░░░░░░░░░░░░░░░░░░░░░░░█░
-                ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-                ░█▀▄░█░█▄░█░█░█░█░░█▀░█▀▄░█▀░█▀▄░▄▀▀░█░
-                ░█░█░█░█▀██░█▀▄░█░░█▀░█▀▄░█▀░█▀▄░█░█░▀░
-                ░▀▀░░▀░▀░░▀░▀░▀░▀▀░▀▀░▀▀░░▀▀░▀░▀░░▀▀░▀░
-                ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-                                                                                                                      \s
-                """;
-        out.println(errorLogo);
+    public static void printErrorLogo(int freeSpaces) {
+        String[] errorLogo = {
+                "                ░░░░░░░▄▄▄▄▄▄░░░░░░░░░░░░░░░░░░░",
+                "                ░░░░░▄█████████▄▄░░░░░░░░▄▄░░░░░",
+                "                ░░░░███████████████▄▄░░░░▄██▄░░░",
+                "                ░▄██████████████████████████▀░░░",
+                "                ░███░░░░░░░░░░░░░░░░░░░█░░░░░░░░",
+                "                ░███░███████████████████░░░░░░░░",
+                "                ░███░░▀████───████────█▀░░░░░░░░",
+                "                ░███░░░▀▄▄▄▄▄▀░▀▄▄▄▄▄▀▀▀▄░░░░░░░",
+                "                ░░██░░░░░░░░░░░░░░░░░░░░░▀▄░░░░░",
+                "                ░░▄█░░░░░▄▀█▀▀▀▄▄▄░░░░░▄▀░░▀▄░░░",
+                "                ░█░░░░░▄▀──█───█──▀█▄▄░▀▀░░░░▀▄░",
+                "                ░▀▄▄░░█────█───█───█──▀▀▄░░▄▀▀▀░",
+                "                ░░░█░██▄▄▄▄█▄▄▄█▄▄▄█▄▄▄▄▄█▄▄▀░░░",
+                "                ░░░█░█████████████▄▄░░░░░░░░░░░░",
+                "                ░░░█░█████████████████████████▄░",
+                "                ░░░█░██████████▀▀░░░░░░░░░░░░░█░",
+                "                ░░░█░███▀░░░░░░░░░░░░░░░░░░░░░█░",
+                "                ░░░█░░░░░░░░░░░░░▀▄░▀▄░░░░░░░█░",
+                "                ░░░█░░░░░░░░░░░░▄▄▄▀▄▄▀░░░░░░░█░",
+                "                ░░░█░░░░░░░░░░░░░░░░░░░░░░░░░░█░",
+                "                ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+                "                ░█▀▄░█░█▄░█░█░█░█░░█▀░█▀▄░█▀░█▀▄░▄▀▀░█░",
+                "                ░█░█░█░█▀██░█▀▄░█░░█▀░█▀▄░█▀░█▀▄░█░█░▀░",
+                "                ░▀▀░░▀░▀░░▀░▀░▀░▀▀░▀▀░▀▀░░▀▀░▀░▀░░▀▀░▀░",
+                "                ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"};
+
+        printLogo(errorLogo, freeSpaces);
     }
 
-    public static void printErrorLogo2() {
-        String errorLogo = """
+    public static void printErrorLogo2(int freeSpaces) {
+        String[] errorLogo = {
+                "▄██████████████▄▐█▄▄▄▄█▌",
+                "██████▌▄▌▄▐▐▌███▌▀▀██▀▀",
+                "████▄█▌▄▌▄▐▐▌▀███▄▄█▌",
+                "▄▄▄▄▄██████████████▀",
+                "                                                                                                    "
+        };
 
-▄██████████████▄▐█▄▄▄▄█▌
-██████▌▄▌▄▐▐▌███▌▀▀██▀▀
-████▄█▌▄▌▄▐▐▌▀███▄▄█▌
-▄▄▄▄▄██████████████▀
-                                                                                                    \s
-                """;
-        out.println(errorLogo);
+        printLogo(errorLogo, freeSpaces);
     }
 
-    public static void printWaitingLogo() {
-        String waitingLogo = """
-                ───▄▄▄
-                ─▄▀░▄░▀▄
-                ─█░█▄▀░█
-                ─█░▀▄▄▀█▄█▄▀
-                ▄▄█▄▄▄▄███▀
-                                
-                """;
-        out.println(waitingLogo);
+    public static void printWaitingLogo(int freeSpaces) {
+        String[] waitingLogo = {
+                "───▄▄▄",
+                "─▄▀░▄░▀▄",
+                "─█░█▄▀░█",
+                "─█░▀▄▄▀█▄█▄▀",
+                "▄▄█▄▄▄▄███▀"
+        };
+
+        printLogo(waitingLogo, freeSpaces);
     }
 
 }

@@ -65,7 +65,7 @@ public class StartAndEndGameHandler extends MessageHandler {
                         }
                     }
                 }else{
-                    getClientInterface().start();
+                    getClientInterface().waitingRoom();
                 }
             }
             case END_GAME ->{

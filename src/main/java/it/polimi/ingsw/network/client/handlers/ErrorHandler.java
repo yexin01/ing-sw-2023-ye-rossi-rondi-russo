@@ -17,17 +17,21 @@ public class ErrorHandler extends MessageHandler {
     public synchronized void handleMessage(Message mes) throws Exception {
         KeyErrorPayload key= (KeyErrorPayload) mes.getPayload().getKey();
         ErrorType error=(ErrorType) mes.getPayload().getContent(Data.ERROR);
-        getClientInterface().displayError(error.getErrorMessage());
         switch(key){
             case ERROR_DATA -> {
                 if(!error.equals(ErrorType.ILLEGAL_TURN)){
+                    getClientInterface().displayError(error.getErrorMessage());
                     getClientInterface().getClientView().somethingWrong();
                 }
             }
             case ERROR_CONNECTION -> {
                 switch(error){
                     case ONLY_PLAYER -> {
-                        getClient().setOnlyOnePlayer(true);
+                        if(!getClient().isOnlyOnePlayer()){
+                            getClientInterface().displayError(error.getErrorMessage());
+                            getClient().setOnlyOnePlayer(true);
+                        }
+
                         try {
                             Thread.sleep(5000);
                         } catch (InterruptedException e) {
@@ -39,18 +43,22 @@ public class ErrorHandler extends MessageHandler {
 
                     //mandato direttamente dal clientHandler ti sei disconnesso questa gestine potrà cambiare
                     case PING_NOT_RECEIVED -> {
+                        getClientInterface().displayError(error.getErrorMessage());
                         //getClientInterface().displayError(error.getErrorMessage());
                     }
                     //errore nella login chiede di riconnettersi
                     case ERR_NICKNAME_LENGTH,ERR_NICKNAME_TAKEN ->{
+                        getClientInterface().displayError(error.getErrorMessage());
                         getClientInterface().askNicknameAndConnection();
                     }
                     default->{
+                        getClientInterface().displayError(error.getErrorMessage());
                         getClientInterface().displayMessage((String) mes.getPayload().getContent(Data.CONTENT));
                     }
                 }
             }
             case ERROR_LOBBY -> {
+                getClientInterface().displayError(error.getErrorMessage());
                 if(error.equals(ErrorType.ERR_RECONNECT_TO_GAME_LOBBY) || error.equals(ErrorType.ERR_JOIN_GLOBAL_LOBBY)){
                     getClientInterface().askNicknameAndConnection();
                 }else {

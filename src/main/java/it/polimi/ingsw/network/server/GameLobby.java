@@ -143,7 +143,7 @@ public class GameLobby {
 
             MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
             MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
-            String content = "\nWelcome to Game Lobby "+ idGameLobby + "! -> waiting for "+ wantedPlayers +" players...\nGame will be starting soon...";
+            String content = "Welcome to Game Lobby "+ idGameLobby + "! -> waiting for "+ wantedPlayers +" players... Game will be starting soon...";
             payload.put(Data.CONTENT,content);
             connection.sendMessageToClient(new Message(header,payload));
 

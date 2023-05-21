@@ -13,11 +13,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.concurrent.Semaphore;
 
 import static java.lang.System.out;
 
-//TODO molti comandi scritti qua li sposterò sugli handler li ho utilizzati per vedere come venivano stampate le varie fasi del turno
 public class CLI implements ClientInterface {
 
     private Scanner in = new Scanner(System.in);
@@ -38,114 +36,7 @@ public class CLI implements ClientInterface {
         printerCommonGoalAndPoints=new PrinterCommonGoalAndPoints();
     }
 
-    public void initialLobby(){
-        //printMyShelfieLogo();
-        doConnection();
-    }
 
-    private void doConnection(){
-        int connectionType = -1;
-
-        String nickname = askNickname();
-        out.println("Hi "+ nickname +"!");
-
-        connectionType = askConnection();
-        if (connectionType == 0) {
-            Colors.colorize(Colors.WHITE_CODE,"You chose Socket connection\n");
-
-        } else if (connectionType == 1){
-            Colors.colorize(Colors.WHITE_CODE,"You chose RMI connection\n");
-        } else {
-            Colors.colorize(Colors.WHITE_CODE,"Invalid connection\n");
-            doConnection();
-        }
-
-        String ip = askIp();
-        int port = askPort(connectionType);
-        Colors.colorize(Colors.WHITE_CODE,"Server Ip Address: " + ip);
-        Colors.colorize(Colors.WHITE_CODE,"Server Port: " + port + "\n");
-        ClientHandler clientHandler=new ClientHandler();
-        try{ //metodo di Clienthanlder (la cli estende ClientHandler)
-            clientHandler.createConnection(connectionType, ip, port,this);
-            Colors.colorize(Colors.WHITE_CODE,"Connection created");
-        } catch (Exception e){
-            Colors.colorize(Colors.ERROR_MESSAGE,"Error in creating connection. Please try again.\n");
-            doConnection();
-        }
-    }
-
-    private String askNickname(){
-        Colors.colorize(Colors.WHITE_CODE,"Enter your username: ");
-        String nickname=in.nextLine().toLowerCase();
-        getClientView().setNickname(nickname);
-        return nickname;
-    }
-
-    private int askConnection(){
-        int connectionType = -1;
-        do{
-            Colors.colorize(Colors.WHITE_CODE,"Enter your connection type: (0 for Socket, 1 for RMI) ");
-            connectionType = Integer.parseInt(in.next());
-            in.nextLine(); // aggiungo questa riga per consumare il carattere di fine riga rimanente
-        } while (connectionType != 0 && connectionType != 1);
-        return connectionType;
-    }
-
-    private String askIp() {
-        String defaultIp = "127.0.0.1";
-        Colors.colorize(Colors.WHITE_CODE,"Enter the server Ip Address (default " + defaultIp + "): (press Enter button to choose default)");
-        in.reset();
-
-        do {
-            if (in.hasNextLine()) {
-                String line = in.nextLine();
-
-                if (line.equals("")) {
-                    return defaultIp;
-                } else {
-                    try {
-                        InetAddress address = InetAddress.getByName(line);
-                        return address.getHostAddress();
-                    } catch (UnknownHostException e) {
-                        Colors.colorize(Colors.ERROR_MESSAGE,"Invalid IP address. Please enter a valid IP address or press Enter to choose the default.");
-                    }
-                }
-            } else {
-                in.nextLine();
-                Colors.colorize(Colors.ERROR_MESSAGE,"Invalid input. Please enter a valid IP address or press Enter to choose the default.");
-            }
-        } while (true);
-    }
-
-    private int askPort(int connectionType) {
-        int defaultPort = (connectionType == 0 ? 1100 : 1099);
-        Colors.colorize(Colors.WHITE_CODE,"Enter the server port (default " + defaultPort + "): (press Enter button to choose default)");
-        in.reset();
-        //qua nel catch e nell'else fanno la stessa cosa
-        do {
-            if (in.hasNextLine()) {
-                String line = in.nextLine();
-
-                if (line.equals("")) {
-                    return defaultPort;
-                } else {
-                    try {
-                        int port = Integer.parseInt(line);
-                        if (port >= 1024 && port <= 65535) {
-                            return port;
-                        } else {
-                            Colors.colorize(Colors.ERROR_MESSAGE,"Invalid port number. Please enter a port number between 1024 and 65535.");
-                         }
-                    } catch (NumberFormatException e) {
-                        Colors.colorize(Colors.ERROR_MESSAGE,"Invalid input. Please enter a valid port number.");
-                    }
-                }
-            } else {
-                in.nextLine();
-                Colors.colorize(Colors.ERROR_MESSAGE,"Invalid input. Please enter a valid port number.");
-            }
-        } while (true);
-    }
 
     public <T extends Enum<T> & Commands> void printLobbyCommands(Class<T> enumClass) throws Exception {
         T[] enumValues = enumClass.getEnumConstants();
@@ -154,11 +45,6 @@ public class CLI implements ClientInterface {
             Colors.colorizeSize(Colors.GAME_INSTRUCTION, "•["+(enumValue.ordinal()+1)+"]",5);
             Colors.colorizeSize(Colors.GAME_INSTRUCTION,enumValue.getCommand(), 30);
             Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
-            if((enumValue.ordinal()+1)%2==0){
-                out.println();
-            }
-            //Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
-
         }
         out.println();
         Colors.colorize(Colors.GAME_INSTRUCTION,"Insert command: ");
@@ -241,7 +127,8 @@ public class CLI implements ClientInterface {
         scanner.nextLine();
 
         if(!(input >= 0 && input < enumSize)){
-            Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.INVALID_INPUT.getErrorMessage());
+            displayError(ErrorType.INVALID_INPUT.getErrorMessage());
+            //Colors.colorize(Colors.ERROR_MESSAGE,
             return null;
         }
         out.println();
@@ -257,13 +144,11 @@ public class CLI implements ClientInterface {
         PrinterLogo.printYourTurnPhase();
         out.println();
         //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: SELECT FROM BOARD");
-        PrinterLogo.printBoardPhase();
+        PrinterLogo.printBoardPhase(10);
         out.println();
         ArrayList<Integer> selection=new ArrayList<>();
         //getClientView().setCoordinatesSelected(new ArrayList<>());
         printerBoard.printMatrixBoard(getClientView().getBoardView(),null);
-        //TODO aggiungere attributo che indica il numero di tile massimo
-        Scanner scanner=new Scanner(System.in);
         boolean continueToAsk = true;
 
         while (continueToAsk) {
@@ -319,11 +204,8 @@ public class CLI implements ClientInterface {
             case PRINT3 -> printerBookshelfAndPersonal.printPersonal(getClientView(),2,35);
             case PRINT4 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,1,60,true,false,0);
             case PRINT5 -> printerCommonGoalAndPoints.printPoints(getClientView());
-            //TODO poi gli passero i valori delle common
             case PRINT6 -> printerCommonGoalAndPoints.printCommonGoalCards(getClientView());
             case PRINT7 -> printerStartAndEndTurn.rulesGame();
-
-            //case PRINT8 -> clientView.somethingWrong();
         }
     }
 
@@ -331,7 +213,8 @@ public class CLI implements ClientInterface {
         int x, y;
         ErrorType error= Check.checkNumTilesSelectedBoard(selection,clientView.getBookshelfView());
         if (error!=null) {
-            Colors.colorize(Colors.ERROR_MESSAGE,error.getErrorMessage());
+            displayError(error.getErrorMessage());
+            //Colors.colorize(Colors.ERROR_MESSAGE,
             out.println();
         }else{
             Colors.colorizeSize(Colors.GAME_INSTRUCTION, "Insert row",14);
@@ -343,7 +226,8 @@ public class CLI implements ClientInterface {
             scanner.nextLine();
             error= Check.checkCoordinates(x, y, clientView.getBoardView());
             if(error!=null){
-                Colors.colorize(Colors.ERROR_MESSAGE, error.getErrorMessage());
+                displayError(error.getErrorMessage());
+                //Colors.colorize(Colors.ERROR_MESSAGE,
                 return selection;
             }
             selection.add(x);
@@ -351,7 +235,8 @@ public class CLI implements ClientInterface {
             error= Check.checkSelectable(selection, getClientView().getBoardView());
             if (error!=null) {
                 //printerBoard.printMatrixBoard(getClientView().getBoardView(),selection);
-                Colors.colorize(Colors.ERROR_MESSAGE, error.getErrorMessage());
+                displayError(error.getErrorMessage());
+                //Colors.colorize(Colors.ERROR_MESSAGE,
                 selection.remove(selection.size()-1);
                 selection.remove(selection.size()-1);
                 out.println();
@@ -379,22 +264,17 @@ public class CLI implements ClientInterface {
                 printCommands(commandsTurn);
 
             }
-        } else Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.ILLEGAL_PHASE.getErrorMessage());
+        } else displayError(ErrorType.ILLEGAL_PHASE.getErrorMessage());
+            //Colors.colorize(Colors.ERROR_MESSAGE,
         return false;
     }
 
     private int sizetile=3;
-    private int sizeLenghtFromBordChoiceItem = 20;
-    private int distanceBetweenTilesChoice = 4;
     @Override
     public  synchronized void askOrder() throws Exception {
         out.println();
-        //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: ORDER TILES");
-        PrinterLogo.printOrderPhase();
+        PrinterLogo.printOrderPhase(10);
         out.println();
-        //clientView.setTilesSelected(Check.createItemTileView(clientView.getCoordinatesSelected(), clientView.getBoardView()));
-        //insertTiles(2);
-        //Colors.colorize(Colors.GAME_INSTRUCTION,"ORDER TILES " );
         boolean continueToAsk = true;
         int[] orderTiles = new int[getClientView().getCoordinatesSelected().size() / 2];
         orderTiles[0]=-1;
@@ -427,7 +307,8 @@ public class CLI implements ClientInterface {
                         }
                         error = Check.checkPermuteSelection(orderTiles,clientView.getTilesSelected());
                         if (error != null) {
-                            Colors.colorize(Colors.ERROR_MESSAGE, error.getErrorMessage());
+                            displayError(error.getErrorMessage());
+                            //Colors.colorize(Colors.ERROR_MESSAGE,
                             out.println();
                         }
                     }
@@ -435,14 +316,16 @@ public class CLI implements ClientInterface {
                     continue;
                 case ORDER_TILES2:
                     if(error!=null){
-                        Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
+                        displayError(ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
+                        //Colors.colorize(Colors.ERROR_MESSAGE,
                     }
                     Colors.colorize(Colors.WHITE_CODE, "Choice has been reset");
                     error = ErrorType.INVALID_ORDER_TILE_NUMBER;
                     continue;
                 case ORDER_TILES3:
                     if(error!=null){
-                        Colors.colorize(Colors.ERROR_MESSAGE,ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
+                        displayError(ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
+                        //Colors.colorize(Colors.ERROR_MESSAGE,
                         continue;
                     }
                     continueToAsk=false;
@@ -462,7 +345,7 @@ public class CLI implements ClientInterface {
     public  synchronized void askColumn() throws Exception {
         out.println();
         //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: COLUMN");
-        PrinterLogo.printColumnPhase();
+        PrinterLogo.printColumnPhase(10);
         out.println();
         ErrorType error = ErrorType.INVALID_COLUMN;
         int column=-1;
@@ -482,7 +365,8 @@ public class CLI implements ClientInterface {
                         column = scanner.nextInt();
                         error = Check.checkBookshelf(column,clientView.getBookshelfView(),clientView.getTilesSelected());
                         if (error != null) {
-                            Colors.colorize(Colors.ERROR_MESSAGE, error.getErrorMessage());
+                            displayError(error.getErrorMessage());
+                            //Colors.colorize(Colors.ERROR_MESSAGE,
                             out.println();
                             error=ErrorType.INVALID_COLUMN;
                         }
@@ -490,7 +374,8 @@ public class CLI implements ClientInterface {
                     continue;
                 case COLUMN2:
                     if (error!=null) {
-                        Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
+                        displayError(ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
+                        //Colors.colorize(Colors.ERROR_MESSAGE,
                         continue;
                     }
                     Colors.colorize(Colors.GAME_INSTRUCTION, "Choice has been reset");
@@ -498,7 +383,8 @@ public class CLI implements ClientInterface {
                     continue;
                 case COLUMN3:
                     if (error!=null) {
-                        Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
+                        displayError(ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
+                        //Colors.colorize(Colors.ERROR_MESSAGE,
                         continue;
                     }
                     //continueToAsk = false;
@@ -518,13 +404,20 @@ public class CLI implements ClientInterface {
 
     @Override
     public void displayError(String error) {
+        out.println();
+        Colors.printCharacter("✘  ",1,Colors.ERROR_MESSAGE);
         Colors.colorize(Colors.ERROR_MESSAGE, error);
+        Colors.printCharacter("  ✘",1,Colors.ERROR_MESSAGE);
         out.println();
     }
 
     @Override
-    public void displayMessage(String error) {
-        Colors.colorize(Colors.BLUE_CODE, error);
+    public void displayMessage(String string) {
+        out.println();
+        Colors.printCharacter("► ",1,Colors.WHITE_CODE);
+        Colors.colorize(Colors.BLUE_CODE, string);
+        Colors.printCharacter(" ◄",1,Colors.WHITE_CODE);
+        out.println();
     }
 
 
@@ -537,7 +430,12 @@ public class CLI implements ClientInterface {
 
     @Override
     public void askLobbyDecision() throws Exception {
-        PrinterLogo.printGlobalLobbyPhase();
+        PrinterLogo.printWinnerLogo(20);
+        PrinterLogo.printErrorLogo(20);
+        PrinterLogo.printErrorLogo2(10);
+        PrinterLogo.printLostConnectionLogo(20);
+        PrinterLogo.printWaitingLogo(20);
+        PrinterLogo.printGlobalLobbyPhase(10);
         out.println();
         boolean continueToAsk = true;
         MessageHeader header=new MessageHeader(MessageType.LOBBY, getClientView().getNickname());
@@ -547,7 +445,8 @@ public class CLI implements ClientInterface {
         while (continueToAsk) {
             commandsLobby = (CommandsLobby) checkCommand(-1);
             if (commandsLobby == null) {
-                Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.INVALID_INPUT.getErrorMessage());
+                //printError(ErrorType.INVALID_INPUT.getErrorMessage());
+                //Colors.colorize(Colors.ERROR_MESSAGE,
                 continue;
             }
             Colors.colorize(Colors.BLUE_CODE, "You choose " + commandsLobby.getCommand() + " ");
@@ -586,44 +485,16 @@ public class CLI implements ClientInterface {
                 case QUIT_SERVER -> {
                     clientView.lobby(KeyLobbyPayload.QUIT_SERVER,-1);
                 }
-                /*
-                case RESET_CHOICE ->{
-                    if(payload == null){
-                        Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
-                    }else{
-                        payload=null;
-                        Colors.colorize(Colors.BLUE_CODE,"Your choice has been reset");
-                    }
-                }
-                case CONFIRM_CHOICE -> {
-                    if (payload == null) {
-                        Colors.colorize(Colors.ERROR_MESSAGE, ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
-                    } else continueToAsk = false;
-                }
-
-                 */
             }
         }
-        //clientView.setLobbyDecision(new Message(header,payload));
-
-
-        message=new Message(header,payload);
-        //return message;
     }
+
 
     @Override
     public void endGame(int[] personalPoints) throws Exception {
-        PrinterLogo.printWinnerLogo();
+        PrinterLogo.printWinnerLogo(20);
         printerCommonGoalAndPoints.printEndGame(clientView,personalPoints);
         clientView.receiveEndGame();
-       // askLobbyDecision();
-        //printerStartAndEndTurn.endGame(getClientView());
-    }
-
-
-
-    public void Setup() {
-        //printerStartAndEndTurn.initialLobby();
     }
 
     public PrinterBookshelfAndPersonal getPrinterBookshelfAndPersonal() {
@@ -633,25 +504,17 @@ public class CLI implements ClientInterface {
     boolean continueToAskEndTurn;
 
     @Override
-    public synchronized void start() throws Exception {
-        PrinterLogo.printWaitingTurnPhase();
+    public synchronized void waitingRoom() throws Exception {
+        PrinterLogo.printWaitingTurnPhase(10);
         Colors.colorize(Colors.GAME_INSTRUCTION, "This is the board\n ");
         printerBoard.printMatrixBoard(clientView.getBoardView(), null);
     }
-
-
-
 
     @Override
     public void displayToken(int num, String nickname) {
         printerCommonGoalAndPoints.printToken(num,nickname);
     }
 
-    @Override
-    public void stop() {
-        semaphore.release();
-    }
-    private Semaphore semaphore = new Semaphore(0);
 
     public ClientView getClientView() {
         return clientView;
@@ -659,6 +522,118 @@ public class CLI implements ClientInterface {
 
     public void setClientView(ClientView clientView) {
         this.clientView = clientView;
+    }
+    public void initialLobby(){
+        doConnection();
+    }
+
+    private void doConnection(){
+        int connectionType = -1;
+
+        String nickname = askNickname();
+        out.println("Hi "+ nickname +"!");
+
+        connectionType = askConnection();
+        if (connectionType == 0) {
+            Colors.colorize(Colors.WHITE_CODE,"You chose Socket connection\n");
+
+        } else if (connectionType == 1){
+            Colors.colorize(Colors.WHITE_CODE,"You chose RMI connection\n");
+        } else {
+            Colors.colorize(Colors.WHITE_CODE,"Invalid connection\n");
+            doConnection();
+        }
+
+        String ip = askIp();
+        int port = askPort(connectionType);
+        Colors.colorize(Colors.WHITE_CODE,"Server Ip Address: " + ip);
+        Colors.colorize(Colors.WHITE_CODE,"Server Port: " + port + "\n");
+        ClientHandler clientHandler=new ClientHandler();
+        try{ //metodo di Clienthanlder (la cli estende ClientHandler)
+            clientHandler.createConnection(connectionType, ip, port,this);
+            Colors.colorize(Colors.WHITE_CODE,"Connection created");
+        } catch (Exception e){
+            displayError("Error in creating connection. Please try again.\n");
+            doConnection();
+        }
+    }
+
+    private String askNickname(){
+        Colors.colorize(Colors.WHITE_CODE,"Enter your username: ");
+        String nickname=in.nextLine().toLowerCase();
+        getClientView().setNickname(nickname);
+        return nickname;
+    }
+
+    private int askConnection(){
+        int connectionType = -1;
+        do{
+            Colors.colorize(Colors.WHITE_CODE,"Enter your connection type: (0 for Socket, 1 for RMI) ");
+            connectionType = Integer.parseInt(in.next());
+            in.nextLine(); // aggiungo questa riga per consumare il carattere di fine riga rimanente
+        } while (connectionType != 0 && connectionType != 1);
+        return connectionType;
+    }
+
+    private String askIp() {
+        String defaultIp = "127.0.0.1";
+        Colors.colorize(Colors.WHITE_CODE,"Enter the server Ip Address (default " + defaultIp + "): (press Enter button to choose default)");
+        in.reset();
+
+        do {
+            if (in.hasNextLine()) {
+                String line = in.nextLine();
+
+                if (line.equals("")) {
+                    return defaultIp;
+                } else {
+                    try {
+                        InetAddress address = InetAddress.getByName(line);
+                        return address.getHostAddress();
+                    } catch (UnknownHostException e) {
+                        displayError("Invalid IP address. Please enter a valid IP address or press Enter to choose the default.");
+                        //Colors.colorize(Colors.ERROR_MESSAGE,);
+                    }
+                }
+            } else {
+                in.nextLine();
+                displayError("Invalid input. Please enter a valid IP address or press Enter to choose the default.");
+                //Colors.colorize(Colors.ERROR_MESSAGE,);
+            }
+        } while (true);
+    }
+
+    private int askPort(int connectionType) {
+        int defaultPort = (connectionType == 0 ? 1100 : 1099);
+        Colors.colorize(Colors.WHITE_CODE,"Enter the server port (default " + defaultPort + "): (press Enter button to choose default)");
+        in.reset();
+        //qua nel catch e nell'else fanno la stessa cosa
+        do {
+            if (in.hasNextLine()) {
+                String line = in.nextLine();
+
+                if (line.equals("")) {
+                    return defaultPort;
+                } else {
+                    try {
+                        int port = Integer.parseInt(line);
+                        if (port >= 1024 && port <= 65535) {
+                            return port;
+                        } else {
+                            displayError("Invalid port number. Please enter a port number between 1024 and 65535.");
+                            //Colors.colorize(Colors.ERROR_MESSAGE,);
+                        }
+                    } catch (NumberFormatException e) {
+                        displayError("Invalid input. Please enter a valid port number.");
+                        //Colors.colorize(Colors.ERROR_MESSAGE,
+                    }
+                }
+            } else {
+                in.nextLine();
+                displayError("Invalid input. Please enter a valid port number.");
+                //Colors.colorize(
+            }
+        } while (true);
     }
 }
 
