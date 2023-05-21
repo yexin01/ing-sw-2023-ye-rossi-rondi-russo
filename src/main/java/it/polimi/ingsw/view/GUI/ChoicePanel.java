@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.GUI;
 
 import it.polimi.ingsw.model.modelView.ItemTileView;
+import it.polimi.ingsw.view.Check;
 import it.polimi.ingsw.view.ClientView;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -34,9 +35,9 @@ public class ChoicePanel extends BasePanel{
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, false, false);
         BackgroundImage background2 = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         setBackground(new Background(background2));
-        itemButtons = new Button[4];
+        itemButtons = new Button[3];
         //semaphore.acquire();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < Check.MAX_SELECTABLE_TILES; i++) {
             itemButtons[i] = new Button();
             createEmptyButton(itemButtons[i], i);
             stackPane.getChildren().add(itemButtons[i]);
@@ -63,7 +64,7 @@ public class ChoicePanel extends BasePanel{
         box1.getChildren().get(1).setOnMouseClicked(mouseEvent ->  {
             Platform.runLater(() -> {
                 counter = 0;
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < 3; i++) {
                     itemButtons[i].setDisable(false);
                     itemButtons[i].setOpacity(1);
                 }
@@ -116,8 +117,8 @@ public class ChoicePanel extends BasePanel{
         public void setButtonIcon(Image icon, int index) {
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
             ImageView imageView = new ImageView(icon);
-            imageView.setFitWidth(screenBounds.getWidth()*0.2);
-            imageView.setFitHeight(screenBounds.getHeight()*0.3);
+            imageView.setFitWidth(screenBounds.getWidth()*0.2*(3.0/Check.MAX_SELECTABLE_TILES));
+            imageView.setFitHeight(screenBounds.getHeight()*0.3*(3.0/Check.MAX_SELECTABLE_TILES));
             imageView.setPreserveRatio(true);
             itemButtons[index].setGraphic(imageView);
             itemButtons[index].setOpacity(1);
@@ -127,7 +128,7 @@ public class ChoicePanel extends BasePanel{
 
     public void setup (int num) {
         tilesSelected = new ItemTileView[num];
-        switch (num) {
+        /*switch (num) {
             case 1:
                 orderTiles = new int[]{0};
                 break;
@@ -138,10 +139,16 @@ public class ChoicePanel extends BasePanel{
                 orderTiles = new int[]{0,1,2};
                 break;
         }
+
+         */
+        orderTiles = new int[num];
+        for (int i=0;i<num;i++) {
+            orderTiles[i] = i;
+        }
     }
 
     public void clear () {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             itemButtons[i].setDisable(true);
             itemButtons[i].setOpacity(0);
         }

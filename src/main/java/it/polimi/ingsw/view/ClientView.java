@@ -25,10 +25,8 @@ public class ClientView {
 
     private ItemTileView[][] bookshelfView;
     private ItemTileView[] tilesSelected;
-
     private PlayerPointsView[] playerPointsViews;
     private PersonalGoalCard playerPersonalGoal;
-
     private String nickname;
     private int column;
 
