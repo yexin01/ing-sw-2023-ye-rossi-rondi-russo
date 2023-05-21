@@ -15,7 +15,7 @@ public class MessageToserverHandlerTurn {
     }
 
 
-    public void handleMessageToServer(Object newValue, KeyAbstractPayload turnPhase, String nickname,MessageType messageType) throws Exception {
+    public synchronized void handleMessageToServer(Object newValue, KeyAbstractPayload turnPhase, String nickname,MessageType messageType) throws Exception {
         MessageHeader header=new MessageHeader(messageType, nickname);
         MessagePayload payload=new MessagePayload(turnPhase);
         payload.put(Data.VALUE_CLIENT,newValue);

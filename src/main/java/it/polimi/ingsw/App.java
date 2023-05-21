@@ -25,7 +25,28 @@ import java.util.List;
 public class App{
 
         public static void main(String[] args) throws Exception {
-            CLI cli=new CLI();
+         ClientView cli=new ClientView();
+
+
+         //cli.setThreadRunning(false);
+         try {
+          Thread.sleep(5000);
+         } catch (InterruptedException e) {
+          e.printStackTrace();
+         }
+         System.out.print("USCITOOOOOOOO");
+         /*
+         cli.setThreadRunning(true);
+         cli.onlyOnePlayer();
+         try {
+          Thread.sleep(5000);
+         } catch (InterruptedException e) {
+          e.printStackTrace();
+         }
+         cli.setThreadRunning(false);
+         System.out.print("USCITOOOOOOOO");
+
+          */
             ArrayList<String> playerNames = new ArrayList<>(List.of("TIZIO", "CAIO", "SEMPRONIO", "PIPPO"));
          ModelView mo=new ModelView(4,new GameRules());
          PlayerPointsView[] pl=new PlayerPointsView[4];

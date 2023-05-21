@@ -24,6 +24,7 @@ public class GameLobby {
     private ModelView modelView;
     private InfoAndEndGameListener infoAndEndGameListener;
     private Message messageEndGame=null;
+    private boolean onlyOnePlayer;
 
 
     private ConcurrentHashMap<String, Connection> players; //maps of all the active players of the game
@@ -195,26 +196,29 @@ public class GameLobby {
         for(String playersD:playersDisconnected){
             System.out.println("DISCONNESSO "+playersD);
         }
-        if(players.size()==1 && messageEndGame==null ){
-            gameController.endGame();
-        }
-        else if(messageEndGame==null){
-            gameController.receiveMessageFromClient(message);
-        }else {
-            int index=gameController.getModel().getIntByNickname(message.getHeader().getNickname());
-            gameController.getActivePlayers()[index]=false;
-            System.out.println(message.getHeader().getNickname()+"SETTATO "+gameController.getActivePlayers()[index]);
-            boolean allFalse = true;
-            for (boolean value : gameController.getActivePlayers()) {
-                if (value) {
-                    allFalse = false;
-                    break;
+        if(!onlyOnePlayer ){
+            if(messageEndGame==null){
+                gameController.receiveMessageFromClient(message);
+            }else {
+                int index=gameController.getModel().getIntByNickname(message.getHeader().getNickname());
+                gameController.getActivePlayers()[index]=false;
+                System.out.println(message.getHeader().getNickname()+"SETTATO "+gameController.getActivePlayers()[index]);
+                boolean allFalse = true;
+                for (boolean value : gameController.getActivePlayers()) {
+                    if (value) {
+                        allFalse = false;
+                        break;
+                    }
+                }
+                if(allFalse){
+                    infoAndEndGameListener.endGame();
                 }
             }
-            if(allFalse){
-                infoAndEndGameListener.endGame();
-            }
+
+        }else{
+            sendOnlyOnePlayer(message.getHeader().getNickname());
         }
+
     }
 
     /**
@@ -252,7 +256,12 @@ public class GameLobby {
             payload.put(Data.WHO_CHANGE,nickname);
             Message message = new Message(header,payload);
             sendMessageToAllPlayers(message);
-        }else sendMessageToSpecificPlayer(messageEndGame,nickname);
+        }
+        if(onlyOnePlayer){
+            onlyOnePlayer=false;
+        }
+
+        else sendMessageToSpecificPlayer(messageEndGame,nickname);
 
         System.out.println("Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in attivo");
     }
@@ -277,6 +286,17 @@ public class GameLobby {
             sendMessageToAllPlayers(message);
             System.out.println(content);
         }
+        if(players.size()==1 && messageEndGame==null ){
+            onlyOnePlayer=true;
+            sendOnlyOnePlayer(nickname);
+        }
+    }
+    public synchronized void sendOnlyOnePlayer(String nickname) throws IOException {
+        MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
+        MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_CONNECTION);
+        payload.put(Data.ERROR,ErrorType.ONLY_PLAYER);
+        Message message = new Message(header,payload);
+        sendMessageToAllPlayers(message);
     }
 
     /**

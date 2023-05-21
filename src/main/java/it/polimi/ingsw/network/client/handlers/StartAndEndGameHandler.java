@@ -20,7 +20,7 @@ public class StartAndEndGameHandler extends MessageHandler {
     }
 
     @Override
-    public void handleMessage(Message mes) throws Exception {
+    public synchronized void handleMessage(Message mes) throws Exception {
         System.out.println("SONO IN START AND GAME HANDLER");
         TurnPhase data = (TurnPhase) mes.getPayload().getKey();
 
@@ -46,7 +46,7 @@ public class StartAndEndGameHandler extends MessageHandler {
                     System.out.println(str.getNickname());
                 }
                 //se si é disconnesso l'utente si troverà automaticamente nella fase end Turn, in piu se non e di turno non entrera in questo if
-                if(mes.getPayload().getContent(Data.WHO_CHANGE).equals(getClientInterface().getClientView().getNickname())){
+                if(mes.getPayload().getContent(Data.NEXT_PLAYER).equals(getClientInterface().getClientView().getNickname())){
                     switch((TurnPhase)mes.getPayload().getContent(Data.PHASE)) {
                         case END_TURN, SELECT_FROM_BOARD ,ALL_INFO-> {
                             getClientInterface().askCoordinates();

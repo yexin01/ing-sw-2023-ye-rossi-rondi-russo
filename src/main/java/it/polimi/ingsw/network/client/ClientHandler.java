@@ -52,6 +52,7 @@ public class ClientHandler implements Runnable {
         notify();
     }
 
+
     /**
      * Method to create a new message handler thread that handles the messages received from the server:
      * if the client is a ClientRMI, it handles the message directly
@@ -88,6 +89,7 @@ public class ClientHandler implements Runnable {
         });
         messageHandlerThread.start();
     }
+
 
     /**
      * Method to create a new connection between client and server
@@ -132,7 +134,7 @@ public class ClientHandler implements Runnable {
      * @throws Exception if there are problems with the connection
      */
     public synchronized void handleMessageFromServer(Message message) throws Exception {
-        managerHandlers.handleMessageFromServer(message);
+       managerHandlers.handleMessageFromServer(message);
     }
 
 }

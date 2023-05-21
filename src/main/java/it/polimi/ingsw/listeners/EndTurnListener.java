@@ -31,10 +31,11 @@ public class EndTurnListener extends EventListener{
         MessageHeader header=new MessageHeader(MessageType.DATA,nickname);
         MessagePayload payload=new MessagePayload(TurnPhase.END_TURN);
         payload.put(Data.NEW_BOARD,boardView);
-        payload.put(Data.WHO_CHANGE,modelView.getTurnNickname());
+        payload.put(Data.NEXT_PLAYER,modelView.getTurnNickname());
         payload.put(Data.TOKEN,modelView.getToken());
         payload.put(Data.POINTS,modelView.checkWinner());
         payload.put(Data.PERSONAL_POINTS,modelView.getPersonalPoint(nickname));
+        payload.put(Data.WHO_CHANGE,modelView.findPreviousPlayer().getNickname());
         Message m=new Message(header,payload);
         return m;
     }

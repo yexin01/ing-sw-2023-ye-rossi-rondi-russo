@@ -14,7 +14,7 @@ public class ErrorHandler extends MessageHandler {
     }
 
     @Override
-    public void handleMessage(Message mes) throws Exception {
+    public synchronized void handleMessage(Message mes) throws Exception {
         KeyErrorPayload key= (KeyErrorPayload) mes.getPayload().getKey();
         ErrorType error=(ErrorType) mes.getPayload().getContent(Data.ERROR);
         getClientInterface().displayError(error.getErrorMessage());
@@ -26,9 +26,20 @@ public class ErrorHandler extends MessageHandler {
             }
             case ERROR_CONNECTION -> {
                 switch(error){
+                    case ONLY_PLAYER -> {
+                        getClient().setOnlyOnePlayer(true);
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                         System.out.println("Il thread è stato interrotto e terminato.");
+                        getClientInterface().getClientView().receiveError();
+                    }
+
                     //mandato direttamente dal clientHandler ti sei disconnesso questa gestine potrà cambiare
                     case PING_NOT_RECEIVED -> {
-                        getClientInterface().displayError(error.getErrorMessage());
+                        //getClientInterface().displayError(error.getErrorMessage());
                     }
                     //errore nella login chiede di riconnettersi
                     case ERR_NICKNAME_LENGTH,ERR_NICKNAME_TAKEN ->{
@@ -52,6 +63,7 @@ public class ErrorHandler extends MessageHandler {
 
         System.out.println("SONO L'ERROR HANDLER");
     }
+
 
 
 }

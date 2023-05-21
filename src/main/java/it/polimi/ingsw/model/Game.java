@@ -51,15 +51,6 @@ public class Game {
         return modelview.getIntegerValue(nickname);
     }
 
-    public void setNextPlayer() {
-        boolean[] activePlayers=modelview.getActivePlayers();
-        do{
-            if(turnPlayerInt() >= (players.size() - 1))
-                setTurnPlayer(0);
-            else setTurnPlayer(turnPlayerInt()+1);
-        }while(!activePlayers[turnPlayerInt()]);
-        System.out.println("Il prossimo giocatore che deve giocare ed é attivo é: "+players.get(turnPlayerInt()).getNickname());
-    }
     public boolean[] disconnectionAndReconnectionPlayer(String nickname,boolean discOrRec) {
         boolean[] activePlayers=modelview.getActivePlayers();
         for(int i=0;i<players.size();i++){

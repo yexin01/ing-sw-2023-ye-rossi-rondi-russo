@@ -12,11 +12,14 @@ public class ConnectionHandler extends MessageHandler{
     }
 
     @Override
-    public void handleMessage(Message mes) throws Exception {
+    public synchronized void handleMessage(Message mes) throws Exception {
         KeyConnectionPayload key= (KeyConnectionPayload) mes.getPayload().getKey();
         getClientInterface().displayMessage((String) mes.getPayload().getContent(Data.CONTENT));
-        if(key.equals(KeyConnectionPayload.RECONNECTION) && mes.getPayload().getContent(Data.WHO_CHANGE).equals(getClientInterface().getClientView().getNickname())){
-            getClientInterface().getClientView().somethingWrong();
+        if(key.equals(KeyConnectionPayload.RECONNECTION)){
+            if(getClient().isOnlyOnePlayer() || mes.getPayload().getContent(Data.WHO_CHANGE).equals(getClientInterface().getClientView().getNickname())){
+                getClient().setOnlyOnePlayer(false);
+                getClientInterface().getClientView().somethingWrong();
+            }
         }
     }
 }

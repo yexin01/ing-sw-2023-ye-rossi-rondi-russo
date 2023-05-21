@@ -98,6 +98,28 @@ public class ModelView {
             System.out.println(obj.getPoints()+"  "+personalPoints[i++]+" "+obj.getNickname());
         }
     }
+    public void setNextPlayer() {
+        do{
+            if(turnPlayer>= (playerPoints.length - 1))
+                setTurnPlayer(0);
+            else setTurnPlayer(turnPlayer+1);
+        }while(!activePlayers[turnPlayer]);
+        System.out.println("Il prossimo giocatore che deve giocare ed é attivo é: "+playerPoints[turnPlayer].getNickname());
+    }
+    public PlayerPointsView findPreviousPlayer() {
+        int currentIndex =turnPlayer;
+         do{
+            currentIndex--;
+            if (currentIndex < 0) {
+                currentIndex = activePlayers.length- 1;
+            }
+            if (currentIndex == turnPlayer) {
+                break;
+            }
+        }while (!activePlayers[currentIndex]);
+        System.out.println("Primo attivo: "+playerPoints[currentIndex].getNickname());
+        return playerPoints[currentIndex];
+    }
 
 
 

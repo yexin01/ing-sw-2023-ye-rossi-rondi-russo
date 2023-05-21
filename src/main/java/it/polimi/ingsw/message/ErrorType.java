@@ -12,6 +12,7 @@ public enum ErrorType implements KeyAbstractPayload {
 
     ERR_NICKNAME_LENGTH("Invalid username length.\n Disconnection.."),//da rifare connessione+login lato client
     ERR_NICKNAME_TAKEN("This nickname is already taken \n Disconnection.."),
+    ONLY_PLAYER("You are the only player connected, wait for another to continue the game"),
 
 
 

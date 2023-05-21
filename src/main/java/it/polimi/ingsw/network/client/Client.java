@@ -121,5 +121,13 @@ public abstract class Client extends UnicastRemoteObject {
      * @throws Exception if there are problems with the connection
      */
     public abstract void closeConnection() throws Exception;
+    private boolean onlyOnePlayer;
 
+    public boolean isOnlyOnePlayer() {
+        return onlyOnePlayer;
+    }
+
+    public void setOnlyOnePlayer(boolean onlyOnePlayer) {
+        this.onlyOnePlayer = onlyOnePlayer;
+    }
 }

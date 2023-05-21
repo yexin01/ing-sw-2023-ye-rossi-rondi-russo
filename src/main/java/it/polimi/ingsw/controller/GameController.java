@@ -105,12 +105,10 @@ public class GameController {
 
     }
     public void disconnectionPlayer(String nickname){
-        //TODO disconnection
         game.getModelView().setActivePlayers(game.disconnectionAndReconnectionPlayer(nickname,false));
         if(nickname.equals(getTurnNickname())){
-            //turnPhaseController.setCurrentPhase(TurnPhase.SELECT_FROM_BOARD);
             game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
-            game.setNextPlayer();
+            game.getModelView().setNextPlayer();
             listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
         }
 
@@ -163,7 +161,7 @@ public class GameController {
             if(game.getBoard().checkRefill()){
                 game.getBoard().refill();
             }
-            game.setNextPlayer();
+            game.getModelView().setNextPlayer();
             System.out.println("Il prossimo giocatore é "+game.getModelView().getTurnNickname());
             listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
         }

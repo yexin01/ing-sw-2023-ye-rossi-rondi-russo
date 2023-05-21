@@ -18,7 +18,7 @@ public class TurnHandler extends MessageHandler {
     private final StartAndEndGameHandler startAndEndGameHandler;
 
     @Override
-    public void handleMessage(Message mes) throws Exception {
+    public synchronized void handleMessage(Message mes) throws Exception {
         TurnPhase turnPhase=(TurnPhase) mes.getPayload().getKey();
         //System.out.println("SONO TURN HANDLER"+turnPhase);
         switch(turnPhase){
@@ -46,7 +46,7 @@ public class TurnHandler extends MessageHandler {
                    i++;
                 }
                 //é il suo turno
-                if(player.equals(getClientInterface().getClientView().getNickname())){
+                if(((String) mes.getPayload().getContent(Data.NEXT_PLAYER)).equals(getClientInterface().getClientView().getNickname())){
                     getClientInterface().askCoordinates();
                     //non é il suo turno
                 }else{

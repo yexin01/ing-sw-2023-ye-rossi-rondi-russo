@@ -13,7 +13,7 @@ public class LobbyHandler extends MessageHandler {
     }
 
     @Override
-    public void handleMessage(Message mes) throws Exception {
+    public synchronized void handleMessage(Message mes) throws Exception {
         getClientInterface().askLobbyDecision();
     }
 }

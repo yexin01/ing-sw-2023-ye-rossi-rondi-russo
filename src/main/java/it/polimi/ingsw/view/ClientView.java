@@ -136,6 +136,9 @@ public class ClientView {
     public void receiveEndGame() throws Exception {
         messageToserverHandlerTurn.handleMessageToServer(null, TurnPhase.END_GAME,nickname,MessageType.DATA);
     }
+    public void receiveError() throws Exception {
+        messageToserverHandlerTurn.handleMessageToServer(null, ErrorType.ONLY_PLAYER,nickname,MessageType.DATA);
+    }
 
 
     public int[][] getCommonGoalView() {
@@ -161,4 +164,27 @@ public class ClientView {
     public void setPersonalPoints(int personalPoints) {
         this.personalPoints = personalPoints;
     }
+
+    public synchronized void onlyOnePlayer() {
+        System.out.println("Waiting another player");
+        Thread thread = new Thread(() -> {
+            while (threadRunning) {
+                System.out.println("Il thread sta eseguendo...");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+            System.out.println("Il thread è stato interrotto e terminato.");
+        });
+        thread.start();
+    }
+    public void setThreadRunning(boolean threadRunning) {
+        this.threadRunning = threadRunning;
+    }
+    public boolean getThreadRunning() {
+        return threadRunning;
+    }
+    private static boolean threadRunning = true;
 }

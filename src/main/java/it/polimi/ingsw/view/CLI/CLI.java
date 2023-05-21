@@ -253,7 +253,7 @@ public class CLI implements ClientInterface {
 
 
     @Override
-    public void askCoordinates() throws Exception {
+    public  synchronized  void askCoordinates() throws Exception {
         PrinterLogo.printYourTurnPhase();
         out.println();
         //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: SELECT FROM BOARD");
@@ -387,7 +387,7 @@ public class CLI implements ClientInterface {
     private int sizeLenghtFromBordChoiceItem = 20;
     private int distanceBetweenTilesChoice = 4;
     @Override
-    public void askOrder() throws Exception {
+    public  synchronized void askOrder() throws Exception {
         out.println();
         //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: ORDER TILES");
         PrinterLogo.printOrderPhase();
@@ -459,7 +459,7 @@ public class CLI implements ClientInterface {
     }
 
     @Override
-    public void askColumn() throws Exception {
+    public  synchronized void askColumn() throws Exception {
         out.println();
         //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: COLUMN");
         PrinterLogo.printColumnPhase();
@@ -621,6 +621,7 @@ public class CLI implements ClientInterface {
     }
 
 
+
     public void Setup() {
         //printerStartAndEndTurn.initialLobby();
     }
@@ -632,11 +633,14 @@ public class CLI implements ClientInterface {
     boolean continueToAskEndTurn;
 
     @Override
-    public void start() throws Exception {
+    public synchronized void start() throws Exception {
         PrinterLogo.printWaitingTurnPhase();
         Colors.colorize(Colors.GAME_INSTRUCTION, "This is the board\n ");
         printerBoard.printMatrixBoard(clientView.getBoardView(), null);
     }
+
+
+
 
     @Override
     public void displayToken(int num, String nickname) {
