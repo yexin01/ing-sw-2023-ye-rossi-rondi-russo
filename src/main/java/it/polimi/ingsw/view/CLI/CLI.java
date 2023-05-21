@@ -141,7 +141,7 @@ public class CLI implements ClientInterface {
 
     @Override
     public  synchronized  void askCoordinates() throws Exception {
-        PrinterLogo.printYourTurnPhase();
+        //PrinterLogo.printYourTurnPhase();
         out.println();
         //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: SELECT FROM BOARD");
         PrinterLogo.printBoardPhase(10);
@@ -199,10 +199,23 @@ public class CLI implements ClientInterface {
 
     private void printCommands(CommandsTurn commandsTurn) throws Exception {
         switch (commandsTurn){
-            case PRINT1 -> printerBoard.printMatrixBoard(getClientView().getBoardView(),null);
-            case PRINT2 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3,1,60,false,false,0);
-            case PRINT3 -> printerBookshelfAndPersonal.printPersonal(getClientView(),2,35);
-            case PRINT4 -> printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,1,60,true,false,0);
+            case PRINT1 ->{
+                PrinterLogo.printBoardLogo(10);
+                printerBoard.printMatrixBoard(getClientView().getBoardView(),null);
+            }
+            case PRINT2 ->{
+                PrinterLogo.printBookshelfLogo(10);
+                printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3,1,60,false,false,0);
+
+            }
+            case PRINT3 -> {
+                printerBookshelfAndPersonal.printPersonal(getClientView(),2,35);
+            }
+            case PRINT4 ->{
+                PrinterLogo.printBookshelfLogo(10);
+                printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,1,60,true,false,0);
+
+            }
             case PRINT5 -> printerCommonGoalAndPoints.printPoints(getClientView());
             case PRINT6 -> printerCommonGoalAndPoints.printCommonGoalCards(getClientView());
             case PRINT7 -> printerStartAndEndTurn.rulesGame();

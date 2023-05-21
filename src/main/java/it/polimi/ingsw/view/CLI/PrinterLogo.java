@@ -77,8 +77,8 @@ public class PrinterLogo {
         String boardLogo[] = {
 
                 "╔╦╗╦ ╦╔═╗  ╔╗ ╔═╗╔═╗╦═╗╔╦╗",
-                 "║ ╠═╣║╣   ╠╩╗║ ║╠═╣╠╦╝ ║║",
-                 "╩ ╩ ╩╚═╝  ╚═╝╚═╝╩ ╩╩╚══╩╝"};
+                " ║ ╠═╣║╣   ╠╩╗║ ║╠═╣╠╦╝ ║║",
+                " ╩ ╩ ╩╚═╝  ╚═╝╚═╝╩ ╩╩╚══╩╝"};
 
         printLogo(boardLogo,freeSpaces);
     }
@@ -175,16 +175,15 @@ public class PrinterLogo {
         printLogo(columnPhaseLogo, freeSpaces);
     }
 
-    public static void printFinalRankingPhase() {
-        String finalRankingPhaseLogo = """
-                
-                                ╔═╗╦╔╗╔╔═╗╦    ╦═╗╔═╗╔╗╔╦╔═╦╔╗╔╔═╗
-                                ╠╣ ║║║║╠═╣║    ╠╦╝╠═╣║║║╠╩╗║║║║║ ╦
-                                ╚  ╩╝╚╝╩ ╩╩═╝  ╩╚═╩ ╩╝╚╝╩ ╩╩╝╚╝╚═╝
-                
-                """;
-        out.println(finalRankingPhaseLogo);
-    } //+ printWinnerLogo
+    public static void printFinalRankingPhase(int freeSpaces) {
+        String[] finalRankingPhaseLogo = {
+                "╔═╗╦╔╗╔╔═╗╦    ╦═╗╔═╗╔╗╔╦╔═╦╔╗╔╔═╗",
+                "╠╣ ║║║║╠═╣║    ╠╦╝╠═╣║║║╠╩╗║║║║║ ╦",
+                "╚  ╩╝╚╝╩ ╩╩═╝  ╩╚═╩ ╩╝╚╝╩ ╩╩╝╚╝╚═╝"
+        };
+
+        printLogo(finalRankingPhaseLogo, freeSpaces);
+    }
 
 
 

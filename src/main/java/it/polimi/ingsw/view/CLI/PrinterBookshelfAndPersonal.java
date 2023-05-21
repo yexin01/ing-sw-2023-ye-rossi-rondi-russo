@@ -36,7 +36,6 @@ public class PrinterBookshelfAndPersonal {
     }
 
     public void printMatrixBookshelf(ClientView clientView,int sizetile,int spaceBetweenTiles,int sizeLenghtFromBord,boolean personalGoal,boolean arrow, int spaceBetweenPersonal) throws Exception {
-        System.out.println("BOOKSHELF ");
         ItemTileView[][] bookshelfView= clientView.getBookshelfView();
         this.spaceBetweenTiles=spaceBetweenTiles;
         this.sizetile=sizetile;
