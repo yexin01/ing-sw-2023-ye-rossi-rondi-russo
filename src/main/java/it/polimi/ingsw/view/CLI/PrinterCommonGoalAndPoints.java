@@ -419,14 +419,14 @@ public class PrinterCommonGoalAndPoints {
                 }
             }
             System.out.println("Tokens left: ");
-            printTokensLeft(clientView);
+            printTokensLeft(i, clientView);
             System.out.println("");
         }
     }
 
-    public void printTokensLeft(ClientView clientView){
+    public void printTokensLeft(int indexCGC, ClientView clientView){
         ArrayList<String[]> tokensToPrint = new ArrayList<>();
-        switch (clientView.getCommonGoalView()[0].length) {
+        switch (clientView.getPlayerPointsViews().length) {
             case 2: tokensToPrint.addAll(Arrays.asList(token4, token8));
                 break;
             case 3: tokensToPrint.addAll(Arrays.asList(token4, token6, token8));
@@ -438,27 +438,12 @@ public class PrinterCommonGoalAndPoints {
         for(int j=0; j<token2.length; j++){
             for (int i=0; i<tokensToPrint.size(); i++){
                 int points = Integer.parseInt(tokensToPrint.get(i)[1].replaceAll("[^0-9]", ""));
-                if (points<= clientView.getCommonGoalView()[1][i]) Colors.colorize(Colors.WHITE_CODE, tokensToPrint.get(i)[j]);
+                if (points<= clientView.getCommonGoalView()[1][indexCGC]) Colors.colorize(Colors.WHITE_CODE, tokensToPrint.get(i)[j]);
                 else Colors.colorize(Colors.BLACK_CODE, tokensToPrint.get(i)[j]);
                 //System.out.println("");
             }
             System.out.println("");
         }
-
-
-
-        /*
-        for(int i=0; i<tokensToPrint.size(); i++){
-            int points = Integer.parseInt(tokensToPrint.get(i)[1].replaceAll("[^0-9]", ""));
-            for(int j=0; j<token2.length; j++){
-                if (points<= clientView.getCommonGoalView()[i][1]) Colors.colorize(Colors.WHITE_CODE, tokensToPrint.get(i)[j]);
-                else Colors.colorize(Colors.BLACK_CODE, tokensToPrint.get(i)[j]);
-                System.out.println("");
-            }
-        }
-
-         */
-
 
     }
 
