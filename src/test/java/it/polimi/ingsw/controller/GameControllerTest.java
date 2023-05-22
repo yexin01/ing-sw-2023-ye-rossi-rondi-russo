@@ -76,7 +76,7 @@ class GameControllerTest {
         ArrayList<String> nicknames = new ArrayList<>();
         nicknames.add("player1"); nicknames.add("player2");
         GameController gameController = new GameController(gameLobby, nicknames, infoAndEndGameListener);
-        Game game = new Game(gameRules, 4, modelView);
+        Game game = new Game(modelView);
         game.addPlayers(nicknames);
         game.setTurnPlayer(0);
         gameController.setGame(game);
@@ -107,7 +107,7 @@ class GameControllerTest {
         ArrayList<String> nicknames = new ArrayList<>();
         nicknames.add("player1"); nicknames.add("player2");
         GameController gameController = new GameController(gameLobby, nicknames, infoAndEndGameListener);
-        Game game = new Game(gameRules, 4, modelView);
+        Game game = new Game(modelView);
         game.addPlayers(nicknames);
         game.setTurnPlayer(0);
         gameController.setGame(game);
@@ -150,7 +150,7 @@ class GameControllerTest {
         ArrayList<String> nicknames = new ArrayList<>();
         nicknames.add("player1"); nicknames.add("player2");
         GameController gameController = new GameController(gameLobby, nicknames, infoAndEndGameListener);
-        Game game = new Game(gameRules, 4, modelView);
+        Game game = new Game(modelView);
         game.addPlayers(nicknames);
         game.setTurnPlayer(0);
         game.createPersonalGoalCard(gameRules);
@@ -174,6 +174,7 @@ class GameControllerTest {
         Message message = new Message(new MessageHeader(MessageType.DATA, game.getTurnPlayerOfTheGame().getNickname()), messagePayload);
         Type type = game.getBoard().getBoardBox(a, b).getTile().getType();
         gameController.selectingColumn(message);
-        assertEquals(type, game.getPlayerByNickname("player1").getBookshelf().getMatrix()[4][0].getType());
+        modelView.setNextPlayer();
+        assertEquals(type, game.getTurnPlayerOfTheGame().getBookshelf().getMatrix()[4][0].getType());
     }
 }
