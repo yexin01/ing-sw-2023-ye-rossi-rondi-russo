@@ -39,6 +39,16 @@ public class GUIApplication extends Application implements ClientInterface {
     }
 
     @Override
+    public void waitingRoom() throws Exception {
+        Platform.runLater(()-> {
+            EndTurnPanel endTurnPanel = new EndTurnPanel(clientView);
+            Scene scene = new Scene(endTurnPanel, screenBounds.getWidth(), screenBounds.getHeight());
+            stage.setScene(scene);
+            stage.show();
+        });
+    }
+
+    /*@Override
     public void start() throws Exception {
         Platform.runLater(()-> {
             EndTurnPanel endTurnPanel = new EndTurnPanel(clientView);
@@ -47,6 +57,8 @@ public class GUIApplication extends Application implements ClientInterface {
             stage.show();
         });
     }
+
+     */
 
     @Override
     public void displayToken(int num, String nickname) {
@@ -149,10 +161,6 @@ public class GUIApplication extends Application implements ClientInterface {
         });
     }
 
-    @Override
-    public void Setup() {
-
-    }
     /*public ChoicePanel getChoicePanel () {
         return this.choicePanel;
     }

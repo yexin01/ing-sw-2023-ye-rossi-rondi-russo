@@ -30,6 +30,7 @@ public abstract class BasePanel extends StackPane {
     private StackPane commonGoalCard2Image;
     private ImageView parquet;
     private GridPane bookshelf;
+    private ImageView png;
     private Image [][] boardTiles = new Image[9][9];
     private double x;
     private double y;
@@ -140,6 +141,10 @@ public abstract class BasePanel extends StackPane {
 
     public ImageView getParquet() {
         return parquet;
+    }
+
+    public ImageView getPng() {
+        return png;
     }
 
     public VBox createCardsBox (ClientView clientView, Rectangle2D screenBounds) {
@@ -401,16 +406,24 @@ public abstract class BasePanel extends StackPane {
                 bookshelf.add(button, j, i);
             }
         }
+        ImageView png = new ImageView("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\boards\\bookshelf_orth.png");
+        png.setFitWidth(getZ()*7.7);
+        png.setFitHeight(getW()*8.7);
+        png.setPreserveRatio(true);
+        png.setTranslateY(getW()/5);
+        this.png = png;
         this.bookshelf = bookshelf;
         yourBookshelf.setOnMouseClicked(mouseEvent -> {
             Platform.runLater(()->{
                 parquet.setVisible(true);
+                png.setVisible(true);
                 bookshelf.setVisible(true);
             });
         });
         bookshelf.setOnMouseClicked(mouseEvent -> {
             Platform.runLater(()-> {
                 parquet.setVisible(false);
+                png.setVisible(false);
                 bookshelf.setVisible(false);
             });
         });

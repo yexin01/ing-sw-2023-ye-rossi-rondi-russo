@@ -160,10 +160,12 @@ public class EndTurnPanel extends BasePanel {
         VBox vBox2 = createCardsBox(clientView, screenBounds);
         getChildren().add(getParquet());
         getChildren().add(getPersonalGoalCardImage());
+        getChildren().add(getPng());
         //getChildren().add(getCommonGoalCard1Image());
         //getChildren().add(getCommonGoalCard2Image());
         getChildren().add(getBookshelf());
         getParquet().setVisible(false);
+        getPng().setVisible(false);
         getPersonalGoalCardImage().setVisible(false);
         //getCommonGoalCard1Image().setVisible(false);
         //getCommonGoalCard2Image().setVisible(false);

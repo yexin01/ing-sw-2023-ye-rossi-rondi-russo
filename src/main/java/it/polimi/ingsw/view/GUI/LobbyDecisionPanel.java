@@ -112,6 +112,7 @@ public class LobbyDecisionPanel extends BasePanel{
                     throw new RuntimeException(e);
                 }
                 Platform.exit();
+                System.exit(0);
             });
 
             HBox hBox2 = new HBox(random, quit);
