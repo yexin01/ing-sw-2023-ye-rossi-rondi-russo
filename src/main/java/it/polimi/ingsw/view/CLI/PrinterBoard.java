@@ -15,7 +15,7 @@ public class PrinterBoard {
     private int sizeTile =3;
     private int sizeWordType=8;
     private int spaceBetweenTiles=2;
-    public void printMatrixBoard(BoardBoxView[][] boardView, ArrayList<Integer> selectionBoard) {
+    public synchronized void printMatrixBoard(BoardBoxView[][] boardView, ArrayList<Integer> selectionBoard) {
         int lineLength= sizeTile +2*spaceBetweenTiles;
         int valuesType=0;
         if(selectionBoard==null){
@@ -158,7 +158,7 @@ public class PrinterBoard {
 */
         //askCoordinates();
     }
-    public int printValues(int valuesType,BoardBoxView[][] boardView,ArrayList<Integer> selection){
+    public synchronized int printValues(int valuesType,BoardBoxView[][] boardView,ArrayList<Integer> selection){
         ArrayList<Integer> coordinatesSelected=selection;
         int numSelectedType=0;
         if(valuesType<Type.values().length){
@@ -183,7 +183,7 @@ public class PrinterBoard {
         else Colors.printFreeSpaces(sizeWordType+freeSpacesFromTableTypesSelected+2+sizeTile);
         return valuesType;
     }
-    public void upperBoard(String color, int column, BoardBoxView[][] board,int lineLength ) {
+    public synchronized void upperBoard(String color, int column, BoardBoxView[][] board,int lineLength ) {
 
 
         String[] lineRepresentations = {
@@ -235,7 +235,7 @@ public class PrinterBoard {
 
     }
 
-    public void downBoard(String color, int column, BoardBoxView[][] board,int lineLength ) {
+    public synchronized void downBoard(String color, int column, BoardBoxView[][] board,int lineLength ) {
 
 
         String[] lineRepresentations = {
@@ -313,7 +313,7 @@ public class PrinterBoard {
     public boolean finishLine;
 
 
-    public void mediumBoard(String color, int row, int column, BoardBoxView[][] board, int lineLength) {
+    public synchronized void mediumBoard(String color, int row, int column, BoardBoxView[][] board, int lineLength) {
         String text;
 
 

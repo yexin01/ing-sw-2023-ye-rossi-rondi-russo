@@ -37,7 +37,7 @@ public class Game {
         return players.get(0);
     }
 
-    public String getLastPlayer(boolean[] activePlayers) {
+    public String getLastPlayer(Boolean[] activePlayers) {
         int i;
         for(i=players.size()-1; !activePlayers[i];i--){
         }
@@ -51,8 +51,8 @@ public class Game {
         return modelview.getIntegerValue(nickname);
     }
 
-    public boolean[] disconnectionAndReconnectionPlayer(String nickname,boolean discOrRec) {
-        boolean[] activePlayers=modelview.getActivePlayers();
+    public Boolean[] disconnectionAndReconnectionPlayer(String nickname,boolean discOrRec) {
+        Boolean[] activePlayers=modelview.getActivePlayers();
         for(int i=0;i<players.size();i++){
             if(players.get(i).getNickname().equals(nickname)){
                 activePlayers[i]=discOrRec;

@@ -24,7 +24,7 @@ public class GameLobby {
     private ModelView modelView;
     private InfoAndEndGameListener infoAndEndGameListener;
     private Message messageEndGame=null;
-    private boolean onlyOnePlayer;
+
 
 
     private ConcurrentHashMap<String, Connection> players; //maps of all the active players of the game
@@ -197,7 +197,7 @@ public class GameLobby {
         for(String playersD:playersDisconnected){
             System.out.println("DISCONNESSO "+playersD);
         }
-        if(!onlyOnePlayer ){
+        if(!checkOnlyPlayer() ){
             if(messageEndGame==null){
                 gameController.receiveMessageFromClient(message);
             }else {
@@ -247,8 +247,9 @@ public class GameLobby {
     public synchronized void changePlayerInActive(String nickname, Connection connection) throws IOException {
         players.put(nickname,connection);
         playersDisconnected.remove(nickname);
-
-        if(messageEndGame==null){
+        if(checkOnlyPlayer()){
+            sendOnlyOnePlayer(nickname);
+        }else if(messageEndGame==null){
             gameController.reconnectionPlayer(nickname);
             MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
             MessagePayload payload=new MessagePayload(KeyConnectionPayload.RECONNECTION);
@@ -257,12 +258,7 @@ public class GameLobby {
             payload.put(Data.WHO_CHANGE,nickname);
             Message message = new Message(header,payload);
             sendMessageToAllPlayers(message);
-        }
-        if(onlyOnePlayer){
-            onlyOnePlayer=false;
-        }
-
-        else sendMessageToSpecificPlayer(messageEndGame,nickname);
+        }else sendMessageToSpecificPlayer(messageEndGame,nickname);
 
         System.out.println("Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in attivo");
     }
@@ -277,17 +273,8 @@ public class GameLobby {
         System.out.println("Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in disconnesso");
         playersDisconnected.add(nickname);
         players.remove(nickname);
-        System.out.println("Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in disconnesso con remove");
-
-        if(players.size()==0){
-            //gameController.bloccagioco();
-            System.out.println("Sono la GameLobby "+ idGameLobby+" ho finito i giocatori");
-        }
-
         gameController.disconnectionPlayer(nickname);
-        System.out.println("Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in disconnesso con gamecontroller");
-
-        if(messageEndGame==null && players.size()>1){
+        if(messageEndGame==null){
             MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
             MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
             String content = "Player "+nickname+" disconnected to Game Lobby "+ idGameLobby + "!";
@@ -296,10 +283,12 @@ public class GameLobby {
             sendMessageToAllPlayers(message);
             System.out.println(content);
         }
-        if(players.size()==1 && messageEndGame==null ){
-            onlyOnePlayer=true;
+        if( checkOnlyPlayer()){
             sendOnlyOnePlayer(nickname);
         }
+    }
+    public boolean checkOnlyPlayer(){
+        return players.size()==1 && messageEndGame==null;
     }
     public synchronized void sendOnlyOnePlayer(String nickname) throws IOException {
         MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);

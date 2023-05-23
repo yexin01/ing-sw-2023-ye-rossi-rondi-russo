@@ -18,7 +18,7 @@ public class PrinterBookshelfAndPersonal {
     private int spaceBetweenTiles;
     private int spaceBetweenPersonal;
     private int lineLength;
-    public void printArrowChoiceColumn(ItemTileView[][] bookshelfView){
+    public synchronized void printArrowChoiceColumn(ItemTileView[][] bookshelfView){
         Colors.printFreeSpaces(sizeLenghtFromBord);
         for (int i = 0; i < bookshelfView.length-1; i++) {
             Colors.printFreeSpaces((lineLength+2)/2);
@@ -35,7 +35,7 @@ public class PrinterBookshelfAndPersonal {
 
     }
 
-    public void printMatrixBookshelf(ClientView clientView,int sizetile,int spaceBetweenTiles,int sizeLenghtFromBord,boolean personalGoal,boolean arrow, int spaceBetweenPersonal) throws Exception {
+    public synchronized void printMatrixBookshelf(ClientView clientView,int sizetile,int spaceBetweenTiles,int sizeLenghtFromBord,boolean personalGoal,boolean arrow, int spaceBetweenPersonal) throws Exception {
         ItemTileView[][] bookshelfView= clientView.getBookshelfView();
         this.spaceBetweenTiles=spaceBetweenTiles;
         this.sizetile=sizetile;
@@ -117,7 +117,7 @@ public class PrinterBookshelfAndPersonal {
         System.out.println();
     }
     private boolean frame=true;
-    public int printPersonalGoalWithOrWithoutFrame(int personalLine, ClientView clientView, int spaceBetweenPersonal, boolean mediumSpaces, int fromBoardBookshelf,int sizeLenghtFromBord)  {
+    public synchronized int printPersonalGoalWithOrWithoutFrame(int personalLine, ClientView clientView, int spaceBetweenPersonal, boolean mediumSpaces, int fromBoardBookshelf,int sizeLenghtFromBord)  {
         ItemTileView[][] bookshelfView= clientView.getBookshelfView();
         PersonalGoalCard q = clientView.getPlayerPersonalGoal();
         int lineLength=1+spaceBetweenPersonal*2;
@@ -207,7 +207,7 @@ public class PrinterBookshelfAndPersonal {
         return personalLine;
     }
 
-    public void printPersonal(ClientView clientView ,int spaceBetweenTiles,int sizeLengthFromBord) throws Exception {
+    public synchronized void printPersonal(ClientView clientView ,int spaceBetweenTiles,int sizeLengthFromBord) throws Exception {
         ItemTileView[][] bookshelfView= clientView.getBookshelfView();
         PersonalGoalCard q=clientView.getPlayerPersonalGoal();
         int personalLine=0;
@@ -227,7 +227,7 @@ public class PrinterBookshelfAndPersonal {
         System.out.println();
     }
 
-    public /*int*/void printTextRight(int rowCoordinates, PersonalGoalCard p){
+    public synchronized  /*int*/void printTextRight(int rowCoordinates, PersonalGoalCard p){
         Colors.printFreeSpaces(2);
         int atLeastOne=0;
         for(PersonalGoalBox cell: p.getCells()){

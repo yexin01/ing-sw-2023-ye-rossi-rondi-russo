@@ -61,7 +61,7 @@ public class GameController {
     public void receiveMessageFromClient(Message message){
         System.out.println("IL PROSSIMO GIOCATORE E: "+getModel().getIntByNickname(getTurnNickname()));
         int i=0;
-        boolean[] activePlayers=game.getModelView().getActivePlayers();
+        Boolean[] activePlayers=game.getModelView().getActivePlayers();
         for(boolean p:activePlayers){
             System.out.println("GIOCATORE: "+game.getPlayers().get(i).getNickname()+" attivo: "+activePlayers[i++]);
         }
@@ -108,10 +108,11 @@ public class GameController {
         game.getModelView().setActivePlayers(game.disconnectionAndReconnectionPlayer(nickname,false));
         if(nickname.equals(getTurnNickname())){
             game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
-            game.getModelView().setNextPlayer();
-            listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
+            if(Arrays.stream(game.getModelView().getActivePlayers()).anyMatch(value -> value)){
+                game.getModelView().setNextPlayer();
+                listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
+            }
         }
-
     }
     public void reconnectionPlayer(String nickname){
         System.out.println(nickname.equals(getTurnNickname()));
@@ -153,7 +154,7 @@ public class GameController {
 
     public void finishTurn() {
         game.getBoard().resetBoard();
-        boolean[] activePlayers=game.getModelView().getActivePlayers();
+        Boolean[] activePlayers=game.getModelView().getActivePlayers();
         System.out.println("ULTIMO GIOCATORE CONNESSO ATTIVO è:"+game.getLastPlayer(activePlayers));
         if(game.isEndGame() && getTurnNickname().equals(game.getLastPlayer(activePlayers))){
             endGame();
@@ -192,7 +193,7 @@ public class GameController {
         this.listenerManager = listenerManager;
     }
 
-    public boolean[] getActivePlayers() {
+    public Boolean[] getActivePlayers() {
         return game.getModelView().getActivePlayers();
     }
 

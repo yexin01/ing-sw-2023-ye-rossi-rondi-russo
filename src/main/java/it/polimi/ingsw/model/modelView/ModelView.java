@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 public class ModelView {
 
     private int turnPlayer;
-    private boolean[] activePlayers;
+    private Boolean[] activePlayers;
     private int MAX_SELECTABLE_TILES;
 
     private int[][] commonGoalView;
@@ -35,7 +35,7 @@ public class ModelView {
         bookshelfView=new ItemTileView[numPlayers][gameRules.getRowsBookshelf()][gameRules.getColumnsBookshelf()];
         playerPoints=new PlayerPointsView[numPlayers];
         playerPersonalGoal=new PersonalGoalCard[numPlayers];
-        activePlayers=new boolean[numPlayers];
+        activePlayers=new Boolean[numPlayers];
         Arrays.fill(activePlayers, true);
         commonGoalView =new int[gameRules.getNumOfCommonGoals()][2];
         token=new int[gameRules.getNumOfCommonGoals()];
@@ -99,7 +99,9 @@ public class ModelView {
         }
     }
     public void setNextPlayer() {
+        int first=turnPlayer;
         do{
+
             if(turnPlayer>= (playerPoints.length - 1))
                 setTurnPlayer(0);
             else setTurnPlayer(turnPlayer+1);
@@ -250,11 +252,11 @@ public class ModelView {
     public void setPersonalPoints(int[] personalPoints) {
         this.personalPoints = personalPoints;
     }
-    public boolean[] getActivePlayers() {
+    public Boolean[] getActivePlayers() {
         return activePlayers;
     }
 
-    public void setActivePlayers(boolean[] activePlayers) {
+    public void setActivePlayers(Boolean[] activePlayers) {
         this.activePlayers = activePlayers;
     }
 

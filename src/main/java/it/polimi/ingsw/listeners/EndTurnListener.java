@@ -19,7 +19,7 @@ public class EndTurnListener extends EventListener{
         System.out.println("STO INVIANDO END, PROSSIMO GIOCATORE");
         System.out.println(playerNickname);
         ModelView model=(ModelView) newValue;
-        boolean[] activePlayers=model.getActivePlayers();
+        Boolean[] activePlayers=model.getActivePlayers();
         for(PlayerPointsView nickname: model.getPlayerPoints()){
             if(activePlayers[model.getIntegerValue(nickname.getNickname())]){
                 getGameLobby().sendMessageToSpecificPlayer(creationMessageEndTurn(nickname.getNickname(),model),nickname.getNickname()) ;

@@ -38,7 +38,7 @@ public class CLI implements ClientInterface {
 
 
 
-    public <T extends Enum<T> & Commands> void printLobbyCommands(Class<T> enumClass) throws Exception {
+    public synchronized <T extends Enum<T> & Commands> void printLobbyCommands(Class<T> enumClass) throws Exception {
         T[] enumValues = enumClass.getEnumConstants();
         out.println();
         for(T enumValue : enumValues){
@@ -50,7 +50,7 @@ public class CLI implements ClientInterface {
         Colors.colorize(Colors.GAME_INSTRUCTION,"Insert command: ");
     }
 
-    public void allCommands(int phase) throws Exception {
+    public synchronized void allCommands(int phase) throws Exception {
         boolean firstPrint=false;
         out.println();
         String[] commandsPhase=new String[]{"select_from_board","order_tiles","column","print" };
