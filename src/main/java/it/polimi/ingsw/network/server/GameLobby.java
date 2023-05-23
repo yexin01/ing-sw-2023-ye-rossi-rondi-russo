@@ -276,9 +276,18 @@ public class GameLobby {
     public synchronized void changePlayerInDisconnected(String nickname) throws IOException {
         System.out.println("Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in disconnesso");
         playersDisconnected.add(nickname);
-        if(messageEndGame==null){
-            players.remove(nickname);
-            gameController.disconnectionPlayer(nickname);
+        players.remove(nickname);
+        System.out.println("Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in disconnesso con remove");
+
+        if(players.size()==0){
+            //gameController.bloccagioco();
+            System.out.println("Sono la GameLobby "+ idGameLobby+" ho finito i giocatori");
+        }
+
+        gameController.disconnectionPlayer(nickname);
+        System.out.println("Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in disconnesso con gamecontroller");
+
+        if(messageEndGame==null && players.size()>1){
             MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
             MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
             String content = "Player "+nickname+" disconnected to Game Lobby "+ idGameLobby + "!";
