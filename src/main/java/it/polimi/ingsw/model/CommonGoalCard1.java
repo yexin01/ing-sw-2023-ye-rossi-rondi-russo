@@ -16,11 +16,11 @@ public class CommonGoalCard1 extends CommonGoalCard {
      */
     @Override
     public boolean checkGoal(ItemTile[][] mat) {
-        int goals = 0;
+        int goals=0;
         int[][] checkable = new int[mat.length][mat[0].length];
         for (int i=0; i<mat.length; i++) {
             for (int j=0; j<mat[0].length; j++) {
-                checkable[i][j] = 1;
+                checkable[i][j]=1;
             }
         }
         for (int i=0; i<mat.length; i++) {
@@ -42,6 +42,10 @@ public class CommonGoalCard1 extends CommonGoalCard {
      * @return 0 if not valid group, 1 if valid group
      */
     private int processGroup(ItemTile[][] mat, int[][] checkable, int x, int y) {
+        if (mat[x][y].getTileID() == -1) {
+            return 0; // Skip empty ItemTile
+        }
+
         Type type = mat[x][y].getType();
         List<Integer> squarePositions = new ArrayList<>();
         squarePositions.add(x);
@@ -49,11 +53,11 @@ public class CommonGoalCard1 extends CommonGoalCard {
 
         int[][] directions = {{0,1},{1,0},{1,1}}; // Right, down, and diagonal directions
         for (int[] direction : directions) {
-            int dx = direction[0];
-            int dy = direction[1];
-            int newX = x+dx;
-            int newY = y+dy;
-            if (isValidPosition(mat,newX,newY) && mat[newX][newY].getType().equals(type)) {
+            int dx=direction[0];
+            int dy=direction[1];
+            int newX=x+dx;
+            int newY=y+dy;
+            if (isValidPosition(mat,newX,newY) && mat[newX][newY].getTileID()!=-1 && mat[newX][newY].getType().equals(type)) {
                 squarePositions.add(newX);
                 squarePositions.add(newY);
             }
@@ -114,17 +118,17 @@ public class CommonGoalCard1 extends CommonGoalCard {
      * @return true if it is a 2x2 square, false otherwise
      */
     private boolean is2x2Square(List<Integer> positions) {
-        int minX = Integer.MAX_VALUE;
-        int minY = Integer.MAX_VALUE;
-        int maxX = Integer.MIN_VALUE;
-        int maxY = Integer.MIN_VALUE;
+        int minX=Integer.MAX_VALUE;
+        int minY=Integer.MAX_VALUE;
+        int maxX=Integer.MIN_VALUE;
+        int maxY=Integer.MIN_VALUE;
         for (int i=0; i<positions.size(); i+=2) {
-            int x = positions.get(i);
-            int y = positions.get(i+1);
-            minX = Math.min(minX,x);
-            minY = Math.min(minY,y);
-            maxX = Math.max(maxX,x);
-            maxY = Math.max(maxY,y);
+            int x=positions.get(i);
+            int y=positions.get(i+1);
+            minX=Math.min(minX,x);
+            minY=Math.min(minY,y);
+            maxX=Math.max(maxX,x);
+            maxY=Math.max(maxY,y);
         }
         return (maxX-minX==1 && maxY-minY==1);
     }
