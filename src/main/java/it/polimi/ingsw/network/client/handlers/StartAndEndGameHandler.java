@@ -27,8 +27,6 @@ public class StartAndEndGameHandler extends MessageHandler {
         switch(data){
             //sia all'inizio del game che durant la partita se un utente si disconnette
             case ALL_INFO ->{
-                String p=((String)mes.getPayload().getContent(Data.WHO_CHANGE));
-                getClientInterface().displayMessage("Turn player is: "+p);
                 BoardBoxView[][] boardView= (BoardBoxView[][]) mes.getPayload().getContent(Data.NEW_BOARD);
                 getClientInterface().getClientView().setBoardView(boardView);
                 ItemTileView[][] bookshelfView=((ItemTileView[][])mes.getPayload().getContent(Data.NEW_BOOKSHELF));
@@ -71,7 +69,7 @@ public class StartAndEndGameHandler extends MessageHandler {
             case END_GAME ->{
                 getClientInterface().getClientView().setPlayerPointsViews((PlayerPointsView[]) mes.getPayload().getContent(Data.POINTS));
                 getClientInterface().endGame((int[]) mes.getPayload().getContent(Data.PERSONAL_POINTS));
-                getClientInterface().askLobbyDecision();
+               // getClientInterface().askLobbyDecision();
             }
         }
 

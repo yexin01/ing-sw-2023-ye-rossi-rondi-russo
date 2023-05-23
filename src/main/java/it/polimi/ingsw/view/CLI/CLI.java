@@ -113,7 +113,6 @@ public class CLI implements ClientInterface {
     }
     public Commands checkCommand(int phase) throws Exception {
         int input;
-        Commands commands;
         int enumSize=-1;
         if(phase==-1){
             printLobbyCommands(CommandsLobby.class);
@@ -128,7 +127,6 @@ public class CLI implements ClientInterface {
 
         if(!(input >= 0 && input < enumSize)){
             displayError(ErrorType.INVALID_INPUT.getErrorMessage());
-            //Colors.colorize(Colors.ERROR_MESSAGE,
             return null;
         }
         out.println();
@@ -141,13 +139,10 @@ public class CLI implements ClientInterface {
 
     @Override
     public  synchronized  void askCoordinates() throws Exception {
-        //PrinterLogo.printYourTurnPhase();
         out.println();
-        //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: SELECT FROM BOARD");
         PrinterLogo.printBoardPhase(10);
         out.println();
         ArrayList<Integer> selection=new ArrayList<>();
-        //getClientView().setCoordinatesSelected(new ArrayList<>());
         printerBoard.printMatrixBoard(getClientView().getBoardView(),null);
         boolean continueToAsk = true;
 
@@ -443,11 +438,9 @@ public class CLI implements ClientInterface {
 
     @Override
     public void askLobbyDecision() throws Exception {
+        PrinterLogo.printGlobalLobbyPhase(50);
         out.println();
         boolean continueToAsk = true;
-        MessageHeader header=new MessageHeader(MessageType.LOBBY, getClientView().getNickname());
-        MessagePayload payload = null;
-        Message message;
         CommandsLobby commandsLobby = null;
         while (continueToAsk) {
             commandsLobby = (CommandsLobby) checkCommand(-1);
@@ -460,17 +453,9 @@ public class CLI implements ClientInterface {
             out.println();
             switch (commandsLobby) {
                 case CREATE_GAME_LOBBY -> {
-
-                    payload = new MessagePayload(KeyLobbyPayload.CREATE_GAME_LOBBY);
                     Colors.colorize(Colors.GAME_INSTRUCTION, "Insert number of players for the new Lobby: ");
                     int num = in.nextInt();
                     clientView.lobby(KeyLobbyPayload.CREATE_GAME_LOBBY,num);
-                    //out.printf(String.valueOf(num));
-                    /*
-                    payload = new MessagePayload(KeyLobbyPayload.CREATE_GAME_LOBBY);
-                    payload.put(Data.VALUE_CLIENT, num);
-
-                     */
                     continueToAsk=false;
 
 
@@ -480,14 +465,10 @@ public class CLI implements ClientInterface {
                     int num = in.nextInt();
                     clientView.lobby(KeyLobbyPayload.JOIN_SPECIFIC_GAME_LOBBY,num);
                     continueToAsk=false;
-                    //out.printf(String.valueOf(num));
-                    //payload = new MessagePayload(KeyLobbyPayload.JOIN_SPECIFIC_GAME_LOBBY);
-                    //payload.put(Data.VALUE_CLIENT, num);
                 }
                 case JOIN_RANDOM_GAME_LOBBY -> {
                     clientView.lobby(KeyLobbyPayload.JOIN_RANDOM_GAME_LOBBY,-1);
                     continueToAsk=false;
-                    //payload = new MessagePayload(KeyLobbyPayload.JOIN_RANDOM_GAME_LOBBY);
                 }
                 case QUIT_SERVER -> {
                     clientView.lobby(KeyLobbyPayload.QUIT_SERVER,-1);
@@ -499,9 +480,23 @@ public class CLI implements ClientInterface {
 
     @Override
     public void endGame(int[] personalPoints) throws Exception {
-        PrinterLogo.printWinnerLogo(20);
+        PrinterLogo.printWinnerLogo(50);
         printerCommonGoalAndPoints.printEndGame(clientView,personalPoints);
         clientView.receiveEndGame();
+        boolean continueToAsk=true;
+
+        while(continueToAsk){
+            out.println();
+            Colors.colorize(Colors.GAME_INSTRUCTION, "Write |ok| to return to lobby:  ");
+            String input = scanner.next();
+            if (input.equals("ok")){
+                continueToAsk=false;
+            }
+            scanner.nextLine();
+        }
+        out.println();
+        askLobbyDecision();
+
     }
 
     public PrinterBookshelfAndPersonal getPrinterBookshelfAndPersonal() {
