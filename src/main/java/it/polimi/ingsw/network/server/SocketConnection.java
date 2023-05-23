@@ -135,7 +135,9 @@ public class SocketConnection extends Connection implements Runnable {
                 System.out.println("Error while closing socket");
             }
 
+            assert listener != null;
             listener.interrupt(); // Interrupts the thread
+
             connected = false;
 
             socketServer.onDisconnect(this);
