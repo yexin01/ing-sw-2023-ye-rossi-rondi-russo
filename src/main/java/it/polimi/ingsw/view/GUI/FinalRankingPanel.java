@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.GUI;
 
+import com.sun.tools.javac.Main;
 import it.polimi.ingsw.view.ClientView;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -12,15 +13,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
+import java.io.IOException;
+import java.util.Objects;
+
 public class FinalRankingPanel extends BasePanel{
 
     Color[] colors= new Color [] {Color.YELLOW, Color.SILVER, Color.SANDYBROWN, Color.WHITE};
     private int counter;
 
-    public FinalRankingPanel(ClientView clientView, int[] personalPoints) {
+    public FinalRankingPanel(ClientView clientView, int[] personalPoints) throws IOException {
         counter = 0;
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        Image backgroundImage = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\misc\\base_pagina2.jpg");
+        Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("base_pagina2.jpg")).openStream());
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, false, false);
         BackgroundImage background2 = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         setBackground(new Background(background2));

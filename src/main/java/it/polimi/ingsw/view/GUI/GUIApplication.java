@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.GUI;
 
+import com.sun.tools.javac.Main;
 import it.polimi.ingsw.view.Check;
 import it.polimi.ingsw.view.ClientInterface;
 import it.polimi.ingsw.view.ClientView;
@@ -17,6 +18,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class GUIApplication extends Application implements ClientInterface {
     private Stage stage;
@@ -43,7 +45,12 @@ public class GUIApplication extends Application implements ClientInterface {
     @Override
     public void waitingRoom() throws Exception {
         Platform.runLater(()-> {
-            EndTurnPanel endTurnPanel = new EndTurnPanel(clientView);
+            EndTurnPanel endTurnPanel = null;
+            try {
+                endTurnPanel = new EndTurnPanel(clientView);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             Scene scene = new Scene(endTurnPanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
             stage.show();
@@ -68,7 +75,13 @@ public class GUIApplication extends Application implements ClientInterface {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("ATTENTION");
             alert.setHeaderText("Token won");
-            Image image = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\scoring tokens\\scoring_"+num+".jpg");
+            //Image image = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\scoring tokens\\scoring_"+num+".jpg");
+            Image image;
+            try {
+                image = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("scoring_"+num+".jpg")).openStream());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(200);
             imageView.setFitHeight(200);
@@ -91,9 +104,19 @@ public class GUIApplication extends Application implements ClientInterface {
     public void askCoordinates() throws Exception {
         Platform.runLater(()-> {
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-            ChoicePanel choicePanel = new ChoicePanel(clientView, screenBounds.getWidth()*0.28*(3.0 / Check.MAX_SELECTABLE_TILES));
+            ChoicePanel choicePanel = null;
+            try {
+                choicePanel = new ChoicePanel(clientView, screenBounds.getWidth()*0.28*(3.0 / Check.MAX_SELECTABLE_TILES));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             this.choicePanel = choicePanel;
-            BoardBoxPanel boardBoxPanel = new BoardBoxPanel(clientView, choicePanel);
+            BoardBoxPanel boardBoxPanel = null;
+            try {
+                boardBoxPanel = new BoardBoxPanel(clientView, choicePanel);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             Scene scene = new Scene(boardBoxPanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
             stage.show();
@@ -112,7 +135,12 @@ public class GUIApplication extends Application implements ClientInterface {
     @Override
     public void askColumn() throws Exception {
         Platform.runLater(()-> {
-            BookshelfPanel bookshelfPanel = new BookshelfPanel(clientView);
+            BookshelfPanel bookshelfPanel = null;
+            try {
+                bookshelfPanel = new BookshelfPanel(clientView);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             Scene scene = new Scene(bookshelfPanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
             stage.show();
@@ -122,7 +150,12 @@ public class GUIApplication extends Application implements ClientInterface {
     @Override
     public void displayError(String error) {
         Platform.runLater(()-> {
-            DisconnectionPanel disconnectionPanel = new DisconnectionPanel(error);
+            DisconnectionPanel disconnectionPanel = null;
+            try {
+                disconnectionPanel = new DisconnectionPanel(error);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             Scene scene = new Scene(disconnectionPanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
             stage.show();
@@ -151,7 +184,12 @@ public class GUIApplication extends Application implements ClientInterface {
     @Override
     public void askLobbyDecision() throws Exception {
         Platform.runLater(()-> {
-            LobbyDecisionPanel lobbyDecisionPanel = new LobbyDecisionPanel(clientView);
+            LobbyDecisionPanel lobbyDecisionPanel = null;
+            try {
+                lobbyDecisionPanel = new LobbyDecisionPanel(clientView);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             Scene scene = new Scene(lobbyDecisionPanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
             stage.show();
@@ -161,7 +199,12 @@ public class GUIApplication extends Application implements ClientInterface {
     @Override
     public void endGame(int[] personalPoints) {
         Platform.runLater(()-> {
-            FinalRankingPanel finalRankingPanel = new FinalRankingPanel(clientView, personalPoints);
+            FinalRankingPanel finalRankingPanel = null;
+            try {
+                finalRankingPanel = new FinalRankingPanel(clientView, personalPoints);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             Scene scene = new Scene(finalRankingPanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
             stage.show();

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.GUI;
 
 
+import com.sun.tools.javac.Main;
 import it.polimi.ingsw.view.ClientView;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -13,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class EndTurnPanel extends BasePanel {
@@ -25,20 +27,20 @@ public class EndTurnPanel extends BasePanel {
     private int counter;
 
 
-    public EndTurnPanel(ClientView clientView) {
+    public EndTurnPanel(ClientView clientView) throws IOException {
         this.clientView = clientView;
         counter = 0;
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        Image backgroundImage = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\misc\\base_pagina2.jpg");
+        Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("base_pagina2.jpg")).openStream());
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, false, false);
         BackgroundImage background2 = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         setBackground(new Background(background2));
-        Image banner = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\Publisher material\\banner 1386x400px.png");
+        Image banner = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("banner 1386x400px.png")).openStream());
         ImageView bannerView = new ImageView(banner);
         bannerView.setFitHeight(370);
         bannerView.setPreserveRatio(true);
         getChildren().add(bannerView);
-        Image title = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\Publisher material\\Title 2000x618px.png");
+        Image title = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Title 2000x618px.png")).openStream());
         ImageView titleView = new ImageView(title);
         titleView.setFitHeight(250);
         titleView.setPreserveRatio(true);

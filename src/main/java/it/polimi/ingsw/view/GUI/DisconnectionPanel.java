@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.GUI;
 
+import com.sun.tools.javac.Main;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Alert;
@@ -10,10 +11,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
+import java.io.IOException;
+import java.util.Objects;
+
 public class DisconnectionPanel extends BasePanel{
-    public DisconnectionPanel(String error) {
+    public DisconnectionPanel(String error) throws IOException {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        Image backgroundImage = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\Publisher material\\Display_2.jpg");
+        Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Display_2.jpg")).openStream());
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, true, false);
         BackgroundImage background = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         setBackground(new Background(background));

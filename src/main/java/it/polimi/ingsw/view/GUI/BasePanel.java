@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.GUI;
 
+import com.sun.tools.javac.Main;
 import it.polimi.ingsw.view.ClientView;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -17,6 +18,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+
+import java.io.IOException;
+import java.util.Objects;
 
 public abstract class BasePanel extends StackPane {
 
@@ -41,16 +45,17 @@ public abstract class BasePanel extends StackPane {
         return font;
     }
 
-    public Button createBoardButton(ClientView clientView, double boardWidth, double boardHeight, int i, int j, boolean filled) {
+    public Button createBoardButton(ClientView clientView, double boardWidth, double boardHeight, int i, int j, boolean filled) throws IOException {
         Button button = new Button();
         ImageView imageView = new ImageView();
         if (!filled) {
-            Image icon = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\item tiles\\BOOK 0.png");
+            Image icon = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("BOOK 0.png")).openStream());
             imageView.setImage(icon);
             button.setDisable(true);
             button.setOpacity(0);
         } else {
-            Image icon = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\Item tiles\\" + clientView.getBoardView()[i][j].getItemTileView().getTypeView() + " " + clientView.getBoardView()[i][j].getItemTileView().getTileID() % 3 + ".png");
+            //Image icon = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\Item tiles\\" + clientView.getBoardView()[i][j].getItemTileView().getTypeView() + " " + clientView.getBoardView()[i][j].getItemTileView().getTileID() % 3 + ".png");
+            Image icon = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource(clientView.getBoardView()[i][j].getItemTileView().getTypeView()+" "+clientView.getBoardView()[i][j].getItemTileView().getTileID()%3+".png")).openStream());
             imageView.setImage(icon);
             boardTiles [i][j] = icon;
         }
@@ -64,16 +69,17 @@ public abstract class BasePanel extends StackPane {
         return button;
     }
 
-    public Button createBookshelfButton(ClientView clientView, double bookshelfWidth, double bookshelfHeight, int i, int j, boolean filled) {
+    public Button createBookshelfButton(ClientView clientView, double bookshelfWidth, double bookshelfHeight, int i, int j, boolean filled) throws IOException {
         Button button = new Button();
         ImageView imageView = new ImageView();
         if (!filled) {
-            Image icon = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\item tiles\\BOOK 0.png");
+            Image icon = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("BOOK 0.png")).openStream());
             imageView.setImage(icon);
             button.setDisable(true);
             button.setOpacity(0);
         } else {
-            Image icon = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\item tiles\\" + clientView.getBookshelfView()[i][j].getTypeView() + " " + clientView.getBookshelfView()[i][j].getTileID() % 3 + ".png");
+            //Image icon = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\item tiles\\" + clientView.getBookshelfView()[i][j].getTypeView() + " " + clientView.getBookshelfView()[i][j].getTileID() % 3 + ".png");
+            Image icon = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource(clientView.getBookshelfView()[i][j].getTypeView()+" "+clientView.getBookshelfView()[i][j].getTileID()%3+".png")).openStream());
             imageView.setImage(icon);
         }
         imageView.setFitWidth(bookshelfWidth);
@@ -147,7 +153,7 @@ public abstract class BasePanel extends StackPane {
         return png;
     }
 
-    public VBox createCardsBox (ClientView clientView, Rectangle2D screenBounds) {
+    public VBox createCardsBox (ClientView clientView, Rectangle2D screenBounds) throws IOException {
         VBox vBox = new VBox();
         Button personal = new Button("Personal Goal Card");
         personal.setFont(font);
@@ -166,7 +172,8 @@ public abstract class BasePanel extends StackPane {
             }
         });
 
-        ImageView personalGoalCard = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\personal goal cards\\Personal_Goals"+(clientView.getPlayerPersonalGoal().getIdPersonal()+1)+".png"));
+        //ImageView personalGoalCard = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\personal goal cards\\Personal_Goals"+(clientView.getPlayerPersonalGoal().getIdPersonal()+1)+".png"));
+        ImageView personalGoalCard = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Personal_Goals"+(clientView.getPlayerPersonalGoal().getIdPersonal()+1)+".png")).openStream()));
         personalGoalCard.setFitWidth(screenBounds.getWidth()*0.5);
         personalGoalCard.setFitHeight(screenBounds.getHeight()*0.5);
         personalGoalCard.setPreserveRatio(true);
@@ -189,7 +196,8 @@ public abstract class BasePanel extends StackPane {
                 }
             });
 
-            ImageView commonGoalCard = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\common goal cards\\"+(clientView.getCommonGoalView()[0][i]+1)+".jpg"));
+            //ImageView commonGoalCard = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\common goal cards\\"+(clientView.getCommonGoalView()[0][i]+1)+".jpg"));
+            ImageView commonGoalCard = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource((clientView.getCommonGoalView()[0][i]+1)+".jpg")).openStream()));
             commonGoalCard.setFitWidth(screenBounds.getWidth()*0.35);
             commonGoalCard.setFitHeight(screenBounds.getHeight()*0.35);
             commonGoalCard.setPreserveRatio(true);
@@ -293,7 +301,7 @@ public abstract class BasePanel extends StackPane {
         this.commonGoalCard2Image = stackPane3;
 
          */
-        ImageView parquet = new ImageView("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\misc\\sfondo parquet.jpg");
+        ImageView parquet = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("sfondo parquet.jpg")).openStream()));
         parquet.setFitWidth(screenBounds.getWidth()*0.65);
         parquet.setFitHeight(screenBounds.getHeight()*0.65);
         parquet.setPreserveRatio(true);
@@ -406,7 +414,7 @@ public abstract class BasePanel extends StackPane {
                 bookshelf.add(button, j, i);
             }
         }
-        ImageView png = new ImageView("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\boards\\bookshelf_orth.png");
+        ImageView png = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("bookshelf_orth.png")).openStream()));
         png.setFitWidth(getZ()*7.7);
         png.setFitHeight(getW()*8.7);
         png.setPreserveRatio(true);

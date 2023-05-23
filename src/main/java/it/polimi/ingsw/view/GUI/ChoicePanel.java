@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.GUI;
 
+import com.sun.tools.javac.Main;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.view.Check;
 import it.polimi.ingsw.view.ClientView;
@@ -17,6 +18,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
+import java.io.IOException;
+import java.util.Objects;
+
 public class ChoicePanel extends BasePanel{
     private ItemTileView[] tilesSelected;
     //public static Semaphore semaphore = new Semaphore(0);
@@ -26,12 +30,12 @@ public class ChoicePanel extends BasePanel{
     private Button[] itemButtons;
     private int[] orderTiles;
 
-    public ChoicePanel (ClientView clientView, double gap) {
+    public ChoicePanel (ClientView clientView, double gap) throws IOException {
         this.clientView=clientView;
         StackPane stackPane = new StackPane();
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         stackPane.setMaxWidth(screenBounds.getWidth()*0.8);
-        Image backgroundImage = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\misc\\base_pagina2.jpg");
+        Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("base_pagina2.jpg")).openStream());
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, false, false);
         BackgroundImage background2 = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         setBackground(new Background(background2));

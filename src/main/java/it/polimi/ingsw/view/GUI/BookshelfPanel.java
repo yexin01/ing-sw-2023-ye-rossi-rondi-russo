@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.GUI;
 
 
+import com.sun.tools.javac.Main;
 import it.polimi.ingsw.message.ErrorType;
 import it.polimi.ingsw.view.Check;
 import it.polimi.ingsw.view.ClientView;
@@ -20,15 +21,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
+import java.io.IOException;
+import java.util.Objects;
+
 public class BookshelfPanel extends BasePanel {
     private ClientView clientView;
     private double x;
     private double y;
 
-    public BookshelfPanel(ClientView clientView) {
+    public BookshelfPanel(ClientView clientView) throws IOException {
         this.clientView = clientView;
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        Image backgroundImage = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\misc\\base_pagina2.jpg");
+        Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("base_pagina2.jpg")).openStream());
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, false, false);
         BackgroundImage background2 = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         setBackground(new Background(background2));
@@ -55,7 +59,7 @@ public class BookshelfPanel extends BasePanel {
             button = createArrow(button, j);
             gridPane.add(button, j, 0);
         }
-        ImageView background = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\boards\\bookshelf.png"));
+        ImageView background = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("bookshelf.png")).openStream()));
         background.setFitWidth(screenBounds.getWidth()*0.8);
         background.setFitHeight(screenBounds.getHeight()*0.8);
         background.setPreserveRatio(true);
@@ -103,7 +107,8 @@ public class BookshelfPanel extends BasePanel {
             button.setPrefSize(80, 80);
             BackgroundSize backgroundSize1 = new BackgroundSize(100, 100, true, true, true, false);
             //BackgroundImage backgroundImage1 = new BackgroundImage(getBoardTiles(clientView.getCoordinatesSelected().get(i), clientView.getCoordinatesSelected().get(i+1)), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize1);
-            Image image = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\item tiles\\" + clientView.getTilesSelected()[i].getTypeView() + " " + clientView.getTilesSelected()[i].getTileID() % 3 + ".png");
+            //Image image = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\item tiles\\" + clientView.getTilesSelected()[i].getTypeView() + " " + clientView.getTilesSelected()[i].getTileID() % 3 + ".png");
+            Image image = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource(clientView.getTilesSelected()[i].getTypeView()+" "+clientView.getTilesSelected()[i].getTileID() % 3 + ".png")).openStream());
             BackgroundImage backgroundImage1 = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize1);
             Background background1 = new Background(backgroundImage1);
             button.setBackground(background1);
@@ -114,9 +119,9 @@ public class BookshelfPanel extends BasePanel {
         hBox.setPickOnBounds(false);
     }
 
-    private Button createArrow (Button button, int i) {
+    private Button createArrow (Button button, int i) throws IOException {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        Image icon = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\arrow.png");
+        Image icon = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("arrow.png")).openStream());
         ImageView imageView = new ImageView(icon);
         imageView.setFitWidth(screenBounds.getWidth()*0.58/5);
         imageView.setFitHeight(screenBounds.getHeight()*0.58/6);

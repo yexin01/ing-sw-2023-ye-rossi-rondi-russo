@@ -29,9 +29,9 @@ public class LobbyPanel extends BasePanel{
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, true, false);
         BackgroundImage background = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         setBackground(new Background(background));
-        Image publisher = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\Publisher material\\publisher.png");
+        Image publisher = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Publisher.png")).openStream());
         ImageView publisherView = new ImageView(publisher);
-        Image title = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\Publisher material\\Title 2000x618px.png");
+        Image title = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Title 2000x618px.png")).openStream());
         ImageView titleView = new ImageView(title);
         titleView.setFitHeight(250);
         titleView.setPreserveRatio(true);
@@ -42,6 +42,9 @@ public class LobbyPanel extends BasePanel{
 
         TextField textField = new TextField("Insert your nickname here");
         textField.setPrefSize(220, 35);
+        textField.setOnMouseClicked(mouseEvent -> {
+            textField.selectAll();
+        });
         Button confirmButton = new Button("Set Nickname");
         confirmButton.setOnAction(actionEvent -> {
             nickname = textField.getText();
@@ -60,7 +63,13 @@ public class LobbyPanel extends BasePanel{
 
         TextField textField1 = new TextField("Insert port (Leave empty for default)");
         textField1.setPrefSize(220, 35);
+        textField1.setOnMouseClicked(mouseEvent -> {
+            textField1.selectAll();
+        });
         TextField textField2 = new TextField("Insert ip (Leave empty for default)");
+        textField2.setOnMouseClicked(mouseEvent -> {
+            textField2.selectAll();
+        });
         textField2.setPrefSize(220, 35);
         Button confirmButton1 = new Button("Set Socket Connection");
         confirmButton1.setOnAction(actionEvent -> {
@@ -99,8 +108,14 @@ public class LobbyPanel extends BasePanel{
         hBox1.setSpacing(5);
 
         TextField textField3 = new TextField("Insert port (Leave empty for default)");
+        textField3.setOnMouseClicked(mouseEvent -> {
+            textField3.selectAll();
+        });
         textField3.setPrefSize(220, 35);
         TextField textField4 = new TextField("Insert ip (Leave empty for default)");
+        textField4.setOnMouseClicked(mouseEvent -> {
+            textField4.selectAll();
+        });
         textField4.setPrefSize(220, 35);
         Button confirmButton2 = new Button("Set RMI Connection");
         confirmButton2.setOnAction(actionEvent -> {

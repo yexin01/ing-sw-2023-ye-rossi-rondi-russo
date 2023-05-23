@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.GUI;
 
+import com.sun.tools.javac.Main;
 import it.polimi.ingsw.message.ErrorType;
 import it.polimi.ingsw.view.Check;
 import it.polimi.ingsw.view.ClientView;
@@ -18,7 +19,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
+
 public class BoardBoxPanel extends BasePanel {
 
     private ArrayList<Integer> coordinatesSelected = new ArrayList<>();
@@ -30,7 +34,7 @@ public class BoardBoxPanel extends BasePanel {
     //private double x;
     //private double y;
 
-    public BoardBoxPanel (ClientView clientView, ChoicePanel choicePanel) {
+    public BoardBoxPanel (ClientView clientView, ChoicePanel choicePanel) throws IOException {
         this.clientView=clientView;
         this.choicePanel = choicePanel;
 
@@ -39,15 +43,15 @@ public class BoardBoxPanel extends BasePanel {
         selectedCount = 0;
 
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        Image backgroundImage = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\misc\\base_pagina2.jpg");
+        Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("base_pagina2.jpg")).openStream());
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, false, false);
         BackgroundImage background2 = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         setBackground(new Background(background2));
-        Image box = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\Publisher material\\box 280x280px.png");
+        Image box = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Box 280x280px.png")).openStream());
         ImageView boxView = new ImageView(box);
         getChildren().add(boxView);
         setAlignment(boxView, Pos.BOTTOM_RIGHT);
-        ImageView background = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\boards\\livingroom.png"));
+        ImageView background = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("livingroom.png")).openStream()));
         background.setFitWidth(screenBounds.getWidth());
         background.setFitHeight(screenBounds.getHeight());
         background.setPreserveRatio(true);

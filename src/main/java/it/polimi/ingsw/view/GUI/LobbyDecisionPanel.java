@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.GUI;
 
+import com.sun.tools.javac.Main;
 import it.polimi.ingsw.message.KeyLobbyPayload;
 import it.polimi.ingsw.view.ClientView;
 import javafx.application.Platform;
@@ -13,21 +14,24 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
 
+import java.io.IOException;
+import java.util.Objects;
+
 public class LobbyDecisionPanel extends BasePanel{
 
     private String numPlayers;
     private String id;
-        public LobbyDecisionPanel(ClientView clientView) {
+        public LobbyDecisionPanel(ClientView clientView) throws IOException {
             //MessageHeader header=new MessageHeader(MessageType.LOBBY, clientView.getNickname());
 
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-            Image backgroundImage = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\Publisher material\\Display_5.jpg");
+            Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Display_5.jpg")).openStream());
             BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, true, false);
             BackgroundImage background = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
             setBackground(new Background(background));
-            Image publisher = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\Publisher material\\publisher.png");
+            Image publisher = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Publisher.png")).openStream());
             ImageView publisherView = new ImageView(publisher);
-            Image title = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\Publisher material\\Title 2000x618px.png");
+            Image title = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Title 2000x618px.png")).openStream());
             ImageView titleView = new ImageView(title);
             titleView.setFitHeight(250);
             titleView.setPreserveRatio(true);
@@ -37,6 +41,9 @@ public class LobbyDecisionPanel extends BasePanel{
             setAlignment(publisherView, Pos.BOTTOM_RIGHT);
 
             TextField textField = new TextField("Insert players number(2-4)");
+            textField.setOnMouseClicked(mouseEvent -> {
+                textField.selectAll();
+            });
             textField.setPrefSize(400, 35);
             Button confirmButton = new Button("Create new Lobby");
             confirmButton.setOnAction(actionEvent -> {
@@ -65,6 +72,9 @@ public class LobbyDecisionPanel extends BasePanel{
             HBox hBox = new HBox(textField, confirmButton);
 
             TextField textField1 = new TextField("Insert ID Lobby");
+            textField1.setOnMouseClicked(mouseEvent -> {
+                textField1.selectAll();
+            });
             textField.setPrefSize(400, 35);
             Button confirmButton1 = new Button("Join specific lobby");
             confirmButton1.setOnAction(actionEvent -> {
