@@ -55,7 +55,8 @@ public class GameLobby {
         for (String player : players.keySet()) {
             playersGame.add(player);
         }
-        this.gameController=new GameController(this,playersGame,infoAndEndGameListener);
+        this.gameController=new GameController();
+        this.gameController.createGame(this,playersGame,infoAndEndGameListener);
     }
 
     /**

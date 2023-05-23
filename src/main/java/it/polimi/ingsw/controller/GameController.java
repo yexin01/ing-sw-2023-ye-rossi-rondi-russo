@@ -24,7 +24,7 @@ public class GameController {
     private Game game;
 
 
-    public GameController(GameLobby gameLobby, ArrayList<String> nicknames,InfoAndEndGameListener infoAndEndGameListener) throws Exception {
+    public void createGame(GameLobby gameLobby, ArrayList<String> nicknames,InfoAndEndGameListener infoAndEndGameListener) throws Exception {
         listenerManager=new ListenerManager();
         //turnPhaseController =new PhaseController<>(TurnPhase.SELECT_FROM_BOARD);
         listenerManager.addListener(KeyErrorPayload.ERROR_DATA,new ErrorListener(gameLobby));
