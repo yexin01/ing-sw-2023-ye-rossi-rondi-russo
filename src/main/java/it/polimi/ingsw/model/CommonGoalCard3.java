@@ -16,15 +16,13 @@ public class CommonGoalCard3 extends CommonGoalCard {
      */
     @Override
     public boolean checkGoal(ItemTile[][] mat) {
-        int goals = 0;
+        int goals=0;
         int[][] checkable = new int[mat.length][mat[0].length];
-
         for (int i=0; i<mat.length; i++) {
             for (int j=0; j<mat[0].length; j++) {
                 checkable[i][j]=1;
             }
         }
-
         for (int i=0; i<mat.length; i++) {
             for (int j=0; j<mat[0].length; j++) {
                 if (mat[i][j].getTileID()!=-1 && checkable[i][j]!=0) {
@@ -32,7 +30,6 @@ public class CommonGoalCard3 extends CommonGoalCard {
                 }
             }
         }
-
         return goals>=4;
     }
 
@@ -45,6 +42,9 @@ public class CommonGoalCard3 extends CommonGoalCard {
      * @return 0 if not valid group, 1 if valid group
      */
     private int processGroup(ItemTile[][] mat, int[][] checkable, int x, int y) {
+        if (mat[x][y].getTileID()==-1) {
+            return 0;
+        }
         Type type = mat[x][y].getType();
         List<Integer> groupPositions = new ArrayList<>();
         groupPositions.add(x);
@@ -52,11 +52,11 @@ public class CommonGoalCard3 extends CommonGoalCard {
 
         int[][] directions = {{0,1},{1,0}}; // Right and down directions
         for (int[] direction : directions) {
-            int dx = direction[0];
-            int dy = direction[1];
-            int newX= x+dx;
-            int newY= y+dy;
-            if (isValidPosition(mat,newX,newY) && mat[newX][newY].getType().equals(type)) {
+            int dx=direction[0];
+            int dy=direction[1];
+            int newX=x+dx;
+            int newY=y+dy;
+            if (isValidPosition(mat,newX,newY) && mat[newX][newY].getTileID()!=-1 && mat[newX][newY].getType().equals(type)) {
                 groupPositions.add(newX);
                 groupPositions.add(newY);
             }
@@ -71,8 +71,8 @@ public class CommonGoalCard3 extends CommonGoalCard {
     /**
      * Method to check if the coordinates are valid to check within the bookshelf dimensions.
      * @param mat matrix of ItemTile[][]
-     * @param x of the position to check
-     * @param y of the position to check
+     * @param x   of the position to check
+     * @param y   of the position to check
      * @return true if valid, false if not valid
      */
     private boolean isValidPosition(ItemTile[][] mat, int x, int y) {
@@ -85,7 +85,7 @@ public class CommonGoalCard3 extends CommonGoalCard {
      * @param checkable matrix of checkable elements
      * @param positions list of the coordinates of the positions of the group found
      */
-    private void markGroup(int[][] checkable, List<Integer>positions) {
+    private void markGroup(int[][] checkable, List<Integer> positions) {
         for (int i=0; i<positions.size(); i+=2) {
             int x=positions.get(i);
             int y=positions.get(i+1);

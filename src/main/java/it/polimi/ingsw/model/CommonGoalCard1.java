@@ -102,7 +102,8 @@ public class CommonGoalCard1 extends CommonGoalCard {
     private boolean containsLargerSquare(ItemTile[][] mat) {
         for (int i=0; i<mat.length-1; i++) {
             for (int j=0; j<mat[0].length-1; j++) {
-                if (mat[i][j].getType().equals(mat[i][j+1].getType()) &&
+                if (mat[i][j].getTileID()!=-1 &&
+                        mat[i][j].getType().equals(mat[i][j+1].getType()) &&
                         mat[i+1][j].getType().equals(mat[i+1][j+1].getType()) &&
                         mat[i][j].getType().equals(mat[i+1][j].getType())) {
                     return true;
