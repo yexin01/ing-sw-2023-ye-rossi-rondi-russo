@@ -443,12 +443,6 @@ public class CLI implements ClientInterface {
 
     @Override
     public void askLobbyDecision() throws Exception {
-        PrinterLogo.printWinnerLogo(20);
-        PrinterLogo.printErrorLogo(20);
-        PrinterLogo.printErrorLogo2(10);
-        PrinterLogo.printLostConnectionLogo(20);
-        PrinterLogo.printWaitingLogo(20);
-        PrinterLogo.printGlobalLobbyPhase(10);
         out.println();
         boolean continueToAsk = true;
         MessageHeader header=new MessageHeader(MessageType.LOBBY, getClientView().getNickname());
