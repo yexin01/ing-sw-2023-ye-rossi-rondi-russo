@@ -16,6 +16,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class GUIApplication extends Application implements ClientInterface {
     private Stage stage;
     private ClientView clientView;
@@ -134,7 +136,12 @@ public class GUIApplication extends Application implements ClientInterface {
     @Override
     public void askNicknameAndConnection() throws Exception {
         Platform.runLater(()-> {
-            LobbyPanel lobbyPanel = new LobbyPanel(clientView);
+            LobbyPanel lobbyPanel = null;
+            try {
+                lobbyPanel = new LobbyPanel(clientView);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             Scene scene = new Scene(lobbyPanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
             stage.show();
