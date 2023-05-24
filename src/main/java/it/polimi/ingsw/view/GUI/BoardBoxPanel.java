@@ -120,11 +120,13 @@ public class BoardBoxPanel extends BasePanel {
         });
         box1.getChildren().get(1).setOnMouseClicked(mouseEvent -> {
             Platform.runLater(() -> {
-                coordinatesSelected.clear();
                 selectedCount = 0;
-                for (int i =0;i<81; i++) {
-                    gridPane.getChildren().get(i).setDisable(false);
+                for (int i =0;i<coordinatesSelected.size(); i+=2) {
+                    int j = (coordinatesSelected.get(i)*9+coordinatesSelected.get(i+1));
+                    gridPane.getChildren().get(j).setDisable(false);
+                    gridPane.getChildren().get(j).setOpacity(1);
                 }
+                coordinatesSelected.clear();
                 choicePanel.clear();
             });
         });
