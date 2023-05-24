@@ -208,6 +208,24 @@ public class GUIApplication extends Application implements ClientInterface {
             Scene scene = new Scene(finalRankingPanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
             stage.show();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("FINAL RANKING");
+            alert.setHeaderText("WINNER");
+            Image image;
+            try {
+                image = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("end game.jpg")).openStream());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(200);
+            imageView.setFitHeight(200);
+            imageView.setPreserveRatio(true);
+            VBox content = new VBox(10);
+            content.getChildren().addAll(imageView, new Label("The winner is: "+clientView.getPlayerPointsViews()[0].getNickname()));
+            DialogPane dialogPane = alert.getDialogPane();
+            dialogPane.setContent(content);
+            alert.show();
         });
     }
 
