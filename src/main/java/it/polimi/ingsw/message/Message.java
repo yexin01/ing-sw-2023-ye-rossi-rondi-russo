@@ -1,5 +1,6 @@
 package it.polimi.ingsw.message;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -7,6 +8,10 @@ import java.util.Map;
  * Class that represents a message sent between client and server
  */
 public class Message implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -5158808756179690476L;
+
     private MessageHeader messageHeader;
     private MessagePayload messagePayload;
 

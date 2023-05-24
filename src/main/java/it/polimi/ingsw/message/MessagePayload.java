@@ -1,5 +1,6 @@
 package it.polimi.ingsw.message;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +9,10 @@ import java.util.Map;
  * Class that represents the payload of a message sent between client and server
  */
 public class MessagePayload implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -4738046953050992458L;
+
     private KeyAbstractPayload key;
     private Map<Data,Object> data; // for example for error message i can put the error type as the only object
 

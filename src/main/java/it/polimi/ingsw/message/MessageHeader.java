@@ -1,11 +1,16 @@
 package it.polimi.ingsw.message;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
  * Class that represents the header of a message sent between client and server
  */
 public class MessageHeader implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -1041059148969477852L;
+
     private final MessageType messageType;
     private final String nickname;
 
