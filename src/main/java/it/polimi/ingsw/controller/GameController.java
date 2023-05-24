@@ -41,9 +41,13 @@ public class GameController {
 
         game.getBoard().fillBag(gameRules);
         game.getBoard().firstFillBoard(nicknames.size(), gameRules);
+        int numOfCommonGoals = gameRules.getNumOfCommonGoals();
+        int numOfPossibleCommonGoalsCards = gameRules.getCommonGoalCardsSize();
+        ArrayList<Integer> numbers = game.generateRandomNumber(numOfPossibleCommonGoalsCards, numOfCommonGoals);
+        game.createCommonGoalCard(gameRules,numbers);
 
-        game.createCommonGoalCard(gameRules);
-        game.createPersonalGoalCard(gameRules);
+        numbers = game.generateRandomNumber(gameRules.getPossiblePersonalGoalsSize(), game.getPlayers().size());
+        game.createPersonalGoalCard(gameRules,numbers);
         gameLobby.setModelView(modelView);
         listenerManager.fireEvent(TurnPhase.ALL_INFO,null,game.getModelView());
         modelView.setTurnPhase(TurnPhase.SELECT_FROM_BOARD);

@@ -143,11 +143,9 @@ public class Game {
      * @param gameRules
      * @throws Exception
      */
-    public void createCommonGoalCard(GameRules gameRules) throws Exception {
+    public void createCommonGoalCard(GameRules gameRules,ArrayList<Integer> numbers ) throws Exception {
 
-        int numOfCommonGoals = gameRules.getNumOfCommonGoals();
-        int numOfPossibleCommonGoalsCards = gameRules.getCommonGoalCardsSize();
-        ArrayList<Integer> numbers = generateRandomNumber(numOfPossibleCommonGoalsCards, numOfCommonGoals);
+        //ArrayList<Integer> numbers = generateRandomNumber(numOfPossibleCommonGoalsCards, numOfCommonGoals);
         setCommonGoalCards(new ArrayList<CommonGoalCard>());
         int i=0;
         //TokenListener tokenListener=new TokenListener(sendMessages);
@@ -199,8 +197,8 @@ public class Game {
      *instantiates personalGoalCard based on the number of players
      */
 
-    public void createPersonalGoalCard(GameRules gameRules) {
-        ArrayList<Integer> numbers = generateRandomNumber(gameRules.getPossiblePersonalGoalsSize(), players.size());
+    public void createPersonalGoalCard(GameRules gameRules, ArrayList<Integer> numbers ) {
+        //ArrayList<Integer> numbers = generateRandomNumber(gameRules.getPossiblePersonalGoalsSize(), players.size());
         int rows= gameRules.getRowsBookshelf();
         int columns= gameRules.getColumnsBookshelf();
         int maxSelectableTiles=gameRules.getMaxSelectableTiles();
