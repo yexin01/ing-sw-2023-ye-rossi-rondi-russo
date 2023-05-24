@@ -25,20 +25,9 @@ import java.util.List;
 public class App{
 
         public static void main(String[] args) throws Exception {
-         ClientView cli=new ClientView();
-         CLI cl3=new CLI();
 
-         cl3.askLobbyDecision();
+/*
 
-         //cli.setThreadRunning(false);
-         try {
-          Thread.sleep(5000);
-         } catch (InterruptedException e) {
-          e.printStackTrace();
-         }
-         System.out.print("USCITOOOOOOOO");
-
-         ArrayList<String> playerNames = new ArrayList<>(List.of("TIZIO", "CAIO", "SEMPRONIO", "PIPPO"));
          ModelView mo=new ModelView(4,new GameRules());
          PlayerPointsView[] pl=new PlayerPointsView[4];
          pl[0]=new PlayerPointsView(new int[]{0,1},0,"TIZIO1");
@@ -54,12 +43,15 @@ public class App{
          mo.setPersonalPoints(personal);
          mo.winnerEndGame();
 
+ */
 
+         ArrayList<String> playerNames = new ArrayList<>(List.of("TIZIO", "CAIO", "SEMPRONIO", "PIPPO"));
 
 
             GameLobby gameLobby = new GameLobby(3, 3,null);
 
             GameController gameController = new GameController();
+            gameController.createGame(gameLobby,playerNames,gameLobby.getStartAndEndGameListener());
             //gameLobby.handleErrorFromClient(new Message(new MessageHeader(MessageType.ERROR,"TIZIO"),null));
            MessageHeader header=new MessageHeader(MessageType.DATA, gameController.getTurnNickname());
             int[] selectionBoard=new int[]{7,3,7,4};

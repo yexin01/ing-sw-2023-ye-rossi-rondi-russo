@@ -216,7 +216,7 @@ public class GameLobby {
                 }
             }
 
-        }else{
+        }else if(gameController!=null && !gameController.getModel().getModelView().getTurnPhase().equals(TurnPhase.ALL_INFO)){
             sendOnlyOnePlayer(message.getHeader().getNickname());
         }
 
