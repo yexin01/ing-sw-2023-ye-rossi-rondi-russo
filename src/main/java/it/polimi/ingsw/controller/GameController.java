@@ -49,6 +49,7 @@ public class GameController {
         numbers = game.generateRandomNumber(gameRules.getPossiblePersonalGoalsSize(), game.getPlayers().size());
         game.createPersonalGoalCard(gameRules,numbers);
         gameLobby.setModelView(modelView);
+        game.updateAllPoints();
         listenerManager.fireEvent(TurnPhase.ALL_INFO,null,game.getModelView());
         modelView.setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
     }

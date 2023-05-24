@@ -34,6 +34,7 @@ public class EndTurnListener extends EventListener{
         payload.put(Data.NEXT_PLAYER,modelView.getTurnNickname());
         payload.put(Data.TOKEN,modelView.getToken());
         payload.put(Data.POINTS,modelView.checkWinner());
+        payload.put(Data.COMMON_GOAL, modelView.getCommonGoalView());
         payload.put(Data.PERSONAL_POINTS,modelView.getPersonalPoint(nickname));
         payload.put(Data.WHO_CHANGE,modelView.findPreviousPlayer().getNickname());
         Message m=new Message(header,payload);
