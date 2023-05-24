@@ -10,12 +10,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BookshelfTest {
 
-    @Test
-    @DisplayName("computeFreeShelves: generic check with one tile for every column")
-    void computeFreeShelves() {
+    Bookshelf insertShelves (int column0, int column1, int column2, int column3, int column4) {
         Bookshelf bookshelf = new Bookshelf(6,5,3);
         // Insert the number of tiles you want for every column
-        int column0 = 1; int column1 = 1; int column2 = 1; int column3 = 1; int column4 = 1; int tileID = 0;
+        //int column0 = 1; int column1 = 1; int column2 = 1; int column3 = 1; int column4 = 1;
+        int tileID = 0;
         for (int j = 0; j<column0; j++) {
             bookshelf.getMatrix()[5-j][0] = new ItemTile(Type.CAT, tileID);
             tileID++;
@@ -36,73 +35,37 @@ class BookshelfTest {
             bookshelf.getMatrix()[5-j][4] = new ItemTile(Type.CAT, tileID);
             tileID++;
         }
-        int[] array = new int[5];
-        array[0] = 6-column0; array[1] = 6-column1; array[2] = 6-column2; array[3] = 6-column3; array[4] = 6-column4;
         bookshelf.computeFreeShelves();
+        return bookshelf;
+    }
+
+    @Test
+    @DisplayName("computeFreeShelves: generic check with one tile for every column")
+    void computeFreeShelves() {
+        int[] array = new int[5];
+        array[0] = 5; array[1] = 5; array[2] = 5; array[3] = 5; array[4] = 5;
+        Bookshelf bookshelf = insertShelves(1,1,1,1,1);
         assertArrayEquals(array, bookshelf.getFreeShelves());
     }
 
     @Test
     @DisplayName("computeFreeShelves: blank bookshelf")
     void computeFreeShelvesCC1() {
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        int column0 = 0; int column1 = 0; int column2 = 0; int column3 = 0; int column4 = 0; int tileID = 0;
-        for (int j = 0; j<column0; j++) {
-            bookshelf.getMatrix()[5-j][0] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column1; j++) {
-            bookshelf.getMatrix()[5-j][1] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column2; j++) {
-            bookshelf.getMatrix()[5-j][2] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column3; j++) {
-            bookshelf.getMatrix()[5-j][3] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column4; j++) {
-            bookshelf.getMatrix()[5-j][4] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
         int[] array = new int[5];
-        array[0] = 6-column0; array[1] = 6-column1; array[2] = 6-column2; array[3] = 6-column3; array[4] = 6-column4;
-        bookshelf.computeFreeShelves();
+        array[0] = 6; array[1] = 6; array[2] = 6; array[3] = 6; array[4] = 6;
+        Bookshelf bookshelf = insertShelves(0,0,0,0,0);
         assertArrayEquals(array, bookshelf.getFreeShelves());
     }
 
     @Test
     @DisplayName("computeFreeShelves: full bookshelf")
     void computeFreeShelvesCC2() {
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        int column0 = 6; int column1 = 6; int column2 = 6; int column3 = 6; int column4 = 6; int tileID = 0;
-        for (int j = 0; j<column0; j++) {
-            bookshelf.getMatrix()[5-j][0] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column1; j++) {
-            bookshelf.getMatrix()[5-j][1] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column2; j++) {
-            bookshelf.getMatrix()[5-j][2] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column3; j++) {
-            bookshelf.getMatrix()[5-j][3] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column4; j++) {
-            bookshelf.getMatrix()[5-j][4] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
         int[] array = new int[5];
-        array[0] = 6-column0; array[1] = 6-column1; array[2] = 6-column2; array[3] = 6-column3; array[4] = 6-column4;
-        bookshelf.computeFreeShelves();
+        array[0] = 0; array[1] = 0; array[2] = 0; array[3] = 0; array[4] = 0;
+        Bookshelf bookshelf = insertShelves(6,6,6,6,6);
         assertArrayEquals(array, bookshelf.getFreeShelves());
     }
+
 
     @Test
     @DisplayName("cloneBookshelf: generic check")
@@ -147,30 +110,7 @@ class BookshelfTest {
     @Test
     @DisplayName("numSelectableTiles: generic check with one tile for every column")
     void numSelectableTiles() {
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        // Insert the number of tiles you want for every column
-        int column0 = 1; int column1 = 1; int column2 = 1; int column3 = 1; int column4 = 1; int tileID = 0;
-        for (int j = 0; j<column0; j++) {
-            bookshelf.getMatrix()[5-j][0] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column1; j++) {
-            bookshelf.getMatrix()[5-j][1] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column2; j++) {
-            bookshelf.getMatrix()[5-j][2] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column3; j++) {
-            bookshelf.getMatrix()[5-j][3] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column4; j++) {
-            bookshelf.getMatrix()[5-j][4] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        bookshelf.computeFreeShelves();
+        Bookshelf bookshelf = insertShelves(1,1,1,1,1);
         //Set inside expected the expected value
         assertEquals(3, bookshelf.numSelectableTiles());
     }
@@ -178,87 +118,21 @@ class BookshelfTest {
     @Test
     @DisplayName("numSelectableTiles: blank bookshelf")
     void numSelectableTilesCC1() {
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        int column0 = 0; int column1 = 0; int column2 = 0; int column3 = 0; int column4 = 0; int tileID = 0;
-        for (int j = 0; j<column0; j++) {
-            bookshelf.getMatrix()[5-j][0] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column1; j++) {
-            bookshelf.getMatrix()[5-j][1] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column2; j++) {
-            bookshelf.getMatrix()[5-j][2] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column3; j++) {
-            bookshelf.getMatrix()[5-j][3] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column4; j++) {
-            bookshelf.getMatrix()[5-j][4] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        bookshelf.computeFreeShelves();
+        Bookshelf bookshelf = insertShelves(0,0,0,0,0);
         assertEquals(3, bookshelf.numSelectableTiles());
     }
 
     @Test
     @DisplayName("numSelectableTiles: 1 free column")
     void numSelectableTilesCC2() {
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        int column0 = 0; int column1 = 6; int column2 = 6; int column3 = 6; int column4 = 6; int tileID = 0;
-        for (int j = 0; j<column0; j++) {
-            bookshelf.getMatrix()[5-j][0] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column1; j++) {
-            bookshelf.getMatrix()[5-j][1] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column2; j++) {
-            bookshelf.getMatrix()[5-j][2] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column3; j++) {
-            bookshelf.getMatrix()[5-j][3] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column4; j++) {
-            bookshelf.getMatrix()[5-j][4] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        bookshelf.computeFreeShelves();
+        Bookshelf bookshelf = insertShelves(0,6,6,6,6);
         assertEquals(3, bookshelf.numSelectableTiles());
     }
 
     @Test
     @DisplayName("numSelectableTiles: only one free box")
     void numSelectableTilesCC3() {
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        int column0 = 5; int column1 = 6; int column2 = 6; int column3 = 6; int column4 = 6; int tileID = 0;
-        for (int j = 0; j<column0; j++) {
-            bookshelf.getMatrix()[5-j][0] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column1; j++) {
-            bookshelf.getMatrix()[5-j][1] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column2; j++) {
-            bookshelf.getMatrix()[5-j][2] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column3; j++) {
-            bookshelf.getMatrix()[5-j][3] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column4; j++) {
-            bookshelf.getMatrix()[5-j][4] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        bookshelf.computeFreeShelves();
+        Bookshelf bookshelf = insertShelves(5,6,6,6,6);
         assertEquals(1, bookshelf.numSelectableTiles());
     }
 
@@ -280,94 +154,28 @@ class BookshelfTest {
     @Test
     @DisplayName("isFull: 1 free box")
     void isFullCC1() {
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        int column0 = 5; int column1 = 6; int column2 = 6; int column3 = 6; int column4 = 6; int tileID = 0;
-        for (int j = 0; j<column0; j++) {
-            bookshelf.getMatrix()[5-j][0] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column1; j++) {
-            bookshelf.getMatrix()[5-j][1] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column2; j++) {
-            bookshelf.getMatrix()[5-j][2] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column3; j++) {
-            bookshelf.getMatrix()[5-j][3] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column4; j++) {
-            bookshelf.getMatrix()[5-j][4] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
+        Bookshelf bookshelf = insertShelves(5,6,6,6,6);
         assertFalse(bookshelf.isFull());
     }
 
     @Test
     @DisplayName("isFull: 1 free column")
     void isFullCC2() {
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        int column0 = 0; int column1 = 6; int column2 = 6; int column3 = 6; int column4 = 6; int tileID = 0;
-        for (int j = 0; j<column0; j++) {
-            bookshelf.getMatrix()[5-j][0] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column1; j++) {
-            bookshelf.getMatrix()[5-j][1] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column2; j++) {
-            bookshelf.getMatrix()[5-j][2] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column3; j++) {
-            bookshelf.getMatrix()[5-j][3] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column4; j++) {
-            bookshelf.getMatrix()[5-j][4] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
+        Bookshelf bookshelf = insertShelves(0,6,6,6,6);
         assertFalse(bookshelf.isFull());
     }
 
     @Test
     @DisplayName("isFull: blank bookshelf")
     void isFullCC3() {
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        int column0 = 0; int column1 = 0; int column2 = 0; int column3 = 0; int column4 = 0; int tileID = 0;
-        for (int j = 0; j<column0; j++) {
-            bookshelf.getMatrix()[5-j][0] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column1; j++) {
-            bookshelf.getMatrix()[5-j][1] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column2; j++) {
-            bookshelf.getMatrix()[5-j][2] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column3; j++) {
-            bookshelf.getMatrix()[5-j][3] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
-        for (int j = 0; j<column4; j++) {
-            bookshelf.getMatrix()[5-j][4] = new ItemTile(Type.CAT, tileID);
-            tileID++;
-        }
+        Bookshelf bookshelf = insertShelves(0,0,0,0,0);
         assertFalse(bookshelf.isFull());
     }
 
     @Test
     @DisplayName("insertTiles: Generic check for blank bookshelf")
     void insertTiles() throws Error {
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        //Blank bookshelf set, create and insert tiles as you want
-        bookshelf.computeFreeShelves();
-        //Set the size of selectedTiles
+        Bookshelf bookshelf = insertShelves(0,0,0,0,0);
         int size = 3; int tileID = 0;
         //Set the column you want to insert the tiles
         ArrayList<ItemTile> selectedTiles = new ArrayList<>();
@@ -384,8 +192,7 @@ class BookshelfTest {
     @Test
     @DisplayName("insertTiles: Checking insert of 1 tile in a blank bookshelf")
     void insertTilesCC1() throws Error {
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        bookshelf.computeFreeShelves();
+        Bookshelf bookshelf = insertShelves(0,0,0,0,0);
         ArrayList<ItemTile> selectedTiles = new ArrayList<>();
         int size = 1; int tileID = 0;
         for (int i = 0; i<size; i++) {
@@ -399,11 +206,7 @@ class BookshelfTest {
     @Test
     @DisplayName("insertTiles: Checking insert of 3 tiles in a bookshelf column with 3 free shelves")
     void insertTilesCC2() throws Error {
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, 0);
-        bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, 1);
-        bookshelf.getMatrix()[3][0] = new ItemTile(Type.CAT, 2);
-        bookshelf.computeFreeShelves();
+        Bookshelf bookshelf = insertShelves(3, 0 , 0, 0, 0);
         ArrayList<ItemTile> selectedTiles = new ArrayList<>();
         int size = 3; int tileID = 3;
         for (int i = 0; i<size; i++) {
@@ -419,13 +222,7 @@ class BookshelfTest {
     @Test
     @DisplayName("insertTiles: Checking insert of 1 tile in a bookshelf column with 1 free shelve")
     void insertTilesCC3() throws Error {
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, 0);
-        bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, 1);
-        bookshelf.getMatrix()[3][0] = new ItemTile(Type.CAT, 2);
-        bookshelf.getMatrix()[2][0] = new ItemTile(Type.CAT, 3);
-        bookshelf.getMatrix()[1][0] = new ItemTile(Type.CAT, 4);
-        bookshelf.computeFreeShelves();
+        Bookshelf bookshelf = insertShelves(5, 0, 0 , 0, 0);
         ArrayList<ItemTile> selectedTiles = new ArrayList<>();
         int size = 1; int tileID = 5;
         for (int i = 0; i<size; i++) {
@@ -464,14 +261,7 @@ class BookshelfTest {
     @Test
     @DisplayName("checkBookshelf: numSelectedTiles > getMaxTilesColumn(column)")
     void checkBookshelfCC2() throws Error {
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        int tileID = 0;
-        bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
-        bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID); tileID++;
-        bookshelf.getMatrix()[3][0] = new ItemTile(Type.CAT, tileID); tileID++;
-        bookshelf.getMatrix()[2][0] = new ItemTile(Type.CAT, tileID); tileID++;
-        bookshelf.getMatrix()[1][0] = new ItemTile(Type.CAT, tileID);
-        bookshelf.computeFreeShelves();
+        Bookshelf bookshelf = insertShelves(5, 0, 0, 0, 0);
         int size = 2;
         int column = 0;
         assertNotEquals(null, bookshelf.checkBookshelf(column, size));

@@ -23,7 +23,7 @@ public class EndTurnPanel extends BasePanel {
     private double y;
     private double z;
     private double w;
-    Color[] colors= new Color [] {Color.YELLOW, Color.SILVER, Color.SANDYBROWN, Color.WHITE};
+    Color[] colors= new Color [] {Color.YELLOW, Color.SILVER, Color.SANDYBROWN, Color.LIGHTPINK};
     private int counter;
 
 

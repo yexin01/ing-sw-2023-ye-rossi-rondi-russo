@@ -14,6 +14,17 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 class PlayerTest {
 
+    ArrayList<BoardBox> createSelectedTiles (int size) {
+        ArrayList<BoardBox> selectedTiles = new ArrayList<>();
+        int tileID = 0;
+        for (int i = 0; i<size; i++) {
+            BoardBox boardBox = new BoardBox(i, i);
+            boardBox.setTile(new ItemTile(Type.CAT, tileID));
+            selectedTiles.add(boardBox);
+            tileID++;
+        }
+        return selectedTiles;
+    }
     @Test
     @DisplayName("selection: generic 3 tiles check")
     void selection() throws Exception {
@@ -23,15 +34,7 @@ class PlayerTest {
         Board board = new Board(modelView);
         board.fillBag(gameRules);
         board.firstFillBoard(2, new GameRules());
-        ArrayList<BoardBox> selectedTiles = new ArrayList<>();
-        int size = 3; int tileID = 0;
-        for (int i = 0; i<size; i++) {
-            BoardBox boardBox = new BoardBox(i, i);
-            boardBox.setTile(new ItemTile(Type.CAT, tileID));
-            selectedTiles.add(boardBox);
-            tileID++;
-        }
-        board.setSelectedBoard(selectedTiles);
+        board.setSelectedBoard(createSelectedTiles(3));
         player.selection(board);
         assertEquals(player.getSelectedItems().get(0).getTileID(), modelView.getSelectedItems()[0].getTileID());
         assertEquals(player.getSelectedItems().get(1).getTileID(), modelView.getSelectedItems()[1].getTileID());
@@ -48,15 +51,7 @@ class PlayerTest {
         Board board = new Board(modelView);
         board.fillBag(gameRules);
         board.firstFillBoard(2, new GameRules());
-        ArrayList<BoardBox> selectedTiles = new ArrayList<>();
-        int size = 3; int tileID = 0;
-        for (int i = 0; i<size; i++) {
-            BoardBox boardBox = new BoardBox(i, i);
-            boardBox.setTile(new ItemTile(Type.CAT, tileID));
-            selectedTiles.add(boardBox);
-            tileID++;
-        }
-        board.setSelectedBoard(selectedTiles);
+        board.setSelectedBoard(createSelectedTiles(3));
         player.selection(board);
         int [] order = new int[]{1, 2, 5};
         assertEquals(ErrorType.INVALID_ORDER_TILE_NUMBER, player.checkPermuteSelection(order));
@@ -72,15 +67,7 @@ class PlayerTest {
         Board board = new Board(modelView);
         board.fillBag(gameRules);
         board.firstFillBoard(2, new GameRules());
-        ArrayList<BoardBox> selectedTiles = new ArrayList<>();
-        int size = 3; int tileID = 0;
-        for (int i = 0; i<size; i++) {
-            BoardBox boardBox = new BoardBox(i, i);
-            boardBox.setTile(new ItemTile(Type.CAT, tileID));
-            selectedTiles.add(boardBox);
-            tileID++;
-        }
-        board.setSelectedBoard(selectedTiles);
+        board.setSelectedBoard(createSelectedTiles(3));
         player.selection(board);
         int [] order = new int[]{1, 2, 1};
         assertEquals(ErrorType.INVALID_ORDER_TILE_REPETITION, player.checkPermuteSelection(order));

@@ -21,8 +21,8 @@ import java.util.Objects;
 
 public class FinalRankingPanel extends BasePanel{
 
-    Color[] colors= new Color [] {Color.YELLOW, Color.SILVER, Color.SANDYBROWN, Color.WHITE};
-    String [] color = new String[] {"YELLOW", "SILVER", "SANDYBROWN", "WHITE"};
+    Color[] colors= new Color [] {Color.YELLOW, Color.SILVER, Color.SANDYBROWN, Color.LIGHTPINK};
+    String [] color = new String[] {"YELLOW", "SILVER", "SANDYBROWN", "LIGHTPINK"};
     private int counter;
     private Border border = new Border(new BorderStroke(Color.BLACK,
             BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(3)));
