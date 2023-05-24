@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.GUI;
 
 import com.sun.tools.javac.Main;
 import it.polimi.ingsw.view.ClientView;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
@@ -32,7 +33,7 @@ public class EndTurnPanel extends BasePanel {
         counter = 0;
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("base_pagina2.jpg")).openStream());
-        BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, false, false);
+        BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, true, true);
         BackgroundImage background2 = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         setBackground(new Background(background2));
         Image banner = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("banner 1386x400px.png")).openStream());
@@ -73,6 +74,7 @@ public class EndTurnPanel extends BasePanel {
                 } else {
                     button = createBookshelfButton(clientView, screenBounds.getWidth()*0.32/clientView.getBoardView()[0].length, screenBounds.getHeight()*0.32/clientView.getBoardView().length, i, j, false);
                 }
+                button.setPadding(new Insets(6));
                 bookshelf.add(button, j+1, i);
             }
         }
@@ -81,7 +83,7 @@ public class EndTurnPanel extends BasePanel {
             bookshelf.add(label, 0, i);
         }
         for (int i=0;i<5;i++) {
-            Label label10 = new Label("        "+Integer.toString(i)); label10.setTextFill(Color.WHITE);
+            Label label10 = new Label("      "+Integer.toString(i)); label10.setTextFill(Color.WHITE);
             bookshelf.add(label10, i+1, 6);
         }
         bookshelf.setMaxSize(screenBounds.getWidth()*0.32, screenBounds.getHeight()*0.32);
@@ -89,7 +91,7 @@ public class EndTurnPanel extends BasePanel {
         //bookshelf.setMaxSize(z*5, w*6);
         //bookshelf.setPadding(new Insets(screenBounds.getHeight()-w*6, 100, 100, screenBounds.getWidth()-z*5));
 
-        Font font = new Font("Poor Richard", 25);
+        Font font = new Font("Poor Richard", 24);
         Font font1 = new Font("Poor Richard", 22);
         Font font2 = new Font("Poor Richard", 17);
         VBox vBox3 = new VBox();
@@ -153,8 +155,8 @@ public class EndTurnPanel extends BasePanel {
         vBox1.setMaxSize(getZ(), getW()+30);
         vBox1.setAlignment(Pos.CENTER);
         vBox1.setPickOnBounds(false);
-        vBox1.setTranslateX(-100);
-        vBox1.setTranslateY(-57);
+        vBox1.setTranslateX(-130);
+        vBox1.setTranslateY(-87);
         getChildren().addAll(vBox1, vBox);
         setAlignment(vBox, Pos.BOTTOM_LEFT);
         setAlignment(vBox1, Pos.BOTTOM_RIGHT);

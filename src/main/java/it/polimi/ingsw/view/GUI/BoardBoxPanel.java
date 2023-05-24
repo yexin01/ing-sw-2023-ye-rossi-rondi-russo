@@ -44,7 +44,7 @@ public class BoardBoxPanel extends BasePanel {
 
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("base_pagina2.jpg")).openStream());
-        BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, false, false);
+        BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, true, true);
         BackgroundImage background2 = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         setBackground(new Background(background2));
         Image box = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Box 280x280px.png")).openStream());
