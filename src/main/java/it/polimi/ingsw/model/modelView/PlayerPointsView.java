@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.modelView;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 //TODO based on how the graphic part is implemented, decide to keep it or not
@@ -9,6 +10,8 @@ public class PlayerPointsView implements Serializable {
     private final int adjacentPoints;
     private final String nickname;
 
+    @Serial
+    private static final long serialVersionUID = -550443840165524261L;
 
     public PlayerPointsView( int[] commonGoalPoints,int adjacentPoints, String nickname) {
         this.commonGoalPoints = commonGoalPoints;
