@@ -417,8 +417,8 @@ public abstract class BasePanel extends StackPane {
         ImageView png = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("bookshelf_orth.png")).openStream()));
         //png.setFitWidth(getZ()*7.7);
         //png.setFitHeight(getW()*8.7);
-        png.setFitWidth(getZ()*(screenBounds.getWidth()/181.82));
-        png.setFitHeight(getW()*(screenBounds.getHeight()/90));
+        png.setFitWidth(getZ()*7.7);
+        png.setFitHeight(getW()*8.7);
         png.setPreserveRatio(true);
         png.setTranslateY(getW()/5);
         this.png = png;
