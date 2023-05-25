@@ -37,7 +37,7 @@ public class EndTurnPanel extends BasePanel {
         setBackground(new Background(background2));
         Image banner = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("banner 1386x400px.png")).openStream());
         ImageView bannerView = new ImageView(banner);
-        bannerView.setFitHeight(370);
+        bannerView.setFitHeight(300);
         bannerView.setPreserveRatio(true);
         getChildren().add(bannerView);
         Image title = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Title 2000x618px.png")).openStream());
@@ -98,20 +98,20 @@ public class EndTurnPanel extends BasePanel {
         Font font1 = new Font("Poor Richard", 22);
         Font font2 = new Font("Poor Richard", 19);
         VBox vBox3 = new VBox();
-        vBox3.setMaxSize(600, 400);
+        vBox3.setMaxSize(700, 400);
         for (int i=(clientView.getPlayerPointsViews().length-1); i>-1; i--) {
             VBox vBox = new VBox();
             Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname());
-            label.setFont(font1); label.setTextFill(Color.WHITE);
+            label.setFont(font1); label.setTextFill(Color.BLACK);
             Label label5 = new Label( clientView.getPlayerPointsViews()[i].getPoints()+"  Points");
-            label5.setFont(font1); label5.setTextFill(Color.WHITE);
+            label5.setFont(font1); label5.setTextFill(Color.BLACK);
             if (Objects.equals(clientView.getPlayerPointsViews()[i].getNickname(), clientView.getNickname())) {
                 int sumToken = 0;
                 for (int j =0; j<clientView.getCommonGoalView().length; j++) {
                     sumToken += clientView.getPlayerPointsViews()[i].getPointsToken()[j];
                 }
                 Label label1 = new Label("Common goals: "+sumToken+"   Adjacent tiles: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal: "+clientView.getPersonalPoints());
-                label1.setFont(font2); label1.setTextFill(Color.WHITE);
+                label1.setFont(font2); label1.setTextFill(Color.BLACK);
                 vBox.getChildren().addAll(label5,label1);
             } else {
                 int sumToken = 0;
@@ -119,17 +119,17 @@ public class EndTurnPanel extends BasePanel {
                     sumToken += clientView.getPlayerPointsViews()[i].getPointsToken()[j];
                 }
                 Label label1 = new Label("Common goals: "+sumToken+"   Adjacent tiles: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal: ?");
-                label1.setFont(font2); label1.setTextFill(Color.WHITE);
+                label1.setFont(font2); label1.setTextFill(Color.BLACK);
                 vBox.getChildren().addAll(label5,label1);
             }
             vBox.setSpacing(10);
             vBox.setAlignment(Pos.CENTER);
             Label label2 = new Label((counter+1)+""); label2.setFont(font); label2.setTextFill(colors[counter]);
             HBox hBox = new HBox(label2, label, vBox);
-            hBox.setMaxSize(500, 300);
+            hBox.setMaxSize(600, 400);
             hBox.setSpacing(40);
             hBox.setAlignment(Pos.CENTER);
-            hBox.setStyle("-fx-border-color: white; -fx-border-width: 0 0 2 0;");
+            hBox.setStyle("-fx-background-color: beige; -fx-background-radius: 8px; -fx-smooth: true");
             vBox3.getChildren().addAll(hBox);
             counter++;
         }
