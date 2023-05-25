@@ -101,26 +101,36 @@ public class EndTurnPanel extends BasePanel {
         vBox3.setMaxSize(600, 400);
         for (int i=(clientView.getPlayerPointsViews().length-1); i>-1; i--) {
             VBox vBox = new VBox();
-            Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname() + "   points:    " + clientView.getPlayerPointsViews()[i].getPoints());
-            label.setFont(font); label.setTextFill(colors[counter]);
+            Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname());
+            label.setFont(font1); label.setTextFill(Color.WHITE);
+            Label label5 = new Label( clientView.getPlayerPointsViews()[i].getPoints()+"  Points");
+            label5.setFont(font1); label5.setTextFill(Color.WHITE);
             if (Objects.equals(clientView.getPlayerPointsViews()[i].getNickname(), clientView.getNickname())) {
                 int sumToken = 0;
                 for (int j =0; j<clientView.getCommonGoalView().length; j++) {
                     sumToken += clientView.getPlayerPointsViews()[i].getPointsToken()[j];
                 }
-                Label label1 = new Label("Common goal points: "+sumToken+"   Adjacent tiles points: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal points: "+clientView.getPersonalPoints());
-                label1.setFont(font2); label1.setTextFill(colors[counter]);
-                vBox3.getChildren().addAll(label, label1);
+                Label label1 = new Label("Common goals: "+sumToken+"   Adjacent tiles: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal: "+clientView.getPersonalPoints());
+                label1.setFont(font2); label1.setTextFill(Color.WHITE);
+                vBox.getChildren().addAll(label5,label1);
             } else {
                 int sumToken = 0;
                 for (int j =0; j<clientView.getCommonGoalView().length; j++) {
                     sumToken += clientView.getPlayerPointsViews()[i].getPointsToken()[j];
                 }
-                Label label1 = new Label("Common goal points: "+sumToken+"   Adjacent tiles points: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal points: ?");
-                label1.setFont(font2); label1.setTextFill(colors[counter]);
-                vBox3.getChildren().addAll(label, label1);
+                Label label1 = new Label("Common goals: "+sumToken+"   Adjacent tiles: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal: ?");
+                label1.setFont(font2); label1.setTextFill(Color.WHITE);
+                vBox.getChildren().addAll(label5,label1);
             }
-            vBox3.getChildren().add(vBox);
+            vBox.setSpacing(10);
+            vBox.setAlignment(Pos.CENTER);
+            Label label2 = new Label((counter+1)+""); label2.setFont(font); label2.setTextFill(colors[counter]);
+            HBox hBox = new HBox(label2, label, vBox);
+            hBox.setMaxSize(500, 300);
+            hBox.setSpacing(40);
+            hBox.setAlignment(Pos.CENTER);
+            hBox.setStyle("-fx-border-color: white; -fx-border-width: 0 0 2 0;");
+            vBox3.getChildren().addAll(hBox);
             counter++;
         }
         //Label label2 = new Label(clientView.getNickname().toUpperCase()+":"); label2.setFont(new Font("Poor Richard", 26)); label2.setTextFill(Color.YELLOW);
@@ -161,7 +171,7 @@ public class EndTurnPanel extends BasePanel {
         vBox1.setAlignment(Pos.CENTER);
         vBox1.setSpacing(20);
         for (int i = 0; i<clientView.getCommonGoalView().length; i++) {
-            Label label2 = new Label("Common Goal Card "+(i+1)+" points left:    "+clientView.getCommonGoalView()[1][i]); label2.setFont(font1); label2.setTextFill(Color.LIGHTGREEN);
+            Label label2 = new Label("Common Goal Card "+(i+1)+" points left:    "+clientView.getCommonGoalView()[1][i]); label2.setFont(font1); label2.setTextFill(Color.WHITE);
             vBox1.getChildren().addAll(label2);
             if (clientView.getCommonGoalView()[1][i]!= 0) {
                 ImageView imageView = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("scoring_" + clientView.getCommonGoalView()[1][i] + ".jpg")).openStream()));

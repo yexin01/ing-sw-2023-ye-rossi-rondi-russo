@@ -2,15 +2,10 @@ package it.polimi.ingsw.view.GUI;
 
 import com.sun.tools.javac.Main;
 import it.polimi.ingsw.view.ClientView;
-import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -30,15 +25,15 @@ public class FinalRankingPanel extends BasePanel{
     public FinalRankingPanel(ClientView clientView, int[] personalPoints) throws IOException {
         counter = 0;
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Display_1.jpg")).openStream());
-        BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, false, true);
+        Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("base_pagina2.jpg")).openStream());
+        BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, true, true);
         BackgroundImage background2 = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         setBackground(new Background(background2));
-        Font font = new Font("Poor Richard", 80);
-        Font font2 = new Font("Poor Richard", 65);
-        Label label1 = new Label("FINAL RANKING"); label1.setFont(font); label1.setTextFill(Color.YELLOW);
-        getChildren().add(label1); setAlignment(label1, Pos.TOP_CENTER); label1.setTranslateY(80);
-        VBox box = new VBox();
+        Font font4 = new Font("Poor Richard", 60);
+        //Font font2 = new Font("Poor Richard", 65);
+        Label label4 = new Label("FINAL RANKING"); label4.setFont(font4); label4.setTextFill(Color.YELLOW);
+        getChildren().add(label4); setAlignment(label4, Pos.TOP_CENTER); label4.setTranslateY(80);
+        /*VBox box = new VBox();
         HBox hBox1 = new HBox();
         Label label3 = new Label("PLAYERS"); label3.setFont(font2); label3.setTextFill(Color.BLACK);
         label3.setMinWidth(500);
@@ -83,5 +78,40 @@ public class FinalRankingPanel extends BasePanel{
         box.setAlignment(Pos.CENTER);
         getChildren().addAll(box);
         setAlignment(box, Pos.CENTER);
+
+         */
+
+        Font font = new Font("Poor Richard", 33);
+        Font font1 = new Font("Poor Richard", 40);
+        Font font2 = new Font("Poor Richard", 24);
+        VBox vBox3 = new VBox();
+        vBox3.setSpacing(40);
+        vBox3.setAlignment(Pos.CENTER);
+        for (int i=(clientView.getPlayerPointsViews().length-1); i>-1; i--) {
+            VBox vBox = new VBox();
+            Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname());
+            label.setFont(font1); label.setTextFill(Color.WHITE);
+            Label label5 = new Label( clientView.getPlayerPointsViews()[i].getPoints()+"Points");
+            label5.setFont(font); label5.setTextFill(Color.WHITE);
+            int sumToken = 0;
+            for (int j =0; j<clientView.getCommonGoalView().length; j++) {
+                sumToken += clientView.getPlayerPointsViews()[i].getPointsToken()[j];
+            }
+            Label label1 = new Label("Common goals: "+sumToken+"   Adjacent tiles: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal: "+(clientView.getPlayerPointsViews()[i].getPoints()-(sumToken+clientView.getPlayerPointsViews()[i].getAdjacentPoints())));
+            label1.setFont(font2); label1.setTextFill(Color.WHITE);
+            vBox.getChildren().addAll(label5,label1);
+            vBox.setSpacing(10);
+            vBox.setAlignment(Pos.CENTER);
+            Label label2 = new Label((counter+1)+""); label2.setFont(font1); label2.setTextFill(colors[counter]);
+            HBox hBox = new HBox(label2, label, vBox);
+            hBox.setMaxSize(700, 300);
+            hBox.setSpacing(40);
+            hBox.setAlignment(Pos.CENTER);
+            hBox.setStyle("-fx-border-color: white; -fx-border-width: 0 0 2 0;");
+            vBox3.getChildren().addAll(hBox);
+            counter++;
+        }
+        getChildren().add(vBox3);
+        setAlignment(vBox3, Pos.CENTER);
     }
 }

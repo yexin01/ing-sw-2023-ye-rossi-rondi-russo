@@ -12,6 +12,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -123,7 +124,7 @@ public class BookshelfPanel extends BasePanel {
 
     private Button createArrow (Button button, int i) throws IOException {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        Image icon = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("arrow.png")).openStream());
+        Image icon = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("arrow2.png")).openStream());
         ImageView imageView = new ImageView(icon);
         imageView.setFitWidth(screenBounds.getWidth()*0.58/10);
         imageView.setFitHeight(screenBounds.getHeight()*0.58/10);
@@ -146,6 +147,13 @@ public class BookshelfPanel extends BasePanel {
                 alert.show();
             }
         }));
+        button.setStyle("-fx-border-color: transparent; -fx-border-width: 0; -fx-background-radius: 0; -fx-background-color: transparent;");
+        button.setOnMouseEntered(mouseEvent -> {
+            button.setEffect(new Glow(1));
+        });
+        button.setOnMouseExited(mouseEvent -> {
+            button.setEffect(null);
+        });
         return button;
     }
 
