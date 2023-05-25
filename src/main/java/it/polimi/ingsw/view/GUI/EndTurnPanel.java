@@ -3,7 +3,6 @@ package it.polimi.ingsw.view.GUI;
 
 import com.sun.tools.javac.Main;
 import it.polimi.ingsw.view.ClientView;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
@@ -65,7 +64,8 @@ public class EndTurnPanel extends BasePanel {
         //board.setMaxSize(x * 9, y * 9);
         //getChildren().add(board);
         //board.setPadding(new Insets(((screenBounds.getHeight() - y * 9)), ((screenBounds.getWidth() - x * 9)), 100, 20));
-        GridPane bookshelf = new GridPane();
+
+        /*GridPane bookshelf = new GridPane();
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
                 Button button;
@@ -87,15 +87,18 @@ public class EndTurnPanel extends BasePanel {
             bookshelf.add(label10, i+1, 6);
         }
         bookshelf.setMaxSize(screenBounds.getWidth()*0.32, screenBounds.getHeight()*0.32);
+
+         */
+
         //getChildren().add(bookshelf);
         //bookshelf.setMaxSize(z*5, w*6);
         //bookshelf.setPadding(new Insets(screenBounds.getHeight()-w*6, 100, 100, screenBounds.getWidth()-z*5));
 
-        Font font = new Font("Poor Richard", 24);
+        Font font = new Font("Poor Richard", 26);
         Font font1 = new Font("Poor Richard", 22);
-        Font font2 = new Font("Poor Richard", 17);
+        Font font2 = new Font("Poor Richard", 19);
         VBox vBox3 = new VBox();
-        vBox3.setMaxSize(450, 200);
+        vBox3.setMaxSize(600, 400);
         for (int i=(clientView.getPlayerPointsViews().length-1); i>-1; i--) {
             VBox vBox = new VBox();
             Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname() + "   points:    " + clientView.getPlayerPointsViews()[i].getPoints());
@@ -126,10 +129,12 @@ public class EndTurnPanel extends BasePanel {
         //Label label5 = new Label("Adjacent tiles points:    "+clientView.getPlayerPoints().getAdjacentPoints()); label5.setFont(font); label5.setTextFill(Color.WHITE);
         //Label label6 = new Label("Common Goal Card 1 points left:    "+clientView.getCommonGoalView()[1][0]); label6.setFont(font1); label6.setTextFill(Color.LIGHTGREEN);
         //Label label7 = new Label("Common Goal Card 2 points left:    "+clientView.getCommonGoalView()[1][1]); label7.setFont(font1); label7.setTextFill(Color.LIGHTGREEN);
-        for (int i = 0; i<clientView.getCommonGoalView().length; i++) {
+        /*for (int i = 0; i<clientView.getCommonGoalView().length; i++) {
             Label label = new Label("Common Goal Card "+(i+1)+" points left:    "+clientView.getCommonGoalView()[1][i]); label.setFont(font1); label.setTextFill(Color.LIGHTGREEN);
             vBox3.getChildren().add(label);
         }
+
+         */
         vBox3.setSpacing(10);
         //vBox3.getChildren().addAll(label6, label7);
         vBox3.setAlignment(Pos.CENTER);
@@ -142,7 +147,7 @@ public class EndTurnPanel extends BasePanel {
         vBox3.setTranslateY(150);
 
         Label label = new Label("THE BOARD:"); label.setFont(font); label.setTextFill(Color.YELLOW);
-        Label label1 = new Label("YOUR BOOKSHELF:"); label1.setFont(font); label1.setTextFill(Color.YELLOW);
+        //Label label1 = new Label("YOUR BOOKSHELF:"); label1.setFont(font); label1.setTextFill(Color.YELLOW);
         VBox vBox = new VBox(label, board);
         vBox.setSpacing(15);
         vBox.setMaxSize(getX(), getY()+30);
@@ -150,16 +155,43 @@ public class EndTurnPanel extends BasePanel {
         vBox.setPickOnBounds(false);
         vBox.setTranslateX(30);
         vBox.setTranslateY(-30);
-        VBox vBox1 = new VBox(label1, bookshelf);
+
+        VBox vBox1 = new VBox();
+        vBox1.setMaxSize(screenBounds.getWidth()*0.2, screenBounds.getHeight()*0.2);
+        vBox1.setAlignment(Pos.CENTER);
+        vBox1.setSpacing(20);
+        for (int i = 0; i<clientView.getCommonGoalView().length; i++) {
+            Label label2 = new Label("Common Goal Card "+(i+1)+" points left:    "+clientView.getCommonGoalView()[1][i]); label2.setFont(font1); label2.setTextFill(Color.LIGHTGREEN);
+            vBox1.getChildren().addAll(label2);
+            if (clientView.getCommonGoalView()[1][i]!= 0) {
+                ImageView imageView = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("scoring_" + clientView.getCommonGoalView()[1][i] + ".jpg")).openStream()));
+                imageView.setFitWidth(screenBounds.getWidth() * 0.15);
+                imageView.setFitHeight(screenBounds.getHeight() * 0.15);
+                imageView.setPreserveRatio(true);
+                vBox1.getChildren().add(imageView);
+            } else {
+                ImageView imageView = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("scoring_back_EMPTY.jpg")).openStream()));
+                imageView.setFitWidth(screenBounds.getWidth() * 0.15);
+                imageView.setFitHeight(screenBounds.getHeight() * 0.15);
+                imageView.setPreserveRatio(true);
+                vBox1.getChildren().add(imageView);
+            }
+        }
+
+        /*VBox vBox1 = new VBox(label1, bookshelf);
         vBox1.setSpacing(15);
         vBox1.setMaxSize(getZ(), getW()+30);
         vBox1.setAlignment(Pos.CENTER);
         vBox1.setPickOnBounds(false);
         vBox1.setTranslateX(-130);
         vBox1.setTranslateY(-87);
+
+         */
         getChildren().addAll(vBox1, vBox);
         setAlignment(vBox, Pos.BOTTOM_LEFT);
         setAlignment(vBox1, Pos.BOTTOM_RIGHT);
+        vBox1.setTranslateX(-100);
+        vBox1.setTranslateY(-60);
 
         VBox vBox2 = createCardsBox(clientView, screenBounds);
         getChildren().add(getParquet());

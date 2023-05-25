@@ -6,8 +6,6 @@ import it.polimi.ingsw.message.ErrorType;
 import it.polimi.ingsw.view.Check;
 import it.polimi.ingsw.view.ClientView;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -55,9 +53,13 @@ public class BookshelfPanel extends BasePanel {
             gridPane.add(button, j, 1);
         }
         for (int j = 0; j < 5; j++) {
+            StackPane stackPane1 = new StackPane();
+            stackPane1.setMinSize(getZ()/1.75, getW());
             Button button = new Button();
             button = createArrow(button, j);
-            gridPane.add(button, j, 0);
+            stackPane1.getChildren().add(button);
+            stackPane1.setAlignment(button, Pos.CENTER);
+            gridPane.add(stackPane1, j, 0);
         }
         ImageView background = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("bookshelf.png")).openStream()));
         background.setFitWidth(screenBounds.getWidth()*0.8);
@@ -123,32 +125,27 @@ public class BookshelfPanel extends BasePanel {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         Image icon = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("arrow.png")).openStream());
         ImageView imageView = new ImageView(icon);
-        imageView.setFitWidth(screenBounds.getWidth()*0.58/5);
-        imageView.setFitHeight(screenBounds.getHeight()*0.58/6);
+        imageView.setFitWidth(screenBounds.getWidth()*0.58/10);
+        imageView.setFitHeight(screenBounds.getHeight()*0.58/10);
         imageView.setPreserveRatio(true);
         button.setGraphic(imageView);
-        button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                Platform.runLater(() -> {
-                    ErrorType errorType = Check.checkBookshelf(i, clientView.getBookshelfView(), clientView.getTilesSelected());
-                    if (errorType == null) {
-                        try {
-                            clientView.setColumn(i);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                        Check.insertTiles(i, clientView.getBookshelfView(), clientView.getTilesSelected());
-                    } else {
-                        Alert alert = new Alert(Alert.AlertType.WARNING);
-                        alert.setTitle("Error!");
-                        alert.setHeaderText("Invalid column selected");
-                        alert.setContentText("Check the columns' free shelves");
-                        alert.show();
-                    }
-                });
+        button.setOnAction(actionEvent -> Platform.runLater(() -> {
+            ErrorType errorType = Check.checkBookshelf(i, clientView.getBookshelfView(), clientView.getTilesSelected());
+            if (errorType == null) {
+                try {
+                    clientView.setColumn(i);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                Check.insertTiles(i, clientView.getBookshelfView(), clientView.getTilesSelected());
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Error!");
+                alert.setHeaderText("Invalid column selected");
+                alert.setContentText("Check the columns' free shelves");
+                alert.show();
             }
-        });
+        }));
         return button;
     }
 
