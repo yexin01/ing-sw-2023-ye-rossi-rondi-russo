@@ -112,7 +112,8 @@ public class ChoicePanel extends BasePanel{
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                tilesSelected[counter] = new ItemTileView(clientView.getBoardView()[clientView.getCoordinatesSelected().get(2*i)][clientView.getCoordinatesSelected().get(2*i+1)].getType(), clientView.getBoardView()[clientView.getCoordinatesSelected().get(2*i)][clientView.getCoordinatesSelected().get(2*i+1)].getId());
+                //tilesSelected[counter] = new ItemTileView(clientView.getBoardView()[clientView.getCoordinatesSelected().get(2*i)][clientView.getCoordinatesSelected().get(2*i+1)].getType(), clientView.getBoardView()[clientView.getCoordinatesSelected().get(2*i)][clientView.getCoordinatesSelected().get(2*i+1)].getId());
+                tilesSelected[counter] = clientView.getTilesSelected()[i];
                 button.setDisable(true);
                 button.setOpacity(0.3);
                 counter++;

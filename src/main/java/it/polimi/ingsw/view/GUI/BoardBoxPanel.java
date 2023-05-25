@@ -111,6 +111,7 @@ public class BoardBoxPanel extends BasePanel {
                 try {
                     choicePanel.setup(selectedCount);
                     clientView.setCoordinatesSelected(coordinatesSelected);
+                    clientView.setTilesSelected(Check.createItemTileView(coordinatesSelected, clientView.getBoardView()));
                     //ChoicePanel.semaphore.release();
                     //coordinatesSelected.clear();
                 } catch (Exception e) {
