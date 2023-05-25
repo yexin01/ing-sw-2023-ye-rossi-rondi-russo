@@ -277,6 +277,7 @@ public class Game {
         PlayerPointsView playerPoints=new PlayerPointsView(player.getCommonGoalPoints(),player.getAdjacentPoints(),player.getNickname());
         modelview.getPersonalPoints()[modelview.getTurnPlayer()]=player.getPersonalGoalPoints();
         modelview.getPlayerPoints()[modelview.getTurnPlayer()]=playerPoints;
+        modelview.setBookshelfView(player.getBookshelf().cloneBookshelf(),player.getNickname());
     }
 
     public PersonalGoalCard turnPersonalGoal(){return getTurnPlayerOfTheGame().getPersonalGoalCard();}

@@ -27,18 +27,8 @@ public class ErrorHandler extends MessageHandler {
             case ERROR_CONNECTION -> {
                 switch(error){
                     case ONLY_PLAYER -> {
-                        if(!getClient().isOnlyOnePlayer()){
-                            getClientInterface().displayError(error.getErrorMessage());
-                            getClient().setOnlyOnePlayer(true);
-                        }
+                       getClientInterface().displayError(error.getErrorMessage());
 
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                         System.out.println("Il thread è stato interrotto e terminato.");
-                        getClientInterface().getClientView().receiveError();
                     }
 
                     //mandato direttamente dal clientHandler ti sei disconnesso questa gestine potrà cambiare

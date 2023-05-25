@@ -254,7 +254,7 @@ public class GameLobby {
         gameController.reconnectionPlayer(nickname);
         if(checkOnlyPlayer()){
             sendOnlyOnePlayer(nickname);
-        }else if(messageEndGame==null){
+        }else if(messageEndGame==null && players.size()>2){
             MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
             MessagePayload payload=new MessagePayload(KeyConnectionPayload.RECONNECTION);
             String content=nickname+" reconnected to Game Lobby "+ idGameLobby + "!";
@@ -356,7 +356,8 @@ public class GameLobby {
      * @throws IOException if there are problems with the connection
      */
     public synchronized void sendMessageToSpecificPlayer(Message message, String nickname) throws IOException {
-        players.get(nickname).sendMessageToClient(message);
+        if(!playersDisconnected.contains(nickname))
+            players.get(nickname).sendMessageToClient(message);
     }
 
     public Message getMessageEndGame() {

@@ -16,8 +16,7 @@ public class ConnectionHandler extends MessageHandler{
         KeyConnectionPayload key= (KeyConnectionPayload) mes.getPayload().getKey();
         getClientInterface().displayMessage((String) mes.getPayload().getContent(Data.CONTENT));
         if(key.equals(KeyConnectionPayload.RECONNECTION)){
-            if(getClient().isOnlyOnePlayer() || mes.getPayload().getContent(Data.WHO_CHANGE).equals(getClientInterface().getClientView().getNickname())){
-                getClient().setOnlyOnePlayer(false);
+            if(mes.getPayload().getContent(Data.WHO_CHANGE).equals(getClientInterface().getClientView().getNickname())){
                 getClientInterface().getClientView().somethingWrong();
             }
         }

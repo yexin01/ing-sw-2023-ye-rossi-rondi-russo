@@ -134,9 +134,12 @@ public class ClientView {
     public void receiveEndGame() throws Exception {
         messageToserverHandlerTurn.handleMessageToServer(null, TurnPhase.END_GAME,nickname,MessageType.DATA);
     }
+    /*
     public void receiveError() throws Exception {
         messageToserverHandlerTurn.handleMessageToServer(null, ErrorType.ONLY_PLAYER,nickname,MessageType.DATA);
     }
+
+     */
 
 
     public int[][] getCommonGoalView() {
