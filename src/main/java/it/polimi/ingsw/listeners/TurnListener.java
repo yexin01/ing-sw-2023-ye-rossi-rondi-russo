@@ -16,6 +16,7 @@ public class TurnListener extends EventListener {
     @Override
     public void fireEvent(KeyAbstractPayload event, String playerNickname, Object newValue) throws IOException {
        TurnPhase turnPhase=(TurnPhase) newValue;
+        System.out.println("STO PHASEEEEEEEEEEEE "+turnPhase);
        MessageHeader header=new MessageHeader(MessageType.DATA,playerNickname);
        MessagePayload payload=new MessagePayload(turnPhase);
        Message message=new Message(header,payload);

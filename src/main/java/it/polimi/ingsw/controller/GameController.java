@@ -49,7 +49,6 @@ public class GameController {
         numbers = game.generateRandomNumber(gameRules.getPossiblePersonalGoalsSize(), game.getPlayers().size());
         game.createPersonalGoalCard(gameRules,numbers);
         gameLobby.setModelView(modelView);
-        game.updateAllPoints();
         listenerManager.fireEvent(TurnPhase.ALL_INFO,null,game.getModelView());
         modelView.setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
     }
@@ -72,15 +71,17 @@ public class GameController {
         }
         String nicknamePlayer= message.getHeader().getNickname();
         try{
-            if (!nicknamePlayer.equals(game.getTurnPlayerOfTheGame().getNickname())) {
+            if (!nicknamePlayer.equals(game.getModelView().getTurnNickname())) {
+                System.out.println("ERRORE DI TURNO");
                 listenerManager.fireEvent(KeyErrorPayload.ERROR_DATA,nicknamePlayer, ErrorType.ILLEGAL_TURN);
 
-            }
-            illegalPhase((TurnPhase) message.getPayload().getKey());
-            switch (getModel().getModelView().getTurnPhase()) {
-                case SELECT_FROM_BOARD ->  checkAndInsertBoardBox(message);
-                case SELECT_ORDER_TILES-> permutePlayerTiles(message);
-                case SELECT_COLUMN->selectingColumn(message);
+            }else{
+                illegalPhase((TurnPhase) message.getPayload().getKey());
+                switch (getModel().getModelView().getTurnPhase()) {
+                    case SELECT_FROM_BOARD ->  checkAndInsertBoardBox(message);
+                    case SELECT_ORDER_TILES-> permutePlayerTiles(message);
+                    case SELECT_COLUMN->selectingColumn(message);
+                }
             }
         }catch(Exception e){
         }
@@ -111,17 +112,20 @@ public class GameController {
     }
     public void disconnectionPlayer(String nickname){
         game.getModelView().setActivePlayers(game.disconnectionAndReconnectionPlayer(nickname,false));
-        if(nickname.equals(getTurnNickname())){
+        if(nickname.equals(getTurnNickname()) && Arrays.stream(getActivePlayers()).filter(element -> element).count()>1){
             game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
-            if(Arrays.stream(game.getModelView().getActivePlayers()).anyMatch(value -> value)){
-                game.getModelView().setNextPlayer();
-                listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
-            }
+            game.getModelView().setNextPlayer();
+            listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
         }
     }
     public void reconnectionPlayer(String nickname){
-        System.out.println(nickname.equals(getTurnNickname()));
+        System.out.println("RICONNESSSO "+nickname.equals(getTurnNickname()));
         game.getModelView().setActivePlayers(game.disconnectionAndReconnectionPlayer(nickname,true));
+        if(Arrays.stream(getActivePlayers()).filter(element -> element).count()==2 && !getActivePlayers()[game.turnPlayerInt()]){
+            game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
+            game.getModelView().setNextPlayer();
+        }
+
     }
 
     public void permutePlayerTiles(Message message) throws Exception {

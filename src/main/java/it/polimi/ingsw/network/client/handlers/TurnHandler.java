@@ -57,7 +57,7 @@ public class TurnHandler extends MessageHandler {
                     getClientInterface().askCoordinates();
                     //non é il suo turno
                 }else{
-                    getClientInterface().displayMessage("Turn player is: "+player);
+                    getClientInterface().displayMessage("Turn player is: "+mes.getPayload().getContent(Data.NEXT_PLAYER));
 
                 }
             }

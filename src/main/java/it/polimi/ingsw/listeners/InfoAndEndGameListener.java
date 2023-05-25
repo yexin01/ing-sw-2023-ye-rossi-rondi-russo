@@ -25,15 +25,8 @@ public class InfoAndEndGameListener extends EventListener{
         switch((TurnPhase)event){
             case ALL_INFO ->{
                 if(playerNickname!=null){
-                    Message message=creationMessageInfo(playerNickname,modelView);
-                    if(modelView.getTurnPhase()==TurnPhase.SELECT_FROM_BOARD){
-                        getGameLobby().sendMessageToSpecificPlayer(message,playerNickname) ;
-                    }else {
-                        MessagePayload payload=message.getPayload();
-                        payload.put(Data.SELECTED_ITEMS,modelView.getSelectedItems());
-                        message=new Message(message.getHeader(),payload);
-                        getGameLobby().sendMessageToSpecificPlayer(message,playerNickname) ;
-                    }
+                    getGameLobby().sendMessageToSpecificPlayer(creationMessageInfo(playerNickname,modelView),playerNickname) ;
+
              }else{
                     for(PlayerPointsView nickname: modelView.getPlayerPoints()){
                         getGameLobby().sendMessageToSpecificPlayer(creationMessageInfo(nickname.getNickname(),modelView),nickname.getNickname()) ;
@@ -63,6 +56,7 @@ public class InfoAndEndGameListener extends EventListener{
         payload.put(Data.COMMON_GOAL,modelView.getCommonGoalView());
         PersonalGoalCard personalGoalCard=modelView.getPlayerPersonalGoal(nickname);
         payload.put(Data.PERSONAL_GOAL_CARD,personalGoalCard);
+        payload.put(Data.SELECTED_ITEMS,modelView.getSelectedItems());
         payload.put(Data.MAX_SELECTABLE_TILES,modelView.getMAX_SELECTABLE_TILES());
         payload.put(Data.PERSONAL_POINTS,modelView.getPersonalPoint(nickname));
         PlayerPointsView[] playerPointsView=modelView.getPlayerPoints();

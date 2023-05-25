@@ -284,7 +284,7 @@ public class CLI implements ClientInterface {
         PrinterLogo.printOrderPhase(10);
         out.println();
         boolean continueToAsk = true;
-        int[] orderTiles = new int[getClientView().getCoordinatesSelected().size() / 2];
+        int[] orderTiles = new int[getClientView().getTilesSelected().length];
         orderTiles[0]=-1;
         ErrorType error = ErrorType.INVALID_ORDER_TILE_NUMBER;
         while (continueToAsk) {
@@ -296,7 +296,7 @@ public class CLI implements ClientInterface {
                 case ORDER_TILES1:
                     //printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 1, 60, true, false, 0);
 
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "Insert numbers from 0 to " + (getClientView().getCoordinatesSelected().size() / 2 - 1) + "\n");
+                    Colors.colorize(Colors.GAME_INSTRUCTION, "Insert numbers from 0 to " + (getClientView().getTilesSelected().length - 1) + "\n");
                     out.println();
                     Colors.colorize(Colors.GAME_INSTRUCTION, "These are the tiles selected by YOU: ");
                     int j = 0;
@@ -309,7 +309,7 @@ public class CLI implements ClientInterface {
 
                     while (error != null) {
 
-                        for (int i = 0; i < getClientView().getCoordinatesSelected().size() / 2; i++) {
+                        for (int i = 0; i < getClientView().getTilesSelected().length; i++) {
                             Colors.colorize(Colors.GAME_INSTRUCTION, "Insert number: ");
                             orderTiles[i] = scanner.nextInt();
                         }

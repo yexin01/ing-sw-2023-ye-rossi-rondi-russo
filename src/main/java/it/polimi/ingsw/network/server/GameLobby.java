@@ -195,13 +195,13 @@ public class GameLobby {
      */
     public synchronized void handleTurn(Message message) throws IOException {
         for(String playersD:playersDisconnected){
-            System.out.println("DISCONNESSO "+playersD);
+            System.out.println("DISCONNESSO "+playersD+"SEI SOLO   "+checkOnlyPlayer());
         }
-        if(!checkOnlyPlayer() ){
-            if(messageEndGame==null){
-                gameController.receiveMessageFromClient(message);
-            }else {
-                int index=gameController.getModel().getIntByNickname(message.getHeader().getNickname());
+
+        if(messageEndGame==null){
+           gameController.receiveMessageFromClient(message);
+        }else {
+            int index=gameController.getModel().getIntByNickname(message.getHeader().getNickname());
                 gameController.getActivePlayers()[index]=false;
                 System.out.println(message.getHeader().getNickname()+"SETTATO "+gameController.getActivePlayers()[index]);
                 boolean allFalse = true;
@@ -215,10 +215,12 @@ public class GameLobby {
                     infoAndEndGameListener.endGame();
                 }
             }
-
-        }else if(gameController!=null && !gameController.getModel().getModelView().getTurnPhase().equals(TurnPhase.ALL_INFO)){
+/*
+        if(gameController!=null && !gameController.getModel().getModelView().getTurnPhase().equals(TurnPhase.ALL_INFO)){
             sendOnlyOnePlayer(message.getHeader().getNickname());
         }
+
+ */
 
     }
 
@@ -228,9 +230,11 @@ public class GameLobby {
      * @throws IOException if there are problems with the connection
      */
     public synchronized void handleErrorFromClient(Message message) throws IOException {
-        if(messageEndGame==null){
-            infoAndEndGameListener.fireEvent(TurnPhase.ALL_INFO,message.getHeader().getNickname(),modelView);
-            System.out.println("SONO NELLA GAME LOBBY l'utente ha segnalato un error:"+message.getHeader().getNickname());
+        if(messageEndGame==null ){
+            if(message.getPayload().getKey().equals(KeyErrorPayload.ERROR_DATA)){
+                infoAndEndGameListener.fireEvent(TurnPhase.ALL_INFO,message.getHeader().getNickname(),modelView);
+            }
+             System.out.println("SONO NELLA GAME LOBBY l'utente ha segnalato un error:"+message.getHeader().getNickname());
         }else{
             sendMessageToSpecificPlayer(messageEndGame,message.getHeader().getNickname());
             System.out.println("END GAME l'utente ha segnalato un error:"+message.getHeader().getNickname());
@@ -247,10 +251,10 @@ public class GameLobby {
     public synchronized void changePlayerInActive(String nickname, Connection connection) throws IOException {
         players.put(nickname,connection);
         playersDisconnected.remove(nickname);
+        gameController.reconnectionPlayer(nickname);
         if(checkOnlyPlayer()){
             sendOnlyOnePlayer(nickname);
         }else if(messageEndGame==null){
-            gameController.reconnectionPlayer(nickname);
             MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
             MessagePayload payload=new MessagePayload(KeyConnectionPayload.RECONNECTION);
             String content=nickname+" reconnected to Game Lobby "+ idGameLobby + "!";
@@ -274,7 +278,9 @@ public class GameLobby {
         playersDisconnected.add(nickname);
         players.remove(nickname);
         gameController.disconnectionPlayer(nickname);
-        if(messageEndGame==null){
+        if( checkOnlyPlayer()){
+            sendOnlyOnePlayer(nickname);
+        }else if(messageEndGame==null){
             MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
             MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
             String content = "Player "+nickname+" disconnected to Game Lobby "+ idGameLobby + "!";
@@ -283,9 +289,8 @@ public class GameLobby {
             sendMessageToAllPlayers(message);
             System.out.println(content);
         }
-        if( checkOnlyPlayer()){
-            sendOnlyOnePlayer(nickname);
-        }
+
+
     }
     public boolean checkOnlyPlayer(){
         return players.size()==1 && messageEndGame==null;
