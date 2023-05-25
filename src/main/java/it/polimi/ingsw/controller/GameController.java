@@ -97,7 +97,8 @@ public class GameController {
             //turnPhaseController.setCurrentPhase(TurnPhase.SELECT_ORDER_TILES);
             game.getModelView().setTurnPhase(TurnPhase.SELECT_ORDER_TILES);
             System.out.println("CAMBIA FASE CONTROLLER");
-            listenerManager.fireEvent(Data.PHASE,getTurnNickname(),TurnPhase.SELECT_ORDER_TILES);
+            send(Data.PHASE,getTurnNickname(),TurnPhase.SELECT_ORDER_TILES);
+            //listenerManager.fireEvent();
         }
     }
     public boolean checkError(ErrorType possibleInvalidArgoment) throws Exception {
@@ -121,9 +122,12 @@ public class GameController {
     public void reconnectionPlayer(String nickname){
         System.out.println("RICONNESSSO "+nickname.equals(getTurnNickname()));
         game.getModelView().setActivePlayers(game.disconnectionAndReconnectionPlayer(nickname,true));
-        if(Arrays.stream(getActivePlayers()).filter(element -> element).count()==2 && !getActivePlayers()[game.turnPlayerInt()]){
-            game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
-            game.getModelView().setNextPlayer();
+        if(Arrays.stream(getActivePlayers()).filter(element -> element).count()==2){
+            if(!getActivePlayers()[game.turnPlayerInt()]){
+                game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
+                game.getModelView().setNextPlayer();
+            }
+            listenerManager.fireEvent(TurnPhase.ALL_INFO,null,game.getModelView());
         }
 
     }
@@ -138,7 +142,8 @@ public class GameController {
             //turnPhaseController.setCurrentPhase(TurnPhase.SELECT_COLUMN);
             game.getModelView().setTurnPhase(TurnPhase.SELECT_COLUMN);
             System.out.println("CAMBIA FASE");
-            listenerManager.fireEvent(Data.PHASE,getTurnNickname(),TurnPhase.SELECT_COLUMN);
+            send(Data.PHASE,getTurnNickname(),TurnPhase.SELECT_COLUMN);
+        //listenerManager.fireEvent();
         }
     }
 
@@ -173,7 +178,13 @@ public class GameController {
             }
             game.getModelView().setNextPlayer();
             System.out.println("Il prossimo giocatore é "+game.getModelView().getTurnNickname());
-            listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
+            send(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
+            //listenerManager.fireEvent();
+        }
+    }
+    public void send(KeyAbstractPayload event, String playerNickname, Object newValue){
+        if(Arrays.stream(getActivePlayers()).filter(element -> element).count()>1){
+            listenerManager.fireEvent(event,playerNickname,newValue);
         }
     }
     public void endGame(){
