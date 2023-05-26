@@ -488,6 +488,28 @@ public abstract class BasePanel extends StackPane {
         });
         vBox.getChildren().add(confirmChoiceButton);
         vBox.getChildren().add(resetChoiceButton);
+        Button quit = new Button("Quit");
+        quit.setFont(font);
+        quit.setStyle(style1);
+        quit.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                quit.setStyle(styleReset);
+            }
+        });
+
+        quit.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                quit.setStyle(style1);
+            }
+        });
+        quit.setOnAction(actionEvent -> {
+            Platform.runLater(()->{
+                Platform.exit();
+                System.exit(0);
+            });
+        });
         return vBox;
     }
 
