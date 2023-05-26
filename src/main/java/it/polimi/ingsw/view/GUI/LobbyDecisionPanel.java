@@ -61,11 +61,13 @@ public class LobbyDecisionPanel extends BasePanel{
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    /*Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Game created");
                     alert.setHeaderText(null);
                     alert.setContentText("Wait until other players join");
                     alert.show();
+
+                     */
 
                 }
             });
@@ -91,11 +93,13 @@ public class LobbyDecisionPanel extends BasePanel{
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-                    Alert alert1 = new Alert(Alert.AlertType.INFORMATION);
+                    /*Alert alert1 = new Alert(Alert.AlertType.INFORMATION);
                     alert1.setTitle("You joined the lobby");
                     alert1.setHeaderText(null);
                     alert1.setContentText("Wait until the game starts");
                     alert1.show();
+
+                     */
                 }
             });
             HBox hBox1 = new HBox(textField1, confirmButton1);
@@ -107,11 +111,13 @@ public class LobbyDecisionPanel extends BasePanel{
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-                Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                /*Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
                 alert2.setTitle("You joined a random lobby");
                 alert2.setHeaderText(null);
                 alert2.setContentText("Wait until the game starts");
                 alert2.show();
+                
+                 */
             });
 
             Button quit = new Button("Quit server");

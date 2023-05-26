@@ -510,6 +510,7 @@ public abstract class BasePanel extends StackPane {
                 System.exit(0);
             });
         });
+        vBox.getChildren().add(quit);
         return vBox;
     }
 

@@ -150,20 +150,23 @@ public class GUIApplication extends Application implements ClientInterface {
     @Override
     public void displayError(String error) {
         Platform.runLater(()-> {
-            DisconnectionPanel disconnectionPanel = null;
-            try {
-                disconnectionPanel = new DisconnectionPanel(error);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Scene scene = new Scene(disconnectionPanel, screenBounds.getWidth(), screenBounds.getHeight());
-            stage.setScene(scene);
-            stage.show();
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Attention");
+            alert.setHeaderText(null);
+            alert.setContentText(error);
+            alert.show();
         });
     }
 
     @Override
     public void displayMessage(String error) {
+        Platform.runLater(()-> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information");
+            alert.setHeaderText(null);
+            alert.setContentText(error);
+            alert.show();
+        });
     }
 
     @Override
@@ -231,12 +234,16 @@ public class GUIApplication extends Application implements ClientInterface {
 
     @Override
     public void onlyPlayer() {
-
+        Platform.runLater(()-> {
+            DisconnectionPanel disconnectionPanel = null;
+            try {
+                disconnectionPanel = new DisconnectionPanel();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Scene scene = new Scene(disconnectionPanel, screenBounds.getWidth(), screenBounds.getHeight());
+            stage.setScene(scene);
+            stage.show();
+        });
     }
-
-    /*public ChoicePanel getChoicePanel () {
-        return this.choicePanel;
-    }
-
-     */
 }
