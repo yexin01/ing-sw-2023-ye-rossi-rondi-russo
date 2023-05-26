@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 
 public class ClientView {
+    private String turnPlayer;
 
 
     private MessageToserverHandlerTurn messageToserverHandlerTurn;
@@ -188,4 +189,12 @@ public class ClientView {
         return threadRunning;
     }
     private static boolean threadRunning = true;
+
+    public String getTurnPlayer() {
+        return turnPlayer;
+    }
+
+    public void setTurnPlayer(String turnPlayer) {
+        this.turnPlayer = turnPlayer;
+    }
 }

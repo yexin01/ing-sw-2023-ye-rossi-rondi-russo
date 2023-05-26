@@ -509,6 +509,7 @@ public class CLI implements ClientInterface {
 
     @Override
     public synchronized void waitingRoom() throws Exception {
+        Colors.colorize(Colors.GAME_INSTRUCTION, "Turn player: "+clientView.getTurnPlayer());
         PrinterLogo.printWaitingTurnPhase(50);
         Colors.colorize(Colors.GAME_INSTRUCTION, "This is the board\n ");
         printCommands(CommandsTurn.PRINT1);

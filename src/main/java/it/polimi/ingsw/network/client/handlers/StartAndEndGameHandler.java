@@ -37,6 +37,8 @@ public class StartAndEndGameHandler extends MessageHandler {
                 int[][] commonGoalsView=((int[][])mes.getPayload().getContent(Data.COMMON_GOAL));
                 getClientInterface().getClientView().setCommonGoalView(commonGoalsView);
                 PlayerPointsView[] playerPointsView=((PlayerPointsView[])mes.getPayload().getContent(Data.POINTS));
+                String turnPlayer=(String) mes.getPayload().getContent(Data.NEXT_PLAYER);
+                getClientInterface().getClientView().setTurnPlayer(turnPlayer);
                 getClientInterface().getClientView().setPlayerPointsViews(playerPointsView);
                 Check.MAX_SELECTABLE_TILES= (int) mes.getPayload().getContent(Data.MAX_SELECTABLE_TILES);
                 System.out.println("I GIOCATORI SONO\n");
@@ -44,7 +46,7 @@ public class StartAndEndGameHandler extends MessageHandler {
                     System.out.println(str.getNickname());
                 }
                 //se si é disconnesso l'utente si troverà automaticamente nella fase end Turn, in piu se non e di turno non entrera in questo if
-                if(mes.getPayload().getContent(Data.NEXT_PLAYER).equals(getClientInterface().getClientView().getNickname())){
+                if(turnPlayer.equals(getClientInterface().getClientView().getNickname())){
                     switch((TurnPhase)mes.getPayload().getContent(Data.PHASE)) {
                         case END_TURN, SELECT_FROM_BOARD ,ALL_INFO-> {
                             getClientInterface().askCoordinates();

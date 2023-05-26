@@ -38,17 +38,16 @@ public class TurnHandler extends MessageHandler {
                int[][] commonGoalViews= (int[][]) mes.getPayload().getContent(Data.COMMON_GOAL);
                getClientInterface().getClientView().setCommonGoalView(commonGoalViews);
                int[] token= (int[]) mes.getPayload().getContent(Data.TOKEN);
-                getClientInterface().waitingRoom();
-               int i=0;
+               String turnPlayer=(String) mes.getPayload().getContent(Data.NEXT_PLAYER);
+               getClientInterface().getClientView().setTurnPlayer(turnPlayer);
                for(int num:token){
                    if(num!=0){
                        //getClientInterface().displayMessage(num+"vinto da "+player+" della common goal numero "+(i+1)+" identita"+getClientInterface().getClientView().getCommonGoalView()[0][i]+"\n");
                        getClientInterface().displayToken(num,player);
                    }
-                   i++;
                 }
                 //é il suo turno
-                if(((String) mes.getPayload().getContent(Data.NEXT_PLAYER)).equals(getClientInterface().getClientView().getNickname())){
+                if(turnPlayer.equals(getClientInterface().getClientView().getNickname())){
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -56,10 +55,7 @@ public class TurnHandler extends MessageHandler {
                     }
                     getClientInterface().askCoordinates();
                     //non é il suo turno
-                }else{
-                    getClientInterface().displayMessage("Turn player is: "+mes.getPayload().getContent(Data.NEXT_PLAYER));
-
-                }
+                }else getClientInterface().waitingRoom();
             }
             default -> {
                 startAndEndGameHandler.handleMessage(mes);
