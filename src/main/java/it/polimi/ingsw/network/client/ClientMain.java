@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.view.CLI.CLI;
+import it.polimi.ingsw.view.CLI.Colors;
 import it.polimi.ingsw.view.GUI.GUIApplication;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -15,10 +16,18 @@ import java.util.Scanner;
 public class ClientMain {
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
+        int n;
+        while (true) {
+            Colors.colorize(Colors.GAME_INSTRUCTION,"\nEnter: 0 for CLI, 1 for GUI  >> ");
+            String input = scanner.nextLine();
 
-        System.out.print("CLI 0 GUI 1: ");
-        int n = scanner.nextInt();
-        scanner.nextLine();
+            if (input.equals("0") || input.equals("1")) {
+                n = Integer.parseInt(input);
+                break;
+            } else {
+                Colors.colorize(Colors.ERROR_MESSAGE,"\nInvalid input. Please enter either 0 or 1.\n");
+            }
+        }
         if (n==0) {
             new CLI().askNicknameAndConnection();
         } else {
