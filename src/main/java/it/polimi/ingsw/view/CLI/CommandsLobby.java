@@ -6,7 +6,7 @@ public enum CommandsLobby implements Commands {
     JOIN_SPECIFIC_GAME_LOBBY("JOIN a specific Lobby"),
     // CONFIRM_CHOICE("CONFIRM choice"),
     JOIN_RANDOM_GAME_LOBBY("JOIN random Game"),
-    QUIT_SERVER("QUIT Application");
+    QUIT_SERVER("QUIT");
 
     private final String command;
 

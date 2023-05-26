@@ -140,7 +140,7 @@ public class CLI implements ClientInterface {
     @Override
     public  synchronized  void askCoordinates() throws Exception {
         out.println();
-        PrinterLogo.printBoardPhase(10);
+        PrinterLogo.printBoardPhase(50);
         out.println();
         ArrayList<Integer> selection=new ArrayList<>();
         printerBoard.printMatrixBoard(getClientView().getBoardView(),null);
@@ -192,7 +192,7 @@ public class CLI implements ClientInterface {
     }
 
 
-    private void printCommands(CommandsTurn commandsTurn) throws Exception {
+    public void printCommands(CommandsTurn commandsTurn) throws Exception {
         switch (commandsTurn){
             case PRINT1 ->{
                 PrinterLogo.printBoardLogo(10);
@@ -214,6 +214,7 @@ public class CLI implements ClientInterface {
             case PRINT5 -> printerCommonGoalAndPoints.printPoints(getClientView());
             case PRINT6 -> printerCommonGoalAndPoints.printCommonGoalCards(getClientView());
             case PRINT7 -> printerStartAndEndTurn.rulesGame();
+            case PRINT9 -> System.exit(0);
         }
     }
 
@@ -281,7 +282,7 @@ public class CLI implements ClientInterface {
     @Override
     public  synchronized void askOrder() throws Exception {
         out.println();
-        PrinterLogo.printOrderPhase(10);
+        PrinterLogo.printOrderPhase(50);
         out.println();
         boolean continueToAsk = true;
         int[] orderTiles = new int[getClientView().getTilesSelected().length];
@@ -353,7 +354,7 @@ public class CLI implements ClientInterface {
     public  synchronized void askColumn() throws Exception {
         out.println();
         //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: COLUMN");
-        PrinterLogo.printColumnPhase(10);
+        PrinterLogo.printColumnPhase(50);
         out.println();
         ErrorType error = ErrorType.INVALID_COLUMN;
         int column=-1;
@@ -472,6 +473,7 @@ public class CLI implements ClientInterface {
                 }
                 case QUIT_SERVER -> {
                     clientView.lobby(KeyLobbyPayload.QUIT_SERVER,-1);
+                    System.exit(0);
                 }
             }
         }
@@ -507,9 +509,10 @@ public class CLI implements ClientInterface {
 
     @Override
     public synchronized void waitingRoom() throws Exception {
-        PrinterLogo.printWaitingTurnPhase(10);
+        PrinterLogo.printWaitingTurnPhase(50);
         Colors.colorize(Colors.GAME_INSTRUCTION, "This is the board\n ");
-        printerBoard.printMatrixBoard(clientView.getBoardView(), null);
+        printCommands(CommandsTurn.PRINT1);
+        printCommands(CommandsTurn.PRINT4);
     }
 
     @Override
@@ -555,8 +558,9 @@ public class CLI implements ClientInterface {
             clientHandler.createConnection(connectionType, ip, port,this);
             Colors.colorize(Colors.WHITE_CODE,"Connection created");
         } catch (Exception e){
-            displayError("Error in creating connection. Please try again.\n");
-            doConnection();
+            e.printStackTrace();
+            //displayError("Error in creating connection. Please try again.\n");
+            //doConnection();
         }
     }
 
@@ -593,7 +597,8 @@ public class CLI implements ClientInterface {
                         InetAddress address = InetAddress.getByName(line);
                         return address.getHostAddress();
                     } catch (UnknownHostException e) {
-                        displayError("Invalid IP address. Please enter a valid IP address or press Enter to choose the default.");
+                        e.printStackTrace();
+                        //displayError("Invalid IP address. Please enter a valid IP address or press Enter to choose the default.");
                         //Colors.colorize(Colors.ERROR_MESSAGE,);
                     }
                 }
@@ -626,13 +631,14 @@ public class CLI implements ClientInterface {
                             //Colors.colorize(Colors.ERROR_MESSAGE,);
                         }
                     } catch (NumberFormatException e) {
-                        displayError("Invalid input. Please enter a valid port number.");
+                        e.printStackTrace();
+                        //displayError("Invalid input. Please enter a valid port number.");
                         //Colors.colorize(Colors.ERROR_MESSAGE,
                     }
                 }
             } else {
                 in.nextLine();
-                displayError("Invalid input. Please enter a valid port number.");
+                //displayError("Invalid input. Please enter a valid port number.");
                 //Colors.colorize(
             }
         } while (true);

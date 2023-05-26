@@ -9,7 +9,7 @@ import static java.lang.System.out;
  */
 public class PrinterLogo {
 
-    public static void printMyShelfieLogo() {
+    public synchronized static void printMyShelfieLogo() {
         String myShelfieLogo = """
                                                                                                                                           
                           ███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
@@ -40,7 +40,7 @@ public class PrinterLogo {
         System.out.println(myShelfieLogo);
     }
 
-    private static void printMyShelfieLogo2() {
+    private synchronized static void printMyShelfieLogo2() {
         String myShelfieLogo = """
 
 
@@ -61,7 +61,7 @@ public class PrinterLogo {
 
         System.out.println(myShelfieLogo);
     }
-    public static void printLogo(String[] lines, int freeSpaces) {
+    public synchronized static void printLogo(String[] lines, int freeSpaces) {
         out.println();
         for (String line : lines) {
             Colors.printFreeSpaces(freeSpaces);
@@ -73,7 +73,7 @@ public class PrinterLogo {
 
 
     // titles for the infos
-    public static void printBoardLogo(int freeSpaces) {
+    public synchronized static void printBoardLogo(int freeSpaces) {
         String boardLogo[] = {
 
                 "╔╦╗╦ ╦╔═╗  ╔╗ ╔═╗╔═╗╦═╗╔╦╗",
@@ -83,7 +83,7 @@ public class PrinterLogo {
         printLogo(boardLogo,freeSpaces);
     }
 
-    public static void printBookshelfLogo(int freeSpaces) {
+    public synchronized static void printBookshelfLogo(int freeSpaces) {
         String[] bookshelfLogo = {
                 "╔╦╗╦ ╦  ╔╗ ╔═╗╔═╗╦╔═╔═╗╦ ╦╔═╗╦  ╔═╗",
                 "║║║╚╦╝  ╠╩╗║ ║║ ║╠╩╗╚═╗╠═╣║╣ ║  ╠╣",
@@ -93,7 +93,7 @@ public class PrinterLogo {
         printLogo(bookshelfLogo, freeSpaces);
     }
 
-    public static void printGamesRulesLogo(int freeSpaces) {
+    public synchronized static void printGamesRulesLogo(int freeSpaces) {
         String[] gamesRulesLogo = {
                 "╔═╗╔═╗╔╦╗╔═╗╔═╗  ╦═╗╦ ╦╦  ╔═╗╔═╗",
                 "║ ╦╠═╣║║║║╣ ╚═╗  ╠╦╝║ ║║  ║╣ ╚═╗",
@@ -103,7 +103,7 @@ public class PrinterLogo {
         printLogo(gamesRulesLogo, freeSpaces);
     }
 
-    public static void printGlobalLobbyPhase(int freeSpaces) {
+    public synchronized static void printGlobalLobbyPhase(int freeSpaces) {
         String[] globalLobbyPhaseLogo = {
                 "╔═╗╦  ╔═╗╔╗ ╔═╗╦    ╦  ╔═╗╔╗ ╔╗ ╦ ╦",
                 "║ ╦║  ║ ║╠╩╗╠═╣║    ║  ║ ║╠╩╗╠╩╗╚╦╝",
@@ -113,7 +113,7 @@ public class PrinterLogo {
         printLogo(globalLobbyPhaseLogo, freeSpaces);
     }
 
-    public static void printGameLobbyPhase(int freeSpaces) {
+    public synchronized static void printGameLobbyPhase(int freeSpaces) {
         String[] gameLobbyPhaseLogo = {
                 "╔═╗╔═╗╔╦╗╔═╗  ╦  ╔═╗╔╗ ╔╗ ╦ ╦",
                 "║ ╦╠═╣║║║║╣   ║  ║ ║╠╩╗╠╩╗╚╦╝",
@@ -123,7 +123,7 @@ public class PrinterLogo {
         printLogo(gameLobbyPhaseLogo, freeSpaces);
     }
 
-    public static void printYourTurnPhase() {
+    public synchronized static void printYourTurnPhase() {
         String yourTurnPhaseLogo = """
                 
                 ╦ ╦╔═╗╦ ╦╦═╗  ╔╦╗╦ ╦╦═╗╔╗╔
@@ -134,7 +134,7 @@ public class PrinterLogo {
         out.println(yourTurnPhaseLogo);
     }
 
-    public static void printWaitingTurnPhase(int freeSpaces) {
+    public synchronized static void printWaitingTurnPhase(int freeSpaces) {
         String[] waitingTurnPhaseLogo = {
                 "╦ ╦╔═╗╦╔╦╗╦╔╗╔╔═╗  ╦ ╦╔═╗╦ ╦╦═╗  ╔╦╗╦ ╦╦═╗╔╗╔",
                 "║║║╠═╣║ ║ ║║║║║ ╦  ╚╦╝║ ║║ ║╠╦╝   ║ ║ ║╠╦╝║║║",
@@ -145,7 +145,7 @@ public class PrinterLogo {
     }
 
 
-    public static void printBoardPhase(int freeSpaces) {
+    public synchronized static void printBoardPhase(int freeSpaces) {
         String[] boardPhaseLogo = {
                 "╔╗ ╔═╗╔═╗╦═╗╔╦╗  ╔═╗╦ ╦╔═╗╔═╗╔═╗",
                 "╠╩╗║ ║╠═╣╠╦╝ ║║  ╠═╝╠═╣╠═╣╚═╗║╣",
@@ -155,7 +155,7 @@ public class PrinterLogo {
         printLogo(boardPhaseLogo, freeSpaces);
     }
 
-    public static void printOrderPhase(int freeSpaces) {
+    public synchronized static void printOrderPhase(int freeSpaces) {
         String[] orderPhaseLogo = {
                 "╔═╗╦═╗╔╦╗╔═╗╦═╗  ╔═╗╦ ╦╔═╗╔═╗╔═╗",
                 "║ ║╠╦╝ ║║║╣ ╠╦╝  ╠═╝╠═╣╠═╣╚═╗║╣",
@@ -165,7 +165,7 @@ public class PrinterLogo {
         printLogo(orderPhaseLogo, freeSpaces);
     }
 
-    public static void printColumnPhase(int freeSpaces) {
+    public synchronized static void printColumnPhase(int freeSpaces) {
         String[] columnPhaseLogo = {
                 "╔═╗╔═╗╦  ╦ ╦╔╦╗╔╗╔  ╔═╗╦ ╦╔═╗╔═╗╔═╗",
                 "║  ║ ║║  ║ ║║║║║║║  ╠═╝╠═╣╠═╣╚═╗║╣",
@@ -175,7 +175,7 @@ public class PrinterLogo {
         printLogo(columnPhaseLogo, freeSpaces);
     }
 
-    public static void printFinalRankingPhase(int freeSpaces) {
+    public synchronized static void printFinalRankingPhase(int freeSpaces) {
         String[] finalRankingPhaseLogo = {
                 "╔═╗╦╔╗╔╔═╗╦    ╦═╗╔═╗╔╗╔╦╔═╦╔╗╔╔═╗",
                 "╠╣ ║║║║╠═╣║    ╠╦╝╠═╣║║║╠╩╗║║║║║ ╦",
@@ -188,7 +188,7 @@ public class PrinterLogo {
 
 
     // drawings :)
-    public static void printWinnerLogo(int m) {
+    public synchronized static void printWinnerLogo(int m) {
         out.println();
         String[] winnerLogo = {
                 "────────────█▄─█─▄▀▀▄─────▄█────────────",
@@ -214,7 +214,7 @@ public class PrinterLogo {
     }
 
 
-    private static void printDisconnectionForcedLogo(int freeSpaces) {
+    private synchronized static void printDisconnectionForcedLogo(int freeSpaces) {
         String disconnectionForcedLogo[] = {
 
                 "▒▒▒▒▒▒▒▒▒▒▒▄▄▄▄░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒",
@@ -236,7 +236,7 @@ public class PrinterLogo {
         printLogo(disconnectionForcedLogo, freeSpaces);
     }
 
-    public static void printLostConnectionLogo(int freeSpaces) {
+    public synchronized static void printLostConnectionLogo(int freeSpaces) {
         String[] lostConnectionLogo = {
                 "            ──▄────▄▄▄▄▄▄▄────▄───",
                 "            ─▀▀▄─▄█████████▄─▄▀▀──",
@@ -249,7 +249,7 @@ public class PrinterLogo {
     }
 
 
-    public static void printErrorLogo(int freeSpaces) {
+    public synchronized static void printErrorLogo(int freeSpaces) {
         String[] errorLogo = {
                 "                ░░░░░░░▄▄▄▄▄▄░░░░░░░░░░░░░░░░░░░",
                 "                ░░░░░▄█████████▄▄░░░░░░░░▄▄░░░░░",
@@ -280,7 +280,7 @@ public class PrinterLogo {
         printLogo(errorLogo, freeSpaces);
     }
 
-    public static void printErrorLogo2(int freeSpaces) {
+    public synchronized static void printErrorLogo2(int freeSpaces) {
         String[] errorLogo = {
                 "▄██████████████▄▐█▄▄▄▄█▌",
                 "██████▌▄▌▄▐▐▌███▌▀▀██▀▀",
@@ -292,7 +292,7 @@ public class PrinterLogo {
         printLogo(errorLogo, freeSpaces);
     }
 
-    public static void printWaitingLogo(int freeSpaces) {
+    public synchronized static void printWaitingLogo(int freeSpaces) {
         String[] waitingLogo = {
                 "───▄▄▄",
                 "─▄▀░▄░▀▄",

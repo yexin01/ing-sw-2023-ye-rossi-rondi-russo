@@ -143,7 +143,7 @@ public class GameController {
             game.getModelView().setTurnPhase(TurnPhase.SELECT_COLUMN);
             System.out.println("CAMBIA FASE");
             send(Data.PHASE,getTurnNickname(),TurnPhase.SELECT_COLUMN);
-        //listenerManager.fireEvent();
+            //listenerManager.fireEvent();
         }
     }
 
@@ -179,12 +179,7 @@ public class GameController {
             game.getModelView().setNextPlayer();
             System.out.println("Il prossimo giocatore é "+game.getModelView().getTurnNickname());
             send(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
-            //listenerManager.fireEvent();
-        }
-    }
-    public void send(KeyAbstractPayload event, String playerNickname, Object newValue){
-        if(Arrays.stream(getActivePlayers()).filter(element -> element).count()>1){
-            listenerManager.fireEvent(event,playerNickname,newValue);
+           // listenerManager.fireEvent();
         }
     }
     public void endGame(){
@@ -200,6 +195,11 @@ public class GameController {
             throw new Exception();
         }
         return;
+    }
+    public void send(KeyAbstractPayload event, String playerNickname, Object newValue){
+        if(Arrays.stream(getActivePlayers()).filter(element -> element).count()>1){
+            listenerManager.fireEvent(event,playerNickname,newValue);
+        }
     }
     public String getTurnNickname() {
         return game.getTurnPlayerOfTheGame().getNickname();

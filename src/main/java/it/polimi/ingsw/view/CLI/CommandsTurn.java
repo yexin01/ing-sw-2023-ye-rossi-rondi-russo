@@ -20,7 +20,8 @@ public enum CommandsTurn implements Commands {
     SELECT_FROM_BOARD4("CONFIRM all choices"),
 
     PRINT7("HELP"),
-    PRINT8("Something wrong");
+    PRINT8("Something wrong"),
+    PRINT9("QUIT app");
 
 
     private final String command;

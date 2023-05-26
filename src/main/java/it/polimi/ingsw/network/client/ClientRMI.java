@@ -40,7 +40,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
         System.out.println("sono il client... sto per fare la lookup...e ho ip: " + getIp() + " e port: " + getPort() + " e nickname: " + getNickname());
         Registry registry = LocateRegistry.getRegistry(getIp(), getPort());
         server = (RMIHandler) registry.lookup("MyShelfieServer");
-        System.out.println("chiamo login su RMIHANDLER...");
+        System.out.println("chiamo login su RMIHANDLER..."+getIp()+" porta "+getPort());
         server.login(getNickname(), this);
     }
 

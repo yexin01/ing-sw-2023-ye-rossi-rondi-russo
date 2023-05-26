@@ -59,8 +59,7 @@ public class InfoAndEndGameListener extends EventListener{
         payload.put(Data.SELECTED_ITEMS,modelView.getSelectedItems());
         payload.put(Data.MAX_SELECTABLE_TILES,modelView.getMAX_SELECTABLE_TILES());
         payload.put(Data.PERSONAL_POINTS,modelView.getPersonalPoint(nickname));
-        PlayerPointsView[] playerPointsView=modelView.getPlayerPoints();
-        payload.put(Data.POINTS,playerPointsView);
+        payload.put(Data.POINTS,modelView.checkWinner());
         payload.put(Data.NEXT_PLAYER,modelView.getTurnNickname());
         payload.put(Data.PHASE,modelView.getTurnPhase());
         Message m=new Message(header,payload);

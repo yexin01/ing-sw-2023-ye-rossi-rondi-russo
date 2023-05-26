@@ -215,13 +215,6 @@ public class GameLobby {
                     infoAndEndGameListener.endGame();
                 }
             }
-/*
-        if(gameController!=null && !gameController.getModel().getModelView().getTurnPhase().equals(TurnPhase.ALL_INFO)){
-            sendOnlyOnePlayer(message.getHeader().getNickname());
-        }
-
- */
-
     }
 
     /**
