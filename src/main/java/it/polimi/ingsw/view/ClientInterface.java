@@ -16,6 +16,7 @@ public interface ClientInterface  {
     void askNicknameAndConnection() throws Exception;
     void askLobbyDecision() throws Exception;
     void endGame(int[] personalPoints) throws Exception;
+    void onlyPlayer();
 
 
 

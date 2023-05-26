@@ -27,10 +27,9 @@ public class ErrorHandler extends MessageHandler {
             case ERROR_CONNECTION -> {
                 switch(error){
                     case ONLY_PLAYER -> {
-                       getClientInterface().displayError(error.getErrorMessage());
+                       getClientInterface().onlyPlayer();
 
                     }
-
                     //mandato direttamente dal clientHandler ti sei disconnesso questa gestine potrà cambiare
                     case PING_NOT_RECEIVED -> {
                         getClientInterface().displayError(error.getErrorMessage());

@@ -229,6 +229,11 @@ public class GUIApplication extends Application implements ClientInterface {
         });
     }
 
+    @Override
+    public void onlyPlayer() {
+
+    }
+
     /*public ChoicePanel getChoicePanel () {
         return this.choicePanel;
     }

@@ -291,6 +291,16 @@ public class PrinterLogo {
 
         printLogo(errorLogo, freeSpaces);
     }
+    public synchronized static void onlyPlayer(int freeSpaces) {
+        String[] onlyLogo = {
+                "      |\\      _,,,---,,_" ,
+                        "ZZZzz /,`.-'`'    -.  ;-;;,_" ,
+                        "     |,4-  ) )-,_. ,\\ (  `'-'" ,
+                        "    '---''(_/--'  `-'\\_) ", "                                                                                             "
+        };
+
+        printLogo(onlyLogo, freeSpaces);
+    }
 
     public synchronized static void printWaitingLogo(int freeSpaces) {
         String[] waitingLogo = {

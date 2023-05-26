@@ -512,6 +512,12 @@ public class CLI implements ClientInterface {
 
     }
 
+    @Override
+    public void onlyPlayer() {
+        displayError(ErrorType.ONLY_PLAYER.getErrorMessage());
+        PrinterLogo.onlyPlayer(10);
+    }
+
     public PrinterBookshelfAndPersonal getPrinterBookshelfAndPersonal() {
         return printerBookshelfAndPersonal;
     }
