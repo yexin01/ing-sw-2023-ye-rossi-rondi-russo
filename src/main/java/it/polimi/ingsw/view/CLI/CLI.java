@@ -13,6 +13,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import static java.lang.System.out;
 
@@ -113,27 +114,37 @@ public class CLI implements ClientInterface {
     }
     public Commands checkCommand(int phase) throws Exception {
         int input;
-        int enumSize=-1;
-        if(phase==-1){
-            printLobbyCommands(CommandsLobby.class);
-            enumSize=CommandsLobby.values().length;
-        }else{
-            allCommands(phase);
-            enumSize=CommandsTurn.values().length;
-        }
-        input = scanner.nextInt();
-        input--;
-        scanner.nextLine();
+        int enumSize = -1;
 
-        if(!(input >= 0 && input < enumSize)){
+        if (phase == -1) {
+            printLobbyCommands(CommandsLobby.class);
+            enumSize = CommandsLobby.values().length;
+        } else {
+            allCommands(phase);
+            enumSize = CommandsTurn.values().length;
+        }
+
+        String userInput = scanner.nextLine();
+
+        try {
+            input = Integer.parseInt(userInput) - 1;
+        } catch (NumberFormatException e) {
             displayError(ErrorType.INVALID_INPUT.getErrorMessage());
             return null;
         }
+
+        if (!(input >= 0 && input < enumSize)) {
+            displayError(ErrorType.INVALID_INPUT.getErrorMessage());
+            return null;
+        }
+
         out.println();
 
-        if(phase==-1){
+        if (phase == -1) {
             return CommandsLobby.values()[input];
-        }else return CommandsTurn.values()[input];
+        } else {
+            return CommandsTurn.values()[input];
+        }
     }
 
 
@@ -537,18 +548,13 @@ public class CLI implements ClientInterface {
         int connectionType = -1;
 
         String nickname = askNickname();
-        out.println("Hi "+ nickname +"!");
-
+        Colors.colorize(Colors.BLUE_CODE,"\nHi "+ nickname +"!\n" );
         connectionType = askConnection();
         if (connectionType == 0) {
-            Colors.colorize(Colors.WHITE_CODE,"You chose Socket connection\n");
+            Colors.colorize(Colors.BLUE_CODE,"\nYou chose Socket connection\n");
 
-        } else if (connectionType == 1){
-            Colors.colorize(Colors.WHITE_CODE,"You chose RMI connection\n");
-        } else {
-            Colors.colorize(Colors.WHITE_CODE,"Invalid connection\n");
-            doConnection();
-        }
+        } else Colors.colorize(Colors.BLUE_CODE,"\nYou chose RMI connection\n");
+
 
         String ip = askIp();
         int port = askPort(connectionType);
@@ -565,85 +571,112 @@ public class CLI implements ClientInterface {
         }
     }
 
-    private String askNickname(){
-        Colors.colorize(Colors.WHITE_CODE,"Enter your username: ");
-        String nickname=in.nextLine().toLowerCase();
+    private String askNickname() {
+        String nickname = "";
+
+        do {
+            Colors.colorize(Colors.WHITE_CODE, "\nEnter your username >> ");
+            nickname = in.nextLine().toLowerCase();
+
+            if (nickname.length() < 2) {
+                displayError("Username should have at least 2 characters.");
+            }
+        } while (nickname.length() < 2);
+
         getClientView().setNickname(nickname);
         return nickname;
     }
 
     private int askConnection(){
         int connectionType = -1;
-        do{
-            Colors.colorize(Colors.WHITE_CODE,"Enter your connection type: (0 for Socket, 1 for RMI) ");
-            connectionType = Integer.parseInt(in.next());
-            in.nextLine(); // aggiungo questa riga per consumare il carattere di fine riga rimanente
+
+        do {
+            Colors.colorize(Colors.WHITE_CODE, "\nEnter your connection type: (0 for Socket, 1 for RMI) >> ");
+            try {
+                connectionType = Integer.parseInt(in.next());
+                in.nextLine();
+            } catch (NumberFormatException e) {
+                displayError(ErrorType.INVALID_INPUT.getErrorMessage());
+                in.nextLine();
+            }
         } while (connectionType != 0 && connectionType != 1);
         return connectionType;
     }
 
     private String askIp() {
         String defaultIp = "127.0.0.1";
-        Colors.colorize(Colors.WHITE_CODE,"Enter the server Ip Address (default " + defaultIp + "): (press Enter button to choose default)");
-        in.reset();
+
+        String ipAddress = defaultIp;
+        boolean validInput = false;
 
         do {
-            if (in.hasNextLine()) {
-                String line = in.nextLine();
+            Colors.colorize(Colors.WHITE_CODE, "\nEnter the server IP Address (default " + defaultIp + ") \nPress ENTER button to choose default >> ");
+            String line = in.nextLine();
 
-                if (line.equals("")) {
-                    return defaultIp;
-                } else {
-                    try {
-                        InetAddress address = InetAddress.getByName(line);
-                        return address.getHostAddress();
-                    } catch (UnknownHostException e) {
-                        e.printStackTrace();
-                        //displayError("Invalid IP address. Please enter a valid IP address or press Enter to choose the default.");
-                        //Colors.colorize(Colors.ERROR_MESSAGE,);
-                    }
-                }
-            } else {
-                in.nextLine();
-                displayError("Invalid input. Please enter a valid IP address or press Enter to choose the default.");
-                //Colors.colorize(Colors.ERROR_MESSAGE,);
+            if (line.equals("")) {
+                return defaultIp;
             }
-        } while (true);
+
+            if (isValidIpAddress(line)) {
+                ipAddress = line;
+                validInput = true;
+            } else {
+                displayError("Invalid IP address. Please enter a valid IP address or press Enter to choose the default.");
+            }
+        } while (!validInput);
+
+        return ipAddress;
+    }
+
+    private boolean isValidIpAddress(String ipAddress) {
+        String[] components = ipAddress.split("\\.");
+
+        if (components.length != 4) {
+            return false;
+        }
+
+        for (String component : components) {
+            try {
+                int value = Integer.parseInt(component);
+                if (value < 0 || value > 255) {
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private int askPort(int connectionType) {
         int defaultPort = (connectionType == 0 ? 1100 : 1099);
-        Colors.colorize(Colors.WHITE_CODE,"Enter the server port (default " + defaultPort + "): (press Enter button to choose default)");
-        in.reset();
-        //qua nel catch e nell'else fanno la stessa cosa
-        do {
-            if (in.hasNextLine()) {
-                String line = in.nextLine();
 
-                if (line.equals("")) {
-                    return defaultPort;
-                } else {
-                    try {
-                        int port = Integer.parseInt(line);
-                        if (port >= 1024 && port <= 65535) {
-                            return port;
-                        } else {
-                            displayError("Invalid port number. Please enter a port number between 1024 and 65535.");
-                            //Colors.colorize(Colors.ERROR_MESSAGE,);
-                        }
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                        //displayError("Invalid input. Please enter a valid port number.");
-                        //Colors.colorize(Colors.ERROR_MESSAGE,
-                    }
-                }
-            } else {
-                in.nextLine();
-                //displayError("Invalid input. Please enter a valid port number.");
-                //Colors.colorize(
+        int port = defaultPort;
+        boolean validInput = false;
+
+        do {
+            Colors.colorize(Colors.WHITE_CODE,"\nEnter the server port (default " + defaultPort + ") \nPress ENTER button to choose default >> ");
+            String line = in.nextLine();
+
+            if (line.equals("")) {
+                return defaultPort;
             }
-        } while (true);
+
+            try {
+                port = Integer.parseInt(line);
+                if (port >= 1024 && port <= 65535) {
+                    validInput = true;
+                } else {
+                    displayError("Invalid port number. Please enter a port number between 1024 and 65535.");
+                }
+            } catch (NumberFormatException e) {
+                displayError("Invalid input. Please enter a valid port number.");
+            }
+        } while (!validInput);
+
+        return port;
     }
+
 }
 
 
