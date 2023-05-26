@@ -98,20 +98,24 @@ public class EndTurnPanel extends BasePanel {
         Font font1 = new Font("Poor Richard", 22);
         Font font2 = new Font("Poor Richard", 19);
         VBox vBox3 = new VBox();
-        vBox3.setMaxSize(700, 400);
+        vBox3.setMaxSize(600, 400);
         for (int i=(clientView.getPlayerPointsViews().length-1); i>-1; i--) {
             VBox vBox = new VBox();
             Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname());
-            label.setFont(font1); label.setTextFill(Color.BLACK);
+            if (clientView.getPlayerPointsViews()[i].getNickname().equals(clientView.getTurnPlayer())) {
+                label.setFont(font1); label.setTextFill(Color.GOLD);
+            } else {
+                label.setFont(font1); label.setTextFill(Color.WHITE);
+            }
             Label label5 = new Label( clientView.getPlayerPointsViews()[i].getPoints()+"  Points");
-            label5.setFont(font1); label5.setTextFill(Color.BLACK);
+            label5.setFont(font1); label5.setTextFill(Color.WHITE);
             if (Objects.equals(clientView.getPlayerPointsViews()[i].getNickname(), clientView.getNickname())) {
                 int sumToken = 0;
                 for (int j =0; j<clientView.getCommonGoalView().length; j++) {
                     sumToken += clientView.getPlayerPointsViews()[i].getPointsToken()[j];
                 }
                 Label label1 = new Label("Common goals: "+sumToken+"   Adjacent tiles: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal: "+clientView.getPersonalPoints());
-                label1.setFont(font2); label1.setTextFill(Color.BLACK);
+                label1.setFont(font2); label1.setTextFill(Color.WHITE);
                 vBox.getChildren().addAll(label5,label1);
             } else {
                 int sumToken = 0;
@@ -119,7 +123,7 @@ public class EndTurnPanel extends BasePanel {
                     sumToken += clientView.getPlayerPointsViews()[i].getPointsToken()[j];
                 }
                 Label label1 = new Label("Common goals: "+sumToken+"   Adjacent tiles: "+clientView.getPlayerPointsViews()[i].getAdjacentPoints()+"   Personal goal: ?");
-                label1.setFont(font2); label1.setTextFill(Color.BLACK);
+                label1.setFont(font2); label1.setTextFill(Color.WHITE);
                 vBox.getChildren().addAll(label5,label1);
             }
             vBox.setSpacing(10);
@@ -129,7 +133,7 @@ public class EndTurnPanel extends BasePanel {
             hBox.setMaxSize(600, 400);
             hBox.setSpacing(40);
             hBox.setAlignment(Pos.CENTER);
-            hBox.setStyle("-fx-background-color: beige; -fx-background-radius: 8px; -fx-smooth: true");
+            hBox.setStyle("-fx-background-color: #805126; -fx-background-radius: 8px; -fx-smooth: true");
             vBox3.getChildren().addAll(hBox);
             counter++;
         }
