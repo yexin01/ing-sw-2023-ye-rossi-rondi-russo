@@ -34,7 +34,6 @@ public class GUIApplication extends Application implements ClientInterface {
         this.clientView = new ClientView();
         this.screenBounds = Screen.getPrimary().getVisualBounds();
         guiApplicationStatic = this;
-        //ClientMain.semaphore.release();
     }
 
     @Override
@@ -43,9 +42,9 @@ public class GUIApplication extends Application implements ClientInterface {
     }
 
     @Override
-    public void waitingRoom() throws Exception {
+    public void waitingRoom() {
         Platform.runLater(()-> {
-            EndTurnPanel endTurnPanel = null;
+            EndTurnPanel endTurnPanel;
             try {
                 endTurnPanel = new EndTurnPanel(clientView);
             } catch (IOException e) {
@@ -56,18 +55,6 @@ public class GUIApplication extends Application implements ClientInterface {
             stage.show();
         });
     }
-
-    /*@Override
-    public void start() throws Exception {
-        Platform.runLater(()-> {
-            EndTurnPanel endTurnPanel = new EndTurnPanel(clientView);
-            Scene scene = new Scene(endTurnPanel, screenBounds.getWidth(), screenBounds.getHeight());
-            stage.setScene(scene);
-            stage.show();
-        });
-    }
-
-     */
 
     @Override
     public void displayToken(int num, String nickname) {
@@ -96,22 +83,21 @@ public class GUIApplication extends Application implements ClientInterface {
 
 
     @Override
-    public void stop() throws Exception {
-
+    public void stop(){
     }
 
     @Override
-    public void askCoordinates() throws Exception {
+    public void askCoordinates() {
         Platform.runLater(()-> {
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-            ChoicePanel choicePanel = null;
+            ChoicePanel choicePanel;
             try {
                 choicePanel = new ChoicePanel(clientView, screenBounds.getWidth()*0.28*(3.0 / Check.MAX_SELECTABLE_TILES));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             this.choicePanel = choicePanel;
-            BoardBoxPanel boardBoxPanel = null;
+            BoardBoxPanel boardBoxPanel;
             try {
                 boardBoxPanel = new BoardBoxPanel(clientView, choicePanel);
             } catch (IOException e) {
@@ -124,7 +110,7 @@ public class GUIApplication extends Application implements ClientInterface {
     }
 
     @Override
-    public void askOrder() throws Exception {
+    public void askOrder() {
         Platform.runLater(()-> {
             Scene scene = new Scene(choicePanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
@@ -133,9 +119,9 @@ public class GUIApplication extends Application implements ClientInterface {
     }
 
     @Override
-    public void askColumn() throws Exception {
+    public void askColumn() {
         Platform.runLater(()-> {
-            BookshelfPanel bookshelfPanel = null;
+            BookshelfPanel bookshelfPanel;
             try {
                 bookshelfPanel = new BookshelfPanel(clientView);
             } catch (IOException e) {
@@ -170,9 +156,9 @@ public class GUIApplication extends Application implements ClientInterface {
     }
 
     @Override
-    public void askNicknameAndConnection() throws Exception {
+    public void askNicknameAndConnection() {
         Platform.runLater(()-> {
-            LobbyPanel lobbyPanel = null;
+            LobbyPanel lobbyPanel;
             try {
                 lobbyPanel = new LobbyPanel(clientView);
             } catch (IOException e) {
@@ -185,9 +171,9 @@ public class GUIApplication extends Application implements ClientInterface {
     }
 
     @Override
-    public void askLobbyDecision() throws Exception {
+    public void askLobbyDecision() {
         Platform.runLater(()-> {
-            LobbyDecisionPanel lobbyDecisionPanel = null;
+            LobbyDecisionPanel lobbyDecisionPanel;
             try {
                 lobbyDecisionPanel = new LobbyDecisionPanel(clientView);
             } catch (IOException e) {
@@ -202,7 +188,7 @@ public class GUIApplication extends Application implements ClientInterface {
     @Override
     public void endGame(int[] personalPoints) {
         Platform.runLater(()-> {
-            FinalRankingPanel finalRankingPanel = null;
+            FinalRankingPanel finalRankingPanel;
             try {
                 finalRankingPanel = new FinalRankingPanel(clientView, personalPoints);
             } catch (IOException e) {
@@ -235,7 +221,7 @@ public class GUIApplication extends Application implements ClientInterface {
     @Override
     public void onlyPlayer() {
         Platform.runLater(()-> {
-            DisconnectionPanel disconnectionPanel = null;
+            DisconnectionPanel disconnectionPanel;
             try {
                 disconnectionPanel = new DisconnectionPanel();
             } catch (IOException e) {

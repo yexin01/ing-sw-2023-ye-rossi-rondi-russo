@@ -24,17 +24,14 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class BookshelfPanel extends BasePanel {
-    private ClientView clientView;
-    private double x;
-    private double y;
+    private final ClientView clientView;
 
     public BookshelfPanel(ClientView clientView) throws IOException {
         this.clientView = clientView;
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("base_pagina2.jpg")).openStream());
-        BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, true, true);
-        BackgroundImage background2 = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
-        setBackground(new Background(background2));
+
+        setBackground(new Background(getParquetBackground()));
+
         GridPane gridPane = new GridPane();
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
@@ -48,7 +45,7 @@ public class BookshelfPanel extends BasePanel {
             }
         }
         for (int j = 0; j < 5; j++) {
-            Button button = new Button();
+            Button button;
             int i = 0;
             button = createBookshelfButton(clientView, screenBounds.getWidth()*0.58/5, screenBounds.getHeight()*0.58/6, i, j, false);
             gridPane.add(button, j, 1);
@@ -57,7 +54,7 @@ public class BookshelfPanel extends BasePanel {
             StackPane stackPane1 = new StackPane();
             stackPane1.setMinSize(getZ()/1.75, getW());
             Button button = new Button();
-            button = createArrow(button, j);
+            createArrow(button, j);
             stackPane1.getChildren().add(button);
             stackPane1.setAlignment(button, Pos.CENTER);
             gridPane.add(stackPane1, j, 0);
@@ -67,16 +64,18 @@ public class BookshelfPanel extends BasePanel {
         background.setFitHeight(screenBounds.getHeight()*0.8);
         background.setPreserveRatio(true);
         getChildren().addAll(background, gridPane);
-        //double[] size = getImageSize(screenBounds.getWidth()*0.58/5, screenBounds.getHeight()*0.58/6);
         gridPane.setMaxSize(getZ()*5, getW()*8);
         setAlignment(background, Pos.BOTTOM_CENTER);
-
         gridPane.setPadding(new Insets(((screenBounds.getHeight()-getW()*8)/2), ((screenBounds.getWidth()-getZ()*5)/2), (background.getFitHeight()*0.22), ((screenBounds.getWidth()-getZ()*5)/2)));
+
         Font font = new Font("Poor Richard", 24);
         VBox box2 = new VBox();
         box2.setMaxSize(500, 200);
         Label label5 = new Label("SELECT  THE  COLUMN  TO  INSERT  \n"+"              THE  SELECTED  TILE(S)!"); label5.setFont(font); label5.setTextFill(Color.YELLOW);
-        Label label6 = new Label("\nTIP: check the goal cards thanks to the above buttons to \n"+" optimize your play and score as many points as possible");
+        Label label6 = new Label("""
+
+                TIP: check the goal cards thanks to the above buttons to\s
+                 optimize your play and score as many points as possible""");
         label6.setFont(new Font("Poor Richard", 20)); label6.setTextFill(Color.WHITE);
         box2.getChildren().addAll(label5, label6);
         box2.setAlignment(Pos.CENTER);
@@ -84,17 +83,11 @@ public class BookshelfPanel extends BasePanel {
         setAlignment(box2, Pos.CENTER_LEFT);
 
         VBox vBox2 = createCardsBox(clientView, screenBounds);
-        getChildren().add(getParquet());
-        getChildren().add(getPersonalGoalCardImage());
-        getChildren().add(getPng());
-        //getChildren().add(getCommonGoalCard1Image());
-        //getChildren().add(getCommonGoalCard2Image());
+        getChildren().addAll(getParquet(), getPersonalGoalCardImage(), getPng(), getBookshelf());
         getChildren().add(getBookshelf());
         getParquet().setVisible(false);
         getPng().setVisible(false);
         getPersonalGoalCardImage().setVisible(false);
-        //getCommonGoalCard1Image().setVisible(false);
-        //getCommonGoalCard2Image().setVisible(false);
         getBookshelf().setVisible(false);
         getBookshelf().setAlignment(Pos.CENTER);
         vBox2.setAlignment(Pos.TOP_RIGHT);
@@ -109,8 +102,6 @@ public class BookshelfPanel extends BasePanel {
             Button button = new Button();
             button.setPrefSize(80, 80);
             BackgroundSize backgroundSize1 = new BackgroundSize(100, 100, true, true, true, false);
-            //BackgroundImage backgroundImage1 = new BackgroundImage(getBoardTiles(clientView.getCoordinatesSelected().get(i), clientView.getCoordinatesSelected().get(i+1)), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize1);
-            //Image image = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\item tiles\\" + clientView.getTilesSelected()[i].getTypeView() + " " + clientView.getTilesSelected()[i].getTileID() % 3 + ".png");
             Image image = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource(clientView.getTilesSelected()[i].getTypeView()+" "+clientView.getTilesSelected()[i].getTileID() % 3 + ".png")).openStream());
             BackgroundImage backgroundImage1 = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize1);
             Background background1 = new Background(backgroundImage1);
@@ -122,7 +113,7 @@ public class BookshelfPanel extends BasePanel {
         hBox.setPickOnBounds(false);
     }
 
-    private Button createArrow (Button button, int i) throws IOException {
+    private void createArrow (Button button, int i) throws IOException {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         Image icon = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("arrow2.png")).openStream());
         ImageView imageView = new ImageView(icon);
@@ -148,13 +139,8 @@ public class BookshelfPanel extends BasePanel {
             }
         }));
         button.setStyle("-fx-border-color: transparent; -fx-border-width: 0; -fx-background-radius: 0; -fx-background-color: transparent;");
-        button.setOnMouseEntered(mouseEvent -> {
-            button.setEffect(new Glow(1));
-        });
-        button.setOnMouseExited(mouseEvent -> {
-            button.setEffect(null);
-        });
-        return button;
+        button.setOnMouseEntered(mouseEvent -> button.setEffect(new Glow(1)));
+        button.setOnMouseExited(mouseEvent -> button.setEffect(null));
     }
 
 }

@@ -1,46 +1,40 @@
 package it.polimi.ingsw.view.GUI;
 
-import com.sun.tools.javac.Main;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.view.Check;
 import it.polimi.ingsw.view.ClientView;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class ChoicePanel extends BasePanel{
     private ItemTileView[] tilesSelected;
-    //public static Semaphore semaphore = new Semaphore(0);
-
-    private ClientView clientView;
+    private final ClientView clientView;
     private int counter;
-    private Button[] itemButtons;
+    private final Button[] itemButtons;
     private int[] orderTiles;
 
     public ChoicePanel (ClientView clientView, double gap) throws IOException {
         this.clientView=clientView;
-        StackPane stackPane = new StackPane();
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
+        StackPane stackPane = new StackPane();
         stackPane.setMaxWidth(screenBounds.getWidth()*0.8);
-        Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("base_pagina2.jpg")).openStream());
-        BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, true, true);
-        BackgroundImage background2 = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
-        setBackground(new Background(background2));
+        setBackground(new Background(getParquetBackground()));
+
         itemButtons = new Button[3];
-        //semaphore.acquire();
         for (int i = 0; i < Check.MAX_SELECTABLE_TILES; i++) {
             itemButtons[i] = new Button();
             createEmptyButton(itemButtons[i], i);
@@ -55,39 +49,29 @@ public class ChoicePanel extends BasePanel{
 
         VBox box1 = createChoiceBox();
         box1.setPickOnBounds(false);
-        box1.getChildren().get(0).setOnMouseClicked(mouseEvent ->  {
-            Platform.runLater(() -> {
-                try {
-                    clientView.setOrderTiles(orderTiles);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-                clientView.setTilesSelected(tilesSelected);
-            });
-        });
-        box1.getChildren().get(1).setOnMouseClicked(mouseEvent ->  {
-            Platform.runLater(() -> {
-                counter = 0;
-                for (int i = 0; i < 3; i++) {
-                    itemButtons[i].setDisable(false);
-                    itemButtons[i].setOpacity(1);
-                }
-            });
-        });
+        box1.getChildren().get(0).setOnMouseClicked(mouseEvent -> Platform.runLater(() -> {
+            try {
+                clientView.setOrderTiles(orderTiles);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            clientView.setTilesSelected(tilesSelected);
+        }));
+        box1.getChildren().get(1).setOnMouseClicked(mouseEvent -> Platform.runLater(() -> {
+            counter = 0;
+            for (int i = 0; i < 3; i++) {
+                itemButtons[i].setDisable(false);
+                itemButtons[i].setOpacity(1);
+            }
+        }));
         getChildren().add(box1);
 
         VBox vBox2 = createCardsBox(clientView, screenBounds);
-        getChildren().add(getParquet());
-        getChildren().add(getPersonalGoalCardImage());
-        getChildren().add(getPng());
-        //getChildren().add(getCommonGoalCard1Image());
-        //getChildren().add(getCommonGoalCard2Image());
+        getChildren().addAll(getParquet(), getPersonalGoalCardImage(), getPng(), getBookshelf());
         getChildren().add(getBookshelf());
         getParquet().setVisible(false);
         getPng().setVisible(false);
         getPersonalGoalCardImage().setVisible(false);
-        //getCommonGoalCard1Image().setVisible(false);
-        //getCommonGoalCard2Image().setVisible(false);
         getBookshelf().setVisible(false);
         getBookshelf().setAlignment(Pos.CENTER);
         vBox2.setAlignment(Pos.TOP_RIGHT);
@@ -109,15 +93,11 @@ public class ChoicePanel extends BasePanel{
     private void createEmptyButton(Button button, int i) {
         button.setDisable(true);
         button.setOpacity(0);
-        button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                //tilesSelected[counter] = new ItemTileView(clientView.getBoardView()[clientView.getCoordinatesSelected().get(2*i)][clientView.getCoordinatesSelected().get(2*i+1)].getType(), clientView.getBoardView()[clientView.getCoordinatesSelected().get(2*i)][clientView.getCoordinatesSelected().get(2*i+1)].getId());
-                tilesSelected[counter] = clientView.getTilesSelected()[i];
-                button.setDisable(true);
-                button.setOpacity(0.3);
-                counter++;
-            }
+        button.setOnAction(actionEvent -> {
+            tilesSelected[counter] = clientView.getTilesSelected()[i];
+            button.setDisable(true);
+            button.setOpacity(0.3);
+            counter++;
         });
     }
 
@@ -135,19 +115,6 @@ public class ChoicePanel extends BasePanel{
 
     public void setup (int num) {
         tilesSelected = new ItemTileView[num];
-        /*switch (num) {
-            case 1:
-                orderTiles = new int[]{0};
-                break;
-            case 2:
-                orderTiles = new int[]{0,1};
-                break;
-            case 3:
-                orderTiles = new int[]{0,1,2};
-                break;
-        }
-
-         */
         orderTiles = new int[num];
         for (int i=0;i<num;i++) {
             orderTiles[i] = i;

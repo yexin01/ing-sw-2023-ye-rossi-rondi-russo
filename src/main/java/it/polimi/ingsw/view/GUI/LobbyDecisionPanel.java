@@ -1,51 +1,35 @@
 package it.polimi.ingsw.view.GUI;
 
-import com.sun.tools.javac.Main;
 import it.polimi.ingsw.message.KeyLobbyPayload;
 import it.polimi.ingsw.view.ClientView;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.stage.Screen;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class LobbyDecisionPanel extends BasePanel{
 
     private String numPlayers;
     private String id;
         public LobbyDecisionPanel(ClientView clientView) throws IOException {
-            //MessageHeader header=new MessageHeader(MessageType.LOBBY, clientView.getNickname());
+            setBackground(new Background(getLobbyBackground()));
 
-            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-            Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Display_5.jpg")).openStream());
-            BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, true, false);
-            BackgroundImage background = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
-            setBackground(new Background(background));
-            Image publisher = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Publisher.png")).openStream());
-            ImageView publisherView = new ImageView(publisher);
-            Image title = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Title 2000x618px.png")).openStream());
-            ImageView titleView = new ImageView(title);
-            titleView.setFitHeight(250);
-            titleView.setPreserveRatio(true);
-            getChildren().add(titleView);
-            getChildren().add(publisherView);
-            setAlignment(titleView, Pos.TOP_CENTER);
-            setAlignment(publisherView, Pos.BOTTOM_RIGHT);
+            getChildren().addAll(getTitle(), getPublisher());
+            setAlignment(getChildren().get(0), Pos.TOP_CENTER);
+            setAlignment(getChildren().get(1), Pos.BOTTOM_RIGHT);
 
             TextField textField = new TextField("Insert players number(2-4)");
-            textField.setOnMouseClicked(mouseEvent -> {
-                textField.selectAll();
-            });
+            textField.setOnMouseClicked(mouseEvent -> textField.selectAll());
             textField.setPrefSize(400, 35);
             Button confirmButton = new Button("Create new Lobby");
+            Button confirmButton1 = new Button("Join specific lobby");
+            Button random = new Button("Join random game");
             confirmButton.setOnAction(actionEvent -> {
                 numPlayers = textField.getText();
                 if (numPlayers.isEmpty()) {
@@ -55,30 +39,21 @@ public class LobbyDecisionPanel extends BasePanel{
                     alert.setContentText("Please insert a number");
                     alert.show();
                 } else {
-                    //MessagePayload payload = new MessagePayload(KeyLobbyPayload.CREATE_GAME_LOBBY);
                     try {
                         clientView.lobby(KeyLobbyPayload.CREATE_GAME_LOBBY, Integer.parseInt(numPlayers));
+                        confirmButton.setDisable(true);
+                        confirmButton1.setDisable(true);
+                        random.setDisable(true);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-                    /*Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Game created");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Wait until other players join");
-                    alert.show();
-
-                     */
-
                 }
             });
             HBox hBox = new HBox(textField, confirmButton);
 
             TextField textField1 = new TextField("Insert ID Lobby");
-            textField1.setOnMouseClicked(mouseEvent -> {
-                textField1.selectAll();
-            });
+            textField1.setOnMouseClicked(mouseEvent -> textField1.selectAll());
             textField.setPrefSize(400, 35);
-            Button confirmButton1 = new Button("Join specific lobby");
             confirmButton1.setOnAction(actionEvent -> {
                 id = textField1.getText();
                 if (id.isEmpty()) {
@@ -90,34 +65,25 @@ public class LobbyDecisionPanel extends BasePanel{
                 } else {
                     try {
                         clientView.lobby(KeyLobbyPayload.JOIN_SPECIFIC_GAME_LOBBY, Integer.parseInt(id));
+                        confirmButton.setDisable(true);
+                        confirmButton1.setDisable(true);
+                        random.setDisable(true);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-                    /*Alert alert1 = new Alert(Alert.AlertType.INFORMATION);
-                    alert1.setTitle("You joined the lobby");
-                    alert1.setHeaderText(null);
-                    alert1.setContentText("Wait until the game starts");
-                    alert1.show();
-
-                     */
                 }
             });
             HBox hBox1 = new HBox(textField1, confirmButton1);
 
-            Button random = new Button("Join random game");
             random.setOnMouseClicked(mouseEvent -> {
                 try {
                     clientView.lobby(KeyLobbyPayload.JOIN_RANDOM_GAME_LOBBY,-1);
+                    confirmButton.setDisable(true);
+                    confirmButton1.setDisable(true);
+                    random.setDisable(true);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-                /*Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
-                alert2.setTitle("You joined a random lobby");
-                alert2.setHeaderText(null);
-                alert2.setContentText("Wait until the game starts");
-                alert2.show();
-                
-                 */
             });
 
             Button quit = new Button("Quit server");

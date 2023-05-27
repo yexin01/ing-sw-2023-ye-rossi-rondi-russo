@@ -3,7 +3,6 @@ package it.polimi.ingsw.view.GUI;
 import com.sun.tools.javac.Main;
 import it.polimi.ingsw.view.ClientView;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Alert;
@@ -13,37 +12,28 @@ import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 
 import java.io.IOException;
 import java.util.Objects;
 
 public abstract class BasePanel extends StackPane {
 
-    private String style2 = "-fx-border-color: rgba(255,255,0,0.65); -fx-border-width: 2px; -fx-border-radius: 4px; -fx-effect: dropshadow(three-pass-box, rgba(255,255,0,0.65), 6, 0, 0, 0); -fx-background-color: rgba(0,0,0,0.58); -fx-text-fill: yellow;";
-    private String style1 = "-fx-border-color: rgba(255,255,0,0.65); -fx-border-width: 2px; -fx-border-radius: 4px; -fx-effect: dropshadow(three-pass-box, rgba(255,255,0,0.65), 6, 0, 0, 0); -fx-background-color: rgba(0,0,0,0.58); -fx-text-fill: white;";
-    private String styleConfirm = "-fx-border-color: rgba(255,255,0,0.65); -fx-border-width: 2px; -fx-border-radius: 4px; -fx-effect: dropshadow(three-pass-box, rgba(255,255,0,0.65), 6, 0, 0, 0); -fx-background-color: rgba(0,0,0,0.58); -fx-text-fill: lightgreen;";
-    private String styleReset = "-fx-border-color: rgba(255,255,0,0.65); -fx-border-width: 2px; -fx-border-radius: 4px; -fx-effect: dropshadow(three-pass-box, rgba(255,255,0,0.65), 6, 0, 0, 0); -fx-background-color: rgba(0,0,0,0.58); -fx-text-fill: red;";
-    private Font font = new Font("Poor Richard", 17);
+    private final String style1 = "-fx-border-color: rgba(255,255,0,0.65); -fx-border-width: 2px; -fx-border-radius: 4px; -fx-effect: dropshadow(three-pass-box, rgba(255,255,0,0.65), 6, 0, 0, 0); -fx-background-color: rgba(0,0,0,0.58); -fx-text-fill: white;";
+    private final String styleReset = "-fx-border-color: rgba(255,255,0,0.65); -fx-border-width: 2px; -fx-border-radius: 4px; -fx-effect: dropshadow(three-pass-box, rgba(255,255,0,0.65), 6, 0, 0, 0); -fx-background-color: rgba(0,0,0,0.58); -fx-text-fill: red;";
+    private final Font font = new Font("Poor Richard", 17);
     private StackPane personalGoalCardImage;
-    private StackPane commonGoalCard1Image;
-    private StackPane commonGoalCard2Image;
     private ImageView parquet;
     private GridPane bookshelf;
     private ImageView png;
-    private Image [][] boardTiles = new Image[9][9];
+    private final Image [][] boardTiles = new Image[9][9];
+    private final Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
     private double x;
     private double y;
     private double z;
     private double w;
-
-    public Font getFont() {
-        return font;
-    }
 
     public Button createBoardButton(ClientView clientView, double boardWidth, double boardHeight, int i, int j, boolean filled) throws IOException {
         Button button = new Button();
@@ -54,7 +44,6 @@ public abstract class BasePanel extends StackPane {
             button.setDisable(true);
             button.setOpacity(0);
         } else {
-            //Image icon = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\Item tiles\\" + clientView.getBoardView()[i][j].getItemTileView().getTypeView() + " " + clientView.getBoardView()[i][j].getItemTileView().getTileID() % 3 + ".png");
             Image icon = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource(clientView.getBoardView()[i][j].getItemTileView().getTypeView()+" "+clientView.getBoardView()[i][j].getItemTileView().getTileID()%3+".png")).openStream());
             imageView.setImage(icon);
             boardTiles [i][j] = icon;
@@ -78,7 +67,6 @@ public abstract class BasePanel extends StackPane {
             button.setDisable(true);
             button.setOpacity(0);
         } else {
-            //Image icon = new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\item tiles\\" + clientView.getBookshelfView()[i][j].getTypeView() + " " + clientView.getBookshelfView()[i][j].getTileID() % 3 + ".png");
             Image icon = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource(clientView.getBookshelfView()[i][j].getTypeView()+" "+clientView.getBookshelfView()[i][j].getTileID()%3+".png")).openStream());
             imageView.setImage(icon);
         }
@@ -91,36 +79,163 @@ public abstract class BasePanel extends StackPane {
         return button;
     }
 
-    /*public Button createEmptyButton (double x, double y) {
-        Button button = new Button();
-        Image icon = new Image("file:src\\main\\java\\com\\example\\demo1\\Images\\itemTiles\\BOOK0.png");
-        ImageView imageView = new ImageView();
-        imageView.setFitWidth(x);
-        imageView.setFitHeight(y);
-        imageView.setPreserveRatio(true);
-        button.setGraphic(imageView);
-        button.setOpacity(0);
-        return button;
+    public VBox createCardsBox (ClientView clientView, Rectangle2D screenBounds) throws IOException {
+        VBox vBox = new VBox();
+
+        GridPane bookshelf = new GridPane();
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 5; j++) {
+                Button button;
+                if (clientView.getBookshelfView()[i][j].getTypeView() != null) {
+                    button = createBookshelfButton(clientView, screenBounds.getWidth()*0.35/5, screenBounds.getHeight()*0.35/6, i, j, true);
+                } else {
+                    button = createBookshelfButton(clientView, screenBounds.getWidth()*0.35/5, screenBounds.getHeight()*0.35/6, i, j, false);
+                }
+                bookshelf.add(button, j, i);
+            }
+        }
+        ImageView png = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("bookshelf_orth.png")).openStream()));
+        png.setFitWidth(getZ()*7.7);
+        png.setFitHeight(getW()*8.7);
+        png.setPreserveRatio(true);
+        png.setTranslateY(getW()/5);
+        this.png = png;
+        this.bookshelf = bookshelf;
+
+        Button personal = new Button("Personal Goal Card");
+        String style2 = "-fx-border-color: rgba(255,255,0,0.65); -fx-border-width: 2px; -fx-border-radius: 4px; -fx-effect: dropshadow(three-pass-box, rgba(255,255,0,0.65), 6, 0, 0, 0); -fx-background-color: rgba(0,0,0,0.58); -fx-text-fill: yellow;";
+        mouseStyle(personal, font, style1, style2);
+        ImageView personalGoalCard = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Personal_Goals"+(clientView.getPlayerPersonalGoal().getIdPersonal()+1)+".png")).openStream()));
+        personalGoalCard.setFitWidth(screenBounds.getWidth()*0.5);
+        personalGoalCard.setFitHeight(screenBounds.getHeight()*0.5);
+        personalGoalCard.setPreserveRatio(true);
+        StackPane stackPane1 = new StackPane(personalGoalCard);
+        this.personalGoalCardImage = stackPane1;
+        personal.setOnMouseClicked(mouseEvent -> Platform.runLater(()->{
+            parquet.setVisible(true);
+            stackPane1.setVisible(true);
+        }));
+        stackPane1.setOnMouseClicked(mouseEvent -> Platform.runLater(()-> {
+            parquet.setVisible(false);
+            stackPane1.setVisible(false);
+        }));
+        vBox.getChildren().add(personal);
+
+        for (int i=0; i<clientView.getCommonGoalView().length;i++) {
+            Button button = new Button("Common Goal Card "+(i+1));
+            mouseStyle(button, font, style1, style2);
+            ImageView commonGoalCard = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource((clientView.getCommonGoalView()[0][i]+1)+".jpg")).openStream()));
+            commonGoalCard.setFitWidth(screenBounds.getWidth()*0.35);
+            commonGoalCard.setFitHeight(screenBounds.getHeight()*0.35);
+            commonGoalCard.setPreserveRatio(true);
+            int finalI = i;
+            button.setOnMouseClicked(mouseEvent -> Platform.runLater(()->{
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Common Goal Card "+(finalI +1));
+                alert.setHeaderText(null);
+                VBox content = new VBox(10);
+                content.getChildren().addAll(commonGoalCard, new Label(commonDescription(clientView.getCommonGoalView()[0][finalI])));
+                DialogPane dialogPane = alert.getDialogPane();
+                dialogPane.setContent(content);
+                alert.showAndWait();
+            }));
+            vBox.getChildren().add(button);
+        }
+
+        Button yourBookshelf = new Button("Your bookshelf");
+        mouseStyle(yourBookshelf, font, style1, style2);
+        yourBookshelf.setOnMouseClicked(mouseEvent -> Platform.runLater(()->{
+            parquet.setVisible(true);
+            png.setVisible(true);
+            bookshelf.setVisible(true);
+        }));
+        bookshelf.setOnMouseClicked(mouseEvent -> Platform.runLater(()-> {
+            parquet.setVisible(false);
+            png.setVisible(false);
+            bookshelf.setVisible(false);
+        }));
+
+        Button restore = new Button("Restore info");
+        mouseStyle(restore, font, style1, style2);
+        restore.setOnMouseClicked(mouseEvent -> {
+            try {
+                clientView.somethingWrong();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Request sent");
+            alert.setHeaderText(null);
+            alert.setContentText("Server restored all game's info");
+            alert.show();
+        });
+
+        Button quit = new Button("Quit");
+        mouseStyle(quit, font, style1, styleReset);
+        quit.setOnAction(actionEvent -> Platform.runLater(()->{
+            Platform.exit();
+            System.exit(0);
+        }));
+
+        ImageView parquet = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("sfondo parquet.jpg")).openStream()));
+        parquet.setFitWidth(screenBounds.getWidth()*0.65);
+        parquet.setFitHeight(screenBounds.getHeight()*0.65);
+        parquet.setPreserveRatio(true);
+        parquet.setEffect(new GaussianBlur());
+        this.parquet = parquet;
+
+        vBox.getChildren().addAll(yourBookshelf, restore, quit);
+        return vBox;
     }
 
-     */
+    public StackPane getPersonalGoalCardImage() {
+        return personalGoalCardImage;
+    }
 
-    /*public ImageView getImageView (double x, double y) {
-        Image icon = new Image("file:src\\main\\java\\com\\example\\demo1\\Images\\itemTiles\\BOOK0.png");
-        ImageView imageView = new ImageView(icon);
-        imageView.setFitWidth(x);
-        imageView.setFitHeight(y);
-        imageView.setPreserveRatio(true);
-        /*double[] size = new double[2];
-        size[0] = imageView.getFitWidth();
-        size[1] = imageView.getFitHeight();
+    public VBox createChoiceBox (){
+        VBox vBox = new VBox();
+        Button confirmChoiceButton = new Button("Confirm choice");
+        String styleConfirm = "-fx-border-color: rgba(255,255,0,0.65); -fx-border-width: 2px; -fx-border-radius: 4px; -fx-effect: dropshadow(three-pass-box, rgba(255,255,0,0.65), 6, 0, 0, 0); -fx-background-color: rgba(0,0,0,0.58); -fx-text-fill: lightgreen;";
+        mouseStyle(confirmChoiceButton, font, style1, styleConfirm);
 
+        Button resetChoiceButton = new Button("Reset choice");
+        mouseStyle(resetChoiceButton, font, style1, styleReset);
 
-        return imageView;
-    };
+        vBox.getChildren().addAll(confirmChoiceButton, resetChoiceButton);
+        return vBox;
+    }
 
-     */
+    public void mouseStyle (Button button, Font font, String style1, String style2) {
+        button.setFont(font);
+        button.setStyle(style1);
+        button.setOnMouseEntered(event -> button.setStyle(style2));
+        button.setOnMouseExited(event -> button.setStyle(style1));
+    }
 
+    public BackgroundImage getParquetBackground () throws IOException {
+        Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("base_pagina2.jpg")).openStream());
+        BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, true, true);
+        return new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
+    }
+
+    public BackgroundImage getLobbyBackground () throws IOException {
+        Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Display_5.jpg")).openStream());
+        BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, true, false);
+        return new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
+    }
+
+    public ImageView getPublisher () throws IOException {
+        Image publisher = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Publisher.png")).openStream());
+        return new ImageView(publisher);
+    }
+
+    public ImageView getTitle () throws IOException {
+        Image title = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Title 2000x618px.png")).openStream());
+        ImageView titleView = new ImageView(title);
+        titleView.setFitHeight(250);
+        titleView.setPreserveRatio(true);
+        return titleView;
+    }
     public double getX() {
         return x;
     }
@@ -151,367 +266,6 @@ public abstract class BasePanel extends StackPane {
 
     public ImageView getPng() {
         return png;
-    }
-
-    public VBox createCardsBox (ClientView clientView, Rectangle2D screenBounds) throws IOException {
-        VBox vBox = new VBox();
-        Button personal = new Button("Personal Goal Card");
-        personal.setFont(font);
-        personal.setStyle(style1);
-        personal.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                personal.setStyle(style2);
-            }
-        });
-
-        personal.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                personal.setStyle(style1);
-            }
-        });
-
-        //ImageView personalGoalCard = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\personal goal cards\\Personal_Goals"+(clientView.getPlayerPersonalGoal().getIdPersonal()+1)+".png"));
-        ImageView personalGoalCard = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Personal_Goals"+(clientView.getPlayerPersonalGoal().getIdPersonal()+1)+".png")).openStream()));
-        personalGoalCard.setFitWidth(screenBounds.getWidth()*0.5);
-        personalGoalCard.setFitHeight(screenBounds.getHeight()*0.5);
-        personalGoalCard.setPreserveRatio(true);
-
-        for (int i=0; i<clientView.getCommonGoalView().length;i++) {
-            Button button = new Button("Common Goal Card "+(i+1));
-            button.setFont(font);
-            button.setStyle(style1);
-            button.setOnMouseEntered(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    button.setStyle(style2);
-                }
-            });
-
-            button.setOnMouseExited(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    button.setStyle(style1);
-                }
-            });
-
-            //ImageView commonGoalCard = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\common goal cards\\"+(clientView.getCommonGoalView()[0][i]+1)+".jpg"));
-            ImageView commonGoalCard = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource((clientView.getCommonGoalView()[0][i]+1)+".jpg")).openStream()));
-            commonGoalCard.setFitWidth(screenBounds.getWidth()*0.35);
-            commonGoalCard.setFitHeight(screenBounds.getHeight()*0.35);
-            commonGoalCard.setPreserveRatio(true);
-
-            int finalI = i;
-            button.setOnMouseClicked(mouseEvent -> {
-                Platform.runLater(()->{
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Common Goal Card "+(finalI +1));
-                    alert.setHeaderText(null);
-                    VBox content = new VBox(10);
-                    content.getChildren().addAll(commonGoalCard, new Label(commonDescription(clientView.getCommonGoalView()[0][finalI])));
-                    DialogPane dialogPane = alert.getDialogPane();
-                    dialogPane.setContent(content);
-                    alert.showAndWait();
-                });
-            });
-            vBox.getChildren().add(button);
-        }
-
-        /*Button common1 = new Button("Common Goal Card 1");
-        common1.setFont(font);
-        common1.setStyle(style1);
-        common1.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                common1.setStyle(style2);
-            }
-        });
-
-        common1.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                common1.setStyle(style1);
-            }
-        });
-
-        ImageView commonGoalCard1 = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\common goal cards\\"+(clientView.getCommonGoalView()[0][0]+1)+".jpg"));
-        commonGoalCard1.setFitWidth(screenBounds.getWidth()*0.35);
-        commonGoalCard1.setFitHeight(screenBounds.getHeight()*0.35);
-        commonGoalCard1.setPreserveRatio(true);
-
-        common1.setOnMouseClicked(mouseEvent -> {
-            Platform.runLater(()->{
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Common Goal Card 1");
-                alert.setHeaderText(null);
-                VBox content = new VBox(10);
-                content.getChildren().addAll(commonGoalCard1, new Label(commonDescription(clientView.getCommonGoalView()[0][0])));
-                DialogPane dialogPane = alert.getDialogPane();
-                dialogPane.setContent(content);
-                alert.showAndWait();
-            });
-        });
-
-         */
-
-        /*Button common2 = new Button("Common Goal Card 2");
-        common2.setFont(font);
-        common2.setStyle(style1);
-        common2.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                common2.setStyle(style2);
-            }
-        });
-
-        common2.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                common2.setStyle(style1);
-            }
-        });
-
-        ImageView commonGoalCard2 = new ImageView(new Image("file:src\\main\\java\\it\\polimi\\ingsw\\Images\\common goal cards\\"+(clientView.getCommonGoalView()[0][1]+1)+".jpg"));
-        commonGoalCard2.setFitWidth(screenBounds.getWidth()*0.35);
-        commonGoalCard2.setFitHeight(screenBounds.getHeight()*0.35);
-        commonGoalCard2.setPreserveRatio(true);
-
-        common2.setOnMouseClicked(mouseEvent -> {
-            Platform.runLater(()->{
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Common Goal Card 2");
-                alert.setHeaderText(null);
-                VBox content = new VBox(10);
-                content.getChildren().addAll(commonGoalCard2, new Label(commonDescription(clientView.getCommonGoalView()[0][1])));
-                DialogPane dialogPane = alert.getDialogPane();
-                dialogPane.setContent(content);
-                alert.showAndWait();
-            });
-        });
-
-         */
-
-
-        StackPane stackPane1 = new StackPane(personalGoalCard);
-        this.personalGoalCardImage = stackPane1;
-        /*StackPane stackPane2 = new StackPane(commonGoalCard1);
-        this.commonGoalCard1Image = stackPane2;
-        StackPane stackPane3 = new StackPane(commonGoalCard2);
-        this.commonGoalCard2Image = stackPane3;
-
-         */
-        ImageView parquet = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("sfondo parquet.jpg")).openStream()));
-        parquet.setFitWidth(screenBounds.getWidth()*0.65);
-        parquet.setFitHeight(screenBounds.getHeight()*0.65);
-        parquet.setPreserveRatio(true);
-        parquet.setEffect(new GaussianBlur());
-        this.parquet = parquet;
-        vBox.getChildren().addAll(personal);
-        personal.setOnMouseClicked(mouseEvent -> {
-            Platform.runLater(()->{
-                parquet.setVisible(true);
-                stackPane1.setVisible(true);
-            });
-        });
-        stackPane1.setOnMouseClicked(mouseEvent -> {
-            Platform.runLater(()-> {
-                parquet.setVisible(false);
-                stackPane1.setVisible(false);
-                });
-        });
-        /*common1.setOnMouseClicked(mouseEvent -> {
-            Platform.runLater(()->{
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Common Goal Card 1");
-                alert.setHeaderText(null);
-                VBox content = new VBox(10);
-                content.getChildren().addAll(commonGoalCard1, new Label(commonDescription(clientView.getCommonGoalView()[0][0])));
-                DialogPane dialogPane = alert.getDialogPane();
-                dialogPane.setContent(content);
-                alert.showAndWait();
-            });
-        });
-        common2.setOnMouseClicked(mouseEvent -> {
-            Platform.runLater(()->{
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Common Goal Card 2");
-                alert.setHeaderText(null);
-                VBox content = new VBox(10);
-                content.getChildren().addAll(commonGoalCard2, new Label(commonDescription(clientView.getCommonGoalView()[0][1])));
-                DialogPane dialogPane = alert.getDialogPane();
-                dialogPane.setContent(content);
-                alert.showAndWait();
-            });
-        });
-
-
-        stackPane3.setOnMouseClicked(mouseEvent -> {
-            Platform.runLater(()-> {
-                parquet.setVisible(false);
-                stackPane3.setVisible(false);
-            });
-        });
-
-         */
-
-        Button restore = new Button("Restore info");
-        restore.setFont(font);
-        restore.setStyle(style1);
-        restore.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                restore.setStyle(style2);
-            }
-        });
-
-        restore.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                restore.setStyle(style1);
-            }
-        });
-
-        restore.setOnMouseClicked(mouseEvent -> {
-            try {
-                clientView.somethingWrong();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Request sent");
-            alert.setHeaderText(null);
-            alert.setContentText("Server restored all game's info");
-            alert.show();
-        });
-
-        Button yourBookshelf = new Button("Your bookshelf");
-        yourBookshelf.setFont(font);
-        yourBookshelf.setStyle("-fx-border-color: rgba(255,255,0,0.65); -fx-border-width: 2px; -fx-border-radius: 4px; -fx-effect: dropshadow(three-pass-box, rgba(255,255,0,0.65), 6, 0, 0, 0); -fx-background-color: rgba(0,0,0,0.58); -fx-text-fill: white;");
-        yourBookshelf.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                yourBookshelf.setStyle(style2);
-            }
-        });
-        yourBookshelf.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                yourBookshelf.setStyle(style1);
-            }
-        });
-        vBox.getChildren().add(yourBookshelf);
-        vBox.getChildren().add(restore);
-        GridPane bookshelf = new GridPane();
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 5; j++) {
-                Button button;
-                if (clientView.getBookshelfView()[i][j].getTypeView() != null) {
-                    button = createBookshelfButton(clientView, screenBounds.getWidth()*0.35/5, screenBounds.getHeight()*0.35/6, i, j, true);
-                } else {
-                    button = createBookshelfButton(clientView, screenBounds.getWidth()*0.35/5, screenBounds.getHeight()*0.35/6, i, j, false);
-                }
-                bookshelf.add(button, j, i);
-            }
-        }
-        ImageView png = new ImageView(new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("bookshelf_orth.png")).openStream()));
-        //png.setFitWidth(getZ()*7.7);
-        //png.setFitHeight(getW()*8.7);
-        png.setFitWidth(getZ()*7.7);
-        png.setFitHeight(getW()*8.7);
-        png.setPreserveRatio(true);
-        png.setTranslateY(getW()/5);
-        this.png = png;
-        this.bookshelf = bookshelf;
-        yourBookshelf.setOnMouseClicked(mouseEvent -> {
-            Platform.runLater(()->{
-                parquet.setVisible(true);
-                png.setVisible(true);
-                bookshelf.setVisible(true);
-            });
-        });
-        bookshelf.setOnMouseClicked(mouseEvent -> {
-            Platform.runLater(()-> {
-                parquet.setVisible(false);
-                png.setVisible(false);
-                bookshelf.setVisible(false);
-            });
-        });
-        return vBox;
-    }
-
-    public StackPane getPersonalGoalCardImage() {
-        return personalGoalCardImage;
-    }
-
-    public StackPane getCommonGoalCard1Image() {
-        return commonGoalCard1Image;
-    }
-
-    public StackPane getCommonGoalCard2Image() {
-        return commonGoalCard2Image;
-    }
-
-    public VBox createChoiceBox (){
-        VBox vBox = new VBox();
-        Button confirmChoiceButton = new Button("Confirm choice");
-        confirmChoiceButton.setFont(font);
-        confirmChoiceButton.setStyle(style1);
-        confirmChoiceButton.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                confirmChoiceButton.setStyle(styleConfirm);
-            }
-        });
-
-        confirmChoiceButton.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                confirmChoiceButton.setStyle(style1);
-            }
-        });
-        Button resetChoiceButton = new Button("Reset choice");
-        resetChoiceButton.setFont(font);
-        resetChoiceButton.setStyle(style1);
-        resetChoiceButton.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                resetChoiceButton.setStyle(styleReset);
-            }
-        });
-
-        resetChoiceButton.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                resetChoiceButton.setStyle(style1);
-            }
-        });
-        vBox.getChildren().add(confirmChoiceButton);
-        vBox.getChildren().add(resetChoiceButton);
-        Button quit = new Button("Quit");
-        quit.setFont(font);
-        quit.setStyle(style1);
-        quit.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                quit.setStyle(styleReset);
-            }
-        });
-
-        quit.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                quit.setStyle(style1);
-            }
-        });
-        quit.setOnAction(actionEvent -> {
-            Platform.runLater(()->{
-                Platform.exit();
-                System.exit(0);
-            });
-        });
-        vBox.getChildren().add(quit);
-        return vBox;
     }
 
     public String commonDescription (int id) {

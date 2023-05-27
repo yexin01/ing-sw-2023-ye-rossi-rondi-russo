@@ -21,8 +21,9 @@ public class DisconnectionPanel extends BasePanel{
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, true, false);
         BackgroundImage background = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         setBackground(new Background(background));
+
         Label label = new Label(ErrorType.ONLY_PLAYER.getErrorMessage());
-        label.setFont(new Font("Poor Richard", 30)); label.setTextFill(Color.RED);
+        label.setFont(new Font("Poor Richard", 28)); label.setTextFill(Color.RED);
         Label label1 = new Label("Please wait...");
         label1.setFont(new Font("Poor Richard", 60)); label1.setTextFill(Color.RED);
         VBox vBox = new VBox(label, label1);
