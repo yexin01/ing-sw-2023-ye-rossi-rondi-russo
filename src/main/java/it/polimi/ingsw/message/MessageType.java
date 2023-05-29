@@ -6,8 +6,7 @@ package it.polimi.ingsw.message;
 public enum MessageType {
     ERROR,
     PING,
-    //ACK,
     CONNECTION,
     LOBBY,
-    DATA //all the actions that the player can do in the game
+    DATA
 }

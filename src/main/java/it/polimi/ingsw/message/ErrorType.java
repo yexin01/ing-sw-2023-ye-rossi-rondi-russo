@@ -5,7 +5,7 @@ package it.polimi.ingsw.message;
  */
 public enum ErrorType implements KeyAbstractPayload {
 
-    //qui connection (nickname, porte, connessioni)
+    //Connection error
     PING_NOT_RECEIVED("Ping not received. Disconnection started.."),
     DISCONNECTION_FORCED("Something went wrong during login. Connection refused! Disconnection started.."),
     DISCONNECTION("Disconnection from the server"),
@@ -17,7 +17,7 @@ public enum ErrorType implements KeyAbstractPayload {
 
 
 
-    //qui lobby (tutte le cose per connettersi alle mappe e prima di creare il game)
+    //Lobby error
     ERR_NUM_PLAYER_WANTED("You must select a number of players between 2 and 4.  You will be sent back to GlobalLobby.."),
     ERR_JOINING_GAME_LOBBY("Failed in joining the Game Lobby! You will be sent back to GlobalLobby.."),
     ERR_GAME_FULL("Failed in joining the requested game lobby because is full! You will be sent back to GlobalLobby.."),
@@ -26,11 +26,11 @@ public enum ErrorType implements KeyAbstractPayload {
 
     ERR_NO_FREE_SPOTS("Failed in joining a random game lobby because all games are full!Creating a new Game Lobby for min num players..."),
 
-//non possono arrivare al client se é disconnesso
+
     ERR_RECONNECT_TO_GAME_LOBBY("Failed to reconnect to previous game lobby! Disconnection.."),
     ERR_JOIN_GLOBAL_LOBBY("Failed in joining the Global Lobby! Disconnection.."),
 
-    //qui data
+    //Data error
     ILLEGAL_TURN("it isn't your turn"),
     ILLEGAL_PHASE("This isn't the phase"),
     INVALID_COLUMN("Invalid Column"),

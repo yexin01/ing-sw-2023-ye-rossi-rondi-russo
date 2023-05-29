@@ -7,6 +7,6 @@ public enum KeyConnectionPayload implements KeyAbstractPayload {
     CONNECTION_CREATION,
 
     RECONNECTION,
-   // DISCONNECTION_FORCED, // from the server
-    BROADCAST; // only to print to the client
+
+    BROADCAST;
 }

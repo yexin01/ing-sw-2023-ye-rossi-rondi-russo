@@ -1,7 +1,20 @@
 package it.polimi.ingsw.model;
 
+/**
+ *class representing the cell of the Board
+ */
 
 public class BoardBox {
+    /**
+     * BoardBox constructor.
+     * @param x: board matrix row;
+     * @param y: board matrix column;
+     */
+    public BoardBox(int x,int y) {
+        this.x=x;
+        this.y=y;
+
+    }
     private int x;
 
     public int getX() {
@@ -59,11 +72,6 @@ public class BoardBox {
         freeEdges++;
     }
 
-    public BoardBox(int x,int y) {
-        this.x=x;
-        this.y=y;
-
-    }
 
 
 }

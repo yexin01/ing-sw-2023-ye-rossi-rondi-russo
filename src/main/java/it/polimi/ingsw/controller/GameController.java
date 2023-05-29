@@ -109,7 +109,8 @@ public class GameController {
         int[] coordinates=(int[]) message.getPayload().getContent(Data.VALUE_CLIENT);
         int maxPlayerSelectableTiles=game.getTurnPlayerOfTheGame().getBookshelf().numSelectableTiles();
         if(!checkError(game.getBoard().checkSelectable(coordinates,maxPlayerSelectableTiles))){
-            game.getTurnPlayerOfTheGame().selection(game.getBoard());
+            game.getTurnPlayerOfTheGame().setSelectedItems(game.getBoard().selected());
+            game.getTurnPlayerOfTheGame().cloneTilesSelected();
             game.getModelView().setTurnPhase(TurnPhase.SELECT_ORDER_TILES);
             System.out.println("CAMBIA FASE CONTROLLER");
             send(Data.PHASE,getTurnNickname(),TurnPhase.SELECT_ORDER_TILES);
@@ -184,7 +185,7 @@ public class GameController {
         game.getBoard().resetBoard();
         Boolean[] activePlayers=game.getModelView().getActivePlayers();
         //System.out.println("ULTIMO GIOCATORE CONNESSO ATTIVO è:"+game.getLastPlayer(activePlayers));
-        if(game.isEndGame() && getTurnNickname().equals(game.getLastPlayer(activePlayers))){
+        if(game.isEndGame() && getTurnNickname().equals(game.getLastPlayer())){
             endGame();
         }else{
             if(game.getBoard().checkRefill()){

@@ -3,12 +3,19 @@ package it.polimi.ingsw.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ *Class represents the player's personalGoal
+ */
 
 public class PersonalGoalCard implements Serializable {
     private final int idPersonal;
     private final ArrayList<PersonalGoalBox> cells;
 
-
+    /**
+     * PersonalGoal constructor with id and PersonalGoalBox arraylist
+     * @param idPersonal
+     * @param cells
+     */
     public PersonalGoalCard(int idPersonal, ArrayList<PersonalGoalBox> cells) {
         this.idPersonal = idPersonal;
         this.cells = cells;

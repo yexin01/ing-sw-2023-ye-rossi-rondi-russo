@@ -15,6 +15,10 @@ public class Game {
     private ArrayList<CommonGoalCard> commonGoalCards;
     private boolean endGame;
 
+    /**
+     * Constructor Game:set the modelView and associate a new Board;
+     * @param modelview:modelView of the current game;
+     */
 
     public Game(ModelView modelview){
         commonGoalCards=new ArrayList<>();
@@ -37,19 +41,29 @@ public class Game {
         return players.get(0);
     }
 
-    public String getLastPlayer(Boolean[] activePlayers) {
+    /**
+     * @return:nickname of the last connected player
+     */
+    public String getLastPlayer() {
+        Boolean[] activePlayers= modelview.getActivePlayers();
         int i;
         for(i=players.size()-1; !activePlayers[i];i--){
         }
         return players.get(i).getNickname();
     }
     public Player getTurnPlayerOfTheGame() {
-       // System.out.println("TURN PLAYER :"+players.get(turnPlayerInt()).getNickname());
         return players.get(turnPlayerInt());
     }
     public int getIntByNickname(String nickname) {
         return modelview.getIntegerValue(nickname);
     }
+
+    /**
+     * sets the player true or false depending on whether he is reconnected or disconnected;
+     * @param nickname:player who has reconnected or disconnected;
+     * @param discOrRec:reconnected true, disconnected false
+     * @return
+     */
 
     public Boolean[] disconnectionAndReconnectionPlayer(String nickname,boolean discOrRec) {
         Boolean[] activePlayers=modelview.getActivePlayers();
@@ -81,40 +95,21 @@ public class Game {
         this.commonGoalCards = commonGoalCards;
     }
 
+    /**
+     *randomly extracts players' play order and instantiates them.
+     * @param nicknames:ArrayList of player nicknames
+     * @throws Exception
+     */
     public void addPlayers(ArrayList<String> nicknames) throws Exception {
         ArrayList<Integer> orderPlayers=generateRandomNumber(nicknames.size(), nicknames.size());
+        GameRules gameRules=new GameRules();
         players = new ArrayList<Player>();
         for(Integer player:orderPlayers){
             String nickname=nicknames.get(player);
-            players.add(new Player(nickname,modelview));
-            //modelview.getPlayersOrder().add(nickname);
-        }
-        //modelview.setPlayersOrder(players);
-
-
-    }
-
-    /**
-     * check that the string passed as a parameter is not already present in the usedNames set
-     * @param nickname if it is different from the present nicknames: add it and return true, otherwise return false
-     * @return
-     */
-    //TODO change just scroll the arraylist and check that there is not an equal one
-    public boolean differentNickname(String nickname) {
-        if (players.isEmpty()) {
-            return true;
-        } else {
-            Set<String> usedNames = new HashSet<>();
-            for (Player p : players) {
-                usedNames.add(p.getNickname());
-            }
-            if (usedNames.contains(nickname)) {
-                return false;
-            } else {
-                return true;
-            }
+            players.add(new Player(nickname,modelview,gameRules));
         }
     }
+
 
     /**
      *generates different random numbers in a fixed range and a number of times numOfgenerated
@@ -159,21 +154,12 @@ public class Game {
         }
 
         setCommonGoalCardsPoints(gameRules);
-        createCommonGoalPlayer(gameRules);
     }
-
-
-    public void createCommonGoalPlayer(GameRules gameRules){
-        int numCommonGoalCards=gameRules.getNumOfCommonGoals();
-        for(Player p:players){
-            p.setCommonGoalPoints(new int[numCommonGoalCards]);
-
-        }
-    }
-
 
     /**
-     * Match arraylist of scores based on number of players
+     *sets the CommonGoalCards scores, based on the number of players in the game, reading the scores from the json file
+     * @param gameRules: to read from json file;
+     * @throws Exception
      */
     public void setCommonGoalCardsPoints(GameRules gameRules) throws Exception {
         ArrayList<Integer> points=gameRules.getCommonGoalPoints(players.size());
@@ -194,19 +180,22 @@ public class Game {
     }
 
     /**
-     *instantiates personalGoalCard based on the number of players
+     *instantiates (reading from the json file) only the personalGoalCards present in the positions of the arrayList numbers.
+     * Positions were extracted randomly.
+     *For each player it instantiates: the reference bookshelf and commonGoalPoints,
+     *set on the modelView PlayerPointsView , personalGoal id and the player's bookshelf.
+     * @param gameRules: to read from json file;
+     * @param numbers
      */
-
     public void createPersonalGoalCard(GameRules gameRules, ArrayList<Integer> numbers ) {
-        //ArrayList<Integer> numbers = generateRandomNumber(gameRules.getPossiblePersonalGoalsSize(), players.size());
+
         int rows= gameRules.getRowsBookshelf();
         int columns= gameRules.getColumnsBookshelf();
         int maxSelectableTiles=gameRules.getMaxSelectableTiles();
-        int[] commonGoalsSetup;
         int i = 0;
         for (Player p : players) {
-            commonGoalsSetup=new int[commonGoalCards.size()];
-            PlayerPointsView setupPoints=new PlayerPointsView(commonGoalsSetup,0,p.getNickname());
+            p.setCommonGoalPoints(new int[commonGoalCards.size()]);
+            PlayerPointsView setupPoints=new PlayerPointsView(p.getCommonGoalPoints(),0,p.getNickname());
             modelview.setPlayerPoints(setupPoints,i);
 
             PersonalGoalCard turnPersonal=gameRules.getPersonalGoalCard(numbers.get(i));
@@ -227,7 +216,12 @@ public class Game {
         return null;
     }
 
-
+    /**
+     *updates the adjacent points of the current player by reading the associated
+     * score from the json file
+     * @param gameRules: to read from json file;
+     * @throws Exception
+     */
     public void updateAdjacentPoints(GameRules gameRules) throws Exception{
         int[] points= gameRules.getAdjacentArray();
         List<Integer> adjacent= turnBookshelf().findAdjacentTilesGroups();
@@ -246,6 +240,11 @@ public class Game {
         }
 
     }
+    /**
+     *updates the commonGoalPoints points of the current player.Update the modelView
+     * if a token is reached.
+     * @throws Exception
+     */
     public void updatePointsCommonGoals(){
         for (int i = 0; i< getTurnPlayerOfTheGame().getCommonGoalPoints().length; i++){
             CommonGoalCard c=commonGoalCards.get(i);
@@ -257,6 +256,12 @@ public class Game {
             }
         }
     }
+    /**
+     *updates the personalPoints of the current player by reading the associated
+     * score from the json file
+     * @param gameRules: to read from json file;
+     * @throws Exception
+     */
     public void updatePersonalGoalPoints(GameRules gameRules) throws Exception {
         int[] points= gameRules.getPersonalGoalPoints();
         int numScored = 0;
@@ -267,6 +272,12 @@ public class Game {
         }
         getTurnPlayerOfTheGame().setPersonalGoalPoints(points[numScored]);
     }
+
+    /**
+     * after calling the various methods that update the scores of the current player,
+     *sets the modelView with the updated scores.
+     * @throws Exception
+     */
 
     public void updateAllPoints() throws Exception {
         GameRules gameRules=new GameRules();
@@ -283,15 +294,6 @@ public class Game {
     public PersonalGoalCard turnPersonalGoal(){return getTurnPlayerOfTheGame().getPersonalGoalCard();}
 
     public Bookshelf turnBookshelf(){return getTurnPlayerOfTheGame().getBookshelf();}
-
-
-    public int deletePlayer(String nickname) {
-        int index=modelview.deleteAllObjectByIndex(nickname);
-        players.remove(index);
-        return index;
-    }
-
-
 
     public boolean isEndGame() {
         return endGame;

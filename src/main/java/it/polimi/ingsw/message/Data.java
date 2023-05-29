@@ -1,5 +1,7 @@
 package it.polimi.ingsw.message;
 
+import java.io.Serializable;
+
 /**
  * Enum that represents the key of the payload for information inputs from the client during the game
  */
