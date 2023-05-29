@@ -29,6 +29,8 @@ public class LobbyPanel extends BasePanel{
         textField.setPrefSize(220, 35);
         textField.setOnMouseClicked(mouseEvent -> textField.selectAll());
         Button confirmButton = new Button("Set Nickname");
+        Button confirmButton1 = new Button("Set Socket Connection"); confirmButton1.setDisable(true);
+        Button confirmButton2 = new Button("Set RMI Connection"); confirmButton2.setDisable(true);
         confirmButton.setOnAction(actionEvent -> {
             nickname = textField.getText();
             if (nickname.isEmpty()) {
@@ -39,6 +41,8 @@ public class LobbyPanel extends BasePanel{
                 alert.show();
             } else {
                 clientView.setNickname(nickname);
+                confirmButton1.setDisable(false);
+                confirmButton2.setDisable(false);
             }
         });
         HBox hBox = new HBox(textField, confirmButton);
@@ -50,7 +54,6 @@ public class LobbyPanel extends BasePanel{
         TextField textField2 = new TextField("Insert ip (Leave empty for default)");
         textField2.setOnMouseClicked(mouseEvent -> textField2.selectAll());
         textField2.setPrefSize(220, 35);
-        Button confirmButton1 = new Button("Set Socket Connection");
         confirmButton1.setOnAction(actionEvent -> {
                     port = textField1.getText();
                     ip = textField2.getText();
@@ -73,7 +76,6 @@ public class LobbyPanel extends BasePanel{
         TextField textField4 = new TextField("Insert ip (Leave empty for default)");
         textField4.setOnMouseClicked(mouseEvent -> textField4.selectAll());
         textField4.setPrefSize(220, 35);
-        Button confirmButton2 = new Button("Set RMI Connection");
         confirmButton2.setOnAction(actionEvent -> {
             port = textField3.getText();
             ip = textField4.getText();
