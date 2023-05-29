@@ -198,7 +198,7 @@ public class GUIApplication extends Application implements ClientInterface {
             Scene scene = new Scene(finalRankingPanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
             stage.show();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            /*Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("FINAL RANKING");
             alert.setHeaderText("WINNER");
             Image image;
@@ -212,10 +212,12 @@ public class GUIApplication extends Application implements ClientInterface {
             imageView.setFitHeight(200);
             imageView.setPreserveRatio(true);
             VBox content = new VBox(10);
-            content.getChildren().addAll(imageView, new Label("The winner is: "+clientView.getPlayerPointsViews()[0].getNickname()));
+            content.getChildren().addAll(imageView, new Label("The winner is: "+clientView.getPlayerPointsViews()[clientView.getPlayerPointsViews().length-1].getNickname()));
             DialogPane dialogPane = alert.getDialogPane();
             dialogPane.setContent(content);
             alert.show();
+
+             */
         });
     }
 
