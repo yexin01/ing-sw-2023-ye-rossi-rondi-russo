@@ -100,19 +100,19 @@ public class ClientHandler implements Runnable {
      * @throws Exception if there are problems with the connection
      */
     public void createConnection(int isRMI,String ip, int port,ClientInterface clientInterface) throws Exception {
-        String connection;
+       // String connection;
         String nickname=clientInterface.getClientView().getNickname();
-        System.out.println(clientInterface.getClientView().getNickname()+"NEL CLIENT HANDLER");
+        //System.out.println(clientInterface.getClientView().getNickname()+"NEL CLIENT HANDLER");
         if (isRMI==0) {
             client = new ClientSocket(nickname, ip, port);
             this.isRMI = false;
-            System.out.println("creato ClientSocket in createConnection()...");
-            connection="SOCKET";
+            //System.out.println("creato ClientSocket in createConnection()...");
+            //connection="SOCKET";
         } else {
             client = new ClientRMI(nickname, ip, port);
             this.isRMI = true;
-            System.out.println("creato ClientRMI in createConnection()...");
-            connection="RMI";
+            //System.out.println("creato ClientRMI in createConnection()...");
+            //connection="RMI";
         }
         managerHandlers.registerEventHandler(MessageType.DATA,new TurnHandler(clientInterface,client,new StartAndEndGameHandler(clientInterface,this.client)));
         LobbyHandler lobbyHandler=new LobbyHandler(clientInterface,client);
@@ -122,8 +122,8 @@ public class ClientHandler implements Runnable {
         clientInterface.getClientView().setMessageToserverHandler(new MessageToserverHandlerTurn(clientInterface,client));
 
         createMessageHandlerThread(client);
-        System.out.println("creato messageHandlerThread...");
-        System.out.println("provo a startare la connection di tipo " + connection + "...");
+        //System.out.println("creato messageHandlerThread...");
+        //System.out.println("provo a startare la connection di tipo " + connection + "...");
         client.startConnection();
 
     }

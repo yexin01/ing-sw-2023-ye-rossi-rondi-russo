@@ -37,7 +37,7 @@ public class Check {
         ItemTileView[] temp = new ItemTileView[tilesSelected.length];
         int j=0;
         for(int i : orderSelected){
-            System.out.println(i);
+           // System.out.println(i);
             temp[j++]=tilesSelected[i];
         }
         return temp ;
