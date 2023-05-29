@@ -2,7 +2,6 @@ package it.polimi.ingsw.controller;
 
 
 import it.polimi.ingsw.json.GameRules;
-import it.polimi.ingsw.listeners.InfoAndEndGameListener;
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Bookshelf;
@@ -29,11 +28,10 @@ class GameControllerTest {
         GameLobby gameLobby = new GameLobby(0, 2, globalLobby);
         gameLobby.addPlayerToGame("player1", new RMIConnection(server, new ClientRMI("player1", "127.0.0.1", 1100)));
         gameLobby.addPlayerToGame("player2", new RMIConnection(server, new ClientRMI("player2", "127.0.0.1", 1100)));
-        InfoAndEndGameListener infoAndEndGameListener = new InfoAndEndGameListener(gameLobby, globalLobby);
         ArrayList<String> nicknames = new ArrayList<>();
         nicknames.add("player1"); nicknames.add("player2");
         GameController gameController = new GameController();
-        gameController.createGame(gameLobby, nicknames, infoAndEndGameListener);
+        gameController.createGame(gameLobby, nicknames);
         gameController.getModel().getTurnPlayerOfTheGame().setBookshelf(new Bookshelf(6,5,3));
         gameController.getModel().getBoard().fillBag(gameRules);
         gameController.getModel().getBoard().firstFillBoard(2, gameRules);
@@ -52,14 +50,30 @@ class GameControllerTest {
     void checkAndInsertBoardBox() throws Exception {
         GameController gameController = initializeGame();
         int[] value = new int[] {1, 3};
-        MessagePayload messagePayload = new MessagePayload(Data.VALUE_CLIENT);
+        MessagePayload messagePayload = new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
         messagePayload.put(Data.VALUE_CLIENT, value);
         Message message = new Message(new MessageHeader(MessageType.DATA, gameController.getTurnNickname()), messagePayload);
         ArrayList<BoardBox> selectedBoard = new ArrayList<>();
         selectedBoard.add(gameController.getModel().getBoard().getBoardBox(1, 3));
         gameController.getModel().getBoard().setSelectedBoard(selectedBoard);
-        gameController.checkAndInsertBoardBox(message);
+        gameController.getModel().getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
+        gameController.receiveMessageFromClient(message);
         assertEquals(gameController.getModel().getBoard().getBoardBox(1,3).getTile().getTileID(), gameController.getModel().getModelView().getSelectedItems()[0].getTileID());
+    }
+
+    @Test
+    void checkAndInsertBoardBoxCC1() throws Exception {
+        GameController gameController = initializeGame();
+        int[] value = new int[] {1, 3, 3, 3};
+        MessagePayload messagePayload = new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
+        messagePayload.put(Data.VALUE_CLIENT, value);
+        Message message = new Message(new MessageHeader(MessageType.DATA, gameController.getTurnNickname()), messagePayload);
+        ArrayList<BoardBox> selectedBoard = new ArrayList<>();
+        selectedBoard.add(gameController.getModel().getBoard().getBoardBox(1, 3));
+        gameController.getModel().getBoard().setSelectedBoard(selectedBoard);
+        gameController.getModel().getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
+        gameController.receiveMessageFromClient(message);
+        assertEquals(TurnPhase.SELECT_FROM_BOARD, gameController.getModel().getModelView().getTurnPhase());
     }
 
     @Test
@@ -83,10 +97,11 @@ class GameControllerTest {
         selectedItems.add(boardBox1.getTile());
         selectedItems.add(boardBox3.getTile());
         int [] value = new int[]{1, 0, 2};
-        MessagePayload messagePayload = new MessagePayload();
+        gameController.getModel().getModelView().setTurnPhase(TurnPhase.SELECT_ORDER_TILES);
+        MessagePayload messagePayload = new MessagePayload(TurnPhase.SELECT_ORDER_TILES);
         messagePayload.put(Data.VALUE_CLIENT, value);
-        Message message = new Message(new MessageHeader(MessageType.DATA, "player1"), messagePayload);
-        gameController.permutePlayerTiles(message);
+        Message message = new Message(new MessageHeader(MessageType.DATA, gameController.getModel().getTurnPlayerOfTheGame().getNickname()), messagePayload);
+        gameController.receiveMessageFromClient(message);
         assertIterableEquals(selectedItems, gameController.getModel().getTurnPlayerOfTheGame().getSelectedItems());
     }
 
@@ -101,11 +116,12 @@ class GameControllerTest {
         gameController.getModel().getBoard().setSelectedBoard(selectedBoard);
         gameController.getModel().getTurnPlayerOfTheGame().selection(gameController.getModel().getBoard());
         int value = 0;
-        MessagePayload messagePayload = new MessagePayload();
+        gameController.getModel().getModelView().setTurnPhase(TurnPhase.SELECT_COLUMN);
+        MessagePayload messagePayload = new MessagePayload(TurnPhase.SELECT_COLUMN);
         messagePayload.put(Data.VALUE_CLIENT, value);
         Message message = new Message(new MessageHeader(MessageType.DATA, gameController.getModel().getTurnPlayerOfTheGame().getNickname()), messagePayload);
         Type type = gameController.getModel().getBoard().getBoardBox(a, b).getTile().getType();
-        gameController.selectingColumn(message);
+        gameController.receiveMessageFromClient(message);
         gameController.getModel().getModelView().setNextPlayer();
         assertEquals(type, gameController.getModel().getTurnPlayerOfTheGame().getBookshelf().getMatrix()[5][0].getType());
     }
