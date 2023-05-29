@@ -62,6 +62,10 @@ public class Colors {
 
          */
     }
+
+    public static String paint(String color, String text) {
+        return (color + text + "\u001B[0m");
+    }
     public static void colorizeSize(String color, String text, int size) {
         int lengthDifference = size - text.length();
         String space = "";

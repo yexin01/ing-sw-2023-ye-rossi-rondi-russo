@@ -9,6 +9,7 @@ import java.util.Arrays;
 public class PrinterCommonGoalAndPoints {
     private String borderColor = Colors.BEIGE_CODE;
     private int lineLength = 16;
+    private String margin = " ".repeat(50);
 
     String tlc = borderColor+"┏"+"\u001B[0m"; //topLeftCorner
     String trc = borderColor+"┓"+"\u001B[0m"; //topRightCorner
@@ -16,6 +17,11 @@ public class PrinterCommonGoalAndPoints {
     String brc = borderColor+"┛"+"\u001B[0m"; //bottomRightCorner
     String hd = borderColor+"━"+"\u001B[0m"; //horizontalDash
     String vd = borderColor+"┃"+"\u001B[0m"; //verticalDash
+    String cr = borderColor+"╋"+"\u001B[0m"; //cross
+    String t = borderColor+"┳"+"\u001B[0m"; //t
+    String ut = borderColor+"┻"+"\u001B[0m"; //upside down t
+    String ri = borderColor+"┫"+"\u001B[0m"; //right intersection
+    String li = borderColor+"┣"+"\u001B[0m"; //left intersection
 
     String oc = Colors.OCHRE_YELLOW_CODE+"▇▇"+"\u001B[0m"; //yellow
     String or = Colors.ORANGE_CODE+"▇▇"+"\u001B[0m"; //orange
@@ -36,10 +42,10 @@ public class PrinterCommonGoalAndPoints {
     };
     private String[] commonGoalCard1Description = {
             "",
-            "      Due gruppi separati di 4 tessere dello",
-            "      stesso tipo che formano un quadrato 2x2.",
-            "      Le tessere dei due gruppi devono essere",
-            "      dello stesso tipo.",
+            "      Two groups each containing 4 tiles of",
+            "      the same type in a 2x2 square. The tiles",
+            "      of one square can be different from",
+            "      those of the other square.",
             "",
             "",
             ""
@@ -60,8 +66,8 @@ public class PrinterCommonGoalAndPoints {
             "",
             "",
             "",
-            "      Due colonne formate ciascuna",
-            "      da 6 diversi tipi di tessere.",
+            "      Two columns each formed by 6",
+            "      different types of tiles.",
             "",
             "",
             ""
@@ -80,11 +86,11 @@ public class PrinterCommonGoalAndPoints {
 
     private String[] commonGoalCard3Description = {
             "",
-            "      Quattro gruppi separati formati ciascuno",
-            "      da quattro tessere adiacenti dello stesso",
-            "      tipo (non necessariamente come mostrato",
-            "      in figura). Le tessere di un gruppo possono",
-            "      essere diverse da quelle di un altro gruppo.",
+            "      Four groups each containing at least",
+            "      4 tiles of the same type (not necessarily",
+            "      in the depicted shape).",
+            "      The tiles of one group can be different",
+            "      from those of another group.",
             "",
             ""
     };
@@ -102,11 +108,11 @@ public class PrinterCommonGoalAndPoints {
 
     private String[] commonGoalCard4Description = {
             "",
-            "      Sei gruppi separati formati ciascuno",
-            "      da due tessere adiacenti dello stesso tipo",
-            "      (non necessariamente come mostrato in",
-            "      figura). Le tessere di un gruppo possono",
-            "      essere diverse da quelle di un altro gruppo.",
+            "      Six groups each containing at least",
+            "      2 tiles of the same type (not necessarily",
+            "      in the depicted shape).",
+            "      The tiles of one group can be different",
+            "      from those of another group.",
             "",
             ""
     };
@@ -125,10 +131,10 @@ public class PrinterCommonGoalAndPoints {
     private String[] commonGoalCard5Description = {
             "",
             "",
-            "      Tre colonne formate ciascuna da",
-            "      6 tessere di uno, due o tre tipi differenti.",
-            "      Colonne diverse possono avere",
-            "      combinazioni diverse di tipi di tessere.",
+            "      Three columns each formed by 6 tiles",
+            "      of maximum three different types. One",
+            "      column can show the same or a different",
+            "      combination of another column.",
             "",
             ""
     };
@@ -147,10 +153,10 @@ public class PrinterCommonGoalAndPoints {
     private String[] commonGoalCard6Description = {
             "",
             "",
-            "",
-            "      Due righe formate ciascuna",
-            "      da 6 diversi tipi di tessere.",
-            "",
+            "      Two lines each formed by 5 different",
+            "      types of tiles. One line can show the",
+            "      same or a different combination of the",
+            "      other line.",
             "",
             ""
     };
@@ -169,10 +175,10 @@ public class PrinterCommonGoalAndPoints {
     private String[] commonGoalCard7Description = {
             "",
             "",
-            "      Quattro righe formate ciascuna",
-            "      da 5 tessere di uno, due o tre tipi",
-            "      differenti. Righe diverse possono avere",
-            "      combinazioni diverse di tipi di tessere.",
+            "      Four lines each formed by 5 tiles of",
+            "      maximum three different types. One",
+            "      line can show the same or a different",
+            "      combination of another line.",
             "",
             ""
     };
@@ -192,8 +198,8 @@ public class PrinterCommonGoalAndPoints {
             "",
             "",
             "",
-            "      Quattro tessere dello stesso tipo",
-            "      ai quattro angoli della Libreria.",
+            "      Four tiles of the same type in the four",
+            "      corners of the bookshelf.",
             "",
             "",
             ""
@@ -213,9 +219,9 @@ public class PrinterCommonGoalAndPoints {
     private String[] commonGoalCard9Description = {
             "",
             "",
-            "      Otto tessere dello stesso tipo. Non ci",
-            "      sono restrizioni sulla posizione di",
-            "      queste tessere.",
+            "      Eight tiles of the same type. There’s no",
+            "      restriction about the position of these",
+            "      tiles.",
             "",
             "",
             ""
@@ -236,8 +242,8 @@ public class PrinterCommonGoalAndPoints {
             "",
             "",
             "",
-            "      Cinque tessere dello stesso tipo",
-            "      che formano una X.",
+            "      Five tiles of the same ",
+            "      type forming an X.",
             "",
             "",
             ""
@@ -258,8 +264,8 @@ public class PrinterCommonGoalAndPoints {
             "",
             "",
             "",
-            "      Cinque tessere dello stesso tipo che",
-            "      formano una diagonale.",
+            "      Five tiles of the same type ",
+            "      forming a diagonal.",
             "",
             "",
             ""
@@ -278,38 +284,21 @@ public class PrinterCommonGoalAndPoints {
 
     private String[] commonGoalCard12Description = {
             "",
-            "      Cinque colonne di altezza crescente o",
-            "      decrescente: a partire dalla prima colonna",
-            "      a sinistra o a destra, ogni colonna successiva",
-            "      deve essere formata da una tessera in più.",
-            "      Le tessere possono essere di qualsiasi tipo.",
+            "      Five columns of increasing or decreasing",
+            "      height. Starting from the first column on",
+            "      the left or on the right, each next column",
+            "      must be made of exactly one more tile.",
+            "      Tiles can be of any type.",
             "",
             ""
     };
 
-    private String[] token2 = {
-            "┏"+"━"+"┓",
-            "┃"+"2"+"┃",
-            "┗"+"━"+"┛"
-    };
-
-    String[] token4 = {
-            "┏"+"━━━"+"┓",
-            "┃"+" 4 "+"┃",
-            "┗"+"━━━"+"┛"
-    };
-
-    String[] token6 = {
-            "┏"+"━━━"+"┓",
-            "┃"+" 6 "+"┃",
-            "┗"+"━━━"+"┛"
-    };
-
-    String[] token8 = {
-            "┏"+"━━━"+"┓",
-            "┃"+" 8 "+"┃",
-            "┗"+"━━━"+"┛"
-    };
+    public String[] buildToken (int x){
+        String [] token ={"┏"+"━━━"+"┓",
+                          "┃ "+ x +" ┃",
+                          "┗"+"━━━"+"┛"};
+        return token;
+    }
 
     private String[][] cgcFigures = {commonGoalCard1, commonGoalCard2, commonGoalCard3, commonGoalCard4, commonGoalCard5,
                              commonGoalCard6, commonGoalCard7, commonGoalCard8, commonGoalCard9, commonGoalCard10,
@@ -319,7 +308,7 @@ public class PrinterCommonGoalAndPoints {
             commonGoalCard7Description, commonGoalCard8Description, commonGoalCard9Description, commonGoalCard10Description,
             commonGoalCard11Description, commonGoalCard12Description};
 
-    private String[][] tokens = {token2, token4, token6, token8};
+    //private String[][] tokens = {token2, token4, token6, token8};
 
     public String[] getCommonGoalCard (int i){
         return cgcFigures[i];
@@ -329,9 +318,12 @@ public class PrinterCommonGoalAndPoints {
         return cgcDescriptions[i];
     }
 
+    /*
     public String[] getToken(int i){
         return tokens[i];
     }
+
+     */
     public void printToken(int num,String player){
         System.out.println("il token "+num+"   nome  "+player);
     }
@@ -341,16 +333,18 @@ public class PrinterCommonGoalAndPoints {
         //durante il turno per i personal point degli altri andrebbe messo ?, in modo tale che all utente non venga mostrato i punteggi personal degli altri
         //la classifica si basa solo sui common e adjacent mentre i personal sono mandati singolarmente , cosi da non vedere quelli degli altri
         PlayerPointsView[] playerPoints=clientView.getPlayerPointsViews();
+        int nickLenght = 10;
         for(int i=playerPoints.length-1;i>=0;i--){
-            System.out.print(playerPoints[i].getNickname()+"  ha ottenuto "+(playerPoints[i].getPoints()));
-            for(int j=0;j<playerPoints[i].getPointsToken().length;j++){
-                System.out.print("Punteggi token "+playerPoints[i].getPointsToken()[j]);
-            }
-            System.out.print("Punteggi adjacent "+playerPoints[i].getAdjacentPoints());
-            if(playerPoints[i].getNickname().equals(clientView.getNickname())){
-                System.out.print("Punteggi personal solo del piocatore "+clientView.getPersonalPoints());
-            }
+            nickLenght = Math.max(playerPoints[i].getNickname().length(), nickLenght);
         }
+        System.out.println(margin+tlc+hd.repeat(nickLenght+2)+t+hd.repeat(8)+t+hd.repeat(8)+t+hd.repeat(10)+t+hd.repeat(10)+trc);
+        System.out.println(margin+vd+" Nickname"+" ".repeat(nickLenght-7)+vd+" Points "+vd+" Common "+vd+" Adjacent "+vd+" Personal "+vd);
+        System.out.println(margin+li+hd.repeat(nickLenght+2)+cr+hd.repeat(8)+cr+hd.repeat(8)+cr+hd.repeat(10)+cr+hd.repeat(10)+ri);
+        for (int i=playerPoints.length-1;i>=0;i--) {
+            System.out.printf(margin+vd+" %s"+" ".repeat(nickLenght-playerPoints[i].getNickname().length()+1)+vd+" %6d "+vd+" %6d "+vd+" %8d "+vd+" %8s "+vd+"%n", playerPoints[i].getNickname().equals(clientView.getTurnPlayer())? Colors.paint(Colors.YELLOW_CODE, playerPoints[i].getNickname()): playerPoints[i].getNickname(), playerPoints[i].getPoints(), Arrays.stream(playerPoints[i].getCommonGoalPoints()).sum(), playerPoints[i].getAdjacentPoints(), playerPoints[i].getNickname().equals(clientView.getNickname())? Integer.toString(clientView.getPersonalPoints()) : "?");
+        }
+        System.out.println(margin+blc+hd.repeat(nickLenght+2)+ut+hd.repeat(8)+ut+hd.repeat(8)+ut+hd.repeat(10)+ut+hd.repeat(10)+brc);
+
 
         /*
         //TODO pensavo di inserire una cornice con i vari punteggi e qualche disegno tipo di due tiles vicine se sono gli adjacentPoints...
@@ -407,19 +401,20 @@ public class PrinterCommonGoalAndPoints {
             int rows = getCommonGoalCard(index).length;
             for(int j=0; j<rows; j++){
                 if(j==0 || j==rows-1){
-                    Colors.printSize2(getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 432+60);
+                    Colors.printSize2(margin+getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 432+60);
                     //Colors.printSize2(getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 432+60);
                     System.out.println("");
                 }
                 else {
-                    Colors.printSize2(getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 124);
+                    Colors.printSize2(margin+getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 124);
                     //Colors.printSize2(getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 124);
                     System.out.println("");
 
                 }
             }
-            System.out.println("Tokens left: ");
+            System.out.println(margin+"Tokens left: ");
             printTokensLeft(i, clientView);
+            //printTokens(i, clientView);
             System.out.println("");
         }
     }
@@ -427,15 +422,16 @@ public class PrinterCommonGoalAndPoints {
     public void printTokensLeft(int indexCGC, ClientView clientView){
         ArrayList<String[]> tokensToPrint = new ArrayList<>();
         switch (clientView.getPlayerPointsViews().length) {
-            case 2: tokensToPrint.addAll(Arrays.asList(token4, token8));
+            case 2: tokensToPrint.addAll(Arrays.asList(buildToken(4), buildToken(8)));
                 break;
-            case 3: tokensToPrint.addAll(Arrays.asList(token4, token6, token8));
+            case 3: tokensToPrint.addAll(Arrays.asList(buildToken(4), buildToken(6), buildToken(8)));
                 break;
-            case 4: tokensToPrint.addAll(Arrays.asList(token2, token4, token6, token8));
+            case 4: tokensToPrint.addAll(Arrays.asList(buildToken(2),buildToken(4), buildToken(6), buildToken(8)));
                 break;
         }
 
-        for(int j=0; j<token2.length; j++){
+        for(int j=0; j<3; j++){
+            System.out.printf(margin);
             for (int i=0; i<tokensToPrint.size(); i++){
                 int points = Integer.parseInt(tokensToPrint.get(i)[1].replaceAll("[^0-9]", ""));
                 if (points<= clientView.getCommonGoalView()[1][indexCGC]) Colors.colorize(Colors.WHITE_CODE, tokensToPrint.get(i)[j]);
