@@ -571,7 +571,7 @@ public class CLI implements ClientInterface {
             scanner.nextLine();
         }
         out.println();
-        askLobbyDecision();
+        //askLobbyDecision();
 
     }
 

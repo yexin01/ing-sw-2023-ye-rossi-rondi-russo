@@ -11,16 +11,47 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *InfoAndEndGameListener send all the data needed to continue the game, listen to both the game controller and the gameLobby.
+ * CASE ALL_INFO:
+ * GameController:
+ * 1)at the beginning of the game;
+ * 2)when the number of connected is equal to 2  (following various disconnections that have led to a number of participants <=1).
+ * GameLobby:
+ * 1)message is sent to the player who has reconnected and the number of connected participants is greater than 2;
+ * 2)this message can be sent even if the player does not disconnect. It is sent after gameLobby receives the something wrong message.
+ *
+ *
+ * CASE END_GAME:
+ * GameController: endGame message is sent to all connected players;
+ * GameLobby: when all players have received the endGame message the endGame method is called from the game lobby.
+ */
+
 public class InfoAndEndGameListener extends EventListener{
     private final GlobalLobby globalLobby;
+
+    /**
+     * Constructor InfoAndEndGameListener
+     * @param gameLobby
+     * @param globalLobby
+     */
     public InfoAndEndGameListener(GameLobby gameLobby, GlobalLobby globalLobby) {
         super(gameLobby);
         this.globalLobby = globalLobby;
     }
 
+    /**
+     *sends the message: -to all connected players in case of game start, -to two connected players following disconnections ,
+     * -only to the user who has just reconnected;
+     * @param event:1)start of the game; 2) a player has requested the updated data up to that moment; 3) end of the game;
+     * @param playerNickname:next player to play or null in case of game start;
+     * @param newValue: modelView updated;
+     * @throws IOException
+     */
+
     @Override
-    public void fireEvent(KeyAbstractPayload event, String playerNickname, Object newValue) throws IOException {
-        System.out.println("SONO NEL LISTENER STARTGAME e NEL caso something wrong LATO SERVER sto inviando");
+    public synchronized void fireEvent(KeyAbstractPayload event, String playerNickname, Object newValue) throws IOException {
+        //System.out.println("SONO NEL LISTENER STARTGAME e NEL caso something wrong LATO SERVER sto inviando");
         ModelView modelView=(ModelView) newValue;
         switch((TurnPhase)event){
             case ALL_INFO ->{
@@ -33,18 +64,29 @@ public class InfoAndEndGameListener extends EventListener{
                     }
                 }
             }
+            /**
+             * END_GAME message contains: all the scores -common,-adjacent and -personal points. Players are sorted from lowest to highest score;
+             */
             case END_GAME ->{
                 MessageHeader header=new MessageHeader(MessageType.DATA,null);
                 MessagePayload payload=new MessagePayload(TurnPhase.END_GAME);
                 payload.put(Data.PERSONAL_POINTS,modelView.getPersonalPoints());
                 payload.put(Data.POINTS,modelView.getPlayerPoints());
-                //payload.put(Data.RANKING,newValue);
                 Message message=new Message(header,payload);
                 getGameLobby().setMessageEndGame(message);
                 getGameLobby().sendMessageToAllPlayers(message);
             }
         }
     }
+
+    /**
+     *creation of the ALL_INFO message that contains: board, player's bookshelf, commonGoal scores remaining,
+     * personalGoal player score, selected tiles of the player whose turn it is, max number of tiles selectable
+     * according to the rules of the game (with these rules 3), scores of players, current player, current phase of the game;
+     * @param nickname: message addressee;
+     * @param modelView: modelView updated;
+     * @return message ALL_INFO
+     */
     public Message creationMessageInfo(String nickname,ModelView modelView){
         MessageHeader header;
         MessagePayload payload=new MessagePayload(TurnPhase.ALL_INFO);
@@ -65,8 +107,12 @@ public class InfoAndEndGameListener extends EventListener{
         Message m=new Message(header,payload);
        return m;
     }
-    public void endGame(){
-        System.out.println("SONO NELL END GAME");
+
+    /**
+     *called from the gameLobby when all players have received the endGame message
+     */
+    public synchronized void endGame(){
+        //System.out.println("SONO NELL END GAME");
         try {
             globalLobby.endGameLobbyFromGlobalLobby(getGameLobby().getIdGameLobby());
         } catch (IOException e) {

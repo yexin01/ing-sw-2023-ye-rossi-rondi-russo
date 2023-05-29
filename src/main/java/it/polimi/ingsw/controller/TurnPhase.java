@@ -2,6 +2,10 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.message.KeyAbstractPayload;
 
+/**
+ * Enum class:contains all possible states of a game;
+ */
+
 public enum TurnPhase implements KeyAbstractPayload {
 
     ALL_INFO,

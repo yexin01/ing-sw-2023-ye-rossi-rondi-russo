@@ -48,11 +48,6 @@ public class TurnHandler extends MessageHandler {
                 }
                 //é il suo turno
                 if(turnPlayer.equals(getClientInterface().getClientView().getNickname())){
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                     getClientInterface().askCoordinates();
                     //non é il suo turno
                 }else getClientInterface().waitingRoom();

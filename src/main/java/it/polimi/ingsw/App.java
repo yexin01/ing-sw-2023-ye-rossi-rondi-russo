@@ -51,7 +51,7 @@ public class App{
             GameLobby gameLobby = new GameLobby(3, 3,null);
 
             GameController gameController = new GameController();
-            gameController.createGame(gameLobby,playerNames,gameLobby.getStartAndEndGameListener());
+            //gameController.createGame(gameLobby,playerNames,gameLobby.getStartAndEndGameListener());
             //gameLobby.handleErrorFromClient(new Message(new MessageHeader(MessageType.ERROR,"TIZIO"),null));
            MessageHeader header=new MessageHeader(MessageType.DATA, gameController.getTurnNickname());
             int[] selectionBoard=new int[]{7,3,7,4};
