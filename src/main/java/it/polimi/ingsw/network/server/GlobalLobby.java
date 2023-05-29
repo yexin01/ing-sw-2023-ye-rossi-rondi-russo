@@ -112,11 +112,14 @@ public class GlobalLobby {
 
         } else {
             waitingPlayersWithNoGame.remove(nickname);
+            /*
             MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
             MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
             String content = "You have joined the game lobby requested! Waiting For all players";
             payload.put(Data.CONTENT,content);
             connection.sendMessageToClient(new Message(header,payload));
+
+             */
             gameLobby.addPlayerToGame(nickname,connection);
         }
     }
@@ -132,13 +135,14 @@ public class GlobalLobby {
         boolean done = false;
         for (GameLobby gameLobby : gameLobbies.values()) {
             if (!gameLobby.isFull() && !done && gameLobby.getGameController()==null) {
-
+                /*
 
                 MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
                 MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
                 String content = "You have joined the first free spot available in a random game!";
                 payload.put(Data.CONTENT,content);
                 connection.sendMessageToClient(new Message(header,payload));
+                */
                 gameLobby.addPlayerToGame(nickname, connection);
                 done = true;
 

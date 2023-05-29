@@ -126,6 +126,12 @@ public class CLI implements ClientInterface {
 
         String userInput = scanner.nextLine();
 
+        if (userInput.isEmpty()) {
+            while (userInput.isEmpty()) {
+                userInput = scanner.nextLine();
+            }
+        }
+
         try {
             input = Integer.parseInt(userInput) - 1;
         } catch (NumberFormatException e) {
@@ -138,6 +144,7 @@ public class CLI implements ClientInterface {
             return null;
         }
 
+        out.println("COMANDO " + userInput);
         out.println();
 
         if (phase == -1) {
@@ -228,6 +235,56 @@ public class CLI implements ClientInterface {
             case PRINT9 -> System.exit(0);
         }
     }
+    private ArrayList<Integer> selectTile(ArrayList<Integer> selection) {
+        int x, y;
+        ErrorType error = Check.checkNumTilesSelectedBoard(selection, clientView.getBookshelfView());
+
+        if (error != null) {
+            displayError(error.getErrorMessage());
+            out.println();
+        } else {
+            while (true) {
+                try {
+                    Colors.colorizeSize(Colors.GAME_INSTRUCTION, "Insert row", 14);
+                    Colors.colorize(Colors.GAME_INSTRUCTION, "(x): ");
+                    x = Integer.parseInt(scanner.nextLine());
+
+                    Colors.colorizeSize(Colors.GAME_INSTRUCTION, "Insert column", 14);
+                    Colors.colorize(Colors.GAME_INSTRUCTION, "(y): ");
+                    y = Integer.parseInt(scanner.nextLine());
+
+                    error = Check.checkCoordinates(x, y, clientView.getBoardView());
+                    if (error != null) {
+                        displayError(error.getErrorMessage());
+                        out.println();
+                        return selection;
+                    }
+
+                    selection.add(x);
+                    selection.add(y);
+
+                    error = Check.checkSelectable(selection, getClientView().getBoardView());
+                    if (error != null) {
+                        displayError(error.getErrorMessage());
+                        selection.remove(selection.size() - 1);
+                        selection.remove(selection.size() - 1);
+                        out.println();
+                    } else {
+                        printerBoard.printMatrixBoard(getClientView().getBoardView(), selection);
+                        break;
+                    }
+                } catch (NumberFormatException e) {
+                    displayError("Invalid input! Please enter valid integer values for row and column.");
+                    out.println();
+                }
+            }
+        }
+
+        return selection;
+    }
+
+
+    /*
 
     private ArrayList<Integer> selectTile(ArrayList<Integer> selection) {
         int x, y;
@@ -267,6 +324,8 @@ public class CLI implements ClientInterface {
         return selection;
     }
 
+     */
+
     private void resetChoice(int lastOrAll,ArrayList<Integer> coordinatesSelected) {
         ErrorType error=Check.resetChoiceBoard(lastOrAll,coordinatesSelected);
         if (error==null) {
@@ -285,7 +344,6 @@ public class CLI implements ClientInterface {
 
             }
         } else displayError(ErrorType.ILLEGAL_PHASE.getErrorMessage());
-            //Colors.colorize(Colors.ERROR_MESSAGE,
         return false;
     }
 
@@ -320,15 +378,19 @@ public class CLI implements ClientInterface {
                     out.println();
 
                     while (error != null) {
+                        try {
+                            for (int i = 0; i < getClientView().getTilesSelected().length; i++) {
+                                Colors.colorize(Colors.GAME_INSTRUCTION, "Insert number: ");
+                                orderTiles[i] = Integer.parseInt(scanner.nextLine());
+                            }
+                            error = Check.checkPermuteSelection(orderTiles, clientView.getTilesSelected());
 
-                        for (int i = 0; i < getClientView().getTilesSelected().length; i++) {
-                            Colors.colorize(Colors.GAME_INSTRUCTION, "Insert number: ");
-                            orderTiles[i] = scanner.nextInt();
-                        }
-                        error = Check.checkPermuteSelection(orderTiles,clientView.getTilesSelected());
-                        if (error != null) {
-                            displayError(error.getErrorMessage());
-                            //Colors.colorize(Colors.ERROR_MESSAGE,
+                            if (error != null) {
+                                displayError(error.getErrorMessage());
+                                out.println();
+                            }
+                        } catch (NumberFormatException e) {
+                            displayError("Invalid input! Please enter valid integers for each number.");
                             out.println();
                         }
                     }
@@ -377,18 +439,21 @@ public class CLI implements ClientInterface {
             }
             switch (commandsTurn) {
                 case COLUMN1:
-
-                    //printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 2, 40, false, true, 50);
                     printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 1, 60, false, true, 50);
                     while (error != null) {
-                        Colors.colorize(Colors.GAME_INSTRUCTION, "To select a column write a number from 0 to " + (getClientView().getBookshelfView()[0].length - 1) + ": ");
-                        column = scanner.nextInt();
-                        error = Check.checkBookshelf(column,clientView.getBookshelfView(),clientView.getTilesSelected());
-                        if (error != null) {
-                            displayError(error.getErrorMessage());
-                            //Colors.colorize(Colors.ERROR_MESSAGE,
+                        try {
+                            Colors.colorize(Colors.GAME_INSTRUCTION, "To select a column, write a number from 0 to " + (getClientView().getBookshelfView()[0].length - 1) + ": ");
+                            column = Integer.parseInt(scanner.nextLine());
+                            error = Check.checkBookshelf(column, clientView.getBookshelfView(), clientView.getTilesSelected());
+
+                            if (error != null) {
+                                displayError(error.getErrorMessage());
+                                out.println();
+                                error = ErrorType.INVALID_COLUMN;
+                            }
+                        } catch (NumberFormatException e) {
+                            displayError("Invalid input! Please enter a valid integer for the column.");
                             out.println();
-                            error=ErrorType.INVALID_COLUMN;
                         }
                     }
                     continue;
