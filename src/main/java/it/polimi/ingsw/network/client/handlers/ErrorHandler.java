@@ -58,7 +58,7 @@ public class ErrorHandler extends MessageHandler {
 
         }
 
-        System.out.println("SONO L'ERROR HANDLER");
+        //System.out.println("SONO L'ERROR HANDLER");
     }
 
 

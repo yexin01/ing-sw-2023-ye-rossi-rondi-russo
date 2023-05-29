@@ -143,8 +143,6 @@ public class CLI implements ClientInterface {
             displayError(ErrorType.INVALID_INPUT.getErrorMessage());
             return null;
         }
-
-        out.println("COMANDO " + userInput);
         out.println();
 
         if (phase == -1) {
@@ -595,7 +593,7 @@ public class CLI implements ClientInterface {
         PrinterLogo.printWaitingTurnPhase(50);
         Colors.colorize(Colors.GAME_INSTRUCTION, "This is the board\n ");
         printCommands(CommandsTurn.PRINT1);
-        printCommands(CommandsTurn.PRINT4);
+        printCommands(CommandsTurn.PRINT5);
     }
 
     @Override
@@ -629,12 +627,11 @@ public class CLI implements ClientInterface {
 
         String ip = askIp();
         int port = askPort(connectionType);
-        Colors.colorize(Colors.WHITE_CODE,"Server Ip Address: " + ip);
-        Colors.colorize(Colors.WHITE_CODE,"Server Port: " + port + "\n");
+        Colors.colorize(Colors.BLUE_CODE,"\nYou choose: -Server Ip Address: " + ip+" -Server Port: " + port + "\n");
         ClientHandler clientHandler=new ClientHandler();
         try{ //metodo di Clienthanlder (la cli estende ClientHandler)
             clientHandler.createConnection(connectionType, ip, port,this);
-            Colors.colorize(Colors.WHITE_CODE,"Connection created");
+            //Colors.colorize(Colors.WHITE_CODE,"Connection created");
         } catch (Exception e){
             e.printStackTrace();
             //displayError("Error in creating connection. Please try again.\n");

@@ -21,7 +21,7 @@ public class StartAndEndGameHandler extends MessageHandler {
 
     @Override
     public synchronized void handleMessage(Message mes) throws Exception {
-        System.out.println("SONO IN START AND GAME HANDLER");
+        //System.out.println("SONO IN START AND GAME HANDLER");
         TurnPhase data = (TurnPhase) mes.getPayload().getKey();
 
         switch(data){
@@ -41,10 +41,13 @@ public class StartAndEndGameHandler extends MessageHandler {
                 getClientInterface().getClientView().setTurnPlayer(turnPlayer);
                 getClientInterface().getClientView().setPlayerPointsViews(playerPointsView);
                 Check.MAX_SELECTABLE_TILES= (int) mes.getPayload().getContent(Data.MAX_SELECTABLE_TILES);
+                /*
                 System.out.println("I GIOCATORI SONO\n");
                 for (PlayerPointsView str : playerPointsView) {
                     System.out.println(str.getNickname());
                 }
+
+                 */
                 //se si é disconnesso l'utente si troverà automaticamente nella fase end Turn, in piu se non e di turno non entrera in questo if
                 if(turnPlayer.equals(getClientInterface().getClientView().getNickname())){
                     switch((TurnPhase)mes.getPayload().getContent(Data.PHASE)) {
@@ -52,13 +55,13 @@ public class StartAndEndGameHandler extends MessageHandler {
                             getClientInterface().askCoordinates();
                         }
                         case SELECT_ORDER_TILES -> {
-                            System.out.println("anche i selected Items");
+                            //System.out.println("anche i selected Items");
                             ItemTileView[] selectedItems = ((ItemTileView[]) mes.getPayload().getContent(Data.SELECTED_ITEMS));
                             getClientInterface().getClientView().setTilesSelected(selectedItems);
                             getClientInterface().askOrder();
                         }
                         case SELECT_COLUMN -> {
-                            System.out.println("anche i selected items");
+                            //System.out.println("anche i selected items");
                             ItemTileView[] selectedItems = ((ItemTileView[]) mes.getPayload().getContent(Data.SELECTED_ITEMS));
                             getClientInterface().getClientView().setTilesSelected(selectedItems);
                             getClientInterface().askColumn();
