@@ -24,9 +24,8 @@ public class GameController {
     private Game game;
 
 
-    public void createGame(GameLobby gameLobby, ArrayList<String> nicknames,InfoAndEndGameListener infoAndEndGameListener) throws Exception {
-        addListeners(gameLobby,infoAndEndGameListener);
-        gameLobby.setStartAndEndGameListener(infoAndEndGameListener);
+    public void createGame(GameLobby gameLobby, ArrayList<String> nicknames) throws Exception {
+        addListeners(gameLobby);
         GameRules gameRules=new GameRules();
         ModelView modelView=new ModelView(nicknames.size(), gameRules);
         modelView.setTurnPhase(TurnPhase.ALL_INFO);
@@ -46,11 +45,11 @@ public class GameController {
         listenerManager.fireEvent(TurnPhase.ALL_INFO,null,game.getModelView());
         modelView.setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
     }
-    public void addListeners(GameLobby gameLobby,InfoAndEndGameListener infoAndEndGameListener){
+    public void addListeners(GameLobby gameLobby){
         listenerManager=new ListenerManager();
         listenerManager.addListener(KeyErrorPayload.ERROR_DATA,new ErrorListener(gameLobby));
-        listenerManager.addListener(TurnPhase.ALL_INFO, infoAndEndGameListener);
-        listenerManager.addListener(TurnPhase.END_GAME, infoAndEndGameListener);
+        listenerManager.addListener(TurnPhase.ALL_INFO, gameLobby.getStartAndEndGameListener());
+        listenerManager.addListener(TurnPhase.END_GAME, gameLobby.getStartAndEndGameListener());
         listenerManager.addListener(TurnPhase.END_TURN,new EndTurnListener(gameLobby));
         listenerManager.addListener(Data.PHASE,new TurnListener(gameLobby));
     }
@@ -101,6 +100,7 @@ public class GameController {
             System.out.println("CAMBIA FASE CONTROLLER");
             send(Data.PHASE,getTurnNickname(),TurnPhase.SELECT_ORDER_TILES);
             //listenerManager.fireEvent();
+            //endGame();
         }
     }
     public boolean checkError(ErrorType possibleInvalidArgoment) throws Exception {

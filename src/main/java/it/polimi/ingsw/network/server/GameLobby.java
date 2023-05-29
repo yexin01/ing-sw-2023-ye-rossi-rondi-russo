@@ -56,7 +56,7 @@ public class GameLobby {
             playersGame.add(player);
         }
         this.gameController=new GameController();
-        this.gameController.createGame(this,playersGame,infoAndEndGameListener);
+        this.gameController.createGame(this,playersGame);
     }
 
     /**
