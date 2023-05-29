@@ -204,6 +204,9 @@ public class GameLobby {
             int index=gameController.getModel().getIntByNickname(message.getHeader().getNickname());
                 gameController.getActivePlayers()[index]=false;
                 System.out.println(message.getHeader().getNickname()+"SETTATO "+gameController.getActivePlayers()[index]);
+                MessageHeader header = new MessageHeader(MessageType.LOBBY,message.getHeader().getNickname());
+                MessagePayload payload = new MessagePayload(KeyLobbyPayload.GLOBAL_LOBBY_DECISION);
+                sendMessageToSpecificPlayer(new Message(header,payload),message.getHeader().getNickname());
                 boolean allFalse = true;
                 for (boolean value : gameController.getActivePlayers()) {
                     if (value) {

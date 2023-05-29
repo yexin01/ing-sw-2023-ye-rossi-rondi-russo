@@ -47,8 +47,6 @@ public class GlobalLobby {
         if(!afterEndGame){
             MessageHeader header = new MessageHeader(MessageType.LOBBY, nickname);
             MessagePayload payload = new MessagePayload(KeyLobbyPayload.GLOBAL_LOBBY_DECISION);
-            //String content = "Welcome to the Global Lobby!";
-            //payload.put(Data.CONTENT,content);
             connection.sendMessageToClient(new Message(header,payload));
         }
 
