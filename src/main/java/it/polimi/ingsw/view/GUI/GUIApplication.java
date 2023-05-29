@@ -23,7 +23,7 @@ import java.util.Objects;
 public class GUIApplication extends Application implements ClientInterface {
     private Stage stage;
     private ClientView clientView;
-    private ChoicePanel choicePanel;
+    private Scene sceneChoice;
     private Rectangle2D screenBounds;
     public static GUIApplication guiApplicationStatic;
 
@@ -96,7 +96,7 @@ public class GUIApplication extends Application implements ClientInterface {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            this.choicePanel = choicePanel;
+            //this.choicePanel = choicePanel;
             BoardBoxPanel boardBoxPanel;
             try {
                 boardBoxPanel = new BoardBoxPanel(clientView, choicePanel);
@@ -104,6 +104,8 @@ public class GUIApplication extends Application implements ClientInterface {
                 throw new RuntimeException(e);
             }
             Scene scene = new Scene(boardBoxPanel, screenBounds.getWidth(), screenBounds.getHeight());
+            Scene scene1 = new Scene(choicePanel, screenBounds.getWidth(), screenBounds.getHeight());
+            this.sceneChoice = scene1;
             stage.setScene(scene);
             stage.show();
         });
@@ -112,8 +114,7 @@ public class GUIApplication extends Application implements ClientInterface {
     @Override
     public void askOrder() {
         Platform.runLater(()-> {
-            Scene scene = new Scene(choicePanel, screenBounds.getWidth(), screenBounds.getHeight());
-            stage.setScene(scene);
+            stage.setScene(sceneChoice);
             stage.show();
         });
     }
