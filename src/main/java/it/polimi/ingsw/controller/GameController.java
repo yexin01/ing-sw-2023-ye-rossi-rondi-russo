@@ -8,13 +8,15 @@ import it.polimi.ingsw.json.GameRules;
 
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.network.server.GameLobby;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * GameController: handles shift phase messages.
+ */
 
 public class GameController {
 
@@ -23,7 +25,12 @@ public class GameController {
 
     private Game game;
 
-
+    /**
+     *Create the game and bind all listeners.
+     * @param gameLobby
+     * @param nicknames:names of players of the current game;
+     * @throws Exception
+     */
     public void createGame(GameLobby gameLobby, ArrayList<String> nicknames) throws Exception {
         addListeners(gameLobby);
         GameRules gameRules=new GameRules();
@@ -45,13 +52,18 @@ public class GameController {
         listenerManager.fireEvent(TurnPhase.ALL_INFO,null,game.getModelView());
         modelView.setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
     }
+
+    /**
+     * Associate listeners.
+     * @param gameLobby
+     */
     public void addListeners(GameLobby gameLobby){
         listenerManager=new ListenerManager();
         listenerManager.addListener(KeyErrorPayload.ERROR_DATA,new ErrorListener(gameLobby));
         listenerManager.addListener(TurnPhase.ALL_INFO, gameLobby.getStartAndEndGameListener());
         listenerManager.addListener(TurnPhase.END_GAME, gameLobby.getStartAndEndGameListener());
         listenerManager.addListener(TurnPhase.END_TURN,new EndTurnListener(gameLobby));
-        listenerManager.addListener(Data.PHASE,new TurnListener(gameLobby));
+        listenerManager.addListener(Data.PHASE,new PhaseListener(gameLobby));
     }
 
     public Game getModel() {
@@ -62,18 +74,16 @@ public class GameController {
         this.game = game;
     }
 
-
+    /**
+     * Check that the received message comes from the current player and that the phase is the correct one,
+     * then call the functions related to the phase.
+     * If it doesn't pass the checks it awakens the ErrorListener.
+     * @param message: message from the client;
+     */
     public void receiveMessageFromClient(Message message){
-        System.out.println("IL PROSSIMO GIOCATORE E: "+getModel().getIntByNickname(getTurnNickname()));
-        int i=0;
-        Boolean[] activePlayers=game.getModelView().getActivePlayers();
-        for(boolean p:activePlayers){
-            System.out.println("GIOCATORE: "+game.getPlayers().get(i).getNickname()+" attivo: "+activePlayers[i++]);
-        }
         String nicknamePlayer= message.getHeader().getNickname();
         try{
             if (!nicknamePlayer.equals(game.getModelView().getTurnNickname())) {
-                System.out.println("ERRORE DI TURNO");
                 listenerManager.fireEvent(KeyErrorPayload.ERROR_DATA,nicknamePlayer, ErrorType.ILLEGAL_TURN);
 
             }else{
@@ -89,23 +99,31 @@ public class GameController {
     }
 
 
-
+    /**
+     * Tiles selection phase, if it passes all the checks it sets the turnPhase of the modelView=TurnPhase.SELECT_ORDER_TILES
+     * and the tiles selected by the client are updated in the modelView;
+     * @param message: message from the client;
+     * @throws Exception
+     */
     public void checkAndInsertBoardBox(Message message) throws Exception {
         int[] coordinates=(int[]) message.getPayload().getContent(Data.VALUE_CLIENT);
         int maxPlayerSelectableTiles=game.getTurnPlayerOfTheGame().getBookshelf().numSelectableTiles();
         if(!checkError(game.getBoard().checkSelectable(coordinates,maxPlayerSelectableTiles))){
             game.getTurnPlayerOfTheGame().selection(game.getBoard());
-            //turnPhaseController.setCurrentPhase(TurnPhase.SELECT_ORDER_TILES);
             game.getModelView().setTurnPhase(TurnPhase.SELECT_ORDER_TILES);
             System.out.println("CAMBIA FASE CONTROLLER");
             send(Data.PHASE,getTurnNickname(),TurnPhase.SELECT_ORDER_TILES);
-            //listenerManager.fireEvent();
-            //endGame();
         }
     }
+
+    /**
+     *in case of error it awakens the errorListener;
+     * @param possibleInvalidArgoment: ErrorType if it is null it means that it has passed the checks;
+     * @return: true if it has not passed the checks, false otherwise;
+     * @throws Exception
+     */
     public boolean checkError(ErrorType possibleInvalidArgoment) throws Exception {
         if(possibleInvalidArgoment!=null){
-            System.out.println("ERRORE NEL CONTROLLER RILEVATO: "+possibleInvalidArgoment.getErrorMessage());
             System.out.println(possibleInvalidArgoment.getErrorMessage());
             listenerManager.fireEvent(KeyErrorPayload.ERROR_DATA,getTurnNickname(),possibleInvalidArgoment);
             return true;
@@ -113,6 +131,113 @@ public class GameController {
         return false;
 
     }
+
+    /**
+     * Order phase,changes the order of the selected tiles, if it passes all the checks it sets the turnPhase
+     * of the modelView=TurnPhase.SELECT_COLUMN.
+     * and the tiles order is updated in the modelView;
+     * @param message: message from the client;
+     * @throws Exception
+     */
+
+    public void permutePlayerTiles(Message message) throws Exception {
+        int[] orderTiles=(int[]) message.getPayload().getContent(Data.VALUE_CLIENT);
+        ErrorType errorType=game.getTurnPlayerOfTheGame().checkPermuteSelection(orderTiles);
+        if(errorType!=null){
+            checkError(errorType);
+        }else {
+            game.getTurnPlayerOfTheGame().permuteSelection(orderTiles);
+            //turnPhaseController.setCurrentPhase(TurnPhase.SELECT_COLUMN);
+            game.getModelView().setTurnPhase(TurnPhase.SELECT_COLUMN);
+            //System.out.println("CAMBIA FASE");
+            send(Data.PHASE,getTurnNickname(),TurnPhase.SELECT_COLUMN);
+            //listenerManager.fireEvent();
+        }
+    }
+
+    /**
+     * if it passes all the checks, it updates the players' scores and sets the turnPhase
+     * of the modelView=TurnPhase.SELECT_FROM_BOARD.
+     * @param message: message from the client;
+     * @throws Exception
+     */
+    public void selectingColumn(Message message) throws Exception {
+        int column=(int) message.getPayload().getContent(Data.VALUE_CLIENT);
+        ErrorType errorType=game.getTurnPlayerOfTheGame().getBookshelf().checkBookshelf(column,game.getTurnPlayerOfTheGame().getSelectedItems().size());
+        if(errorType!=null){
+            checkError(errorType);
+        }else{
+            game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
+            game.getTurnPlayerOfTheGame().insertBookshelf(column);
+            if(game.getTurnPlayerOfTheGame().getBookshelf().isFull()){
+                game.setEndGame(true);
+            }
+            game.updateAllPoints();
+            finishTurn();
+        }
+    }
+
+    /**
+     *end of turn: if pass all checks sets the next player and wakes up the EndTurnListener;
+     */
+    public void finishTurn() {
+        game.getBoard().resetBoard();
+        Boolean[] activePlayers=game.getModelView().getActivePlayers();
+        //System.out.println("ULTIMO GIOCATORE CONNESSO ATTIVO è:"+game.getLastPlayer(activePlayers));
+        if(game.isEndGame() && getTurnNickname().equals(game.getLastPlayer(activePlayers))){
+            endGame();
+        }else{
+            if(game.getBoard().checkRefill()){
+                game.getBoard().refill();
+            }
+            game.getModelView().setNextPlayer();
+            //System.out.println("Il prossimo giocatore é "+game.getModelView().getTurnNickname());
+            send(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
+           // listenerManager.fireEvent();
+        }
+    }
+
+    /**
+     *Awakens InfoAndEndGameListener,then the endGame message will be sent;
+     */
+    public void endGame(){
+        game.getModelView().winnerEndGame();
+        Arrays.fill(game.getModelView().getActivePlayers(), true);
+        listenerManager.fireEvent(TurnPhase.END_GAME,getTurnNickname(),game.getModelView());
+    }
+
+    /**
+     * if it fails the phase check it calls the errorListener.
+     * @param phase:phase of the client message
+     * @throws Exception
+     */
+    public void illegalPhase(TurnPhase phase) throws Exception {
+        if(!getModel().getModelView().getTurnPhase().equals(phase)){
+            listenerManager.fireEvent(KeyErrorPayload.ERROR_DATA,getTurnNickname(),ErrorType.ILLEGAL_PHASE);
+            throw new Exception();
+        }
+        return;
+    }
+
+    /**
+     *If the number of active players is greater than 1, it awakens the relative listener,
+     *otherwise it means that: -no player is connected or -only one player is connected, in this case
+     * the data has been updated to the last phase received  but the message for the next phase is not sent.
+     * @param event:error, end of phase or end of turn;
+     * @param playerNickname: current player or next player,it depends on the phase;
+     * @param newValue: modelView or current phase;
+     */
+    public void send(KeyAbstractPayload event, String playerNickname, Object newValue){
+        if(Arrays.stream(getActivePlayers()).filter(element -> element).count()>1){
+            listenerManager.fireEvent(event,playerNickname,newValue);
+        }
+    }
+
+    /**
+     *Called from the gameLobby after a player disconnects: if connected players are >1 and the disconnected player
+     * is the turnPlayer,set next player and wakes up EndTurnLstener.
+     * @param nickname:player disconnected;
+     */
     public void disconnectionPlayer(String nickname){
         game.getModelView().setActivePlayers(game.disconnectionAndReconnectionPlayer(nickname,false));
         if(nickname.equals(getTurnNickname()) && Arrays.stream(getActivePlayers()).filter(element -> element).count()>1){
@@ -121,8 +246,14 @@ public class GameController {
             listenerManager.fireEvent(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
         }
     }
+
+    /**
+     * If the number of connected players is =2 it wakes up InfoAndEndGameListener,
+     * furthermore if the turnPlayer is not active it sets the next active player.
+     * @param nickname:player reconnected;
+     */
     public void reconnectionPlayer(String nickname){
-        System.out.println("RICONNESSSO "+nickname.equals(getTurnNickname()));
+        //System.out.println("RICONNESSSO "+nickname.equals(getTurnNickname()));
         game.getModelView().setActivePlayers(game.disconnectionAndReconnectionPlayer(nickname,true));
         if(Arrays.stream(getActivePlayers()).filter(element -> element).count()==2){
             if(!getActivePlayers()[game.turnPlayerInt()]){
@@ -134,75 +265,11 @@ public class GameController {
 
     }
 
-    public void permutePlayerTiles(Message message) throws Exception {
-        int[] orderTiles=(int[]) message.getPayload().getContent(Data.VALUE_CLIENT);
-        ErrorType errorType=game.getTurnPlayerOfTheGame().checkPermuteSelection(orderTiles);
-        if(errorType!=null){
-            checkError(errorType);
-        }else {
-            game.getTurnPlayerOfTheGame().permuteSelection(orderTiles);
-            //turnPhaseController.setCurrentPhase(TurnPhase.SELECT_COLUMN);
-            game.getModelView().setTurnPhase(TurnPhase.SELECT_COLUMN);
-            System.out.println("CAMBIA FASE");
-            send(Data.PHASE,getTurnNickname(),TurnPhase.SELECT_COLUMN);
-            //listenerManager.fireEvent();
-        }
-    }
+    /**
+     *
+     * @return:nickname of the current player
+     */
 
-    public void selectingColumn(Message message) throws Exception {
-        int column=(int) message.getPayload().getContent(Data.VALUE_CLIENT);
-        System.out.println("You selected "+column);
-        ErrorType errorType=game.getTurnPlayerOfTheGame().getBookshelf().checkBookshelf(column,game.getTurnPlayerOfTheGame().getSelectedItems().size());
-        if(errorType!=null){
-            checkError(errorType);
-        }else{
-            game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
-            game.getTurnPlayerOfTheGame().insertBookshelf(column);
-            System.out.println("finish1");
-            if(game.getTurnPlayerOfTheGame().getBookshelf().isFull()){
-                game.setEndGame(true);
-            }
-            game.updateAllPoints();
-            finishTurn();
-        }
-    }
-
-
-    public void finishTurn() {
-        game.getBoard().resetBoard();
-        Boolean[] activePlayers=game.getModelView().getActivePlayers();
-        System.out.println("ULTIMO GIOCATORE CONNESSO ATTIVO è:"+game.getLastPlayer(activePlayers));
-        if(game.isEndGame() && getTurnNickname().equals(game.getLastPlayer(activePlayers))){
-            endGame();
-        }else{
-            if(game.getBoard().checkRefill()){
-                game.getBoard().refill();
-            }
-            game.getModelView().setNextPlayer();
-            System.out.println("Il prossimo giocatore é "+game.getModelView().getTurnNickname());
-            send(TurnPhase.END_TURN,getTurnNickname(),game.getModelView());
-           // listenerManager.fireEvent();
-        }
-    }
-    public void endGame(){
-        game.getModelView().winnerEndGame();
-        Arrays.fill(game.getModelView().getActivePlayers(), true);
-        listenerManager.fireEvent(TurnPhase.END_GAME,getTurnNickname(),game.getModelView());
-    }
-
-
-    public void illegalPhase(TurnPhase phase) throws Exception {
-        if(!getModel().getModelView().getTurnPhase().equals(phase)){
-            listenerManager.fireEvent(KeyErrorPayload.ERROR_DATA,getTurnNickname(),ErrorType.ILLEGAL_PHASE);
-            throw new Exception();
-        }
-        return;
-    }
-    public void send(KeyAbstractPayload event, String playerNickname, Object newValue){
-        if(Arrays.stream(getActivePlayers()).filter(element -> element).count()>1){
-            listenerManager.fireEvent(event,playerNickname,newValue);
-        }
-    }
     public String getTurnNickname() {
         return game.getTurnPlayerOfTheGame().getNickname();
     }
@@ -214,6 +281,11 @@ public class GameController {
     public void setListenerManager(ListenerManager listenerManager) {
         this.listenerManager = listenerManager;
     }
+
+    /**
+     *
+     * @return:boolean array of players indicating who is connected;
+     */
 
     public Boolean[] getActivePlayers() {
         return game.getModelView().getActivePlayers();
