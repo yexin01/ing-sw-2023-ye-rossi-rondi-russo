@@ -68,7 +68,6 @@ public class ChoicePanel extends BasePanel{
 
         VBox vBox2 = createCardsBox(clientView, screenBounds);
         getChildren().addAll(getParquet(), getPersonalGoalCardImage(), getPng(), getBookshelf());
-        getChildren().add(getBookshelf());
         getParquet().setVisible(false);
         getPng().setVisible(false);
         getPersonalGoalCardImage().setVisible(false);
