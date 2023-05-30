@@ -269,7 +269,9 @@ public class GameLobby {
     public synchronized void changePlayerInDisconnected(String nickname) throws IOException {
         playersDisconnected.add(nickname);
         players.remove(nickname);
-        gameController.disconnectionPlayer(nickname);
+        if(gameController!=null){
+            gameController.disconnectionPlayer(nickname);
+        }
         if( checkOnlyPlayer()){
             sendOnlyOnePlayer(nickname);
         }else if(messageEndGame==null){
