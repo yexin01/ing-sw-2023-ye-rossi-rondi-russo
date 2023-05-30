@@ -9,7 +9,7 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
- * Server class that handles the connection with the clients
+ * Server class that handles the connection with the clients.
  */
 public class Server implements Runnable{
     private final Object clientsLock = new Object();
