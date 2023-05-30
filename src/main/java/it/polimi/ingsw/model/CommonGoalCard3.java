@@ -47,7 +47,7 @@ public class CommonGoalCard3 extends CommonGoalCard{
                         newj=posgoal.get(x+1);
                         x=x+2;
                     }
-                }while( (near<8 && (i<mat.length-1)&&(j<mat[0].length-1) ) && (near>oldnear || x<posgoal.size()) );
+                } while ((near<8 && (i<mat.length-1) && (j<mat[0].length-1)) && ((near>oldnear || x<posgoal.size()) && x<posgoal.size()));
 
                 if(near>=8){
                     goals++;
