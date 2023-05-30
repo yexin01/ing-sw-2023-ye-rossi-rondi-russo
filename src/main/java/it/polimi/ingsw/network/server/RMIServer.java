@@ -28,6 +28,8 @@ public class RMIServer {
      */
     public void startServer() {
         try {
+            System.setProperty("java.rmi.server.ignoreStubClasses", "true");
+
             RMIHandlerImplementation rmiHandler = new RMIHandlerImplementation(server);
             Registry registry = LocateRegistry.createRegistry(port);
             registry.rebind("MyShelfieServer", rmiHandler);
