@@ -28,12 +28,10 @@ public class RMIServer {
      */
     public void startServer() {
         try {
-            System.setProperty("java.rmi.server.ignoreStubClasses", "true");
-
             RMIHandlerImplementation rmiHandler = new RMIHandlerImplementation(server);
             Registry registry = LocateRegistry.createRegistry(port);
-            registry.rebind("MyShelfieServer", rmiHandler);
-        } catch (IOException e ) {
+            registry.bind("MyShelfieServer", rmiHandler);
+        } catch (IOException | AlreadyBoundException e ) {
             System.out.println("already bound!!");
         }
     }
