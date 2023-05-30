@@ -14,9 +14,8 @@ public class ClientHandler implements Runnable {
     private Client client;
 
     private Thread messageHandlerThread;
-    private BlockingQueue<Message> queueToHandle = new LinkedBlockingQueue<>();
+    private BlockingQueue<Message> queueToHandle = new LinkedBlockingQueue<>(); // is a buffer between the clientHandler thread and the thread that receives messages from the network connection (whether it is RMI or Socket)
     private ManagerHandlers managerHandlers=new ManagerHandlers();
-    // is a buffer between the clientHandler thread and the thread that receives messages from the network connection (whether it is RMI or Socket)
     private boolean isRMI;
 
     /**
@@ -52,7 +51,6 @@ public class ClientHandler implements Runnable {
         notify();
     }
 
-
     /**
      * Method to create a new message handler thread that handles the messages received from the server:
      * if the client is a ClientRMI, it handles the message directly
@@ -63,7 +61,7 @@ public class ClientHandler implements Runnable {
         this.client = client;
         messageHandlerThread = new Thread(() -> {
             while (true) {
-                Message message = null;
+                Message message;
                 try {
                     message = client.getNextMessage();
                 } catch (Exception e) {
@@ -90,9 +88,8 @@ public class ClientHandler implements Runnable {
         messageHandlerThread.start();
     }
 
-
     /**
-     * Method to create a new connection between client and server
+     * Method to create a new connection between client and server and to create a new message handler thread that handles the messages received from the server through the connection created
      * @param isRMI 0 if the connection is a socket connection, 1 if the connection is an RMI connection
      * @param ip the ip of the server
      * @param port the port of the server
@@ -100,19 +97,13 @@ public class ClientHandler implements Runnable {
      * @throws Exception if there are problems with the connection
      */
     public void createConnection(int isRMI,String ip, int port,ClientInterface clientInterface) throws Exception {
-       // String connection;
         String nickname=clientInterface.getClientView().getNickname();
-        //System.out.println(clientInterface.getClientView().getNickname()+"NEL CLIENT HANDLER");
         if (isRMI==0) {
             client = new ClientSocket(nickname, ip, port);
             this.isRMI = false;
-            //System.out.println("creato ClientSocket in createConnection()...");
-            //connection="SOCKET";
         } else {
             client = new ClientRMI(nickname, ip, port);
             this.isRMI = true;
-            //System.out.println("creato ClientRMI in createConnection()...");
-            //connection="RMI";
         }
         managerHandlers.registerEventHandler(MessageType.DATA,new TurnHandler(clientInterface,client,new StartAndEndGameHandler(clientInterface,this.client)));
         LobbyHandler lobbyHandler=new LobbyHandler(clientInterface,client);
@@ -120,12 +111,8 @@ public class ClientHandler implements Runnable {
         managerHandlers.registerEventHandler(MessageType.ERROR,new ErrorHandler(clientInterface,client));
         managerHandlers.registerEventHandler(MessageType.CONNECTION,new ConnectionHandler(clientInterface,client));
         clientInterface.getClientView().setMessageToserverHandler(new MessageToserverHandlerTurn(clientInterface,client));
-
         createMessageHandlerThread(client);
-        //System.out.println("creato messageHandlerThread...");
-        //System.out.println("provo a startare la connection di tipo " + connection + "...");
         client.startConnection();
-
     }
 
     /**

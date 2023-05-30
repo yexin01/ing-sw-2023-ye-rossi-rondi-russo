@@ -8,7 +8,6 @@ import it.polimi.ingsw.model.modelView.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -23,17 +22,12 @@ public class GameLobby {
     private GameController gameController;
     private ModelView modelView;
     private InfoAndEndGameListener infoAndEndGameListener;
-    private Message messageEndGame=null;
-
-
-
+    private Message messageEndGame;
     private ConcurrentHashMap<String, Connection> players; //maps of all the active players of the game
     private CopyOnWriteArrayList<String> playersDisconnected; //maps of all the disconnected players of the game
 
-    // sto valutando cosa conviene fare per le disconnessioni di un player potrei cambiare i metodi di disconnessione
-
     /**
-     * Constructor of the class GameLobby that creates a new game lobby with the given id and the given number of players wanted
+     * Constructor of the class GameLobby that creates a new game lobby with the generated given id and the given number of players wanted
      * @param idGameLobby the id of the game lobby
      * @param wantedPlayers the number of players wanted in the game lobby
      */
@@ -52,9 +46,7 @@ public class GameLobby {
      */
     public synchronized void createGame() throws Exception {
         ArrayList<String> playersGame=new ArrayList<>();
-        for (String player : players.keySet()) {
-            playersGame.add(player);
-        }
+        for (String player : players.keySet()) { playersGame.add(player); }
         this.gameController=new GameController();
         this.gameController.createGame(this,playersGame);
     }
@@ -133,6 +125,21 @@ public class GameLobby {
     }
 
     /**
+     * @return the message end game
+     */
+    public Message getMessageEndGame() {
+        return messageEndGame;
+    }
+
+    /**
+     * Method to set the message end game
+     * @param messageEndGame the message end game
+     */
+    public void setMessageEndGame(Message messageEndGame) {
+        this.messageEndGame = messageEndGame;
+    }
+
+    /**
      * Method that adds a player to the game lobby if it is not full yet and sends a message to the player that wants to join the game lobby as confirmation
      * @param nickname the nickname of the player that wants to join the game lobby
      * @param connection the connection of the player that wants to join the game lobby
@@ -149,9 +156,8 @@ public class GameLobby {
             connection.sendMessageToClient(new Message(header,payload));
 
             if(isFull()){
-                System.out.println("è piena la lobby. posso creare il gioco vero");
                 createGame();
-                System.out.println("creato un game con gameID: "+idGameLobby+"\n");
+                System.out.println("The game lobby is now full, created a game with gameID: "+idGameLobby+"\n");
             }
 
         } catch (IOException e){
@@ -194,30 +200,23 @@ public class GameLobby {
      * @param message the message received from the player
      */
     public synchronized void handleTurn(Message message) throws IOException {
-        for(String playersD:playersDisconnected){
-            System.out.println("DISCONNESSO "+playersD+"SEI SOLO   "+checkOnlyPlayer());
-        }
-
         if(messageEndGame==null){
            gameController.receiveMessageFromClient(message);
-        }else {
+        }else{
             int index=gameController.getModel().getIntByNickname(message.getHeader().getNickname());
-                gameController.getActivePlayers()[index]=false;
-                System.out.println(message.getHeader().getNickname()+"SETTATO "+gameController.getActivePlayers()[index]);
-                MessageHeader header = new MessageHeader(MessageType.LOBBY,message.getHeader().getNickname());
-                MessagePayload payload = new MessagePayload(KeyLobbyPayload.GLOBAL_LOBBY_DECISION);
-                sendMessageToSpecificPlayer(new Message(header,payload),message.getHeader().getNickname());
-                boolean allFalse = true;
-                for (boolean value : gameController.getActivePlayers()) {
-                    if (value) {
-                        allFalse = false;
-                        break;
-                    }
-                }
-                if(allFalse){
-                    infoAndEndGameListener.endGame();
+            gameController.getActivePlayers()[index]=false;
+            MessageHeader header = new MessageHeader(MessageType.LOBBY,message.getHeader().getNickname());
+            MessagePayload payload = new MessagePayload(KeyLobbyPayload.GLOBAL_LOBBY_DECISION);
+            sendMessageToSpecificPlayer(new Message(header,payload),message.getHeader().getNickname());
+            boolean allFalse = true;
+            for (boolean value : gameController.getActivePlayers()) {
+                if (value) {
+                    allFalse = false;
+                    break;
                 }
             }
+            if(allFalse){ infoAndEndGameListener.endGame(); }
+        }
     }
 
     /**
@@ -226,14 +225,12 @@ public class GameLobby {
      * @throws IOException if there are problems with the connection
      */
     public synchronized void handleErrorFromClient(Message message) throws IOException {
-        if(messageEndGame==null ){
+        if(messageEndGame==null){
             if(message.getPayload().getKey().equals(KeyErrorPayload.ERROR_DATA)){
                 infoAndEndGameListener.fireEvent(TurnPhase.ALL_INFO,message.getHeader().getNickname(),modelView);
             }
-             System.out.println("SONO NELLA GAME LOBBY l'utente ha segnalato un error:"+message.getHeader().getNickname());
         }else{
             sendMessageToSpecificPlayer(messageEndGame,message.getHeader().getNickname());
-            System.out.println("END GAME l'utente ha segnalato un error:"+message.getHeader().getNickname());
         }
     }
 
@@ -260,7 +257,7 @@ public class GameLobby {
             sendMessageToAllPlayers(message);
         }else sendMessageToSpecificPlayer(messageEndGame,nickname);
 
-        System.out.println("Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in attivo");
+        System.out.println("GameLobby "+ idGameLobby+" changed "+nickname+" in active");
     }
 
     /**
@@ -270,7 +267,6 @@ public class GameLobby {
      * @throws IOException if there are problems with the connection
      */
     public synchronized void changePlayerInDisconnected(String nickname) throws IOException {
-        System.out.println("Sono la GameLobby "+ idGameLobby+" ho cambiato il giocatore "+nickname+" in disconnesso");
         playersDisconnected.add(nickname);
         players.remove(nickname);
         gameController.disconnectionPlayer(nickname);
@@ -285,12 +281,21 @@ public class GameLobby {
             sendMessageToAllPlayers(message);
             System.out.println(content);
         }
-
-
+        System.out.println("GameLobby "+ idGameLobby+" changed "+nickname+" in disconnected");
     }
+
+    /**
+     * @return true if there is only one player in the game lobby and the game is not ended, false otherwise
+     */
     public boolean checkOnlyPlayer(){
         return players.size()==1 && messageEndGame==null;
     }
+
+    /**
+     * Method to send a message error when there is only one player in the game lobby
+     * @param nickname the nickname of the player to send the message
+     * @throws IOException if there are problems with the connection
+     */
     public synchronized void sendOnlyOnePlayer(String nickname) throws IOException {
         MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
         MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_CONNECTION);
@@ -311,41 +316,6 @@ public class GameLobby {
     }
 
     /**
-     * Method to send a message to all the active players in the game lobby except one
-     * @param message the message to send
-     * @param nickname the nickname of the player to exclude
-     * @throws IOException if there are problems with the connection
-     */
-    public synchronized void sendMessageToAllPlayersExceptOne(Message message, String nickname) throws IOException {
-        for (String player : players.keySet()) {
-            if (!player.equals(nickname)) {
-                players.get(player).sendMessageToClient(message);
-            }
-        }
-    }
-
-    /**
-     * Method to send a message to all the active players in the game lobby except some
-     * @param message the message to send
-     * @param nicknames the nicknames of the players to exclude
-     * @throws IOException if there are problems with the connection
-     */
-    public synchronized void sendMessageToAllPlayersExceptSome(Message message, String[] nicknames) throws IOException {
-        for (String player : players.keySet()) {
-            boolean found = false;
-            for (String nickname : nicknames) {
-                if (player.equals(nickname)) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                players.get(player).sendMessageToClient(message);
-            }
-        }
-    }
-
-    /**
      * Method to send a message to a specific player in the game lobby
      * @param message the message to send
      * @param nickname the nickname of the player to send the message
@@ -356,11 +326,4 @@ public class GameLobby {
             players.get(nickname).sendMessageToClient(message);
     }
 
-    public Message getMessageEndGame() {
-        return messageEndGame;
-    }
-
-    public void setMessageEndGame(Message messageEndGame) {
-        this.messageEndGame = messageEndGame;
-    }
 }

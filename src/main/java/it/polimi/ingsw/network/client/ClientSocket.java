@@ -42,7 +42,6 @@ public class ClientSocket extends Client implements Runnable {
      */
     @Override
     public void startConnection() throws IOException {
-        //System.out.println("Connecting to server from socket with ip: " + getIp() + " and port: " + getPort());
         socket = new Socket(getIp(), getPort());
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());

@@ -38,8 +38,7 @@ public class Server implements Runnable{
      * @param ipAddress ip address of the server
      */
     public Server(int rmiPort, int socketPort, String ipAddress) {
-        // it checks if there is already an instance of the server
-        GameRules gameRules= null;
+        GameRules gameRules;
         try {
             gameRules = new GameRules();
         } catch (Exception e) {
@@ -49,6 +48,7 @@ public class Server implements Runnable{
         MIN_PLAYERS= gameRules.getMinPlayers();
         MAX_LENGTH_NICKNAME= gameRules.getMaxCharactersPlayers();
         MIN_LENGTH_NICKNAME= gameRules.getMinCharactersPlayers();
+        // it checks if there is already an instance of the server
         if (instance != null) {
             return;
         }
@@ -62,6 +62,10 @@ public class Server implements Runnable{
         globalLobby = new GlobalLobby();
     }
 
+    /**
+     * Method to set the ip address of the server
+     * @param ipAddress ip address of the server
+     */
     private static void setIpAddress(String ipAddress) {
         Server.ipAddress = ipAddress;
     }
@@ -74,26 +78,6 @@ public class Server implements Runnable{
     javac src/main/java/it/polimi/ingsw/network/server/Server.java
     java src/main/java/it/polimi/ingsw/network/server/Server 6000 7000 192.168.1.100
 
-     */
-    /* se vogliamo farlo da terminale
-    public static void main(String[] args){
-        int rmiPort = 51633; // porta di default
-        int socketPort = 51634; // porta di default
-        String ipAddress = "127.0.0.1"; // indirizzo IP di default
-
-        if (args.length >= 1) {
-            rmiPort = Integer.parseInt(args[0]);
-        }
-        if (args.length >= 2) {
-            socketPort = Integer.parseInt(args[1]);
-        }
-        if (args.length >= 3) {
-            ipAddress = args[2];
-        }
-
-        Server server = new Server(ipAddress, rmiPort, socketPort);
-        server.run();
-    }
      */
     //TODO: da fare il jar per lanciare da terminale windows e mac
     public static void main(String[] args) {
@@ -206,7 +190,6 @@ public class Server implements Runnable{
                         ClientPinger pinger = new ClientPinger(getUsernameByConnection(connection), connection, clientsLock);
                         connection.setClientPinger(pinger);
                         executor.execute(pinger);
-                        System.out.println("Sono il server... ho creato un thread clientPinger per il client " + getUsernameByConnection(connection));
                     }
                 }
             }
@@ -241,8 +224,6 @@ public class Server implements Runnable{
         //it works on the map of clientsConnected then it will enter in the globalLobby and then in the gameLobby
         try {
             synchronized (clientsLock) {
-                System.out.println("\nSono il server... ho ricevuto la richiesta di login da parte di " + nickname);
-
                 if (globalLobby.isPlayerDisconnectedInAnyGameLobby(nickname) || clientsConnected.containsKey(nickname)) {
                     knownPlayerLogin(nickname, connection);
                 } else {
@@ -268,7 +249,6 @@ public class Server implements Runnable{
      * @throws Exception if the player used an invalid nickname (too long or too short)
      */
     private synchronized void newPlayerLogin(String nickname, Connection connection) throws Exception {
-
         if (checkNickname(nickname)) { // nickname legit
             clientsConnected.put(nickname, connection);
 
@@ -276,12 +256,9 @@ public class Server implements Runnable{
             connection.setToken(token);
 
             System.out.println(nickname + " connected to server!");
-            System.out.println("Sono il server.. ora passo alla fase nella globalLobby...");
-
             this.globalLobby.addPlayerToWaiting(nickname, connection,false);
 
         } else { // nickname not legit
-
             MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
             MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_CONNECTION);
             payload.put(Data.ERROR, ErrorType.ERR_NICKNAME_LENGTH);
@@ -290,7 +267,6 @@ public class Server implements Runnable{
             connection.disconnect();
             System.out.println("Attention! " + nickname + " tried to connect with invalid name length! Connection refused!");
         }
-
     }
 
     /**
@@ -301,8 +277,6 @@ public class Server implements Runnable{
      */
     private synchronized void knownPlayerLogin(String nickname, Connection connection) throws Exception {
         if (globalLobby.isPlayerDisconnectedInAnyGameLobby(nickname)) { // player was disconnected
-            System.out.println("Sono il server... " + nickname + " era disconnesso in una gameLobby. Ora lo riconnetto...");
-
             clientsConnected.put(nickname, connection);
 
             String token = UUID.randomUUID().toString();
@@ -310,13 +284,11 @@ public class Server implements Runnable{
 
             MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
             MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
-            String content = "Login effettuato con successo sul server! Ora verrai riconnesso alla tua partita...";
+            String content = "Login was successful! You will be reconnected to your previous game...";
             payload.put(Data.CONTENT, content);
             connection.sendMessageToClient(new Message(header, payload));
 
-            System.out.println(nickname + " connected to server!");
-            System.out.println("Sono il server.. ora passo alla fase di riconnessione direttamente nella gameLobby...(skip globalLobby)");
-
+            System.out.println(nickname + " reconnected to server!");
             globalLobby.reconnectPlayerToGameLobby(nickname, connection);
 
         } else if (clientsConnected.containsKey(nickname)) { // nickname already in use
@@ -330,7 +302,6 @@ public class Server implements Runnable{
             System.out.println("Attention! " + nickname + " tried to connect with a nickname already taken!");
         }
     }
-
 
     /**
      * Method that checks if the nickname is valid (not too long or too short)
@@ -353,9 +324,7 @@ public class Server implements Runnable{
             synchronized (clientsLock) {
                 System.out.println(username + " disconnected from server!");
                 this.globalLobby.disconnectPlayerFromGlobalLobby(username);
-                System.out.println("Sono il server... ho disconnesso " + username + " dalla globalLobby");
                 clientsConnected.remove(username);
-                System.out.println("Sono il server... ho disconnesso " + username + " dalla lista di clientsConnected del server");
             }
         }
     }
@@ -387,9 +356,7 @@ public class Server implements Runnable{
      * @throws Exception if the message is not valid
      */
     public synchronized void receiveMessageFromClient(Message message) throws Exception {
-        System.out.println("\nSono il server... ho ricevuto il messaggio: "+ message.toString() + "da un client\n");
         MessageType messageType = message.getHeader().getMessageType();
-
         switch (messageType) {
             case LOBBY -> handleGlobalLobbyPhase(message);
             case DATA-> handleData(message);
@@ -404,8 +371,6 @@ public class Server implements Runnable{
      * @throws Exception if the message is not valid
      */
     private synchronized void handleGlobalLobbyPhase(Message message) throws Exception {
-        System.out.println("Sono il server... ho ricevuto la richiesta di join global lobby da parte di " + message.getHeader().getNickname());
-
         KeyLobbyPayload keyLobbyPayload = (KeyLobbyPayload) message.getPayload().getKey();
         switch (keyLobbyPayload) {
             case CREATE_GAME_LOBBY -> handleCreateGameLobby(message);
@@ -423,8 +388,6 @@ public class Server implements Runnable{
      */
     private synchronized void handleCreateGameLobby(Message message) throws IOException {
         int wantedPlayers = (int) message.getPayload().getContent(Data.VALUE_CLIENT);
-        System.out.println("Sono il server... ho ricevuto la richiesta di creare una nuova game lobby da parte di " + message.getHeader().getNickname() + " con " + wantedPlayers + " giocatori");
-
         if(wantedPlayers < MIN_PLAYERS || wantedPlayers > MAX_PLAYERS){
             MessageHeader header = new MessageHeader(MessageType.ERROR, message.getHeader().getNickname());
             MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_LOBBY);
@@ -435,10 +398,7 @@ public class Server implements Runnable{
             System.out.println("Attention! " + message.getHeader().getNickname() + " tried to create a game lobby with invalid number of players!");
             return;
         }
-
-        System.out.println("il numero di giocatori è valido! ora devo creare la game lobby...");
         this.globalLobby.playerCreatesGameLobby(wantedPlayers, message.getHeader().getNickname(), clientsConnected.get(message.getHeader().getNickname()));
-        System.out.println("game lobby creata con successo!");
     }
 
     /**
@@ -448,8 +408,6 @@ public class Server implements Runnable{
      */
     private synchronized void handleJoinSpecificGameLobby(Message message) throws IOException {
         int gameId = (int) message.getPayload().getContent(Data.VALUE_CLIENT);
-        System.out.println("Sono il server... ho ricevuto la richiesta di join specific game lobby da parte di " + message.getHeader().getNickname() + " con id " + gameId);
-
         this.globalLobby.playerJoinsGameLobbyId(gameId, message.getHeader().getNickname(), clientsConnected.get(message.getHeader().getNickname()));
     }
 
@@ -459,9 +417,6 @@ public class Server implements Runnable{
      * @throws IOException if the game lobby is full
      */
     private synchronized void handleJoinRandomGameLobby(Message message) throws IOException {
-        System.out.println("Sono il server... ho ricevuto la richiesta di join random game lobby da parte di " + message.getHeader().getNickname());
-        System.out.println("ora devo aggiungere il player alla game lobby random con un posto libero...");
-
         this.globalLobby.playerJoinsFirstFreeSpotInRandomGame(message.getHeader().getNickname(), clientsConnected.get(message.getHeader().getNickname()));
     }
 
@@ -471,22 +426,9 @@ public class Server implements Runnable{
      * @throws Exception if the client is not found in the list of clients connected to the server
      */
     private synchronized void handleQuitServer(Message message) throws Exception {
-        System.out.println("Sono il server... ho ricevuto la richiesta di quit server da parte di " + message.getHeader().getNickname());
-        System.out.println("ora devo disconnettere il player dalla global lobby...");
-
         this.globalLobby.disconnectPlayerFromGlobalLobby(message.getHeader().getNickname());
-        System.out.println("Sono il server... ho disconnesso " + message.getHeader().getNickname() + " dalla globalLobby");
         this.clientsConnected.remove(message.getHeader().getNickname());
-        System.out.println("Sono il server... ho disconnesso " + message.getHeader().getNickname() + " dalla lista di clientsConnected del server");
         clientsConnected.get(message.getHeader().getNickname()).disconnect();
-        System.out.println("Sono il server... ho disconnesso " + message.getHeader().getNickname() + " dalla connessione con il server");
-    }
-
-    private synchronized void handleEndGamePhase(int gameId) throws IOException {
-        System.out.println("Sono il server... ho ricevuto la richiesta di terminare la game lobby con id " + gameId + "perché è stata completata la partita!");
-        System.out.println("ora devo terminare la game lobby...");
-
-        this.globalLobby.endGameLobbyFromGlobalLobby(gameId);
     }
 
     /**
@@ -498,16 +440,9 @@ public class Server implements Runnable{
         String nickname = message.getHeader().getNickname();
 
         if(globalLobby.isPlayerActiveInAnyGameLobby(nickname)){
-            System.out.println("Sono il server... ho ricevuto un messaggio di tipo DATA da parte di " + nickname);
-            System.out.println("ora devo inoltrare il messaggio alla game lobby del giocatore al metodo handledata...");
-
             GameLobby gameLobby = this.globalLobby.findGameLobbyByNickname(nickname);
             gameLobby.handleTurn(message);
-
         } else {
-            System.out.println("Sono il server... ho ricevuto un messaggio di tipo DATA da parte di " + nickname);
-            System.out.println("ma il giocatore non è attivo in nessuna game lobby, quindi non posso inoltrare il messaggio");
-
             MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
             MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_LOBBY);
             payload.put(Data.ERROR, ErrorType.ERR_GAME_NOT_FOUND);
@@ -526,16 +461,10 @@ public class Server implements Runnable{
         String nickname = message.getHeader().getNickname();
 
         if (globalLobby.isPlayerActiveInAnyGameLobby(nickname)) {
-            System.out.println("Sono il server... ho ricevuto un messaggio di tipo ERROR da parte di " + nickname);
-            System.out.println("ora devo inoltrare il messaggio alla game lobby del giocatore al metodo handleError...");
-
             GameLobby gameLobby = this.globalLobby.findGameLobbyByNickname(nickname);
             gameLobby.handleErrorFromClient(message);
 
         } else {
-            System.out.println("Sono il server... ho ricevuto un messaggio di tipo ERROR da parte di " + nickname);
-            System.out.println("ma il giocatore non è attivo in nessuna game lobby, quindi non posso inoltrare il messaggio");
-
             MessageHeader header = new MessageHeader(MessageType.ERROR, nickname);
             MessagePayload payload = new MessagePayload(KeyErrorPayload.ERROR_LOBBY);
             payload.put(Data.ERROR, ErrorType.ERR_GAME_NOT_FOUND);

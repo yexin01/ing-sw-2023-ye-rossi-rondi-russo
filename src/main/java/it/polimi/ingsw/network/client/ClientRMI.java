@@ -37,10 +37,8 @@ public class ClientRMI extends Client implements RMIClientConnection {
      */
     @Override
     public void startConnection() throws Exception {
-        //System.out.println("sono il client... sto per fare la lookup...e ho ip: " + getIp() + " e port: " + getPort() + " e nickname: " + getNickname());
         Registry registry = LocateRegistry.getRegistry(getIp(), getPort());
         server = (RMIHandler) registry.lookup("MyShelfieServer");
-        //System.out.println("chiamo login su RMIHANDLER..."+getIp()+" porta "+getPort());
         server.login(getNickname(), this);
     }
 
@@ -63,7 +61,6 @@ public class ClientRMI extends Client implements RMIClientConnection {
      */
     @Override
     public synchronized void receiveMessageFromServer(Message message) {
-        //System.out.println("sono il client... ho ricevuto il messaggio: " +message.toString() +" dal server!-------");
         addMessage(message);
     }
 

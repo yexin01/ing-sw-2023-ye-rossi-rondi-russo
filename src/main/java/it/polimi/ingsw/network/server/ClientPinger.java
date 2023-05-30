@@ -46,7 +46,6 @@ public class ClientPinger implements Runnable {
                     Thread.currentThread().interrupt();
                 }
             } else {
-                System.out.println("Connection lost for client: " + nickname + ". Disconnecting ClientPinger thread associated.");
                 synchronized (clientsLock) {
                     try {
                         Server.getInstance().onDisconnect(connection);
@@ -56,11 +55,9 @@ public class ClientPinger implements Runnable {
                 }
                 Thread.currentThread().interrupt();
             }
-
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                System.out.println("ClientPinger interrupted for client: " + nickname +"\n");
                 Thread.currentThread().interrupt();
             }
         }
