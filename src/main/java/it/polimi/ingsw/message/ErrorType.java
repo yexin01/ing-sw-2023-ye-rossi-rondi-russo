@@ -9,6 +9,7 @@ public enum ErrorType implements KeyAbstractPayload {
     PING_NOT_RECEIVED("Ping not received. Disconnection started.."),
     DISCONNECTION_FORCED("Something went wrong during login. Connection refused! Disconnection started.."),
     DISCONNECTION("Disconnection from the server"),
+    ERROR_CONNECTION("Error in creating connection, try again"),
 
     ERR_NICKNAME_LENGTH("Invalid username length. Disconnection.."),
     ERR_NICKNAME_TAKEN("This nickname is already taken  Disconnection.."),

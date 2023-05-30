@@ -505,9 +505,9 @@ public class CLI implements ClientInterface {
 
 
     @Override
-    public void askNicknameAndConnection() throws Exception {
+    public void askNicknameAndConnection() {
         PrinterLogo.printMyShelfieLogo();
-        initialLobby();
+        doConnection();
     }
 
 
@@ -609,9 +609,6 @@ public class CLI implements ClientInterface {
     public void setClientView(ClientView clientView) {
         this.clientView = clientView;
     }
-    public void initialLobby(){
-        doConnection();
-    }
 
     private void doConnection(){
         int connectionType = -1;
@@ -629,13 +626,12 @@ public class CLI implements ClientInterface {
         int port = askPort(connectionType);
         Colors.colorize(Colors.BLUE_CODE,"\nYou choose: -Server Ip Address: " + ip+" -Server Port: " + port + "\n");
         ClientHandler clientHandler=new ClientHandler();
-        try{ //metodo di Clienthanlder (la cli estende ClientHandler)
+        try{
             clientHandler.createConnection(connectionType, ip, port,this);
-            //Colors.colorize(Colors.WHITE_CODE,"Connection created");
         } catch (Exception e){
-            e.printStackTrace();
-            //displayError("Error in creating connection. Please try again.\n");
-            //doConnection();
+            displayError(ErrorType.ERROR_CONNECTION.getErrorMessage());
+            askNicknameAndConnection();
+
         }
     }
 
