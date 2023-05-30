@@ -70,6 +70,10 @@ public class Server implements Runnable{
         Server.ipAddress = ipAddress;
     }
 
+    public String getIpAddress() {
+        return Server.ipAddress;
+    }
+
     /*
     Per avviare il server da terminale macbook: (da cambiare il path in base alla posizione del progetto):
     
@@ -165,6 +169,8 @@ public class Server implements Runnable{
             return;
         }
         instance = this;
+        setIpAddress(ipAddress);
+
         instance.rmiServer = new RMIServer(this, rmiPort);
         instance.rmiServer.startServer();
         System.out.println("RMI Server started on port: " + rmiPort );
@@ -172,8 +178,6 @@ public class Server implements Runnable{
         instance.socketServer = new SocketServer(this, socketPort);
         instance.socketServer.startServer();
         System.out.println("Socket Server started on port: " + socketPort + "\n");
-
-        setIpAddress(ipAddress);
 
         System.out.println("Server started successfully with IP address: " + ipAddress + "\n");
     }

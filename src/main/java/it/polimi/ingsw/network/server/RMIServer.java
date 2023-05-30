@@ -27,7 +27,10 @@ public class RMIServer {
      * Method that starts the RMI server when called by Server class and binds the RMI handler to the registry
      */
     public void startServer() {
+        String ipAddress = server.getIpAddress();
         try {
+            System.setProperty("java.rmi.server.hostname", ipAddress);
+
             RMIHandlerImplementation rmiHandler = new RMIHandlerImplementation(server);
             Registry registry = LocateRegistry.createRegistry(port);
             registry.bind("MyShelfieServer", rmiHandler);
