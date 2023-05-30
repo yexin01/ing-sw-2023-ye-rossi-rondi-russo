@@ -1,19 +1,18 @@
 package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CommonGoalCard1 extends CommonGoalCard {
 
     /**
-     * Goal1: "Two groups each containing 4 tiles of the same type in a 2x2 square.
-     * The tiles of one square can be different from those of the other square."
-     * Notes: - The implementation follows the Italian rules where "gruppi separati" refers to groups separated by at least 1 box in the matrix.
-     * - The square cannot be contained within larger squares; it must be exactly 2x2.
+     * Goal1: "Two groups each containing 4 tiles of the same type in a 2x2 square. The tiles of one square can be different from those of the other square."
+     * Notes: - the implementation of this function follows the Italian rules where it says "gruppi separati" as groups separated by at least 1 box in the matrix
+     * - also the square cannot be contained into larger squares, but it has to be exactly 2x2 (as requested by professor Cugola in Slack.channel-requirements)
      *
      * @param mat matrix of ItemTile[][]
      * @return boolean if the goal is reached or not
      */
+
     @Override
     public boolean checkGoal(ItemTile[][] mat) {
         int goals=0;
@@ -23,115 +22,77 @@ public class CommonGoalCard1 extends CommonGoalCard {
                 checkable[i][j]=1;
             }
         }
-        for (int i=0; i<mat.length; i++) {
-            for (int j=0; j<mat[0].length; j++) {
-                if (mat[i][j].getTileID()!=-1 && checkable[i][j]!=0) {
-                    goals += processGroup(mat,checkable,i,j);
+        ArrayList<Integer> posgoal = new ArrayList<>(); // ArrayList of positions (x,y,x,y,etc) of the goals found and will be used to make uncheckable those near that
+
+        // check the goal
+        for (int i=0; i<mat.length-1 && goals<2; i++) {
+            for (int j=0; j<mat[0].length-1 && goals<2; j++) {
+                while ((checkable[i][j]==0 || mat[i][j].getTileID()==-1) && (j<mat[0].length-2)) { j++; }
+                if (mat[i][j].getTileID()!=-1 && mat[i+1][j+1].getTileID()!=-1 && mat[i+1][j].getTileID()!=-1 && mat[i][j+1].getTileID()!=-1
+                        && mat[i][j].getType().equals(mat[i+1][j+1].getType()) && mat[i][j].getType().equals(mat[i+1][j].getType()) && mat[i][j].getType().equals(mat[i][j+1].getType())) {
+                    posgoal.add(i);
+                    posgoal.add(j);
+                    posgoal.add(i);
+                    posgoal.add(j+1);
+                    posgoal.add(i+1);
+                    posgoal.add(j);
+                    posgoal.add(i+1);
+                    posgoal.add(j+1);
+                    if (checkNoLargerSquares(mat, i+1, j + 1)) { goals++; }
+                    for (int x=0; x<posgoal.size(); x=x+2) { checkable = allNearUncheckable(checkable, posgoal.get(x), posgoal.get(x+1)); }
+                    if (posgoal.size()>0) { posgoal.subList(0, posgoal.size()).clear(); }
                 }
             }
         }
-        return goals>=2 && !containsLargerSquare(mat);
+        return goals>=2;
     }
 
     /**
-     * Method to check right, down, diagonal directions if it can be counted as a valid group for the goal and if it is a 2x2 square.
+     * checkNoLargerSquares is used to check that the square found is exactly of 2x2 and it is not contained into larger squares
+     * Notes: checkNear is only used by checkGoal1()
      * @param mat matrix of ItemTile[][]
-     * @param checkable matrix of checkable elements
-     * @param x of the position to check
-     * @param y of the position to check
-     * @return 0 if not valid group, 1 if valid group
+     * @param x as the 'i' of the position to check (of the tile in the right down corner)
+     * @param y as the 'j' of the position to check (of the tile in the right down corner)
+     * @return boolean if it is not contained in a larger square
      */
-    private int processGroup(ItemTile[][] mat, int[][] checkable, int x, int y) {
-        if (mat[x][y].getTileID() == -1) {
-            return 0; // Skip empty ItemTile
+    private boolean checkNoLargerSquares (ItemTile[][] mat, int x, int y){
+        if(mat[x][y].getTileID()!=-1 && (( y+1<mat[0].length && mat[x][y+1].getTileID()!=-1 && !mat[x][y].getType().equals(mat[x][y+1].getType()) ) ||
+                ( x+1<mat.length && mat[x+1][y].getTileID()!=-1 && !mat[x][y].getType().equals(mat[x+1][y].getType()) ) ||
+                ( x+1<mat.length && y+1<mat[0].length && mat[x+1][y+1].getTileID()!=-1 && !mat[x][y].getType().equals(mat[x+1][y+1].getType()) ) ||
+                ( x-1>=0 && y+1<mat[0].length && mat[x-1][y+1].getTileID()!=-1 && !mat[x][y].getType().equals(mat[x-1][y+1].getType()) ) ||
+                ( x+1<mat.length && y-1>=0 && mat[x+1][y-1].getTileID()!=-1 && !mat[x][y].getType().equals(mat[x+1][y-1].getType()) ) )) {
+            return true;
         }
-
-        Type type = mat[x][y].getType();
-        List<Integer> squarePositions = new ArrayList<>();
-        squarePositions.add(x);
-        squarePositions.add(y);
-
-        int[][] directions = {{0,1},{1,0},{1,1}}; // Right, down, and diagonal directions
-        for (int[] direction : directions) {
-            int dx=direction[0];
-            int dy=direction[1];
-            int newX=x+dx;
-            int newY=y+dy;
-            if (isValidPosition(mat,newX,newY) && mat[newX][newY].getTileID()!=-1 && mat[newX][newY].getType().equals(type)) {
-                squarePositions.add(newX);
-                squarePositions.add(newY);
-            }
+        // if all those (in the dimensions) are null then it does not have larger squares
+        if( ( y+1<mat[0].length && mat[x][y+1].getTileID()==-1 ) ||
+                ( x+1<mat.length && mat[x+1][y].getTileID()==-1 ) ||
+                ( x+1<mat.length && y+1<mat[0].length && mat[x+1][y+1].getTileID()==-1 ) ||
+                ( x-1>=0 && y+1<mat[0].length && mat[x-1][y+1].getTileID()==-1 ) ||
+                ( x+1<mat.length && y-1>=0 && mat[x+1][y-1].getTileID()==-1 ) ){
+            return true;
         }
-        if (squarePositions.size()>=8 && is2x2Square(squarePositions)) {
-            markGroup(checkable,squarePositions);
-            return 1;
-        }
-        return 0;
+        return y+1==mat[0].length && x+1==mat.length; // corner case
     }
 
     /**
-     * Method to check if the coordinates are valid to check within the bookshelf dimensions.
-     * @param mat matrix of ItemTile[][]
-     * @param x of the position to check
-     * @param y of the position to check
-     * @return true if valid, false if not valid
+     * allNearUncheckable will put at '0' the positions of the matching tiles found
+     * Notes: allNearUncheckable is used by checkGoal1(), checkGoal3() and checkGoal4()
+     * @param checkable matrix used to skips those near, that cannot be part of other groups to count for the goal
+     * @param x as the 'i' of the position to check
+     * @param y as the 'j' of the position to check
+     * @return the matrix of checkable updated
      */
-    private boolean isValidPosition(ItemTile[][] mat, int x, int y) {
-        return x>=0 && x<mat.length && y>=0 && y<mat[0].length;
-    }
-
-    /**
-     * Method to put 0 on checkable matrix of all tiles near a valid group found. To be sure all groups counted for the goal,
-     * are in fact separated by at least one element.
-     * @param checkable matrix of checkable elements
-     * @param positions list of the coordinates of the positions of the group found
-     */
-    private void markGroup(int[][] checkable, List<Integer> positions) {
-        for (int i=0; i<positions.size(); i+=2) {
-            int x=positions.get(i);
-            int y=positions.get(i+1);
-            checkable[x][y]=0;
-        }
-    }
-
-    /**
-     * Method to check that there are any larger squares, if there are then the check will not count it as a goal.
-     * @param mat matrix of ItemTile[][]
-     * @return true if found larger squares, false otherwise
-     */
-    private boolean containsLargerSquare(ItemTile[][] mat) {
-        for (int i=0; i<mat.length-1; i++) {
-            for (int j=0; j<mat[0].length-1; j++) {
-                if (mat[i][j].getTileID()!=-1 &&
-                        mat[i][j].getType().equals(mat[i][j+1].getType()) &&
-                        mat[i+1][j].getType().equals(mat[i+1][j+1].getType()) &&
-                        mat[i][j].getType().equals(mat[i+1][j].getType())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Method to check if it exactly a 2x2 square.
-     * @param positions list of the coordinates of the positions of the group found
-     * @return true if it is a 2x2 square, false otherwise
-     */
-    private boolean is2x2Square(List<Integer> positions) {
-        int minX=Integer.MAX_VALUE;
-        int minY=Integer.MAX_VALUE;
-        int maxX=Integer.MIN_VALUE;
-        int maxY=Integer.MIN_VALUE;
-        for (int i=0; i<positions.size(); i+=2) {
-            int x=positions.get(i);
-            int y=positions.get(i+1);
-            minX=Math.min(minX,x);
-            minY=Math.min(minY,y);
-            maxX=Math.max(maxX,x);
-            maxY=Math.max(maxY,y);
-        }
-        return (maxX-minX==1 && maxY-minY==1);
+    public int [][] allNearUncheckable (int [][] checkable, int x, int y){
+        checkable[x][y]=0;
+        if(x-1>=0){ checkable[x-1][y]=0; }
+        if(x+1<checkable.length){ checkable[x+1][y]=0; }
+        if(x-1>=0 && y-1>=0){ checkable[x-1][y-1]=0; }
+        if(x-1>=0 && y+1<checkable[0].length){ checkable[x-1][y+1]=0; }
+        if(y-1>=0){ checkable[x][y-1]=0; }
+        if(y+1<checkable[0].length){ checkable[x][y+1]=0; }
+        if(x+1<checkable.length && y-1>=0){ checkable[x+1][y-1]=0; }
+        if(x+1<checkable.length && y+1<checkable[0].length){ checkable[x+1][y+1]=0; }
+        return checkable;
     }
 
 }
