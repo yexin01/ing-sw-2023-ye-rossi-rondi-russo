@@ -15,12 +15,16 @@ public class MessageToserverHandlerTurn {
     }
 
 
-    public synchronized void handleMessageToServer(Object newValue, KeyAbstractPayload turnPhase, String nickname,MessageType messageType) throws Exception {
+    public synchronized void handleMessageToServer(Object newValue, KeyAbstractPayload turnPhase, String nickname,MessageType messageType){
         MessageHeader header=new MessageHeader(messageType, nickname);
         MessagePayload payload=new MessagePayload(turnPhase);
         payload.put(Data.VALUE_CLIENT,newValue);
         Message message=new Message(header,payload);
-        client.sendMessageToServer(message);
+        try {
+            client.sendMessageToServer(message);
+        } catch (Exception e) {
+
+        }
         //System.out.println("HO INVIATO IL MESSAGGIO TIPOLOGIA "+messageType);
     }
 }

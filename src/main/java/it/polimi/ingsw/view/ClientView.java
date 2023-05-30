@@ -80,7 +80,7 @@ public class ClientView {
         return coordinatesSelected;
     }
 
-    public void setCoordinatesSelected(ArrayList<Integer> coordinatesSelected) throws Exception {
+    public void setCoordinatesSelected(ArrayList<Integer> coordinatesSelected)  {
         this.coordinatesSelected = coordinatesSelected;
 
         messageToserverHandlerTurn.handleMessageToServer(coordinatesSelected.stream().mapToInt(Integer::intValue).toArray(),TurnPhase.SELECT_FROM_BOARD,nickname, MessageType.DATA);
@@ -90,7 +90,7 @@ public class ClientView {
         return orderTiles;
     }
 
-    public void setOrderTiles(int[] orderTiles) throws Exception {
+    public void setOrderTiles(int[] orderTiles){
         this.orderTiles = orderTiles;
 
         messageToserverHandlerTurn.handleMessageToServer(orderTiles,TurnPhase.SELECT_ORDER_TILES,nickname,MessageType.DATA);
@@ -102,7 +102,7 @@ public class ClientView {
         return column;
     }
 
-    public void setColumn(int column) throws Exception {
+    public void setColumn(int column) {
         this.column = column;
 
         messageToserverHandlerTurn.handleMessageToServer(column,TurnPhase.SELECT_COLUMN,nickname,MessageType.DATA);
@@ -118,7 +118,7 @@ public class ClientView {
     }
 
 
-    public void endGame(int choice) throws Exception {
+    public void endGame(int choice){
         if(choice==0){
             //quit game
             messageToserverHandlerTurn.handleMessageToServer(1,KeyLobbyPayload.QUIT_SERVER,nickname,MessageType.LOBBY);
@@ -126,13 +126,13 @@ public class ClientView {
         }else messageToserverHandlerTurn.handleMessageToServer(0,KeyLobbyPayload.GLOBAL_LOBBY_DECISION,nickname,MessageType.LOBBY);
     }
 
-    public void lobby(KeyLobbyPayload keyLobbyPayload,int value) throws Exception {
+    public void lobby(KeyLobbyPayload keyLobbyPayload,int value) {
         messageToserverHandlerTurn.handleMessageToServer(value,keyLobbyPayload,nickname,MessageType.LOBBY);
     }
-    public void somethingWrong() throws Exception {
+    public void somethingWrong(){
         messageToserverHandlerTurn.handleMessageToServer(null, KeyErrorPayload.ERROR_DATA,nickname,MessageType.ERROR);
     }
-    public void receiveEndGame() throws Exception {
+    public void receiveEndGame() {
         messageToserverHandlerTurn.handleMessageToServer(null, TurnPhase.END_GAME,nickname,MessageType.DATA);
     }
     /*

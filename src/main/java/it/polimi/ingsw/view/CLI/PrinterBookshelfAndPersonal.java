@@ -35,7 +35,7 @@ public class PrinterBookshelfAndPersonal {
 
     }
 
-    public synchronized void printMatrixBookshelf(ClientView clientView,int sizetile,int spaceBetweenTiles,int sizeLenghtFromBord,boolean personalGoal,boolean arrow, int spaceBetweenPersonal) throws Exception {
+    public synchronized void printMatrixBookshelf(ClientView clientView,int sizetile,int spaceBetweenTiles,int sizeLenghtFromBord,boolean personalGoal,boolean arrow, int spaceBetweenPersonal){
         ItemTileView[][] bookshelfView= clientView.getBookshelfView();
         this.spaceBetweenTiles=spaceBetweenTiles;
         this.sizetile=sizetile;
@@ -207,7 +207,7 @@ public class PrinterBookshelfAndPersonal {
         return personalLine;
     }
 
-    public synchronized void printPersonal(ClientView clientView ,int spaceBetweenTiles,int sizeLengthFromBord) throws Exception {
+    public synchronized void printPersonal(ClientView clientView ,int spaceBetweenTiles,int sizeLengthFromBord) {
         ItemTileView[][] bookshelfView= clientView.getBookshelfView();
         PersonalGoalCard q=clientView.getPlayerPersonalGoal();
         int personalLine=0;

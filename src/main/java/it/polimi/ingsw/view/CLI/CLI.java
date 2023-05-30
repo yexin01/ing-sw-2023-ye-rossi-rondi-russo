@@ -39,7 +39,7 @@ public class CLI implements ClientInterface {
 
 
 
-    public synchronized <T extends Enum<T> & Commands> void printLobbyCommands(Class<T> enumClass) throws Exception {
+    public synchronized <T extends Enum<T> & Commands> void printLobbyCommands(Class<T> enumClass){
         T[] enumValues = enumClass.getEnumConstants();
         out.println();
         for(T enumValue : enumValues){
@@ -51,7 +51,7 @@ public class CLI implements ClientInterface {
         Colors.colorize(Colors.GAME_INSTRUCTION,"Insert command: ");
     }
 
-    public synchronized void allCommands(int phase) throws Exception {
+    public synchronized void allCommands(int phase){
         boolean firstPrint=false;
         out.println();
         String[] commandsPhase=new String[]{"select_from_board","order_tiles","column","print" };
@@ -112,7 +112,7 @@ public class CLI implements ClientInterface {
         Colors.colorize(Colors.GAME_INSTRUCTION,"Insert command: ");
 
     }
-    public Commands checkCommand(int phase) throws Exception {
+    public Commands checkCommand(int phase) {
         int input;
         int enumSize = -1;
 
@@ -154,7 +154,7 @@ public class CLI implements ClientInterface {
 
 
     @Override
-    public  synchronized  void askCoordinates() throws Exception {
+    public  synchronized  void askCoordinates() {
         out.println();
         PrinterLogo.printBoardPhase(50);
         out.println();
@@ -208,7 +208,7 @@ public class CLI implements ClientInterface {
     }
 
 
-    public void printCommands(CommandsTurn commandsTurn) throws Exception {
+    public void printCommands(CommandsTurn commandsTurn) {
         switch (commandsTurn){
             case PRINT1 ->{
                 PrinterLogo.printBoardLogo(10);
@@ -331,7 +331,7 @@ public class CLI implements ClientInterface {
             Colors.colorize(Colors.GAME_INSTRUCTION, "Reset successful\n");
         }
     }
-    public boolean handleInvalidPhase(CommandsTurn commandsTurn) throws Exception {
+    public boolean handleInvalidPhase(CommandsTurn commandsTurn)  {
         String commandString = commandsTurn.toString();
         if (commandString.toLowerCase().startsWith("print")) {
             if(commandsTurn.equals(CommandsTurn.PRINT8)){
@@ -347,7 +347,7 @@ public class CLI implements ClientInterface {
 
     private int sizetile=3;
     @Override
-    public  synchronized void askOrder() throws Exception {
+    public  synchronized void askOrder() {
         out.println();
         PrinterLogo.printOrderPhase(50);
         out.println();
@@ -422,7 +422,7 @@ public class CLI implements ClientInterface {
     }
 
     @Override
-    public  synchronized void askColumn() throws Exception {
+    public  synchronized void askColumn(){
         out.println();
         //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: COLUMN");
         PrinterLogo.printColumnPhase(50);
@@ -512,7 +512,7 @@ public class CLI implements ClientInterface {
 
 
     @Override
-    public void askLobbyDecision() throws Exception {
+    public void askLobbyDecision() {
         PrinterLogo.printGlobalLobbyPhase(50);
         out.println();
         boolean continueToAsk = true;
@@ -554,7 +554,7 @@ public class CLI implements ClientInterface {
     }
 
     @Override
-    public void endGame(int[] personalPoints, String playerBookshelfFull) throws Exception {
+    public void endGame(int[] personalPoints, String playerBookshelfFull) {
         printerCommonGoalAndPoints.printEndGame(clientView,personalPoints,playerBookshelfFull);
         clientView.receiveEndGame();
         boolean continueToAsk=true;
@@ -588,7 +588,7 @@ public class CLI implements ClientInterface {
     boolean continueToAskEndTurn;
 
     @Override
-    public synchronized void waitingRoom() throws Exception {
+    public synchronized void waitingRoom() {
         Colors.colorize(Colors.GAME_INSTRUCTION, "Turn player: "+clientView.getTurnPlayer());
         PrinterLogo.printWaitingTurnPhase(50);
         Colors.colorize(Colors.GAME_INSTRUCTION, "This is the board\n ");
