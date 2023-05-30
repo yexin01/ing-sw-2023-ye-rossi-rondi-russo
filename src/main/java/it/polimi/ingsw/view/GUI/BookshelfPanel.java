@@ -26,6 +26,10 @@ import java.util.Objects;
 public class BookshelfPanel extends BasePanel {
     private final ClientView clientView;
 
+    /**
+     * Creates the scene root(Selecting column)
+     * @param clientView : Client infos
+     */
     public BookshelfPanel(ClientView clientView) throws IOException {
         this.clientView = clientView;
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
@@ -112,6 +116,11 @@ public class BookshelfPanel extends BasePanel {
         hBox.setPickOnBounds(false);
     }
 
+    /**
+     * Changes the default button into an arrow to choose a bookshelf column
+     * @param button : chosen button
+     * @param i : bookshelf Grid pane column
+     */
     private void createArrow (Button button, int i) throws IOException {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         Image icon = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("arrow2.png")).openStream());

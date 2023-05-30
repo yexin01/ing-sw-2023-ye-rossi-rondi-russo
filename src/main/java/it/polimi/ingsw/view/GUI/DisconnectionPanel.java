@@ -15,6 +15,11 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class DisconnectionPanel extends BasePanel{
+
+    /**
+     * Creates a panel to be shown when the player is the last
+     * active player inside a game
+     */
     public DisconnectionPanel() throws IOException {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Display_2.jpg")).openStream());

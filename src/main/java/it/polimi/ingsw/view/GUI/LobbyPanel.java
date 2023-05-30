@@ -57,13 +57,32 @@ public class LobbyPanel extends BasePanel{
         confirmButton1.setOnAction(actionEvent -> {
                     port = textField1.getText();
                     ip = textField2.getText();
-                    int chosenPort = (port.isEmpty() ? 1100 : Integer.parseInt(port));
-                    String chosenIp = (ip.isEmpty() ? defaultIp : ip);
+                    //int chosenPort = (port.isEmpty() ? 1100 : Integer.parseInt(port));
+            int chosenPort2 = 0;
+            try {
+                int chosenPort = (port.isEmpty() ? 1100 : Integer.parseInt(port));
+                if (chosenPort >= 1024 && chosenPort <= 65535) {
+                   chosenPort2 = chosenPort;
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Invalid port number!");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Please enter a port number between 1024 and 65535");
+                    alert.show();
+                }
+            } catch (NumberFormatException e) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Invalid port number!");
+                alert.setHeaderText(null);
+                alert.setContentText("Please enter a valid port number");
+                alert.show();
+            }
+            String chosenIp = (ip.isEmpty() ? defaultIp : ip);
                     ClientHandler clientHandler = new ClientHandler();
                     try {
-                        clientHandler.createConnection(0, chosenIp, chosenPort, GUIApplication.guiApplicationStatic);
+                        clientHandler.createConnection(0, chosenIp, chosenPort2, GUIApplication.guiApplicationStatic);
                     } catch (Exception e) {
-                        throw new RuntimeException(e);
+                        GUIApplication.guiApplicationStatic.askNicknameAndConnection();
                     }
                 });
 
@@ -79,13 +98,31 @@ public class LobbyPanel extends BasePanel{
         confirmButton2.setOnAction(actionEvent -> {
             port = textField3.getText();
             ip = textField4.getText();
-            int chosenPort = (port.isEmpty() ? 1099 : Integer.parseInt(port));
+            int chosenPort2 = 0;
+            try {
+                int chosenPort = (port.isEmpty() ? 1100 : Integer.parseInt(port));
+                if (chosenPort >= 1024 && chosenPort <= 65535) {
+                    chosenPort2 = chosenPort;
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Invalid port number!");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Please enter a port number between 1024 and 65535");
+                    alert.show();
+                }
+            } catch (NumberFormatException e) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Invalid port number!");
+                alert.setHeaderText(null);
+                alert.setContentText("Please enter a valid port number");
+                alert.show();
+            }
             String chosenIp = (ip.isEmpty() ? defaultIp : ip);
             ClientHandler clientHandler = new ClientHandler();
             try {
-                clientHandler.createConnection(1, chosenIp, chosenPort, GUIApplication.guiApplicationStatic);
+                clientHandler.createConnection(0, chosenIp, chosenPort2, GUIApplication.guiApplicationStatic);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                GUIApplication.guiApplicationStatic.askNicknameAndConnection();
             }
         });
         HBox hBox2 = new HBox(textField3, textField4, confirmButton2);

@@ -26,6 +26,11 @@ public class ChoicePanel extends BasePanel{
     private final Button[] itemButtons;
     private int[] orderTiles;
 
+    /**
+     * Creates the scene root(Tile(s) order)
+     * @param clientView : Client infos
+     * @param gap : gap between the selected tiles in the scene
+     */
     public ChoicePanel (ClientView clientView, double gap) throws IOException {
         this.clientView=clientView;
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
@@ -89,6 +94,12 @@ public class ChoicePanel extends BasePanel{
         getChildren().add(box2);
         setAlignment(box2, Pos.TOP_CENTER);
     }
+
+    /**
+     * Create 3 buttons (Max selectable tiles from the previous scene)
+     * @param button : chosen button
+     * @param i : button position in the 3 buttons group
+     */
     private void createEmptyButton(Button button, int i) {
         button.setDisable(true);
         button.setOpacity(0);
@@ -100,7 +111,13 @@ public class ChoicePanel extends BasePanel{
         });
     }
 
-        public void setButtonIcon(Image icon, int index) {
+    /**
+     * For every chosen tile in the previous scene, it changes default button
+     * into the chosen tile
+     * @param icon : tile image
+     * @param index : position inside the tiles selected in the previous scene
+     */
+    public void setButtonIcon(Image icon, int index) {
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
             ImageView imageView = new ImageView(icon);
             imageView.setFitWidth(screenBounds.getWidth()*0.2*(3.0/Check.MAX_SELECTABLE_TILES));
@@ -112,6 +129,10 @@ public class ChoicePanel extends BasePanel{
             itemButtons[index].setStyle("-fx-border-color: rgba(255,255,0,0.86); -fx-border-width: 2px; -fx-border-radius: 4px; -fx-effect: dropshadow(three-pass-box, rgba(255,255,0,0.86), 20, 0, 0, 0);");
     }
 
+    /**
+     * Initialize two arrays based on the number of the selected tiles
+     * @param num : number of selected tiles
+     */
     public void setup (int num) {
         tilesSelected = new ItemTileView[num];
         orderTiles = new int[num];
@@ -120,6 +141,9 @@ public class ChoicePanel extends BasePanel{
         }
     }
 
+    /**
+     * Clear the image set up if the user resets a choice
+     */
     public void clear () {
         for (int i = 0; i < 3; i++) {
             itemButtons[i].setDisable(true);

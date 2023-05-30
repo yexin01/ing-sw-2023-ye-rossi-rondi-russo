@@ -28,6 +28,13 @@ public class GUIApplication extends Application implements ClientInterface {
     public static GUIApplication guiApplicationStatic;
 
 
+    /**
+     * Sets up the Gui
+     * @param stage the primary stage for this application, onto which
+     * the application scene can be set.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages.
+     */
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
@@ -36,11 +43,17 @@ public class GUIApplication extends Application implements ClientInterface {
         guiApplicationStatic = this;
     }
 
+    /**
+     * @return clientView
+     */
     @Override
     public ClientView getClientView() {
         return clientView;
     }
 
+    /**
+     * Sets on stage the end turn panel
+     */
     @Override
     public void waitingRoom() {
         Platform.runLater(()-> {
@@ -56,6 +69,12 @@ public class GUIApplication extends Application implements ClientInterface {
         });
     }
 
+    /**
+     * Shows a pop-up to notify to the user who won a token and
+     * which token did they won
+     * @param num : Token value
+     * @param nickname : Nickname of the user who won the token
+     */
     @Override
     public void displayToken(int num, String nickname) {
         Platform.runLater(()-> {
@@ -81,11 +100,10 @@ public class GUIApplication extends Application implements ClientInterface {
         });
     }
 
-
-    @Override
-    public void stop(){
-    }
-
+    /**
+     * Sets on stage the panel where the user can choose the tiles from
+     * the board and create the next scene (Tile(s) order)
+     */
     @Override
     public void askCoordinates() {
         Platform.runLater(()-> {
@@ -111,6 +129,9 @@ public class GUIApplication extends Application implements ClientInterface {
         });
     }
 
+    /**
+     * Sets on stage the previously created scene (Selected tile(s) order)
+     */
     @Override
     public void askOrder() {
         Platform.runLater(()-> {
@@ -119,6 +140,10 @@ public class GUIApplication extends Application implements ClientInterface {
         });
     }
 
+    /**
+     * Sets on stage the panel in which the user can decide the bookshelf
+     * column to insert the selected tiles
+     */
     @Override
     public void askColumn() {
         Platform.runLater(()-> {
@@ -134,6 +159,10 @@ public class GUIApplication extends Application implements ClientInterface {
         });
     }
 
+    /**
+     * Shows a pop-up that notify the user about an error
+     * @param error : Error description string
+     */
     @Override
     public void displayError(String error) {
         Platform.runLater(()-> {
@@ -145,6 +174,10 @@ public class GUIApplication extends Application implements ClientInterface {
         });
     }
 
+    /**
+     * Shows a pop-up that notify the user mostly about lobby infos
+     * @param error : Message description string
+     */
     @Override
     public void displayMessage(String error) {
         Platform.runLater(()-> {
@@ -156,6 +189,10 @@ public class GUIApplication extends Application implements ClientInterface {
         });
     }
 
+    /**
+     * Sets on stage the panel in which the user can choose their
+     * nickname and the preferred connection
+     */
     @Override
     public void askNicknameAndConnection() {
         Platform.runLater(()-> {
@@ -171,6 +208,10 @@ public class GUIApplication extends Application implements ClientInterface {
         });
     }
 
+    /**
+     * Sets on stage the panel in which the user can choose to create a game, or
+     * join a specific/random lobby
+     */
     @Override
     public void askLobbyDecision() {
         Platform.runLater(()-> {
@@ -186,6 +227,11 @@ public class GUIApplication extends Application implements ClientInterface {
         });
     }
 
+    /**
+     * Sets on stage the panel that shows the final ranking, and gives the
+     * possibility to the users to come back to the lobby
+     * @param personalPoints : Personal goal points of all the users
+     */
     @Override
     public void endGame(int[] personalPoints) {
         Platform.runLater(()-> {
@@ -198,29 +244,13 @@ public class GUIApplication extends Application implements ClientInterface {
             Scene scene = new Scene(finalRankingPanel, screenBounds.getWidth(), screenBounds.getHeight());
             stage.setScene(scene);
             stage.show();
-            /*Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("FINAL RANKING");
-            alert.setHeaderText("WINNER");
-            Image image;
-            try {
-                image = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("end game.jpg")).openStream());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(200);
-            imageView.setFitHeight(200);
-            imageView.setPreserveRatio(true);
-            VBox content = new VBox(10);
-            content.getChildren().addAll(imageView, new Label("The winner is: "+clientView.getPlayerPointsViews()[clientView.getPlayerPointsViews().length-1].getNickname()));
-            DialogPane dialogPane = alert.getDialogPane();
-            dialogPane.setContent(content);
-            alert.show();
-
-             */
         });
     }
 
+    /**
+     * Sets on stage the panel in which the user is informed to be the
+     * last active player in the game
+     */
     @Override
     public void onlyPlayer() {
         Platform.runLater(()-> {

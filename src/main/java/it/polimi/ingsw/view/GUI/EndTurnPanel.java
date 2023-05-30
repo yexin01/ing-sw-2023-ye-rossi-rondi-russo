@@ -20,6 +20,12 @@ import java.util.Objects;
 public class EndTurnPanel extends BasePanel {
 
 
+    /**
+     * Creates a panel to be shown when the user's turn is over.
+     * Besides the others in-turn options, it additionally shows
+     * a real time board and the common goal card tokens left
+     * @param clientView : Client infos
+     */
     public EndTurnPanel(ClientView clientView) throws IOException {
         int counter = 0;
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();

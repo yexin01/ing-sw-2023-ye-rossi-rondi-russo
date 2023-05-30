@@ -22,6 +22,12 @@ public class FinalRankingPanel extends BasePanel{
     private final String style1 = "-fx-border-color: rgba(255,255,0,0.65); -fx-border-width: 2px; -fx-border-radius: 4px; -fx-effect: dropshadow(three-pass-box, rgba(255,255,0,0.65), 6, 0, 0, 0); -fx-background-color: rgba(0,0,0,0.58); -fx-text-fill: white;";
     private final String styleReset = "-fx-border-color: rgba(255,255,0,0.65); -fx-border-width: 2px; -fx-border-radius: 4px; -fx-effect: dropshadow(three-pass-box, rgba(255,255,0,0.65), 6, 0, 0, 0); -fx-background-color: rgba(0,0,0,0.58); -fx-text-fill: red;";
 
+    /**
+     * Creates the panel to be shown when tha game is over. it shows the
+     * final ranking and the possibility to go back to the global lobby
+     * @param clientView : Client infos
+     * @param personalPoints : personal goal points of all the players
+     */
     public FinalRankingPanel(ClientView clientView, int[] personalPoints) throws IOException {
         int counter = 0;
 
@@ -46,7 +52,7 @@ public class FinalRankingPanel extends BasePanel{
             VBox vBox = new VBox();
             Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname());
             label.setFont(font1); label.setTextFill(Color.WHITE);
-            Label label5 = new Label( clientView.getPlayerPointsViews()[i].getPoints()+"  Points");
+            Label label5 = new Label( (clientView.getPlayerPointsViews()[i].getPoints()+personalPoints[i])+"  Points");
             label5.setFont(font); label5.setTextFill(Color.WHITE);
             int sumToken = 0;
             for (int j =0; j<clientView.getCommonGoalView().length; j++) {

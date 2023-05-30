@@ -35,6 +35,15 @@ public abstract class BasePanel extends StackPane {
     private double z;
     private double w;
 
+    /**
+     * @param clientView : Client infos
+     * @param boardWidth : Button width
+     * @param boardHeight : Button height
+     * @param i : Board row
+     * @param j : Board column
+     * @param filled : true if filled, false if empty
+     * @return : BoardButton with the correct tile image
+     */
     public Button createBoardButton(ClientView clientView, double boardWidth, double boardHeight, int i, int j, boolean filled) throws IOException {
         Button button = new Button();
         ImageView imageView = new ImageView();
@@ -58,6 +67,15 @@ public abstract class BasePanel extends StackPane {
         return button;
     }
 
+    /**
+     * @param clientView : Client infos
+     * @param bookshelfWidth : Button width
+     * @param bookshelfHeight : Button height
+     * @param i : Bookshelf row
+     * @param j : Bookshelf column
+     * @param filled : true if filled, false if empty
+     * @return : BookshelfButton with the correct tile image
+     */
     public Button createBookshelfButton(ClientView clientView, double bookshelfWidth, double bookshelfHeight, int i, int j, boolean filled) throws IOException {
         Button button = new Button();
         ImageView imageView = new ImageView();
@@ -79,6 +97,14 @@ public abstract class BasePanel extends StackPane {
         return button;
     }
 
+    /**
+     *
+     * @param clientView : Client infos
+     * @param screenBounds : screen properties (width and height)
+     * @return Vbox containing buttons that shows personal goal card, common goal cards,
+     *         your bookshelf and the possibility to restore the info from the Client
+     *         view and to quit from the game
+     */
     public VBox createCardsBox (ClientView clientView, Rectangle2D screenBounds) throws IOException {
         VBox vBox = new VBox();
 
@@ -188,10 +214,18 @@ public abstract class BasePanel extends StackPane {
         return vBox;
     }
 
+    /**
+     *
+     * @return personal goal card png
+     */
     public StackPane getPersonalGoalCardImage() {
         return personalGoalCardImage;
     }
 
+    /**
+     *
+     * @return Vbox containing confirm and reset choice buttons
+     */
     public VBox createChoiceBox (){
         VBox vBox = new VBox();
         Button confirmChoiceButton = new Button("Confirm choice");
@@ -205,6 +239,13 @@ public abstract class BasePanel extends StackPane {
         return vBox;
     }
 
+    /**
+     * Receives a button and changes its style when the mouse is on it
+     * @param button : Button chosen
+     * @param font : Font chosen for the button
+     * @param style1 : Default style
+     * @param style2 : Style when the mouse is on the button
+     */
     public void mouseStyle (Button button, Font font, String style1, String style2) {
         button.setFont(font);
         button.setStyle(style1);
@@ -212,23 +253,38 @@ public abstract class BasePanel extends StackPane {
         button.setOnMouseExited(event -> button.setStyle(style1));
     }
 
+    /**
+     * @return Parquet png for the background
+     */
     public BackgroundImage getParquetBackground () throws IOException {
         Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("base_pagina2.jpg")).openStream());
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, true, true);
         return new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
     }
 
+    /**
+     *
+     * @return background image for the lobby
+     */
     public BackgroundImage getLobbyBackground () throws IOException {
         Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Display_5.jpg")).openStream());
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, true, false);
         return new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
     }
 
+    /**
+     *
+     * @return publisher logo
+     */
     public ImageView getPublisher () throws IOException {
         Image publisher = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Publisher.png")).openStream());
         return new ImageView(publisher);
     }
 
+    /**
+     *
+     * @return Game title
+     */
     public ImageView getTitle () throws IOException {
         Image title = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Title 2000x618px.png")).openStream());
         ImageView titleView = new ImageView(title);
@@ -236,38 +292,69 @@ public abstract class BasePanel extends StackPane {
         titleView.setPreserveRatio(true);
         return titleView;
     }
+
+    /**
+     * @return last board button width
+     */
     public double getX() {
         return x;
     }
 
+    /**
+     * @return last board button height
+     */
     public double getY() {
         return y;
     }
 
+    /**
+     * @return last bookshelf button width
+     */
     public double getZ() {
         return z;
     }
 
+    /**
+     * @return last bookshelf button height
+     */
     public double getW() {
         return w;
     }
 
+    /**
+     * @param i : board row
+     * @param j : board column
+     * @return tile image of the board[i][j] tile
+     */
     public Image getBoardTiles(int i, int j) {
         return boardTiles[i][j];
     }
 
+    /**
+     * @return bookshelf for "Your bookshelf" button
+     */
     public GridPane getBookshelf() {
         return bookshelf;
     }
 
+    /**
+     * @return parquet background for several buttons
+     */
     public ImageView getParquet() {
         return parquet;
     }
 
+    /**
+     * @return bookshelf png for "Your Bookshelf" button
+     */
     public ImageView getPng() {
         return png;
     }
 
+    /**
+     * @param id : Common goal card id
+     * @return description of the correspondent common goal card
+     */
     public String commonDescription (int id) {
         switch (id) {
             case 0 -> {

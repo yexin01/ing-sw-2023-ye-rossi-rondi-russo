@@ -29,6 +29,12 @@ public class BoardBoxPanel extends BasePanel {
     private int selectedCount;
 
 
+    /**
+     * Creates the scene root(Tile(s) selection from the board) and starts to
+     * set up the next scene root(Tile(s) order)
+     * @param clientView : Client infos
+     * @param choicePanel : Panel from the next scene (Tile(s) order)
+     */
     public BoardBoxPanel (ClientView clientView, ChoicePanel choicePanel) throws IOException {
         coordinatesSelected.clear();
         choicePanel.clear();
