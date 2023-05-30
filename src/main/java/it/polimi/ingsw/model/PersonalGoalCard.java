@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -8,6 +9,10 @@ import java.util.ArrayList;
  */
 
 public class PersonalGoalCard implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1644368757037203142L;
+
     private final int idPersonal;
     private final ArrayList<PersonalGoalBox> cells;
 

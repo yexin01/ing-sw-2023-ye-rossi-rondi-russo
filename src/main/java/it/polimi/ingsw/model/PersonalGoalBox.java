@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -7,6 +8,10 @@ import java.io.Serializable;
  * belonging to the enum Type.
  */
 public class PersonalGoalBox implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 545291495180279995L;
+
     private final int x;
     private final int y;
     private final Type type;
