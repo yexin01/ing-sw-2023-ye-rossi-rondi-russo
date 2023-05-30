@@ -12,13 +12,13 @@ class CommonGoalCard1Test {
         CommonGoalCard1 commonGoalCard1 = new CommonGoalCard1();
         Bookshelf bookshelf = new Bookshelf(6,5,3);
         //Set the lower left coordinate of matrix in which you want to create one square
-        int x = 5; int y = 1; int tileID = 0;
+        int x = 5; int y = 0; int tileID = 0;
         bookshelf.getMatrix()[x][y] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[x-1][y] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[x][y+1] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[x-1][y+1] = new ItemTile(Type.CAT, tileID); tileID++;
         //Set the other lower left coordinate of matrix in which you want to create one square
-        x = 1; y = 1;
+        x = 5; y = 3;
         bookshelf.getMatrix()[x][y] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[x-1][y] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[x][y+1] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -74,6 +74,15 @@ class CommonGoalCard1Test {
         bookshelf.getMatrix()[0][4] = new ItemTile(Type.TROPHY, tileID); tileID++;
         bookshelf.getMatrix()[1][3] = new ItemTile(Type.TROPHY, tileID); tileID++;
         bookshelf.getMatrix()[1][4] = new ItemTile(Type.TROPHY, tileID);
+        bookshelf.getMatrix()[2][3] = new ItemTile(Type.BOOK, tileID); tileID++;
+        bookshelf.getMatrix()[3][3] = new ItemTile(Type.BOOK, tileID); tileID++;
+        bookshelf.getMatrix()[4][3] = new ItemTile(Type.BOOK, tileID); tileID++;
+        bookshelf.getMatrix()[5][3] = new ItemTile(Type.BOOK, tileID); tileID++;
+        bookshelf.getMatrix()[2][4] = new ItemTile(Type.BOOK, tileID); tileID++;
+        bookshelf.getMatrix()[3][4] = new ItemTile(Type.BOOK, tileID); tileID++;
+        bookshelf.getMatrix()[4][4] = new ItemTile(Type.BOOK, tileID); tileID++;
+        bookshelf.getMatrix()[5][4] = new ItemTile(Type.BOOK, tileID); tileID++;
+
         Assertions.assertTrue(commonGoalCard1.checkGoal(bookshelf.getMatrix()));
     }
 }

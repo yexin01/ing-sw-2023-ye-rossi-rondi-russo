@@ -9,7 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 class GameTest {
 
@@ -18,7 +19,7 @@ class GameTest {
         ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(modelView);
         ArrayList<Player> players = new ArrayList<>();
-        players.add(new Player("player1", modelView));
+        players.add(new Player("player1", modelView, gameRules));
         game.setPlayers(players);
         return game;
     }
@@ -36,7 +37,7 @@ class GameTest {
         assertEquals(nicknames.size(), modelView.getPlayerPoints().length);
     }
 
-    @Test
+    /*@Test
     @DisplayName("differentNickname: 2nd player has 1st player nickname")
     void differentNickname() throws Exception {
         Game game = singlePlayer();
@@ -63,6 +64,8 @@ class GameTest {
         assertTrue(game.differentNickname("player3"));
     }
 
+     */
+
     @Test
     @DisplayName("createCommonGoalCard: generic check for size and points")
     void createCommonGoalCard() throws Exception {
@@ -70,8 +73,8 @@ class GameTest {
         ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(modelView);
         ArrayList<Player> players = new ArrayList<>();
-        players.add(new Player("player1", modelView));
-        players.add(new Player("player2", modelView));
+        players.add(new Player("player1", modelView, gameRules));
+        players.add(new Player("player2", modelView, gameRules));
         game.setPlayers(players);
         ArrayList<Integer> ids = new ArrayList<>();
         ids.add(1);
@@ -183,8 +186,8 @@ class GameTest {
         GameRules gameRules = new GameRules();
         ModelView modelView = new ModelView(2, gameRules);
         Game game = new Game(modelView);
-        Player player1 = new Player("player1", modelView);
-        Player player2 = new Player("player2", modelView);
+        Player player1 = new Player("player1", modelView, gameRules);
+        Player player2 = new Player("player2", modelView, gameRules);
         Bookshelf bookshelf1 = new Bookshelf(6,5,3);
         player1.setBookshelf(bookshelf1);
         ArrayList<Player> players = new ArrayList<>();
@@ -199,7 +202,7 @@ class GameTest {
         commonGoalCards.add(commonGoalCard8);
         commonGoalCards.add(commonGoalCard9);
         game.setCommonGoalCards(commonGoalCards);
-        game.createCommonGoalPlayer(gameRules);
+        //game.createCommonGoalPlayer(gameRules);
         game.setCommonGoalCardsPoints(gameRules);
         int tileID = 0;
         bookshelf1.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;

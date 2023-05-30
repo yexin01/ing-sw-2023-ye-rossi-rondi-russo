@@ -30,12 +30,13 @@ class PlayerTest {
     void selection() throws Exception {
         GameRules gameRules = new GameRules();
         ModelView modelView = new ModelView(2, gameRules);
-        Player player = new Player("player1", modelView);
+        Player player = new Player("player1", modelView, gameRules);
         Board board = new Board(modelView);
         board.fillBag(gameRules);
         board.firstFillBoard(2, new GameRules());
         board.setSelectedBoard(createSelectedTiles(3));
-        player.selection(board);
+        player.setSelectedItems(board.selected());
+        player.cloneTilesSelected();
         assertEquals(player.getSelectedItems().get(0).getTileID(), modelView.getSelectedItems()[0].getTileID());
         assertEquals(player.getSelectedItems().get(1).getTileID(), modelView.getSelectedItems()[1].getTileID());
         assertEquals(player.getSelectedItems().get(2).getTileID(), modelView.getSelectedItems()[2].getTileID());
@@ -47,12 +48,12 @@ class PlayerTest {
     void checkPermuteSelection() throws Exception {
         GameRules gameRules = new GameRules();
         ModelView modelView = new ModelView(2, gameRules);
-        Player player = new Player("player1", modelView);
+        Player player = new Player("player1", modelView, gameRules);
         Board board = new Board(modelView);
         board.fillBag(gameRules);
         board.firstFillBoard(2, new GameRules());
         board.setSelectedBoard(createSelectedTiles(3));
-        player.selection(board);
+        player.setSelectedItems(board.selected());
         int [] order = new int[]{1, 2, 5};
         assertEquals(ErrorType.INVALID_ORDER_TILE_NUMBER, player.checkPermuteSelection(order));
         //assertThrows(Error.class, ()->player.checkPermuteSelection(order));
@@ -63,12 +64,12 @@ class PlayerTest {
     void checkPermuteSelectionCC1() throws Exception {
         GameRules gameRules = new GameRules();
         ModelView modelView = new ModelView(2, gameRules);
-        Player player = new Player("player1", modelView);
+        Player player = new Player("player1", modelView, gameRules);
         Board board = new Board(modelView);
         board.fillBag(gameRules);
         board.firstFillBoard(2, new GameRules());
         board.setSelectedBoard(createSelectedTiles(3));
-        player.selection(board);
+        player.setSelectedItems(board.selected());
         int [] order = new int[]{1, 2, 1};
         assertEquals(ErrorType.INVALID_ORDER_TILE_REPETITION, player.checkPermuteSelection(order));
         //assertThrows(Error.class, ()->player.checkPermuteSelection(order));
@@ -79,7 +80,7 @@ class PlayerTest {
     void permuteSelection() throws Exception {
         GameRules gameRules = new GameRules();
         ModelView modelView = new ModelView(2, gameRules);
-        Player player = new Player("player1", modelView);
+        Player player = new Player("player1", modelView, gameRules);
         Board board = new Board(modelView);
         board.fillBag(gameRules);
         board.firstFillBoard(2, new GameRules());
@@ -95,7 +96,7 @@ class PlayerTest {
         selectedBoard.add(boardBox2);
         selectedBoard.add(boardBox3);
         board.setSelectedBoard(selectedBoard);
-        player.selection(board);
+        player.setSelectedItems(board.selected());
         ArrayList<ItemTile> selectedItems = new ArrayList<>();
         selectedItems.add(boardBox2.getTile());
         selectedItems.add(boardBox1.getTile());

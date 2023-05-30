@@ -91,7 +91,7 @@ class GameControllerTest {
         selectedBoard.add(boardBox2);
         selectedBoard.add(boardBox3);
         gameController.getModel().getBoard().setSelectedBoard(selectedBoard);
-        gameController.getModel().getTurnPlayerOfTheGame().selection(gameController.getModel().getBoard());
+        gameController.getModel().getTurnPlayerOfTheGame().setSelectedItems(gameController.getModel().getBoard().selected());
         ArrayList<ItemTile> selectedItems = new ArrayList<>();
         selectedItems.add(boardBox2.getTile());
         selectedItems.add(boardBox1.getTile());
@@ -114,7 +114,7 @@ class GameControllerTest {
         int a=1; int b=3;
         selectedBoard.add(gameController.getModel().getBoard().getBoardBox(a, b));
         gameController.getModel().getBoard().setSelectedBoard(selectedBoard);
-        gameController.getModel().getTurnPlayerOfTheGame().selection(gameController.getModel().getBoard());
+        gameController.getModel().getTurnPlayerOfTheGame().setSelectedItems(gameController.getModel().getBoard().selected());
         int value = 0;
         gameController.getModel().getModelView().setTurnPhase(TurnPhase.SELECT_COLUMN);
         MessagePayload messagePayload = new MessagePayload(TurnPhase.SELECT_COLUMN);
