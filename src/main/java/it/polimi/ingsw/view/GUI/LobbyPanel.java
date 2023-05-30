@@ -120,7 +120,7 @@ public class LobbyPanel extends BasePanel{
             String chosenIp = (ip.isEmpty() ? defaultIp : ip);
             ClientHandler clientHandler = new ClientHandler();
             try {
-                clientHandler.createConnection(0, chosenIp, chosenPort2, GUIApplication.guiApplicationStatic);
+                clientHandler.createConnection(1, chosenIp, chosenPort2, GUIApplication.guiApplicationStatic);
             } catch (Exception e) {
                 GUIApplication.guiApplicationStatic.askNicknameAndConnection();
             }
