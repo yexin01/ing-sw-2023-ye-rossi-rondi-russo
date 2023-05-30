@@ -73,7 +73,7 @@ public class StartAndEndGameHandler extends MessageHandler {
             }
             case END_GAME ->{
                 getClientInterface().getClientView().setPlayerPointsViews((PlayerPointsView[]) mes.getPayload().getContent(Data.POINTS));
-                getClientInterface().endGame((int[]) mes.getPayload().getContent(Data.PERSONAL_POINTS));
+                getClientInterface().endGame((int[]) mes.getPayload().getContent(Data.PERSONAL_POINTS),(String)mes.getPayload().getContent(Data.BOOKSHELF_FULL_PLAYER));
                // getClientInterface().askLobbyDecision();
             }
         }

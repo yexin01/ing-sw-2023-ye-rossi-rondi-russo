@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 /**
  * Class that represents the single cell of the PersonalGoalCard having type
- * belonging to the enum Type.
+ * belonging to the enum Type. (immutable)
  */
 public class PersonalGoalBox implements Serializable {
 

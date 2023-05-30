@@ -15,7 +15,7 @@ public interface ClientInterface  {
     void displayMessage(String error);
     void askNicknameAndConnection() throws Exception;
     void askLobbyDecision() throws Exception;
-    void endGame(int[] personalPoints) throws Exception;
+    void endGame(int[] personalPoints,String playerBookshelfFull) throws Exception;
     void onlyPlayer();
 
 

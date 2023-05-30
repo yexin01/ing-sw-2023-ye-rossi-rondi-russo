@@ -233,6 +233,11 @@ public class GUIApplication extends Application implements ClientInterface {
      * @param personalPoints : Personal goal points of all the users
      */
     @Override
+    public void endGame(int[] personalPoints, String playerBookshelfFull) throws Exception {
+
+    }
+
+
     public void endGame(int[] personalPoints) {
         Platform.runLater(()-> {
             FinalRankingPanel finalRankingPanel;

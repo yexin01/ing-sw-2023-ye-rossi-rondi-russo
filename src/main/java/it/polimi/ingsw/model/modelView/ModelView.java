@@ -11,6 +11,9 @@ import java.util.Comparator;
 import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
+/**
+ * Class that contains immutable objects to send to the client.
+ */
 public class ModelView {
 
     private int turnPlayer;
@@ -20,6 +23,7 @@ public class ModelView {
     private int[][] commonGoalView;
     private int[] token;
     private int[] personalPoints;
+    private String bookshelfFullPoints;
 
     private BoardBoxView[][] boardView;
 
@@ -29,6 +33,12 @@ public class ModelView {
     private PlayerPointsView[] playerPoints;
     private PersonalGoalCard[] playerPersonalGoal;
     private ItemTileView[] selectedItems;
+
+    /**
+     * Constructor ModelView
+     * @param numPlayers: of the game associated;
+     * @param gameRules:
+     */
 
     public ModelView(int numPlayers,GameRules gameRules){
         //pointsLeftCommon=new int[gameRules.getNumOfCommonGoals()];
@@ -81,8 +91,14 @@ public class ModelView {
             indices[i] = i;
         }
 
-        Arrays.sort(indices, Comparator.comparingInt(index -> playerPoints[index].getPoints() + personalPoints[index]));
-
+        //Arrays.sort(indices, Comparator.comparingInt(index -> playerPoints[index].getPoints() + personalPoints[index]));
+        Arrays.sort(indices, Comparator.comparingInt(index -> {
+            if (index == getIntegerValue(bookshelfFullPoints)) {
+                return playerPoints[index].getPoints() + personalPoints[index] + 1;
+            } else {
+                return playerPoints[index].getPoints() + personalPoints[index];
+            }
+        }));
         PlayerPointsView[] sortedPlayerPoints = new PlayerPointsView[playerPoints.length];
         int[] sortedPersonalPoints = new int[personalPoints.length];
 
@@ -174,6 +190,12 @@ public class ModelView {
     }
     public String getTurnNickname(){
         return playerPoints[turnPlayer].getNickname();
+    }
+    public String getBookshelfFullPoints(){
+        return bookshelfFullPoints;
+    }
+    public void setBookshelfFullPoints(String nickname){
+        bookshelfFullPoints=nickname;
     }
 
 

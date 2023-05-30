@@ -12,6 +12,9 @@ import org.json.simple.parser.ParseException;
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ *class that allows to read from the json file
+ */
 public class GameRules {
     private JSONObject json;
     private String boardJsonFile="gameRules.json";
@@ -19,15 +22,35 @@ public class GameRules {
         this.json = readJsonFromFile();
     }
 
+    /**
+     *
+     * @return: maximum number of selectable tiles. According to the rules of the game it corresponds to 3.
+     */
+
     public int getMaxSelectableTiles() {
         return ((Long) json.get("max_selectable_tiles")).intValue();
     }
+
+    /**
+     *
+     * @return: maximum number of letters acceptable for the player's nickname.
+     */
     public int getMaxCharactersPlayers() {
         return ((Long) json.get("max_characters_players")).intValue();
     }
+
+    /**
+     *
+     * @return: minimum number of letters acceptable for the player's nickname.
+     */
     public int getMinCharactersPlayers() {
         return ((Long) json.get("min_characters_players")).intValue();
     }
+
+    /**
+     *
+     * @return: minimum number of players to start a game.
+     */
     public int getMinPlayers() {
         return ((Long) json.get("min_players")).intValue();
     }

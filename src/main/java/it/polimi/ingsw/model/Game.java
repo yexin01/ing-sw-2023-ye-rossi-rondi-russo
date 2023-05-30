@@ -290,6 +290,9 @@ public class Game {
         modelview.getPlayerPoints()[modelview.getTurnPlayer()]=playerPoints;
         modelview.setBookshelfView(player.getBookshelf().cloneBookshelf(),player.getNickname());
     }
+    public boolean getEndGame(){
+        return endGame;
+    }
 
     public PersonalGoalCard turnPersonalGoal(){return getTurnPlayerOfTheGame().getPersonalGoalCard();}
 

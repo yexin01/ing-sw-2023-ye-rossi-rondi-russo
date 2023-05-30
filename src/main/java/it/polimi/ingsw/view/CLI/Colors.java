@@ -84,11 +84,6 @@ public class Colors {
         System.out.printf("%s%s", text, space);
     }
 
-    public static void upperOneBoard(String color) {
-        String text = "      0      1      2      3      4      5      6      7      8\n" +
-                "╔══════╦══════╦══════╦══════╦══════╦══════╦══════╦══════╦══════╗";
-        System.out.println(color + text + "\u001B[0m");
-    }
     public static String printTiles(Object type, int size) {
         String square = TYPE_COLORS.get(type) + "█";
         String coloredSquares = square.repeat(size);

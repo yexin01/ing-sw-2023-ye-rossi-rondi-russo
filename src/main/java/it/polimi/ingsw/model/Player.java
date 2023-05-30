@@ -22,7 +22,7 @@ public class Player {
     private ModelView modelView;
 
     /**
-     * Constructorwhich instantiates the player with the current game's modelView and nickname;
+     * Constructor which instantiates the player with the current game's modelView and nickname;
      * @param nickname:player nickname;
      * @param modelView:modelView of the game;
      * @throws Exception

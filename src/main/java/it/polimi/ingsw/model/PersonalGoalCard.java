@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- *Class represents the player's personalGoal
+ *Class represents the player's personalGoal (immutable)
  */
 
 public class PersonalGoalCard implements Serializable {

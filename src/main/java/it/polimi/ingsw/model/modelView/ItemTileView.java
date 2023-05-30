@@ -5,6 +5,9 @@ import it.polimi.ingsw.model.Type;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * Serializable immutable class represents the single tile
+ */
 public class ItemTileView implements Serializable {
 
     private Type type;

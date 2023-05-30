@@ -553,11 +553,9 @@ public class CLI implements ClientInterface {
         }
     }
 
-
     @Override
-    public void endGame(int[] personalPoints) throws Exception {
-        PrinterLogo.printWinnerLogo(50);
-        printerCommonGoalAndPoints.printEndGame(clientView,personalPoints);
+    public void endGame(int[] personalPoints, String playerBookshelfFull) throws Exception {
+        printerCommonGoalAndPoints.printEndGame(clientView,personalPoints,playerBookshelfFull);
         clientView.receiveEndGame();
         boolean continueToAsk=true;
 
@@ -572,8 +570,10 @@ public class CLI implements ClientInterface {
         }
         out.println();
         //askLobbyDecision();
-
     }
+
+
+
 
     @Override
     public void onlyPlayer() {

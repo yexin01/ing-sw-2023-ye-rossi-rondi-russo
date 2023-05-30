@@ -170,7 +170,8 @@ public class GameController {
         }else{
             game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
             game.getTurnPlayerOfTheGame().insertBookshelf(column);
-            if(game.getTurnPlayerOfTheGame().getBookshelf().isFull()){
+            if(game.getTurnPlayerOfTheGame().getBookshelf().isFull()&& !game.getEndGame()){
+                game.getModelView().setBookshelfFullPoints(game.getTurnPlayerOfTheGame().getNickname());
                 game.setEndGame(true);
             }
             game.updateAllPoints();

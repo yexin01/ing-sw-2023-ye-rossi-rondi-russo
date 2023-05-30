@@ -324,6 +324,7 @@ public class PrinterCommonGoalAndPoints {
     }
 
      */
+
     public void printToken(int num,String player){
         System.out.println("il token "+num+"   nome  "+player);
     }
@@ -364,7 +365,7 @@ public class PrinterCommonGoalAndPoints {
          */
 
     }
-    public  void printEndGame(ClientView clientView,int[] personalPoints){
+    public  void printEndGame(ClientView clientView,int[] personalPoints,String playerBookshelfFull){
         //i playerpoints saranno ordinati dal basso verso l alto leggerli al contrario e per il punteggio totale sommare quello in posizione index dell array personal
         //sono gia associati ai rispettivi giocatori ma non potevo mostrare i personal points prima
         PlayerPointsView[] playersRanking= clientView.getPlayerPointsViews();

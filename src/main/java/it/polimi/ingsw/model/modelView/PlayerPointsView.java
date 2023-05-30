@@ -3,7 +3,9 @@ package it.polimi.ingsw.model.modelView;
 import java.io.Serial;
 import java.io.Serializable;
 
-//TODO based on how the graphic part is implemented, decide to keep it or not
+/**
+ *Immutable class that represents the single player with his scores
+ */
 public class PlayerPointsView implements Serializable {
 
     private final int[] commonGoalPoints;
@@ -13,21 +15,24 @@ public class PlayerPointsView implements Serializable {
     @Serial
     private static final long serialVersionUID = -550443840165524261L;
 
+    /**
+     * Constructor PlayerPointsView
+     * @param commonGoalPoints:array with common points scores, the position of each common
+     *                        indicates the score relative to that common;
+     * @param adjacentPoints:scores of adjacent tiles;
+     * @param nickname: nickname of the player;
+     */
     public PlayerPointsView( int[] commonGoalPoints,int adjacentPoints, String nickname) {
         this.commonGoalPoints = commonGoalPoints;
         this.adjacentPoints = adjacentPoints;
         this.nickname = nickname;
     }
 
-    public int getHowManyTokenYouHave(){
-        int num=0;
-        for(Integer points:commonGoalPoints){
-            if(points!=0){
-                num++;
-            }
-        }
-        return num;
-    }
+    /**
+     *
+     * @return: sum of common goal points;
+     */
+
     public int getPoints(){
         int sum=0;
         for(int n:commonGoalPoints){
@@ -36,6 +41,11 @@ public class PlayerPointsView implements Serializable {
         int un=adjacentPoints+sum;
         return adjacentPoints+sum;
     }
+
+    /**
+     *
+     * @return: array of common goal points
+     */
     public int[] getPointsToken(){
         return commonGoalPoints;
     }

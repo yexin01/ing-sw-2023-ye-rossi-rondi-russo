@@ -65,13 +65,16 @@ public class InfoAndEndGameListener extends EventListener{
                 }
             }
             /**
-             * END_GAME message contains: all the scores -common,-adjacent and -personal points. Players are sorted from lowest to highest score;
+             * END_GAME message contains: all the scores -common,-adjacent and -personal points,first player
+             * to completely fill the bookshelf.
+             * Players are sorted from lowest to highest score;
              */
             case END_GAME ->{
                 MessageHeader header=new MessageHeader(MessageType.DATA,null);
                 MessagePayload payload=new MessagePayload(TurnPhase.END_GAME);
                 payload.put(Data.PERSONAL_POINTS,modelView.getPersonalPoints());
                 payload.put(Data.POINTS,modelView.getPlayerPoints());
+                payload.put(Data.BOOKSHELF_FULL_PLAYER,modelView.getBookshelfFullPoints());
                 Message message=new Message(header,payload);
                 getGameLobby().setMessageEndGame(message);
                 getGameLobby().sendMessageToAllPlayers(message);

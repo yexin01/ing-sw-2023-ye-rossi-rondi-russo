@@ -5,7 +5,9 @@ import it.polimi.ingsw.model.Type;
 import java.io.Serial;
 import java.io.Serializable;
 
-
+/**
+ * Class representing the immutable cell of the board
+ */
 public class BoardBoxView implements Serializable {
     private final boolean occupiable;
     private final ItemTileView itemTileView;
@@ -15,6 +17,16 @@ public class BoardBoxView implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -3213024846906965897L;
+
+    /**
+     * Constructor of BoardBoxView.
+     * @param occupiable:according to the table read from the json file and depending on
+     *                  the number of players it is true or false;
+     * @param itemTileView:itemTileView in the position [x][y] of the board;
+     * @param x:row of the board;
+     * @param y:column of the board;
+     * @param freeEdges:num of free edges of the cell;
+     */
 
     public BoardBoxView(boolean occupiable, ItemTileView itemTileView, int x, int y, int freeEdges) {
         this.occupiable = occupiable;

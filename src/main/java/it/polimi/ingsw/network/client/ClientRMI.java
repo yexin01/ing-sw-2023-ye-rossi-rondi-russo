@@ -39,6 +39,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
     public void startConnection() throws Exception {
         Registry registry = LocateRegistry.getRegistry(getIp(), getPort());
         server = (RMIHandler) registry.lookup("MyShelfieServer");
+        System.out.println("CI ENTRA");
         server.login(getNickname(), this);
     }
 
