@@ -166,7 +166,7 @@ public class Server implements Runnable{
         }
         instance = this;
         instance.rmiServer = new RMIServer(this, rmiPort);
-        instance.rmiServer.startServer();
+        instance.rmiServer.startServer(ipAddress);
         System.out.println("RMI Server started on port: " + rmiPort );
 
         instance.socketServer = new SocketServer(this, socketPort);
