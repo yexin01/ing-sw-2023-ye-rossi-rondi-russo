@@ -26,27 +26,10 @@ public class RMIServer {
     /**
      * Method that starts the RMI server when called by Server class and binds the RMI handler to the registry
      */
-    /*
-    public void startServer(String ip) {
+    public void startServer() {
         try {
             RMIHandlerImplementation rmiHandler = new RMIHandlerImplementation(server);
             Registry registry = LocateRegistry.createRegistry(port);
-            System.setProperty("java.rmi.server.hostname", ip);
-            registry.bind("MyShelfieServer", rmiHandler);
-        } catch (IOException e ) {
-            System.out.println("already bound!!");
-        } catch (AlreadyBoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-     */
-
-    public void startServer(String ip) {
-        try {
-            RMIHandlerImplementation rmiHandler = new RMIHandlerImplementation(server);
-            Registry registry = LocateRegistry.createRegistry(port);
-            System.setProperty("java.rmi.server.hostname", ip);
             registry.rebind("MyShelfieServer", rmiHandler);
         } catch (IOException e ) {
             System.out.println("already bound!!");
