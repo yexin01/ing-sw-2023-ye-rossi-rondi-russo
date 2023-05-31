@@ -28,7 +28,7 @@ public class FinalRankingPanel extends BasePanel{
      * @param clientView : Client infos
      * @param personalPoints : personal goal points of all the players
      */
-    public FinalRankingPanel(ClientView clientView, int[] personalPoints) throws IOException {
+    public FinalRankingPanel(ClientView clientView, int[] personalPoints, String playerBookshelfFull) throws IOException {
         int counter = 0;
 
         setBackground(new Background(getParquetBackground()));
@@ -52,7 +52,11 @@ public class FinalRankingPanel extends BasePanel{
             VBox vBox = new VBox();
             Label label = new Label(clientView.getPlayerPointsViews()[i].getNickname());
             label.setFont(font1); label.setTextFill(Color.WHITE);
-            Label label5 = new Label( (clientView.getPlayerPointsViews()[i].getPoints()+personalPoints[i])+"  Points");
+            int totalPoints = (clientView.getPlayerPointsViews()[i].getPoints()+personalPoints[i]);
+            if (clientView.getPlayerPointsViews()[i].getNickname().equals(playerBookshelfFull)) {
+                totalPoints++;
+            }
+            Label label5 = new Label( totalPoints+"  Points");
             label5.setFont(font); label5.setTextFill(Color.WHITE);
             int sumToken = 0;
             for (int j =0; j<clientView.getCommonGoalView().length; j++) {

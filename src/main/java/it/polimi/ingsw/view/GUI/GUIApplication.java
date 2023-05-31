@@ -231,18 +231,14 @@ public class GUIApplication extends Application implements ClientInterface {
      * Sets on stage the panel that shows the final ranking, and gives the
      * possibility to the users to come back to the lobby
      * @param personalPoints : Personal goal points of all the users
+     * @param playerBookshelfFull : first one to finish the bookshelf
      */
     @Override
     public void endGame(int[] personalPoints, String playerBookshelfFull) {
-
-    }
-
-
-    public void endGame(int[] personalPoints) {
         Platform.runLater(()-> {
             FinalRankingPanel finalRankingPanel;
             try {
-                finalRankingPanel = new FinalRankingPanel(clientView, personalPoints);
+                finalRankingPanel = new FinalRankingPanel(clientView, personalPoints, playerBookshelfFull);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
