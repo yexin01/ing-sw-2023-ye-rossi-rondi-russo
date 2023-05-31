@@ -43,9 +43,9 @@ public class CLI implements ClientInterface {
         T[] enumValues = enumClass.getEnumConstants();
         out.println();
         for(T enumValue : enumValues){
-            Colors.colorizeSize(Colors.GAME_INSTRUCTION, "•["+(enumValue.ordinal()+1)+"]",5);
+            Colors.colorizeSize(Colors.GAME_INSTRUCTION, "·["+(enumValue.ordinal()+1)+"]",5);
             Colors.colorizeSize(Colors.GAME_INSTRUCTION,enumValue.getCommand(), 30);
-            Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
+            Colors.colorize(Colors.GAME_INSTRUCTION, "│ ");
         }
         out.println();
         Colors.colorize(Colors.GAME_INSTRUCTION,"Insert command: ");
@@ -64,7 +64,7 @@ public class CLI implements ClientInterface {
                 Colors.colorizeSize(Colors.GAME_INSTRUCTION,titlePhase[i], 30+5);
             }else Colors.colorizeSize(Colors.BLACK_CODE,titlePhase[i], 30+5);
             Colors.printFreeSpaces(2);
-            //Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
+            //Colors.colorize(Colors.GAME_INSTRUCTION, "│ ");
 
         }
         out.println();
@@ -75,12 +75,12 @@ public class CLI implements ClientInterface {
             while(!commandString.toLowerCase().startsWith(commandsPhase[typeCommand%(commandsPhase.length+1)])){
                 String noCommands=" ";
                 Colors.colorizeSize(Colors.GAME_INSTRUCTION,noCommands, 30+5);
-                Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
+                Colors.colorize(Colors.GAME_INSTRUCTION, "│ ");
                 i++;
                 typeCommand++;
             }
             if(commandString.toLowerCase().startsWith(commandsPhase[commandsPhase.length-1])){
-                Colors.colorizeSize(Colors.GAME_INSTRUCTION, "•["+(command.ordinal()+1)+"]",5);
+                Colors.colorizeSize(Colors.GAME_INSTRUCTION, "·["+(command.ordinal()+1)+"]",5);
                 Colors.colorizeSize(Colors.GAME_INSTRUCTION,command.getCommand(), 15);
                 //System.out.println();
 
@@ -92,21 +92,21 @@ public class CLI implements ClientInterface {
                     }
                 }else {
                     firstPrint=false;
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
+                    Colors.colorize(Colors.GAME_INSTRUCTION, "│ ");
                     out.println();
                     typeCommand=0;
                 }
             }else{
                 if (commandString.toLowerCase().startsWith(commandsPhase[phase])/* || commandString.toLowerCase().startsWith(commandsPhase[commandsPhase.length-1])*/) {
-                    Colors.colorizeSize(Colors.GAME_INSTRUCTION, "•["+(command.ordinal()+1)+"]",5);
+                    Colors.colorizeSize(Colors.GAME_INSTRUCTION, "·["+(command.ordinal()+1)+"]",5);
                     Colors.colorizeSize(Colors.GAME_INSTRUCTION,command.getCommand(), 30);
                 }else{
-                    Colors.colorizeSize(Colors.BLACK_CODE, "•["+(command.ordinal()+1)+"]",5);
+                    Colors.colorizeSize(Colors.BLACK_CODE, "·["+(command.ordinal()+1)+"]",5);
                     Colors.colorizeSize(Colors.BLACK_CODE,command.getCommand(), 30);
                 }
                 i++;
                 typeCommand++;
-                Colors.colorize(Colors.GAME_INSTRUCTION, "┃ ");
+                Colors.colorize(Colors.GAME_INSTRUCTION, "│ ");
             }
         }
         Colors.colorize(Colors.GAME_INSTRUCTION,"Insert command: ");
@@ -200,9 +200,10 @@ public class CLI implements ClientInterface {
                     Colors.colorize(Colors.GAME_INSTRUCTION, "(" + x + ", " + y + ") ");
                     out.print(Colors.printTiles(getClientView().getBoardView()[x][y].getType(), 3));
                     Colors.colorize(Colors.GAME_INSTRUCTION, "; ");
-                    out.println();
+
                 }
             }
+            out.println();
         }
 
     }

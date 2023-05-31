@@ -44,7 +44,7 @@ public class PrinterBookshelfAndPersonal {
         this.lineLength=sizetile+2*spaceBetweenTiles;
         String characterBetweenPersonalAndBookshelf;
         if(personalGoal){
-            characterBetweenPersonalAndBookshelf="←";
+            characterBetweenPersonalAndBookshelf="«";
         }else characterBetweenPersonalAndBookshelf=" ";
         if(arrow){
             printArrowChoiceColumn(bookshelfView);
@@ -55,14 +55,12 @@ public class PrinterBookshelfAndPersonal {
         }else personalLine=0;
         int charForSide = 3;
         int size = (lineLength + 1) * bookshelfView[0].length + 1;
-
         String[] lineRepresentations = {
-                "┳" + "━".repeat(lineLength),
-                "┳" + "━".repeat(lineLength),
-                "┳" + "━".repeat(lineLength) + "┳",
-                "┣" + "━".repeat(lineLength),
-                "╋" + "━".repeat(lineLength),
-                "╋" + "━".repeat(lineLength) + "┫",
+                "┬" + "─".repeat(lineLength),
+                "┬" + "─".repeat(lineLength) + "┬",
+                "├" + "─".repeat(lineLength),
+                "┼" + "─".repeat(lineLength),
+                "┼" + "─".repeat(lineLength) + "┤",
                 " ".repeat(lineLength - 2 * spaceBetweenTiles),
         };
 
@@ -78,14 +76,14 @@ public class PrinterBookshelfAndPersonal {
             Colors.printCharacter(" ",characterBetweenPersonalAndBookshelf.length(),Colors.GAME_INSTRUCTION);
             for (int j = 0; j < bookshelfView[0].length; j++) {
                 if (j == 0) {
-                    index = (i == 0 && j == 0) ? 0 : 3;
+                    index = (i == 0 && j == 0) ? 0 : 2;
                 }
                 if (j > 0 && j < bookshelfView[0].length - 1) {
-                    index = (i == 0) ? 1 : 4;
+                    index = (i == 0) ? 0 : 3;
 
                 }
                 if (j == bookshelfView[0].length - 1) {
-                    index = (i == 0) ? 2 : 5;
+                    index = (i == 0) ? 1 : 4;
                 }
 
                 System.out.print(Colors.BEIGE_CODE + lineRepresentations[index] + "\u001B[0m");
@@ -96,15 +94,15 @@ public class PrinterBookshelfAndPersonal {
                 personalLine= printPersonalGoalWithOrWithoutFrame(personalLine,clientView,spaceBetweenPersonal,false,sizeLenghtFromBord,sizeLenghtFromBord-bookshelfView[0].length*2*spaceBetweenPersonal-bookshelfView[0].length-1-10);
                 Colors.printCharacter(characterBetweenPersonalAndBookshelf,characterBetweenPersonalAndBookshelf.length(),Colors.GAME_INSTRUCTION);
                 for (int j = 0; j < bookshelfView[0].length; j++) {
-                    Colors.colorize(Colors.BEIGE_CODE, "┃");
+                    Colors.colorize(Colors.BEIGE_CODE, "│");
                     Colors.printFreeSpaces(spaceBetweenTiles);
                     if (bookshelfView[i][j].getTileID() != -1) {
                         System.out.print(Colors.printTiles(bookshelfView[i][j].getTypeView(), sizetile));
 
-                    } else System.out.print(lineRepresentations[6]);
+                    } else System.out.print(lineRepresentations[5]);
                     Colors.printFreeSpaces(spaceBetweenTiles);
                 }
-                Colors.colorize(Colors.BEIGE_CODE, "┃");
+                Colors.colorize(Colors.BEIGE_CODE, "│");
 
             }
             System.out.println();
@@ -122,15 +120,15 @@ public class PrinterBookshelfAndPersonal {
         PersonalGoalCard q = clientView.getPlayerPersonalGoal();
         int lineLength=1+spaceBetweenPersonal*2;
         String[] lineRepresentations = {
-                "┏" + "━".repeat(lineLength),
-                "┳" + "━".repeat(lineLength),
-                "┳" + "━".repeat(lineLength) + "┓",
-                "┣" + "━".repeat(lineLength),
-                "╋" + "━".repeat(lineLength),
-                "╋" + "━".repeat(lineLength) + "┫",
-                "┗" + "━".repeat(lineLength),
-                "┻" + "━".repeat(lineLength),
-                "┻" + "━".repeat(lineLength) + "┛",
+                "┌" + "─".repeat(lineLength),
+                "┬" + "─".repeat(lineLength),
+                "┬" + "─".repeat(lineLength) + "┐",
+                "├" + "─".repeat(lineLength),
+                "┼" + "─".repeat(lineLength),
+                "┼" + "─".repeat(lineLength) + "┤",
+                "└" + "─".repeat(lineLength),
+                "┴" + "─".repeat(lineLength),
+                "┴" + "─".repeat(lineLength) + "┘",
                 " ".repeat(lineLength - 2 * spaceBetweenPersonal),
         };
         int index = 0;
@@ -167,7 +165,7 @@ public class PrinterBookshelfAndPersonal {
                 if(personalLine!= bookshelfView.length){
                     for(int j=0;j<bookshelfView[0].length;j++){
                         boolean found = false;
-                        Colors.colorize(Colors.BEIGE_CODE,"╎");
+                        Colors.colorize(Colors.BEIGE_CODE,"│");
                         fromBoardBookshelf--;
                         Colors.printFreeSpaces(spaceBetweenPersonal);
                         fromBoardBookshelf=fromBoardBookshelf-spaceBetweenPersonal;
@@ -192,7 +190,7 @@ public class PrinterBookshelfAndPersonal {
                         //Colors.colorize(Colors.WHITE_CODE,"║");
                         //printFreeSpaces(spaceBetweenPersonal);
                     }
-                    Colors.colorize(Colors.BEIGE_CODE,"╎");
+                    Colors.colorize(Colors.BEIGE_CODE,"│");
                     fromBoardBookshelf--;
                     Colors.printFreeSpaces(spaceBetweenPersonal);
                     fromBoardBookshelf=fromBoardBookshelf-spaceBetweenPersonal;
@@ -239,8 +237,8 @@ public class PrinterBookshelfAndPersonal {
             if(x==rowCoordinates){
                 int y = cell.getY();
                 if(atLeastOne==0){
-                    Colors.colorize(Colors.GAME_INSTRUCTION,"➠");
-                }else Colors.colorize(Colors.GAME_INSTRUCTION,"•");
+                    Colors.colorize(Colors.GAME_INSTRUCTION,"»");
+                }else Colors.colorize(Colors.GAME_INSTRUCTION,"·");
                 //Colors.colorize(Colors.BEIGE_CODE,"┃");
 
 
