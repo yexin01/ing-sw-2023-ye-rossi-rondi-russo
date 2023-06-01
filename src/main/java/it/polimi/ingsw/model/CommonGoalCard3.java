@@ -31,7 +31,8 @@ public class CommonGoalCard3 extends CommonGoalCard{
         goals=0;
         for(int i=0; i<mat.length-1 && goals<4; i++){
             for(int j=0; j<mat[0].length-1 && goals<4; j++){
-                while ((checkable[i][j]==0 || mat[i][j].getTileID()==-1) && (j<mat[0].length-2)) { j++; }
+                while( (checkable[i][j]==0 || mat[i][j].getTileID()==-1) && (j<mat[0].length-1)){ j++; }
+                checkable[i][j]=0;
                 posgoal.add(i);
                 posgoal.add(j);
                 newi=i;
@@ -46,9 +47,10 @@ public class CommonGoalCard3 extends CommonGoalCard{
                         newi=posgoal.get(x);
                         newj=posgoal.get(x+1);
                         x=x+2;
+                    } else {
+                        break; // to avoid infinite loop if there are no more near tiles to check
                     }
-                } while ((near<8 && (i<mat.length-1) && (j<mat[0].length-1)) && ((near>oldnear || x<posgoal.size()) && x<posgoal.size()));
-
+                }while(near<8 && i<mat.length-1 && j<mat[0].length-1);
                 if(near>=8){
                     goals++;
                     //make uncheckable those of the group found and those near
@@ -62,7 +64,6 @@ public class CommonGoalCard3 extends CommonGoalCard{
                     checkable = allNearUncheckable (checkable, posgoal.get(x), posgoal.get(x+1));
                 }
                 if (near>0) { posgoal.subList(0, near).clear(); }
-                checkable[i][j]=0;
             }
         }
         return goals>=4;
@@ -70,7 +71,6 @@ public class CommonGoalCard3 extends CommonGoalCard{
 
     /**
      * checkNear() will check the position on right, left and bottom to see if there are any other tiles with the same type, if it finds any, its positions will be added to the ArrayList posgoal
-     * Notes: checkNear is only used by checkGoal3()
      * @param posgoal that will be return with the new finds
      * @param mat matrix of ItemTile[][] to check
      * @param a as the 'i' of the position to check
