@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.server;
 
+import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.message.*;
 
 import java.io.IOException;
@@ -19,7 +20,6 @@ public class GlobalLobby {
     private ConcurrentHashMap<Integer, GameLobby> gameLobbies; //maps all the games in progress or waiting to be created, GameLobby refers to 1 game in progress
     private ConcurrentHashMap<String, Connection> waitingPlayersWithNoGame; //map of all the players waiting to be added to a game lobby
 
-    private final static int MIN_PLAYERS = 2;
 
     /**
      * Constructor of the class GlobalLobby that creates a new Global Lobby for the server
@@ -28,6 +28,7 @@ public class GlobalLobby {
         this.gameLobbies = new ConcurrentHashMap<>();
         this.waitingPlayersWithNoGame = new ConcurrentHashMap<>();
     }
+
 
     /**
      * Method that adds a player to the waiting list of the global lobby of the server
@@ -100,7 +101,7 @@ public class GlobalLobby {
      * @param connection the connection of the player that wants to join a random game lobby
      * @throws IOException if there are problems with the connection
      */
-    public synchronized void playerJoinsFirstFreeSpotInRandomGame(String nickname, Connection connection) throws IOException {
+    public synchronized void playerJoinsFirstFreeSpotInRandomGame(String nickname,int minPlayers, Connection connection) throws IOException {
         boolean done = false;
         for (GameLobby gameLobby : gameLobbies.values()) {
             if (!gameLobby.isFull() && !done && gameLobby.getGameController()==null) {
@@ -115,7 +116,7 @@ public class GlobalLobby {
             payload.put(Data.CONTENT, ErrorType.ERR_NO_FREE_SPOTS.getErrorMessage());
             connection.sendMessageToClient(new Message(header,payload));
 
-            GameLobby gameLobby = new GameLobby(getFirstFreeGameLobbyId(), MIN_PLAYERS,this);
+            GameLobby gameLobby = new GameLobby(getFirstFreeGameLobbyId(), minPlayers,this);
             gameLobbies.put(gameLobby.getIdGameLobby(), gameLobby);
             gameLobby.addPlayerToGame(nickname, connection);
 

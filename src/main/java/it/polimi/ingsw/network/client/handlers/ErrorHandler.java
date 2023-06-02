@@ -5,14 +5,28 @@ import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientMain;
 import it.polimi.ingsw.view.ClientInterface;
-
+/**
+ * The ErrorHandler class extends the MessageHandler class and handles incoming error messages.
+ * It provides methods to handle and process different types of error messages and take appropriate actions based on the error type.
+ */
 public class ErrorHandler extends MessageHandler {
-
+    /**
+     * Constructs an ErrorHandler object with the specified client interface and client.
+     *
+     * @param clientInterface The client interface used for displaying messages and interacting with the client.
+     * @param client The client object associated with this error handler.
+     */
     public ErrorHandler(ClientInterface clientInterface, Client client) {
         super(clientInterface, client);
 
     }
-
+    /**
+     * Overrides the handleMessage method from the MessageHandler class.
+     * Handles the incoming error message and performs the necessary actions based on the error type and key.
+     *
+     * @param mes The message object to be handled.
+     * @throws Exception if an error occurs while handling the message.
+     */
     @Override
     public synchronized void handleMessage(Message mes) throws Exception {
         KeyErrorPayload key= (KeyErrorPayload) mes.getPayload().getKey();

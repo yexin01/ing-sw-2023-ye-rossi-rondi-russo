@@ -7,19 +7,36 @@ import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.network.client.Client;
 
 import it.polimi.ingsw.view.ClientInterface;
-
+/**
+ * The TurnHandler class extends the MessageHandler class and handles incoming messages related to the game turns.
+ * It processes the incoming message and performs the necessary actions based on the turn phase data.
+ * It also delegates certain messages to the StartAndEndGameHandler for further handling.
+ */
 public class TurnHandler extends MessageHandler {
-
+    /**
+     * Constructs a TurnHandler object with the specified client interface, client, and startAndEndGameHandler.
+     *
+     * @param clientInterface The client interface used for displaying messages and interacting with the client.
+     * @param client The client object associated with this turn handler.
+     * @param startAndEndGameHandler The start and end game handler used for handling certain messages.
+     */
     public TurnHandler(ClientInterface clientInterface, Client client, StartAndEndGameHandler startAndEndGameHandler) {
         super(clientInterface, client);
         this.startAndEndGameHandler = startAndEndGameHandler;
     }
     private final StartAndEndGameHandler startAndEndGameHandler;
-
+    /**
+     * Overrides the handleMessage method from the MessageHandler class.
+     * Handles the incoming message by processing the turn phase data and performing the necessary actions based on the data.
+     * Certain messages, such as actions related to the start and end of the game or when the entire ClientView is reset
+     * after a disconnection, are delegated to the StartAndEndGameHandler for further handling.
+     *
+     * @param mes The message object to be handled.
+     * @throws Exception if an error occurs while handling the message.
+     */
     @Override
     public synchronized void handleMessage(Message mes) throws Exception {
         TurnPhase turnPhase=(TurnPhase) mes.getPayload().getKey();
-        //System.out.println("SONO TURN HANDLER"+turnPhase);
         switch(turnPhase){
             case SELECT_ORDER_TILES ->{
                 getClientInterface().askOrder();
@@ -28,7 +45,6 @@ public class TurnHandler extends MessageHandler {
                 getClientInterface().askColumn();
             }
             case END_TURN -> {
-                //System.out.println("END TURN CLIENT");
                BoardBoxView[][] boardBoxViews= (BoardBoxView[][]) mes.getPayload().getContent(Data.NEW_BOARD);
                getClientInterface().getClientView().setBoardView(boardBoxViews);
                PlayerPointsView[] points=(PlayerPointsView[]) mes.getPayload().getContent(Data.POINTS);
@@ -42,14 +58,11 @@ public class TurnHandler extends MessageHandler {
                getClientInterface().getClientView().setTurnPlayer(turnPlayer);
                for(int num:token){
                    if(num!=0){
-                       //getClientInterface().displayMessage(num+"vinto da "+player+" della common goal numero "+(i+1)+" identita"+getClientInterface().getClientView().getCommonGoalView()[0][i]+"\n");
                        getClientInterface().displayToken(num,player);
                    }
                 }
-                //é il suo turno
                 if(turnPlayer.equals(getClientInterface().getClientView().getNickname())){
                     getClientInterface().askCoordinates();
-                    //non é il suo turno
                 }else getClientInterface().waitingRoom();
             }
             default -> {

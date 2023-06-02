@@ -46,6 +46,7 @@ public class Server implements Runnable{
         }
         MAX_PLAYERS= gameRules.getMaxPlayers();
         MIN_PLAYERS= gameRules.getMinPlayers();
+
         MAX_LENGTH_NICKNAME= gameRules.getMaxCharactersPlayers();
         MIN_LENGTH_NICKNAME= gameRules.getMinCharactersPlayers();
         // it checks if there is already an instance of the server
@@ -786,7 +787,7 @@ public class Server implements Runnable{
      * @throws IOException if the game lobby is full
      */
     private synchronized void handleJoinRandomGameLobby(Message message) throws IOException {
-        this.globalLobby.playerJoinsFirstFreeSpotInRandomGame(message.getHeader().getNickname(), clientsConnected.get(message.getHeader().getNickname()));
+        this.globalLobby.playerJoinsFirstFreeSpotInRandomGame(message.getHeader().getNickname(), MIN_PLAYERS,clientsConnected.get(message.getHeader().getNickname()));
     }
 
     /**
