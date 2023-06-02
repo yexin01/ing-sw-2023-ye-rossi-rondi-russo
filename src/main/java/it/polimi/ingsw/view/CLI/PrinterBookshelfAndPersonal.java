@@ -29,7 +29,7 @@ public class PrinterBookshelfAndPersonal {
         Colors.printFreeSpaces(sizeLenghtFromBord);
         for (int i = 0; i < bookshelfView.length-1; i++) {
             Colors.printFreeSpaces((lineLength+2)/2);
-            System.out.print("↓");
+            Colors.colorize(Colors.RED_CODE,"v");
             Colors.printFreeSpaces((lineLength+2-(lineLength+2)/2)-2);
         }
 
@@ -110,7 +110,7 @@ public class PrinterBookshelfAndPersonal {
         }
 
         Colors.printFreeSpaces(sizeLenghtFromBord - charForSide+characterBetweenPersonalAndBookshelf.length());
-        Colors.printCharacter("▓", size + 2 * charForSide, Colors.BEIGE_CODE);
+        Colors.printCharacter("█", size + 2 * charForSide, Colors.BEIGE_CODE);
 
         System.out.println();
     }

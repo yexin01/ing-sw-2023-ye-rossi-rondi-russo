@@ -12,24 +12,24 @@ public class PrinterCommonGoalAndPoints {
     private int terminalWidth = 80;
     private String margin = " ".repeat(50);
 
-    String tlc = borderColor+"┏"+"\u001B[0m"; //topLeftCorner
-    String trc = borderColor+"┓"+"\u001B[0m"; //topRightCorner
-    String blc = borderColor+"┗"+"\u001B[0m"; //bottomLeftCorner
-    String brc = borderColor+"┛"+"\u001B[0m"; //bottomRightCorner
-    String hd = borderColor+"━"+"\u001B[0m"; //horizontalDash
-    String vd = borderColor+"┃"+"\u001B[0m"; //verticalDash
-    String cr = borderColor+"╋"+"\u001B[0m"; //cross
-    String t = borderColor+"┳"+"\u001B[0m"; //t
-    String ut = borderColor+"┻"+"\u001B[0m"; //upside down t
-    String ri = borderColor+"┫"+"\u001B[0m"; //right intersection
-    String li = borderColor+"┣"+"\u001B[0m"; //left intersection
+    String tlc = borderColor+"┌"+"\u001B[0m"; //topLeftCorner
+    String trc = borderColor+"┐"+"\u001B[0m"; //topRightCorner
+    String blc = borderColor+"└"+"\u001B[0m"; //bottomLeftCorner
+    String brc = borderColor+"┘"+"\u001B[0m"; //bottomRightCorner
+    String hd = borderColor+"─"+"\u001B[0m"; //horizontalDash
+    String vd = borderColor+"│"+"\u001B[0m"; //verticalDash
+    String cr = borderColor+"┼"+"\u001B[0m"; //cross
+    String t = borderColor+"┬"+"\u001B[0m"; //t
+    String ut = borderColor+"┴"+"\u001B[0m"; //upside down t
+    String ri = borderColor+"┤"+"\u001B[0m"; //right intersection
+    String li = borderColor+"├"+"\u001B[0m"; //left intersection
 
-    String oc = Colors.OCHRE_YELLOW_CODE+"▇▇"+"\u001B[0m"; //yellow
-    String or = Colors.ORANGE_CODE+"▇▇"+"\u001B[0m"; //orange
-    String g = Colors.GREEN_CODE+"▇▇"+"\u001B[0m"; //green
-    String l = Colors.LIGHT_BLUE_CODE+"▇▇"+"\u001B[0m"; //lightblue
-    String b = Colors.BLUE_CODE+"▇▇"+"\u001B[0m"; //blue
-    String p = Colors.PINK_CODE+"▇▇"+"\u001B[0m"; //pink
+    String oc = Colors.OCHRE_YELLOW_CODE+"▄▄"+"\u001B[0m"; //yellow
+    String or = Colors.ORANGE_CODE+"▄▄"+"\u001B[0m"; //orange
+    String g = Colors.GREEN_CODE+"▄▄"+"\u001B[0m"; //green
+    String l = Colors.LIGHT_BLUE_CODE+"▄▄"+"\u001B[0m"; //lightblue
+    String b = Colors.BLUE_CODE+"▄▄"+"\u001B[0m"; //blue
+    String p = Colors.PINK_CODE+"▄▄"+"\u001B[0m"; //pink
 
     private String[] commonGoalCard1 = {
             tlc + hd.repeat(lineLength) + trc,
@@ -275,11 +275,11 @@ public class PrinterCommonGoalAndPoints {
     private String[] commonGoalCard12 = {
             tlc + hd.repeat(lineLength) + trc,
             vd + "                " + vd,
-            vd + " ▇▇             " + vd,
-            vd + " ▇▇ ▇▇          " + vd,
-            vd + " ▇▇ ▇▇ ▇▇       " + vd,
-            vd + " ▇▇ ▇▇ ▇▇ ▇▇    " + vd,
-            vd + " ▇▇ ▇▇ ▇▇ ▇▇ ▇▇ " + vd,
+            vd + " ▄▄             " + vd,
+            vd + " ▄▄ ▄▄          " + vd,
+            vd + " ▄▄ ▄▄ ▄▄       " + vd,
+            vd + " ▄▄ ▄▄ ▄▄ ▄▄    " + vd,
+            vd + " ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ " + vd,
             blc + hd.repeat(lineLength) + brc
     };
 
@@ -294,10 +294,11 @@ public class PrinterCommonGoalAndPoints {
             ""
     };
 
+
     public String[] buildToken (int x){
-        String [] token ={"┏"+"━━━"+"┓",
-                          "┃ "+ x +" ┃",
-                          "┗"+"━━━"+"┛"};
+        String [] token ={"┌"+"───"+"┐",
+                          "│ "+ x +" │",
+                          "└"+"───"+"┘"};
         return token;
     }
 
@@ -343,7 +344,7 @@ public class PrinterCommonGoalAndPoints {
         System.out.println(tab+vd+" Nickname"+" ".repeat(nickLenght-7)+vd+" Points "+vd+" Common "+vd+" Adjacent "+vd+" Personal "+vd);
         System.out.println(tab+li+hd.repeat(nickLenght+2)+cr+hd.repeat(8)+cr+hd.repeat(8)+cr+hd.repeat(10)+cr+hd.repeat(10)+ri);
         for (int i=playerPoints.length-1;i>=0;i--) {
-            System.out.printf(tab+vd+" %s"+" ".repeat(nickLenght-playerPoints[i].getNickname().length()+1)+vd+" %6d "+vd+" %6d "+vd+" %8d "+vd+" %8s "+vd+"%n", playerPoints[i].getNickname().equals(clientView.getTurnPlayer())? Colors.paint(Colors.YELLOW_CODE, playerPoints[i].getNickname()): playerPoints[i].getNickname(), playerPoints[i].getPoints(), Arrays.stream(playerPoints[i].getCommonGoalPoints()).sum(), playerPoints[i].getAdjacentPoints(), playerPoints[i].getNickname().equals(clientView.getNickname())? Integer.toString(clientView.getPersonalPoints()) : "?");
+            System.out.printf(tab+vd+" %s"+" ".repeat(nickLenght-playerPoints[i].getNickname().length()+1)+vd+" %6d "+vd+" %6d "+vd+" %8d "+vd+" %8s "+vd+"%n", playerPoints[i].getNickname().equals(clientView.getTurnPlayer())? Colors.paint(Colors.YELLOW_CODE, playerPoints[i].getNickname()): playerPoints[i].getNickname(), playerPoints[i].getPoints(), Arrays.stream(playerPoints[i].getPointsToken()).sum(), playerPoints[i].getAdjacentPoints(), playerPoints[i].getNickname().equals(clientView.getNickname())? Integer.toString(clientView.getPersonalPoints()) : "?");
         }
         System.out.println(tab+blc+hd.repeat(nickLenght+2)+ut+hd.repeat(8)+ut+hd.repeat(8)+ut+hd.repeat(10)+ut+hd.repeat(10)+brc);
 
@@ -402,7 +403,7 @@ public class PrinterCommonGoalAndPoints {
                     color = Colors.WHITE_CODE;
                 break;
             }
-            System.out.printf(tab+vd+" %s"+" ".repeat(nickLenght-playersRanking[i].getNickname().length()+1)+vd+" %6d "+vd+" %6d "+vd+" %8d "+vd+" %8s "+vd+"  "+symbol+"%n", Colors.paint(color, playersRanking[i].getNickname()), playersRanking[i].getPoints()+personalPoints[i]+(playersRanking[i].getNickname().equals(nickWhoFilledBookshelf)?1:0), Arrays.stream(playersRanking[i].getCommonGoalPoints()).sum(), playersRanking[i].getAdjacentPoints(), clientView.getPersonalPoints());
+            System.out.printf(tab+vd+" %s"+" ".repeat(nickLenght-playersRanking[i].getNickname().length()+1)+vd+" %6d "+vd+" %6d "+vd+" %8d "+vd+" %8s "+vd+"  "+symbol+"%n", Colors.paint(color, playersRanking[i].getNickname()), playersRanking[i].getPoints()+personalPoints[i]+(playersRanking[i].getNickname().equals(nickWhoFilledBookshelf)?1:0), Arrays.stream(playersRanking[i].getPointsToken()).sum(), playersRanking[i].getAdjacentPoints(), clientView.getPersonalPoints());
         }
         System.out.println(tab+blc+hd.repeat(nickLenght+2)+ut+hd.repeat(8)+ut+hd.repeat(8)+ut+hd.repeat(10)+ut+hd.repeat(10)+brc);
 

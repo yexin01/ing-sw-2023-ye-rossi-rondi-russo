@@ -25,7 +25,6 @@ public class CLI implements ClientInterface {
     private Scanner scanner;
     private PrinterBoard printerBoard;
     private PrinterBookshelfAndPersonal printerBookshelfAndPersonal;
-    private PrinterStartAndEndTurn printerStartAndEndTurn;
     private PrinterCommonGoalAndPoints printerCommonGoalAndPoints;
 
     public CLI(){
@@ -33,7 +32,6 @@ public class CLI implements ClientInterface {
         this.clientView=new ClientView();
         printerBoard=new PrinterBoard();
         printerBookshelfAndPersonal=new PrinterBookshelfAndPersonal();
-        printerStartAndEndTurn =new PrinterStartAndEndTurn();
         printerCommonGoalAndPoints=new PrinterCommonGoalAndPoints();
     }
 
@@ -230,7 +228,7 @@ public class CLI implements ClientInterface {
             }
             case PRINT5 -> printerCommonGoalAndPoints.printPoints(getClientView());
             case PRINT6 -> printerCommonGoalAndPoints.printCommonGoalCards(getClientView());
-            case PRINT7 -> printerStartAndEndTurn.rulesGame();
+            case PRINT7 -> PrinterLogo.printGamesRulesLogo();
             case PRINT9 -> System.exit(0);
         }
     }
@@ -592,7 +590,6 @@ public class CLI implements ClientInterface {
     public synchronized void waitingRoom() {
         Colors.colorize(Colors.GAME_INSTRUCTION, "Turn player: "+clientView.getTurnPlayer());
         PrinterLogo.printWaitingTurnPhase(50);
-        Colors.colorize(Colors.GAME_INSTRUCTION, "This is the board\n ");
         printCommands(CommandsTurn.PRINT1);
         printCommands(CommandsTurn.PRINT5);
     }
