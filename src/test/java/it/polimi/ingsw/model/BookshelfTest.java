@@ -104,7 +104,7 @@ class BookshelfTest {
         }
         bookshelf.computeFreeShelves();
         //Set inside expected the expected value
-        //assertEquals(5, bookshelf.maxFreeShelves());
+        assertEquals(5, bookshelf.maxFreeShelves());
     }
 
     @Test

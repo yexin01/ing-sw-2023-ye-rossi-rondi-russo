@@ -49,7 +49,7 @@ public class Bookshelf {
         return bookshelfView;
     }
 
-    private int maxFreeShelves() {
+    public int maxFreeShelves() {
         int max = 0;
         for (int i = 0; i < freeShelves.length; i++) {
             if (freeShelves[i] > max) {
