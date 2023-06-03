@@ -5,7 +5,9 @@ import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.Type;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.view.ClientView;
-
+/**
+ * The `PrinterBookshelfAndPersonal` class provides methods for printing bookshelf and personalGoal.
+ */
 public class PrinterBookshelfAndPersonal {
 
     private int sizeLengthFromBord;

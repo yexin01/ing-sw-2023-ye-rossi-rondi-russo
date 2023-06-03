@@ -4,7 +4,9 @@ import it.polimi.ingsw.model.Type;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 
 import java.util.ArrayList;
-
+/**
+ * The `PrinterBoard` class provides methods for printing board-related information.
+ */
 public class PrinterBoard {
 
     private boolean waitingForFirst;
