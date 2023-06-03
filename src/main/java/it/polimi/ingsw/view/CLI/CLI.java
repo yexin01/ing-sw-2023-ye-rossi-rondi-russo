@@ -9,11 +9,8 @@ import it.polimi.ingsw.view.ClientInterface;
 import it.polimi.ingsw.view.ClientView;
 
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 import static java.lang.System.out;
 
@@ -34,9 +31,54 @@ public class CLI implements ClientInterface {
         printerBookshelfAndPersonal=new PrinterBookshelfAndPersonal();
         printerCommonGoalAndPoints=new PrinterCommonGoalAndPoints();
     }
+    //LOBBY PHASE
+    /**
+     * Asks the user to make a decision in the lobby phase.
+     */
+    @Override
+    public void askLobbyDecision() {
+        PrinterLogo.printGlobalLobbyPhase(50);
+        out.println();
+        boolean continueToAsk = true;
+        CommandsLobby commandsLobby = null;
+        while (continueToAsk) {
+            commandsLobby = (CommandsLobby) checkCommand(-1);
+            if (commandsLobby == null) {
+                continue;
+            }
+            Colors.colorize(Colors.BLUE_CODE, "You choose " + commandsLobby.getCommand() + " ");
+            out.println();
+            switch (commandsLobby) {
+                case CREATE_GAME_LOBBY -> {
+                    Colors.colorize(Colors.GAME_INSTRUCTION, "Insert number of players for the new Lobby: ");
+                    int num = in.nextInt();
+                    clientView.lobby(KeyLobbyPayload.CREATE_GAME_LOBBY,num);
+                    continueToAsk=false;
+                }
+                case JOIN_SPECIFIC_GAME_LOBBY -> {
+                    Colors.colorize(Colors.GAME_INSTRUCTION, "Insert id Lobby you want to join: ");
+                    int num = in.nextInt();
+                    clientView.lobby(KeyLobbyPayload.JOIN_SPECIFIC_GAME_LOBBY,num);
+                    continueToAsk=false;
+                }
+                case JOIN_RANDOM_GAME_LOBBY -> {
+                    clientView.lobby(KeyLobbyPayload.JOIN_RANDOM_GAME_LOBBY,-1);
+                    continueToAsk=false;
+                }
+                case QUIT_SERVER -> {
+                    clientView.lobby(KeyLobbyPayload.QUIT_SERVER,-1);
+                    System.exit(0);
+                }
+            }
+        }
+    }
 
-
-
+    /**
+     * Prints CommandsLobby.
+     *
+     * @param <T>        the type of the commands enumeration
+     * @param enumClass  the class of the commands enumeration
+     */
     public synchronized <T extends Enum<T> & Commands> void printLobbyCommands(Class<T> enumClass){
         T[] enumValues = enumClass.getEnumConstants();
         out.println();
@@ -48,21 +90,22 @@ public class CLI implements ClientInterface {
         out.println();
         Colors.colorize(Colors.GAME_INSTRUCTION,"Insert command: ");
     }
-
+    /**
+     * Prints CommandsTurn based on the given phase.
+     * The commands of the specified phase will be printed in a different color.
+     *@param phase the phase number
+     */
     public synchronized void allCommands(int phase){
         boolean firstPrint=false;
         out.println();
         String[] commandsPhase=new String[]{"select_from_board","order_tiles","column","print" };
         String[] titlePhase=new String[]{"BOARD","ORDER","COLUMN","INFO PLAYER" };
-        //String option="Select a command: ";
-        //Colors.colorize(Colors.GAME_INSTRUCTION,option );
         out.println();
         for(int i=0;i<titlePhase.length;i++){
             if(phase==i || i==commandsPhase.length-1){
                 Colors.colorizeSize(Colors.GAME_INSTRUCTION,titlePhase[i], 30+5);
             }else Colors.colorizeSize(Colors.BLACK_CODE,titlePhase[i], 30+5);
             Colors.printFreeSpaces(2);
-            //Colors.colorize(Colors.GAME_INSTRUCTION, "│ ");
 
         }
         out.println();
@@ -80,8 +123,6 @@ public class CLI implements ClientInterface {
             if(commandString.toLowerCase().startsWith(commandsPhase[commandsPhase.length-1])){
                 Colors.colorizeSize(Colors.GAME_INSTRUCTION, "·["+(command.ordinal()+1)+"]",5);
                 Colors.colorizeSize(Colors.GAME_INSTRUCTION,command.getCommand(), 15);
-                //System.out.println();
-
                 if(!firstPrint){
                     firstPrint=true;
                     Colors.colorize(Colors.GAME_INSTRUCTION, "  ");
@@ -110,6 +151,42 @@ public class CLI implements ClientInterface {
         Colors.colorize(Colors.GAME_INSTRUCTION,"Insert command: ");
 
     }
+    /**
+     * Prints the corresponding view based on the provided command.
+     * @param commandsTurn the command to determine the view to print
+     */
+    public void printCommands(CommandsTurn commandsTurn) {
+        switch (commandsTurn){
+            case PRINT1 ->{
+                PrinterLogo.printBoardLogo(10);
+                printerBoard.printMatrixBoard(getClientView().getBoardView(),null);
+            }
+            case PRINT2 ->{
+                PrinterLogo.printBookshelfLogo(10);
+                printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3,1,60,false,false,0);
+
+            }
+            case PRINT3 -> {
+                printerBookshelfAndPersonal.printPersonal(getClientView(),2,35);
+            }
+            case PRINT4 ->{
+                PrinterLogo.printBookshelfLogo(10);
+                printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,1,60,true,false,0);
+
+            }
+            case PRINT5 -> printerCommonGoalAndPoints.printPoints(getClientView());
+            case PRINT6 -> printerCommonGoalAndPoints.printCommonGoalCards(getClientView());
+            case PRINT7 -> PrinterLogo.printGamesRulesLogo();
+            case PRINT9 -> System.exit(0);
+        }
+    }
+
+    /**
+     * Checks the user input for a command based on the given phase.
+     *
+     * @param phase the phase number
+     * @return the command corresponding to the user input, or null if the input is invalid or out of range
+     */
     public Commands checkCommand(int phase) {
         int input;
         int enumSize = -1;
@@ -149,8 +226,34 @@ public class CLI implements ClientInterface {
             return CommandsTurn.values()[input];
         }
     }
+    /**
+     * Handles an invalid phase for the given command.
+     *
+     * @param commandsTurn the command that triggered the invalid phase
+     * @return true if the user has selected the "somethingWrong", false otherwise
+     *
+     * If the provided command is "somethingWrong", the server will be contacted to sets
+     * all attributes in the client view.
+     */
+    public boolean handleInvalidPhase(CommandsTurn commandsTurn)  {
+        String commandString = commandsTurn.toString();
+        if (commandString.toLowerCase().startsWith("print")) {
+            if(commandsTurn.equals(CommandsTurn.PRINT8)){
+                clientView.somethingWrong();
+                return true;
+            }else{
+                printCommands(commandsTurn);
 
-
+            }
+        } else displayError(ErrorType.ILLEGAL_PHASE.getErrorMessage());
+        return false;
+    }
+    //SELECT FROM BOARD PHASE
+    /**
+     * Asks the user to enter coordinates for tile selection.
+     * Displays the board and prompts for commands to select and confirm tile coordinates.
+     * Continues asking for commands until a valid confirmation command is received.
+     */
     @Override
     public  synchronized  void askCoordinates() {
         out.println();
@@ -207,31 +310,13 @@ public class CLI implements ClientInterface {
     }
 
 
-    public void printCommands(CommandsTurn commandsTurn) {
-        switch (commandsTurn){
-            case PRINT1 ->{
-                PrinterLogo.printBoardLogo(10);
-                printerBoard.printMatrixBoard(getClientView().getBoardView(),null);
-            }
-            case PRINT2 ->{
-                PrinterLogo.printBookshelfLogo(10);
-                printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3,1,60,false,false,0);
-
-            }
-            case PRINT3 -> {
-                printerBookshelfAndPersonal.printPersonal(getClientView(),2,35);
-            }
-            case PRINT4 ->{
-                PrinterLogo.printBookshelfLogo(10);
-                printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,1,60,true,false,0);
-
-            }
-            case PRINT5 -> printerCommonGoalAndPoints.printPoints(getClientView());
-            case PRINT6 -> printerCommonGoalAndPoints.printCommonGoalCards(getClientView());
-            case PRINT7 -> PrinterLogo.printGamesRulesLogo();
-            case PRINT9 -> System.exit(0);
-        }
-    }
+    /**
+     * Allows the user to select a tile on the board by specifying the row and column coordinates.
+     *
+     * @param selection the current list of selected tiles
+     * @return the updated list of selected tiles after the user's successful selection, or the same
+     * list if an error occurs during the selection process
+     */
     private ArrayList<Integer> selectTile(ArrayList<Integer> selection) {
         int x, y;
         ErrorType error = Check.checkNumTilesSelectedBoard(selection, clientView.getBookshelfView());
@@ -281,48 +366,11 @@ public class CLI implements ClientInterface {
     }
 
 
-    /*
-
-    private ArrayList<Integer> selectTile(ArrayList<Integer> selection) {
-        int x, y;
-        ErrorType error= Check.checkNumTilesSelectedBoard(selection,clientView.getBookshelfView());
-        if (error!=null) {
-            displayError(error.getErrorMessage());
-            //Colors.colorize(Colors.ERROR_MESSAGE,
-            out.println();
-        }else{
-            Colors.colorizeSize(Colors.GAME_INSTRUCTION, "Insert row",14);
-            Colors.colorize(Colors.GAME_INSTRUCTION, "(x): ");
-            x = scanner.nextInt();
-            Colors.colorizeSize(Colors.GAME_INSTRUCTION, "Insert column",14);
-            Colors.colorize(Colors.GAME_INSTRUCTION, "(y): ");
-            y = scanner.nextInt();
-            scanner.nextLine();
-            error= Check.checkCoordinates(x, y, clientView.getBoardView());
-            if(error!=null){
-                displayError(error.getErrorMessage());
-                //Colors.colorize(Colors.ERROR_MESSAGE,
-                return selection;
-            }
-            selection.add(x);
-            selection.add(y);
-            error= Check.checkSelectable(selection, getClientView().getBoardView());
-            if (error!=null) {
-                //printerBoard.printMatrixBoard(getClientView().getBoardView(),selection);
-                displayError(error.getErrorMessage());
-                //Colors.colorize(Colors.ERROR_MESSAGE,
-                selection.remove(selection.size()-1);
-                selection.remove(selection.size()-1);
-                out.println();
-            }else {
-                printerBoard.printMatrixBoard(getClientView().getBoardView(),selection);
-            }
-        }
-        return selection;
-    }
-
+    /**
+     * Resets the selected tiles on the board.
+     * @param lastOrAll the reset option (0 for the last selected tile, 1 for all selected tiles)
+     * @param coordinatesSelected the list of currently selected tile coordinates
      */
-
     private void resetChoice(int lastOrAll,ArrayList<Integer> coordinatesSelected) {
         ErrorType error=Check.resetChoiceBoard(lastOrAll,coordinatesSelected);
         if (error==null) {
@@ -330,21 +378,15 @@ public class CLI implements ClientInterface {
             Colors.colorize(Colors.GAME_INSTRUCTION, "Reset successful\n");
         }
     }
-    public boolean handleInvalidPhase(CommandsTurn commandsTurn)  {
-        String commandString = commandsTurn.toString();
-        if (commandString.toLowerCase().startsWith("print")) {
-            if(commandsTurn.equals(CommandsTurn.PRINT8)){
-                clientView.somethingWrong();
-                return true;
-            }else{
-                printCommands(commandsTurn);
 
-            }
-        } else displayError(ErrorType.ILLEGAL_PHASE.getErrorMessage());
-        return false;
-    }
-
+//ORDER PHASE
     private int sizetile=3;
+    /**
+     * Asks the user to input the order of the selected tiles.
+     * The method displays the order phase and prompts the user to enter numbers from 0 to N-1,
+     * where N is the number of selected tiles.
+     * The user's input represents the desired order of the tiles.
+     */
     @Override
     public  synchronized void askOrder() {
         out.println();
@@ -361,14 +403,12 @@ public class CLI implements ClientInterface {
             }
             switch (commandsTurn) {
                 case ORDER_TILES1:
-                    //printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 1, 60, true, false, 0);
-
                     Colors.colorize(Colors.GAME_INSTRUCTION, "Insert numbers from 0 to " + (getClientView().getTilesSelected().length - 1) + "\n");
                     out.println();
                     Colors.colorize(Colors.GAME_INSTRUCTION, "These are the tiles selected by YOU: ");
                     int j = 0;
                     for (ItemTileView t : getClientView().getTilesSelected()) {
-                        Colors.colorize(Colors.RED_CODE, Integer.toString(j++) + " ");
+                        Colors.colorize(Colors.ERROR_MESSAGE, Integer.toString(j++) + " ");
                         out.print(Colors.printTiles(t.getTypeView(), sizetile));
                         Colors.colorize(Colors.GAME_INSTRUCTION, "; ");
                     }
@@ -396,15 +436,13 @@ public class CLI implements ClientInterface {
                 case ORDER_TILES2:
                     if(error!=null){
                         displayError(ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
-                        //Colors.colorize(Colors.ERROR_MESSAGE,
                     }
-                    Colors.colorize(Colors.WHITE_CODE, "Choice has been reset");
+                    Colors.colorize(Colors.GAME_INSTRUCTION, "Choice has been reset");
                     error = ErrorType.INVALID_ORDER_TILE_NUMBER;
                     continue;
                 case ORDER_TILES3:
                     if(error!=null){
                         displayError(ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
-                        //Colors.colorize(Colors.ERROR_MESSAGE,
                         continue;
                     }
                     continueToAsk=false;
@@ -419,11 +457,17 @@ public class CLI implements ClientInterface {
 
         }
     }
+    //COLUMN PHASE
+    /**
+     * Asks the user to select a column for placing the selected tiles.
+     * The method displays the column phase and prompts the user to enter a number from 0 to N-1,
+     * where N is the number of columns in the bookshelf.
+     * The user's input represents the desired column for tile placement.
+     */
 
     @Override
     public  synchronized void askColumn(){
         out.println();
-        //Colors.colorize(Colors.ERROR_MESSAGE, "PHASE: COLUMN");
         PrinterLogo.printColumnPhase(50);
         out.println();
         ErrorType error = ErrorType.INVALID_COLUMN;
@@ -457,7 +501,6 @@ public class CLI implements ClientInterface {
                 case COLUMN2:
                     if (error!=null) {
                         displayError(ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
-                        //Colors.colorize(Colors.ERROR_MESSAGE,
                         continue;
                     }
                     Colors.colorize(Colors.GAME_INSTRUCTION, "Choice has been reset");
@@ -466,10 +509,8 @@ public class CLI implements ClientInterface {
                 case COLUMN3:
                     if (error!=null) {
                         displayError(ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
-                        //Colors.colorize(Colors.ERROR_MESSAGE,
                         continue;
                     }
-                    //continueToAsk = false;
                     getClientView().setColumn(column);
                     Check.insertTiles(column,clientView.getBookshelfView(),clientView.getTilesSelected());
                     continueToAsk=false;
@@ -483,75 +524,41 @@ public class CLI implements ClientInterface {
         }
 
     }
-
+    /**
+     * Displays an error message to the user.
+     * @param error the error message to display
+     */
     @Override
     public void displayError(String error) {
         out.println();
-        Colors.printCharacter("✘  ",1,Colors.ERROR_MESSAGE);
+        Colors.printCharacter("x  ",1,Colors.ERROR_MESSAGE);
         Colors.colorize(Colors.ERROR_MESSAGE, error);
-        Colors.printCharacter("  ✘",1,Colors.ERROR_MESSAGE);
+        Colors.printCharacter("  x",1,Colors.ERROR_MESSAGE);
         out.println();
     }
-
+    /**
+     * Displays a message to the user.
+     * @param string the message to display
+     */
     @Override
     public void displayMessage(String string) {
         out.println();
-        Colors.printCharacter("► ",1,Colors.WHITE_CODE);
+        Colors.printCharacter("» ", 1, Colors.GAME_INSTRUCTION);
         Colors.colorize(Colors.BLUE_CODE, string);
-        Colors.printCharacter(" ◄",1,Colors.WHITE_CODE);
+        Colors.printCharacter(" «", 1,Colors.GAME_INSTRUCTION);
         out.println();
     }
 
 
-    @Override
-    public void askNicknameAndConnection() {
-        PrinterLogo.printMyShelfieLogo();
-        doConnection();
-    }
 
-
-    @Override
-    public void askLobbyDecision() {
-        PrinterLogo.printGlobalLobbyPhase(50);
-        out.println();
-        boolean continueToAsk = true;
-        CommandsLobby commandsLobby = null;
-        while (continueToAsk) {
-            commandsLobby = (CommandsLobby) checkCommand(-1);
-            if (commandsLobby == null) {
-                //printError(ErrorType.INVALID_INPUT.getErrorMessage());
-                //Colors.colorize(Colors.ERROR_MESSAGE,
-                continue;
-            }
-            Colors.colorize(Colors.BLUE_CODE, "You choose " + commandsLobby.getCommand() + " ");
-            out.println();
-            switch (commandsLobby) {
-                case CREATE_GAME_LOBBY -> {
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "Insert number of players for the new Lobby: ");
-                    int num = in.nextInt();
-                    clientView.lobby(KeyLobbyPayload.CREATE_GAME_LOBBY,num);
-                    continueToAsk=false;
-
-
-                }
-                case JOIN_SPECIFIC_GAME_LOBBY -> {
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "Insert id Lobby you want to join: ");
-                    int num = in.nextInt();
-                    clientView.lobby(KeyLobbyPayload.JOIN_SPECIFIC_GAME_LOBBY,num);
-                    continueToAsk=false;
-                }
-                case JOIN_RANDOM_GAME_LOBBY -> {
-                    clientView.lobby(KeyLobbyPayload.JOIN_RANDOM_GAME_LOBBY,-1);
-                    continueToAsk=false;
-                }
-                case QUIT_SERVER -> {
-                    clientView.lobby(KeyLobbyPayload.QUIT_SERVER,-1);
-                    System.exit(0);
-                }
-            }
-        }
-    }
-
+    /**
+     * Ends the game and displays the end game results.
+     * @param personalPoints an array containing the personal points of each player
+     * @param playerBookshelfFull the nickname indicating the player who completed their bookshelf first
+     * After displaying the end game results, the client view will receive the end game notification
+     * The user will be prompted to enter "ok" to return to the lobby.
+     * Once the user enters "ok", the function will exit and control will return to the lobby.
+     */
     @Override
     public void endGame(int[] personalPoints, String playerBookshelfFull) {
         printerCommonGoalAndPoints.printEndGame(clientView,personalPoints,playerBookshelfFull);
@@ -568,24 +575,26 @@ public class CLI implements ClientInterface {
             scanner.nextLine();
         }
         out.println();
-        //askLobbyDecision();
     }
 
 
-
+    /**
+     * Displays an error message indicating that the current player is the only player connected to the game,
+     * and they need to wait for another player to join before they can continue.
+     * Additionally, it prints a logo indicating the "Only Player" status.
+     */
 
     @Override
     public void onlyPlayer() {
         displayError(ErrorType.ONLY_PLAYER.getErrorMessage());
         PrinterLogo.onlyPlayer(10);
     }
+    //WAITING TURN PHASE
 
-    public PrinterBookshelfAndPersonal getPrinterBookshelfAndPersonal() {
-        return printerBookshelfAndPersonal;
-    }
-
-    boolean continueToAskEndTurn;
-
+    /**
+     * Displays the waiting room phase, showing the current turn player, the board, and the current ranking.
+     * This phase is displayed while the player is waiting for his/her turn.
+     */
     @Override
     public synchronized void waitingRoom() {
         Colors.colorize(Colors.GAME_INSTRUCTION, "Turn player: "+clientView.getTurnPlayer());
@@ -593,13 +602,20 @@ public class CLI implements ClientInterface {
         printCommands(CommandsTurn.PRINT1);
         printCommands(CommandsTurn.PRINT5);
     }
-
+    /**
+     * Displays the player who won a token and the associated score.
+     * @param num the token number
+     * @param nickname the nickname of the player who won the token
+     */
     @Override
     public void displayToken(int num, String nickname) {
         printerCommonGoalAndPoints.printToken(num,nickname);
     }
 
-
+    /**
+     * Returns the current client view.
+     * @return the client view
+     */
     public ClientView getClientView() {
         return clientView;
     }
@@ -608,7 +624,16 @@ public class CLI implements ClientInterface {
         this.clientView = clientView;
     }
 
-    private void doConnection(){
+
+    //ASK CONNECTION
+
+    /**
+     * Establishes a connection with the game server based on the user's input for connection type,
+     * nickname, IP address, and port.
+     */
+    @Override
+    public void askNicknameAndConnection(){
+        PrinterLogo.printMyShelfieLogo();
         int connectionType = -1;
 
         String nickname = askNickname();
@@ -633,11 +658,15 @@ public class CLI implements ClientInterface {
         }
     }
 
+    /**
+     * Asks the user to enter their nickname and returns the entered nickname.
+     * @return the user's nickname
+     */
     private String askNickname() {
         String nickname = "";
 
         do {
-            Colors.colorize(Colors.WHITE_CODE, "\nEnter your username >> ");
+            Colors.colorize(Colors.GAME_INSTRUCTION, "\nEnter your username >> ");
             nickname = in.nextLine().toLowerCase();
 
             if (nickname.length() < 2) {
@@ -648,12 +677,15 @@ public class CLI implements ClientInterface {
         getClientView().setNickname(nickname);
         return nickname;
     }
-
+    /**
+     * Asks the user to enter the connection type (0 for Socket, 1 for RMI) and returns the entered connection type.
+     * @return the connection type (0 for Socket, 1 for RMI)
+     */
     private int askConnection(){
         int connectionType = -1;
 
         do {
-            Colors.colorize(Colors.WHITE_CODE, "\nEnter your connection type: (0 for Socket, 1 for RMI) >> ");
+            Colors.colorize(Colors.GAME_INSTRUCTION, "\nEnter your connection type: (0 for Socket, 1 for RMI) >> ");
             try {
                 connectionType = Integer.parseInt(in.next());
                 in.nextLine();
@@ -664,7 +696,11 @@ public class CLI implements ClientInterface {
         } while (connectionType != 0 && connectionType != 1);
         return connectionType;
     }
-
+    /**
+     * Asks the user to enter the server IP address and returns the entered IP address.
+     * If no input is provided, the default IP address "127.0.0.1" is returned.
+     * @return the server IP address
+     */
     private String askIp() {
         String defaultIp = "127.0.0.1";
 
@@ -672,7 +708,7 @@ public class CLI implements ClientInterface {
         boolean validInput = false;
 
         do {
-            Colors.colorize(Colors.WHITE_CODE, "\nEnter the server IP Address (default " + defaultIp + ") \nPress ENTER button to choose default >> ");
+            Colors.colorize(Colors.GAME_INSTRUCTION, "\nEnter the server IP Address (default " + defaultIp + ") \nPress ENTER button to choose default >> ");
             String line = in.nextLine();
 
             if (line.equals("")) {
@@ -689,7 +725,11 @@ public class CLI implements ClientInterface {
 
         return ipAddress;
     }
-
+    /**
+     * Checks if the given IP address is valid.
+     * @param ipAddress the IP address to check
+     * @return true if the IP address is valid, false otherwise
+     */
     private boolean isValidIpAddress(String ipAddress) {
         String[] components = ipAddress.split("\\.");
 
@@ -709,6 +749,11 @@ public class CLI implements ClientInterface {
         }
         return true;
     }
+    /**
+     * Asks the user for the server port number.
+     * @param connectionType the type of connection (0 for Socket, 1 for RMI)
+     * @return the server port number entered by the user, or the default port number if no valid input is provided
+     */
 
     private int askPort(int connectionType) {
         int defaultPort = (connectionType == 0 ? 1100 : 1099);
@@ -717,7 +762,7 @@ public class CLI implements ClientInterface {
         boolean validInput = false;
 
         do {
-            Colors.colorize(Colors.WHITE_CODE,"\nEnter the server port (default " + defaultPort + ") \nPress ENTER button to choose default >> ");
+            Colors.colorize(Colors.GAME_INSTRUCTION,"\nEnter the server port (default " + defaultPort + ") \nPress ENTER button to choose default >> ");
             String line = in.nextLine();
 
             if (line.equals("")) {

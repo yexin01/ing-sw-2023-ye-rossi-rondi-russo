@@ -1,9 +1,7 @@
 package it.polimi.ingsw.view.CLI;
 
-import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Type;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
-import it.polimi.ingsw.view.ClientView;
 
 import java.util.ArrayList;
 
@@ -15,13 +13,18 @@ public class PrinterBoard {
     private int sizeTile =3;
     private int sizeWordType=8;
     private int spaceBetweenTiles=2;
+    /**
+     * Prints the matrix board with the given board view and selection.
+     *
+     * @param boardView the board view representing the matrix board
+     * @param selectionBoard the list of selected coordinates on the board
+     */
     public synchronized void printMatrixBoard(BoardBoxView[][] boardView, ArrayList<Integer> selectionBoard) {
         int lineLength= sizeTile +2*spaceBetweenTiles;
         int valuesType=0;
         if(selectionBoard==null){
             valuesType=Type.values().length+1;
         }
-        //Colors.upperOneBoard(Colors.WHITE_CODE);
         Colors.printFreeSpaces(2+ sizeTile +sizeWordType+freeSpacesFromTableTypesSelected+sizeCoordinates);
         for (int i=0;i<boardView[0].length;i++){
             Colors.printFreeSpaces(spaceBetweenTiles+ sizeTile /2);
@@ -44,31 +47,20 @@ public class PrinterBoard {
 
         }
         System.out.println();
-        //Colors.mediumBoard(Colors.OCHRE_YELLOW_CODE);
 
         for (int i = 0; i < boardView.length; i++) {
             finishLine=false;
             valuesType=printValues(valuesType,boardView,selectionBoard);
-            /*
-            if(valuesType<Type.values().length){
-                Colors.printTypeWithTypeColor(Type.values()[valuesType]);
-                System.out.printf("  "+Colors.printTiles(Type.values()[valuesType++])+"                           -");
-            }else Colors.printFreeSpaces(42);
-
-             */
-
             System.out.print(String.format("%-"+sizeCoordinates+"s", i));
             for (int j = 0; j < boardView[i].length; j++) {
 
                 if (boardView[i][j].getItemTileView().getTileID() != -1) {
-                    //System.out.printf("%-6s","("+i+","+j+")");
                     boolean selected = false;
                     for (int k = 0; selectionBoard!=null && k < selectionBoard.size(); k += 2) {
                         if (selectionBoard.get(k).equals(i) && selectionBoard.get(k + 1).equals(j)) {
-                            // colors.colorize(Colors.RED_CODE,"SELECTED");
                             Colors.colorize(Colors.WHITE_CODE,"║");
                             Colors.printFreeSpaces(spaceBetweenTiles);
-                            Colors.colorize(Colors.RED_CODE, "█".repeat(sizeTile));
+                            Colors.colorize(Colors.ERROR_MESSAGE, "█".repeat(sizeTile));
                             Colors.printFreeSpaces(spaceBetweenTiles);
                             selected = true;
                             break;
@@ -79,8 +71,6 @@ public class PrinterBoard {
                         Colors.printFreeSpaces(spaceBetweenTiles);
                         System.out.print(Colors.printTiles(boardView[i][j].getItemTileView().getTypeView(), sizeTile));
                         Colors.printFreeSpaces(spaceBetweenTiles);
-
-                        //colors.printTypeWithTypeColor(matrix[i][j].getItemTileView().getTypeView());
                     }
                     if(j==boardView[0].length-1 || !boardView[i][j+1].isOccupiable()){
                         Colors.colorize(Colors.WHITE_CODE,"║");
@@ -89,13 +79,7 @@ public class PrinterBoard {
                     }
                 } else {
 
-                    //TODO finire
-                    //printFreeSpaces(2);
-                    //System.out.print("  ");
-                    //Colors.colorize(Colors.WHITE_CODE,"║ ");
-
                     if (boardView[i][j].isOccupiable()) {
-                        //System.out.printf("%-6s","("+i+","+j+")");
                         Colors.colorize(Colors.WHITE_CODE,"║");
                         Colors.printFreeSpaces(spaceBetweenTiles);
                         Colors.printFreeSpaces(sizeTile);
@@ -105,28 +89,13 @@ public class PrinterBoard {
                             Colors.printFreeSpaces(spaceBetweenTiles);
                             break;
                         }
-                        //Colors.colorize(Colors.RESET_CODE, " ".repeat(lineLength+1));
                     } else Colors.colorize(Colors.RESET_CODE, " ".repeat(lineLength+1));
-                    //Colors.colorize(Colors.WHITE_CODE,"║ ");
-
-
                 }
 
-
             }
-            //Colors.colorize(Colors.WHITE_CODE,"║ ");
             System.out.println("");
             valuesType=printValues(valuesType,boardView,selectionBoard);
-
-/*                if(valuesType<Type.values().length){
-                    Colors.printTypeWithTypeColor(Type.values()[valuesType]);
-                    System.out.printf("  "+Colors.printTiles(Type.values()[valuesType++])+"                           -");
-                }else Colors.printFreeSpaces(42);
-
- */
-            //System.out.println(i);
             Colors.printFreeSpaces(sizeCoordinates);
-            //Colors.mediumBoard(Colors.WHITE_CODE);
             waitingForFirst=true;
             for(int k=0;k<boardView[0].length;k++){
                 if(i==boardView.length-1){
@@ -139,25 +108,15 @@ public class PrinterBoard {
             }
             System.out.println("");
         }
-        /*
-        valuesType=printValues(valuesType);
-        /*
-        if(valuesType<Type.values().length){
-            Colors.printTypeWithTypeColor(Type.values()[valuesType]);
-            System.out.printf("  "+Colors.printTiles(Type.values()[valuesType++])+"       -");
-        }else Colors.printFreeSpaces(44);
-
-
-        System.out.print("  ");
-        for(int k=0;k<boardView[0].length;k++){
-            Colors.downBoard(Colors.WHITE_CODE,k,boardView);
-        }
-        System.out.println("  ");
-
-        //Colors.lowerBoard(Colors.WHITE_CODE);
-*/
-        //askCoordinates();
     }
+    /**
+     * Prints the values for a specific type on the board view, with the given selection.
+     *
+     * @param valuesType the type of row to print
+     * @param boardView the board view representing the matrix board
+     * @param selection the list of selected coordinates on the board
+     * @return the number of row printed
+     */
     public synchronized int printValues(int valuesType,BoardBoxView[][] boardView,ArrayList<Integer> selection){
         ArrayList<Integer> coordinatesSelected=selection;
         int numSelectedType=0;
@@ -170,19 +129,27 @@ public class PrinterBoard {
             }
             Colors.printTypeWithTypeColor(Type.values()[valuesType],sizeWordType);
             System.out.printf(Colors.printTiles(Type.values()[valuesType++],sizeTile));
-            Colors.colorize(Colors.RED_CODE," "+numSelectedType);
+            Colors.colorize(Colors.ERROR_MESSAGE," "+numSelectedType);
             Colors.printFreeSpaces(freeSpacesFromTableTypesSelected);
             return valuesType;
         }else if(valuesType==Type.values().length){
             Colors.printTypeWithTypeColor("SELECTED",sizeWordType);
             System.out.printf(Colors.printTiles("SELECTED",sizeTile));
-            Colors.colorize(Colors.RED_CODE,"  ");
+            Colors.colorize(Colors.ERROR_MESSAGE,"  ");
             valuesType++;
             Colors.printFreeSpaces(freeSpacesFromTableTypesSelected);
         }
         else Colors.printFreeSpaces(sizeWordType+freeSpacesFromTableTypesSelected+2+sizeTile);
         return valuesType;
     }
+    /**
+     * Prints the upper part of the board with the specified color and column, based on the board view.
+     *
+     * @param color the color to use for printing
+     * @param column the column number to print
+     * @param board the board view representing the matrix board
+     * @param lineLength the length of the line for formatting purposes
+     */
     public synchronized void upperBoard(String color, int column, BoardBoxView[][] board,int lineLength ) {
 
 
@@ -194,21 +161,9 @@ public class PrinterBoard {
                 "╦" + "═".repeat(lineLength) + "╗"
         };
 
-        /*
-        String[] lineRepresentations = {
-                "       ",
-                "╔══════╗",
-                "╔══════",
-                "╦══════",
-                "╦══════╗"
-        };
-
-         */
-
         String text;
 
         if (column == board[0].length - 1 && waitingForFirst && !board[0][column].isOccupiable()) {
-            text = lineRepresentations[0];
             finishLine = true;
             return;
         }
@@ -231,9 +186,17 @@ public class PrinterBoard {
                 }
             }
         }
-        System.out.print(color + text + "\u001B[0m");
+        System.out.print(color + text + "\033[0m");
 
     }
+    /**
+     * Prints the lower part of the board with the specified color and column, based on the board view.
+     *
+     * @param color the color to use for printing
+     * @param column the column number to print
+     * @param board the board view representing the matrix board
+     * @param lineLength the length of the line for formatting purposes
+     */
 
     public synchronized void downBoard(String color, int column, BoardBoxView[][] board,int lineLength ) {
 
@@ -245,18 +208,6 @@ public class PrinterBoard {
                 "╩" + "═".repeat(lineLength),
                 "╩" + "═".repeat(lineLength) + "╝"
         };
-
-        /*
-        String[] lineRepresentations = {
-                "       ",
-                "╚══════╝",
-                "╚══════",
-                "╩══════",
-                "╩══════╝"
-        };
-
-         */
-
         String text;
         int row = board.length - 1;
 
@@ -284,35 +235,22 @@ public class PrinterBoard {
                 }
             }
         }
-        System.out.print(color + text + "\u001B[0m");
-        /*
-        String text;
-        int row=board.length-1;
-        if(board[row].length==1){
-            text="╚══════╝";
-        }else{
-            if (board[row][column].isOccupiable() == false) {
-                text="       ";
-            }else{
-                if((column==0 && board[row][column].isOccupiable()==true) ||(column!=0 && board[row][column-1].isOccupiable()==false)){
-                    text="╚══════";
+        System.out.print(color + text + "\033[0m");
 
-                }else if(column!=0 && column!= board[row].length-1 && board[row][column-1].isOccupiable()==true && board[row][column+1].isOccupiable()==true ){
-                    text="╩══════";
-                }else{ //if((column==board[0].length && board[0][column].isOccupiable()==true)||(column!=0 && column!=board[0].length && board[0][column-1].isOccupiable()==false)){
-                    text="╩══════╝";
-                }
-            }
-        }
-
-        System.out.print(color + text + "\u001B[0m");
-   */
     }
 
 
     public boolean finishLine;
 
-
+    /**
+     * Prints the medium part of the board with the specified color, row, and column, based on the board view.
+     *
+     * @param color the color to use for printing
+     * @param row the row number to print
+     * @param column the column number to print
+     * @param board the board view representing the matrix board
+     * @param lineLength the length of the line for formatting purposes
+     */
     public synchronized void mediumBoard(String color, int row, int column, BoardBoxView[][] board, int lineLength) {
         String text;
 
@@ -333,29 +271,10 @@ public class PrinterBoard {
                 "╩" + "═".repeat(lineLength) + "╝"
 
         };
-        /*
-        String[] lineRepresentations = {
-                "       ",
-                "╔══════",
-                "╠══════",
-                "╦══════",
-                "╦══════╗",
-                "╬══════",
-                "╬══════╗",
-                "╬══════╣",
-                "╩══════",
-                "╩══════╝",
-                "╬══════╝"
-        };
-
-         */
-
 
         if (board[row][column].isOccupiable() == false) {
             if (board[row + 1][column].isOccupiable() == false) text = lineRepresentations[0];
             else if (waitingForFirst) {
-                //if (board[row - 1][column].isOccupiable() == true) text = "╔══════";
-                //else text = "╠══════";
                 text = lineRepresentations[1];
                 waitingForFirst=false;
             } else {
@@ -363,13 +282,6 @@ public class PrinterBoard {
                     if (board[row][column - 1].isOccupiable() == true) text=lineRepresentations[6];
                     else text = lineRepresentations[4];
                     finishLine=true;
-                    /*
-                    if (board[row+1][column - 1].isOccupiable() == true) text = "╬══════╗";
-                    else text = "╦══════╗";
-                    finishLine=true;
-
-                     */
-
                 }
                 else{
                     if(board[row][column - 1].isOccupiable() == true){
@@ -431,97 +343,6 @@ public class PrinterBoard {
 
             }
         }
-
-
-
-
-        /*
-        String text;
-        if (board[row][column].isOccupiable() == false) {
-            if (board[row + 1][column].isOccupiable() == false) text = "       ";
-            else if (waitingForFirst) {
-                //if (board[row - 1][column].isOccupiable() == true) text = "╔══════";
-                //else text = "╠══════";
-                text = "╔══════";
-                waitingForFirst=false;
-            } else {
-                if(column== board[0].length-1){
-                    if (board[row][column - 1].isOccupiable() == true) text = "╬══════╗";
-                    else text = "╦══════╗";
-                    finishLine=true;
-                    /*
-                    if (board[row+1][column - 1].isOccupiable() == true) text = "╬══════╗";
-                    else text = "╦══════╗";
-                    finishLine=true;
-
-                     */
-        /*
-                }
-                else{
-                    if(board[row][column - 1].isOccupiable() == true){
-                        if(board[row+1][column + 1].isOccupiable() == true )text = "╬══════";
-                        else {
-                            text = "╬══════╗";
-                            finishLine=true;
-                        }
-                    }
-                    else {
-                        if(board[row+1][column + 1].isOccupiable() == true)text = "╦══════";
-                        else {
-                            text = "╦══════╗";
-                            finishLine=true;
-                        }
-
-                    }
-
-                }
-
-            }
-        }else {
-            if(waitingForFirst) {
-                if(board[row + 1][column].isOccupiable() == true) text="╠══════";
-                else text="╚══════";
-                waitingForFirst=false;
-            }
-            else {
-                if(column== board[0].length-1){
-                    if(board[row+1][column].isOccupiable() == true)text = "╬══════╣";
-                    else if(board[row+1][column-1].isOccupiable() == true) text = "╬══════╝";
-                    else text = "╩══════╝";
-                    finishLine=true;
-                }else {
-                    if(board[row+1][column].isOccupiable() == true){
-                        if( board[row+1][column+1].isOccupiable()==true)text="╬══════";
-                        else{
-                            if( board[row][column+1].isOccupiable()==true)text="╬══════";
-                            else{
-                                text = "╬══════╣";
-                                finishLine=true;
-                            }
-
-                        }
-                    }
-                    else{
-                        if(board[row][column+1].isOccupiable() == true){
-                            if(board[row+1][column-1].isOccupiable() == true)text = "╬══════";
-                            else text = "╩══════";
-                        }
-                        else{
-                            if(board[row+1][column-1].isOccupiable() == true)text = "╬══════╝";
-                            else text = "╩══════╝";
-                            finishLine=true;
-                        }
-                    }
-
-                }
-
-            }
-        }
-
-         */
-
-        System.out.print(color + text + "\u001B[0m");
-
-
+        System.out.print(color + text + "\033[0m");
     }
 }

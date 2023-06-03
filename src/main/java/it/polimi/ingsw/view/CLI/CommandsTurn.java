@@ -1,5 +1,7 @@
 package it.polimi.ingsw.view.CLI;
-
+/**
+ * Enumeration of turn commands.
+ */
 public enum CommandsTurn implements Commands {
 
     SELECT_FROM_BOARD1("SELECT a tile"),
@@ -26,17 +28,21 @@ public enum CommandsTurn implements Commands {
 
     private final String command;
 
-
+    /**
+     * Constructs a turn command with the specified command string.
+     *
+     * @param command the turn command
+     */
     CommandsTurn(String command) {
         this.command = command;
     }
-
+    /**
+     * Returns the command string of the turn command.
+     *
+     * @return the command string
+     */
     public String getCommand() {
         return command;
     }
 
-   /* public String getSecondErrorMessage(ErrorType e) {
-        return e.errorMessage;
-    }
-    */
 }
