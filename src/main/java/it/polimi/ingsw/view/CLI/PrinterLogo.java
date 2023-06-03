@@ -80,7 +80,9 @@ public class PrinterLogo {
                 " ║ ╠═╣║╣   ╠╩╗║ ║╠═╣╠╦╝ ║║",
                 " ╩ ╩ ╩╚═╝  ╚═╝╚═╝╩ ╩╩╚══╩╝"};
 
-        printLogo(boardLogo,freeSpaces);
+        int shift = terminalWidth-boardLogo[0].length()/2;
+        printLogo(boardLogo,shift);
+        //printLogo(boardLogo,freeSpaces);
     }
 
     public synchronized static void printBookshelfLogo(int freeSpaces) {
@@ -90,7 +92,9 @@ public class PrinterLogo {
                 "╩ ╩ ╩   ╚═╝╚═╝╚═╝╩ ╩╚═╝╩ ╩╚═╝╩═╝╚"
         };
 
-        printLogo(bookshelfLogo, freeSpaces);
+        int shift = terminalWidth-bookshelfLogo[0].length()/2;
+        printLogo(bookshelfLogo,shift);
+        //printLogo(bookshelfLogo, freeSpaces);
     }
     private static int terminalWidth = 80;
     public synchronized static void printGamesRulesLogo() {
@@ -164,7 +168,9 @@ public class PrinterLogo {
                 "╚═╝╩═╝╚═╝╚═╝╩ ╩╩═╝  ╩═╝╚═╝╚═╝╚═╝ ╩"
         };
 
-        printLogo(globalLobbyPhaseLogo, freeSpaces);
+        int shift = terminalWidth-globalLobbyPhaseLogo[0].length()/2;
+        printLogo(globalLobbyPhaseLogo,shift);
+        //printLogo(globalLobbyPhaseLogo, freeSpaces);
     }
 
     public synchronized static void printGameLobbyPhase(int freeSpaces) {
@@ -174,7 +180,9 @@ public class PrinterLogo {
                 "╚═╝╩ ╩╩ ╩╚═╝  ╩═╝╚═╝╚═╝╚═╝ ╩"
         };
 
-        printLogo(gameLobbyPhaseLogo, freeSpaces);
+        int shift = terminalWidth-gameLobbyPhaseLogo[0].length()/2;
+        printLogo(gameLobbyPhaseLogo,shift);
+        //printLogo(gameLobbyPhaseLogo, freeSpaces);
     }
 
     public synchronized static void printYourTurnPhase() {
@@ -195,7 +203,9 @@ public class PrinterLogo {
                 "╚╩╝╩ ╩╩ ╩ ╩╝╚╝╚═╝   ╩ ╚═╝╚═╝╩╚═   ╩ ╚═╝╩╚═╝╚╝"
         };
 
-        printLogo(waitingTurnPhaseLogo, freeSpaces);
+        int shift = terminalWidth-waitingTurnPhaseLogo[0].length()/2;
+        printLogo(waitingTurnPhaseLogo,shift);
+        //printLogo(waitingTurnPhaseLogo, freeSpaces);
     }
 
 
@@ -205,8 +215,9 @@ public class PrinterLogo {
                 "╠╩╗║ ║╠═╣╠╦╝ ║║  ╠═╝╠═╣╠═╣╚═╗║╣",
                 "╚═╝╚═╝╩ ╩╩╚══╩╝  ╩  ╩ ╩╩ ╩╚═╝╚═╝"
         };
-
-        printLogo(boardPhaseLogo, freeSpaces);
+        int shift = terminalWidth-boardPhaseLogo[0].length()/2;
+        printLogo(boardPhaseLogo,shift);
+        //printLogo(boardPhaseLogo, freeSpaces);
     }
 
     public synchronized static void printOrderPhase(int freeSpaces) {
@@ -215,8 +226,9 @@ public class PrinterLogo {
                 "║ ║╠╦╝ ║║║╣ ╠╦╝  ╠═╝╠═╣╠═╣╚═╗║╣",
                 "╚═╝╩╚══╩╝╚═╝╩╚═  ╩  ╩ ╩╩ ╩╚═╝╚═╝"
         };
-
-        printLogo(orderPhaseLogo, freeSpaces);
+        int shift = terminalWidth-orderPhaseLogo[0].length()/2;
+        printLogo(orderPhaseLogo,shift);
+        //printLogo(orderPhaseLogo, freeSpaces);
     }
 
     public synchronized static void printColumnPhase(int freeSpaces) {
@@ -225,8 +237,9 @@ public class PrinterLogo {
                 "║  ║ ║║  ║ ║║║║║║║  ╠═╝╠═╣╠═╣╚═╗║╣",
                 "╚═╝╚═╝╩═╝╚═╝╩ ╩╝╚╝  ╩  ╩ ╩╩ ╩╚═╝╚═╝"
         };
-
-        printLogo(columnPhaseLogo, freeSpaces);
+        int shift = terminalWidth-columnPhaseLogo[0].length()/2;
+        printLogo(columnPhaseLogo,shift);
+        //printLogo(columnPhaseLogo, freeSpaces);
     }
 
     public synchronized static void printFinalRankingPhase(int freeSpaces) {
@@ -235,8 +248,9 @@ public class PrinterLogo {
                 "╠╣ ║║║║╠═╣║    ╠╦╝╠═╣║║║╠╩╗║║║║║ ╦",
                 "╚  ╩╝╚╝╩ ╩╩═╝  ╩╚═╩ ╩╝╚╝╩ ╩╩╝╚╝╚═╝"
         };
-
-        printLogo(finalRankingPhaseLogo, freeSpaces);
+        int shift = terminalWidth-finalRankingPhaseLogo[0].length()/2;
+        printLogo(finalRankingPhaseLogo,shift);
+        //printLogo(finalRankingPhaseLogo, freeSpaces);
     }
 
 

@@ -327,7 +327,13 @@ public class PrinterCommonGoalAndPoints {
 
      */
     public void printToken(int num,String player){
-        System.out.println("il token "+num+"   nome  "+player);
+        String [] token = {"┌"+"───"+"┐","│ "+ num +" │","└"+"───"+"┘"};
+        String str = player+" has won the following common goal card token!";
+        System.out.println(" ".repeat((terminalWidth-str.length()/2))+str);
+        for(String s:token){
+            System.out.println(" ".repeat((terminalWidth-s.length()/2))+s);
+        }
+        System.out.println("");
     }
 
     public void printPoints(ClientView clientView){
@@ -336,17 +342,17 @@ public class PrinterCommonGoalAndPoints {
         //la classifica si basa solo sui common e adjacent mentre i personal sono mandati singolarmente , cosi da non vedere quelli degli altri
         PlayerPointsView[] playerPoints=clientView.getPlayerPointsViews();
         int nickLenght = 10;
-        String tab = " ".repeat(terminalWidth-(nickLenght+54)/2);
         for(int i=playerPoints.length-1;i>=0;i--){
             nickLenght = Math.max(playerPoints[i].getNickname().length(), nickLenght);
         }
-        System.out.println(tab+tlc+hd.repeat(nickLenght+2)+t+hd.repeat(8)+t+hd.repeat(8)+t+hd.repeat(10)+t+hd.repeat(10)+trc);
-        System.out.println(tab+vd+" Nickname"+" ".repeat(nickLenght-7)+vd+" Points "+vd+" Common "+vd+" Adjacent "+vd+" Personal "+vd);
-        System.out.println(tab+li+hd.repeat(nickLenght+2)+cr+hd.repeat(8)+cr+hd.repeat(8)+cr+hd.repeat(10)+cr+hd.repeat(10)+ri);
+        String shift = " ".repeat(terminalWidth-(nickLenght+42)/2);
+        System.out.println(shift+tlc+hd.repeat(nickLenght+2)+t+hd.repeat(8)+t+hd.repeat(8)+t+hd.repeat(10)+t+hd.repeat(10)+trc);
+        System.out.println(shift+vd+" Nickname"+" ".repeat(nickLenght-7)+vd+" Points "+vd+" Common "+vd+" Adjacent "+vd+" Personal "+vd);
+        System.out.println(shift+li+hd.repeat(nickLenght+2)+cr+hd.repeat(8)+cr+hd.repeat(8)+cr+hd.repeat(10)+cr+hd.repeat(10)+ri);
         for (int i=playerPoints.length-1;i>=0;i--) {
-            System.out.printf(tab+vd+" %s"+" ".repeat(nickLenght-playerPoints[i].getNickname().length()+1)+vd+" %6d "+vd+" %6d "+vd+" %8d "+vd+" %8s "+vd+"%n", playerPoints[i].getNickname().equals(clientView.getTurnPlayer())? Colors.paint(Colors.YELLOW_CODE, playerPoints[i].getNickname()): playerPoints[i].getNickname(), playerPoints[i].getPoints(), Arrays.stream(playerPoints[i].getPointsToken()).sum(), playerPoints[i].getAdjacentPoints(), playerPoints[i].getNickname().equals(clientView.getNickname())? Integer.toString(clientView.getPersonalPoints()) : "?");
+            System.out.printf(shift+vd+" %s"+" ".repeat(nickLenght-playerPoints[i].getNickname().length()+1)+vd+" %6d "+vd+" %6d "+vd+" %8d "+vd+" %8s "+vd+"%n", playerPoints[i].getNickname().equals(clientView.getTurnPlayer())? Colors.paint(Colors.YELLOW_CODE, playerPoints[i].getNickname()): playerPoints[i].getNickname(), playerPoints[i].getPoints(), Arrays.stream(playerPoints[i].getPointsToken()).sum(), playerPoints[i].getAdjacentPoints(), playerPoints[i].getNickname().equals(clientView.getNickname())? Integer.toString(clientView.getPersonalPoints()) : "?");
         }
-        System.out.println(tab+blc+hd.repeat(nickLenght+2)+ut+hd.repeat(8)+ut+hd.repeat(8)+ut+hd.repeat(10)+ut+hd.repeat(10)+brc);
+        System.out.println(shift+blc+hd.repeat(nickLenght+2)+ut+hd.repeat(8)+ut+hd.repeat(8)+ut+hd.repeat(10)+ut+hd.repeat(10)+brc);
 
 
         /*
@@ -369,15 +375,13 @@ public class PrinterCommonGoalAndPoints {
     }
     //TODO: aggiungi 1 punto al nickWhoFilledBookshelf
     public  void printEndGame(ClientView clientView,int[] personalPoints, String nickWhoFilledBookshelf){
-        //i playerpoints saranno ordinati dal basso verso l alto leggerli al contrario e per il punteggio totale sommare quello in posizione index dell array personal
-        //sono gia associati ai rispettivi giocatori ma non potevo mostrare i personal points prima
         PrinterLogo.printWinnerLogo(terminalWidth-(43)/2); //old parameter: terminalWidth-(43)/2
         PlayerPointsView[] playersRanking= clientView.getPlayerPointsViews();
         int nickLenght = 10;
-        String tab = " ".repeat(terminalWidth-(nickLenght+54-7)/2);
         for(int i=playersRanking.length-1;i>=0;i--){
             nickLenght = Math.max(playersRanking[i].getNickname().length(), nickLenght);
         }
+        String tab = " ".repeat(terminalWidth-(nickLenght+42)/2);
         System.out.println(tab+tlc+hd.repeat(nickLenght+2)+t+hd.repeat(8)+t+hd.repeat(8)+t+hd.repeat(10)+t+hd.repeat(10)+trc);
         System.out.println(tab+vd+" Nickname"+" ".repeat(nickLenght-7)+vd+" Points "+vd+" Common "+vd+" Adjacent "+vd+" Personal "+vd);
         System.out.println(tab+li+hd.repeat(nickLenght+2)+cr+hd.repeat(8)+cr+hd.repeat(8)+cr+hd.repeat(10)+cr+hd.repeat(10)+ri);
