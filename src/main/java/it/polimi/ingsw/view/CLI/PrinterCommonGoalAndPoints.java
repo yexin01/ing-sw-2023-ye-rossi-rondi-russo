@@ -6,6 +6,13 @@ import it.polimi.ingsw.view.ClientView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * This class contains a method used to print each common goal card with its description and available tokens,
+ * as well as the methods to visualize the points of each player and the final ranking.
+ * The characters defined at the beginning of the class are used to draw the cards' borders and tiles disposition.
+ * Every card is constructed line by line, together with its description.
+ * The attribute terminalWidth is initialized with a default value of 80 and is used to center the output in the terminal.
+ */
 public class PrinterCommonGoalAndPoints {
     private String borderColor = Colors.BEIGE_CODE;
     private int lineLength = 16;
@@ -294,7 +301,10 @@ public class PrinterCommonGoalAndPoints {
             ""
     };
 
-
+    /**
+     * This method builds the token according to the points passed as parameter
+     * @param x: token points
+     */
     public String[] buildToken (int x){
         String [] token ={"┌"+"───"+"┐",
                           "│ "+ x +" │",
@@ -326,6 +336,13 @@ public class PrinterCommonGoalAndPoints {
     }
 
      */
+
+    /**
+     * Whenever a common goal is scored, this method is called to notify everyone
+     * that a certain player has taken the topmost token.
+     * @param num : token points
+     * @param player : player nickname
+     */
     public void printToken(int num,String player){
         String [] token = {"┌"+"───"+"┐","│ "+ num +" │","└"+"───"+"┘"};
         String str = player+" has won the following common goal card token!";
@@ -336,10 +353,14 @@ public class PrinterCommonGoalAndPoints {
         System.out.println("");
     }
 
+    /**
+     * Prints the game ranking whenever a player asks for it.
+     * While everyone can see each other's common and adjacent points, the only personal points visualized are
+     * the ones scored by the player who asked for the ranking.
+     * The turn player is highlighted in yellow.
+     * @param clientView
+     */
     public void printPoints(ClientView clientView){
-        //i playerpoints view della clientView saranno ordinati dal piu basso al piu alto leggerli al contrario
-        //durante il turno per i personal point degli altri andrebbe messo ?, in modo tale che all utente non venga mostrato i punteggi personal degli altri
-        //la classifica si basa solo sui common e adjacent mentre i personal sono mandati singolarmente , cosi da non vedere quelli degli altri
         PlayerPointsView[] playerPoints=clientView.getPlayerPointsViews();
         int nickLenght = 10;
         for(int i=playerPoints.length-1;i>=0;i--){
@@ -354,26 +375,15 @@ public class PrinterCommonGoalAndPoints {
         }
         System.out.println(shift+blc+hd.repeat(nickLenght+2)+ut+hd.repeat(8)+ut+hd.repeat(8)+ut+hd.repeat(10)+ut+hd.repeat(10)+brc);
 
-
-        /*
-        //TODO pensavo di inserire una cornice con i vari punteggi e qualche disegno tipo di due tiles vicine se sono gli adjacentPoints...
-        PlayerPointsView playerPoints=clientView.getPlayerPoints();
-        System.out.println("POINTS ");
-        System.out.println("AdjacentPoint "+playerPoints.getAdjacentPoints()+" How many token you have:"+playerPoints.getHowManyTokenYouHave()+" PersonalGoalPoint "+playerPoints.getPersonalGoalPoints());
-        System.out.println("END TURN ");
-        String whoChange;
-        CommonGoalView[] commonGoalViews= clientView.getCommonGoalViews();
-        for(CommonGoalView commonGoalp:commonGoalViews){
-            if(commonGoalp.getWhoWonLastToken()==null){
-                whoChange="NO ONE HAS WON A TOKEN";
-            }else whoChange=commonGoalp.getWhoWonLastToken()+" ONE HAS WON A TOKEN";
-            System.out.println(commonGoalp.getLastPointsLeft()+" This are TOKEN points that remain,"+whoChange);
-        }
-
-         */
-
     }
-    //TODO: aggiungi 1 punto al nickWhoFilledBookshelf
+
+    /**
+     * Prints the final ranking at game end. A table is shown with the total amounts of points for each player,
+     * categorized in common, adjacent and personal points. Podium players are higlighted in gold, silver and bronze.
+     * @param clientView
+     * @param personalPoints
+     * @param nickWhoFilledBookshelf
+     */
     public  void printEndGame(ClientView clientView,int[] personalPoints, String nickWhoFilledBookshelf){
         PrinterLogo.printWinnerLogo(terminalWidth-(43)/2); //old parameter: terminalWidth-(43)/2
         PlayerPointsView[] playersRanking= clientView.getPlayerPointsViews();
@@ -411,28 +421,12 @@ public class PrinterCommonGoalAndPoints {
         }
         System.out.println(tab+blc+hd.repeat(nickLenght+2)+ut+hd.repeat(8)+ut+hd.repeat(8)+ut+hd.repeat(10)+ut+hd.repeat(10)+brc);
 
-        /*
-        //int numOfCGC = clientView.getIdCommonGoals().length;
-        int numOfRows = getCommonGoalCard(clientView.getIdCommonGoals()[0]).length;
-        int[] cgcIndexes = clientView.getIdCommonGoals();
-
-        for (int i=0; i<numOfRows; i++){
-            if(i==0 || i==numOfRows-1){
-                Colors.printSize2(getCommonGoalCard(cgcIndexes[0])[i]+getCommonGoalCardDescription(cgcIndexes[0])[i], 432+60);
-                Colors.printSize2(getCommonGoalCard(cgcIndexes[1])[i]+getCommonGoalCardDescription(cgcIndexes[1])[i], 432+60);
-                System.out.println("");
-            }
-            else {
-                Colors.printSize2(getCommonGoalCard(cgcIndexes[0])[i]+getCommonGoalCardDescription(cgcIndexes[0])[i], 124);
-                Colors.printSize2(getCommonGoalCard(cgcIndexes[1])[i]+getCommonGoalCardDescription(cgcIndexes[1])[i], 124);
-                System.out.println("");
-
-            }
-        }
-
-         */
     }
 
+    /**
+     * print the common goal cards int the middle of the screen.
+     * @param clientView
+     */
     public  void printCommonGoalCards(ClientView clientView){
         int numOfCommonGoalCards = clientView.getCommonGoalView()[0].length;
         for(int i=0; i<numOfCommonGoalCards; i++){
@@ -458,6 +452,14 @@ public class PrinterCommonGoalAndPoints {
         }
     }
 
+    /**
+     * Prints the tokens left for the common goal card with index indexCGC.
+     * The switch statement guarantees that tokensToPrint contains the right tokens for
+     * the number of players,according to the rules.
+     * Available tokens are printed in white, while the ones already taken are shaded in black.
+     * @param indexCGC
+     * @param clientView
+     */
     public void printTokensLeft(int indexCGC, ClientView clientView){
         ArrayList<String[]> tokensToPrint = new ArrayList<>();
         switch (clientView.getPlayerPointsViews().length) {
