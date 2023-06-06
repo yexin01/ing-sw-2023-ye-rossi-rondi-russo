@@ -91,5 +91,10 @@ public class BoardBox {
     public void setFreeEdges(int freeEdges) {
         this.freeEdges = freeEdges;
     }
-
+    /**
+     * Increases the number of free edges on the cell by 1.
+     */
+    public void increasefreeEdges() {
+        freeEdges++;
+    }
 }

@@ -597,10 +597,10 @@ public class CLI implements ClientInterface {
      */
     @Override
     public synchronized void waitingRoom() {
-        Colors.colorize(Colors.GAME_INSTRUCTION, "Turn player: "+clientView.getTurnPlayer());
         PrinterLogo.printWaitingTurnPhase(50);
         printCommands(CommandsTurn.PRINT1);
         printCommands(CommandsTurn.PRINT5);
+        Colors.colorize(Colors.GAME_INSTRUCTION, "Turn player: "+clientView.getTurnPlayer());
     }
     /**
      * Displays the player who won a token and the associated score.
@@ -609,7 +609,9 @@ public class CLI implements ClientInterface {
      */
     @Override
     public void displayToken(int num, String nickname) {
-        printerCommonGoalAndPoints.printToken(num,nickname);
+        printerCommonGoalAndPoints.printToken(num, nickname);
+        Colors.colorize(Colors.GAME_INSTRUCTION, "\nPress ENTER to continue...>> ");
+        scanner.nextLine();
     }
 
     /**
