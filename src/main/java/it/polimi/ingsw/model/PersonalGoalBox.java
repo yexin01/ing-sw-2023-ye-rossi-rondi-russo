@@ -17,25 +17,34 @@ public class PersonalGoalBox implements Serializable {
     private final Type type;
 
     /**
-     *Constructor of the PersonalGoalBox
-     * @param type:cell type;
-     * @param x:bookshelf row;
-     * @param y:bookshelf column;
+     * Constructs a PersonalGoalBox object with the specified type, row, and column.
+     * @param type The type of the personal goal.
+     * @param x The row of the bookshelf.
+     * @param y The column of the bookshelf.
      */
     public PersonalGoalBox(Type type, int x, int y) {
         this.x = x;
         this.y = y;
         this.type = type;
     }
-
+    /**
+     * Returns the row of the bookshelf.
+     * @return The row of the bookshelf.
+     */
     public int getX() {
         return x;
     }
-
+    /**
+     * Returns the column of the bookshelf.
+     * @return The column of the bookshelf.
+     */
     public int getY() {
         return y;
     }
-
+    /**
+     * Returns the type of the personal goal.
+     * @return The type of the personal goal.
+     */
     public Type getTypePersonal() {
         return type;
     }

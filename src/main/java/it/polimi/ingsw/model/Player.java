@@ -15,47 +15,59 @@ import java.util.Objects;
 public class Player {
 
 
-    //private GameInfo gameInfo;
     private String nickname;
 
 
     private ModelView modelView;
 
     /**
-     * Constructor which instantiates the player with the current game's modelView and nickname;
-     * @param nickname:player nickname;
-     * @param modelView:modelView of the game;
-     * @throws Exception
-     */
 
-    public Player (String nickname, ModelView modelView,GameRules gameRules) throws Exception {
+     Constructs a Player object with the specified nickname, model view, and game rules.
+     @param nickname The nickname of the player.
+     @param modelView The model view object containing the game state.
+     @param gameRules The game rules object defining the rules and settings of the game.
+     */
+    public Player (String nickname, ModelView modelView,GameRules gameRules) {
         this.modelView=modelView;
         selectedItems=new ArrayList<>();
         commonGoalPoints=new int[gameRules.getNumOfCommonGoals()];
         this.nickname = nickname;
     }
+    /**
+     * Returns the nickname of the player.
+     * @return The nickname of the player.
+     */
     public String getNickname() {
         return nickname;
     }
+    /**
+     * Sets the nickname of the player.
+     * @param nickname The nickname to set.
+     */
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
 
     private ArrayList<ItemTile> selectedItems;
+    /**
+     * Returns the list of selected item tiles by the player.
+     * @return The list of selected item tiles.
+     */
     public ArrayList<ItemTile> getSelectedItems() {
         return selectedItems;
     }
 
 
     /**
-     * Check that:1)the order array is the same length as the selectedItems,2)there are no repeated numbers or
+     * Check that:
+     * 1)the order array is the same length as the selectedItems,
+     * 2)there are no repeated numbers or
      * 3)invalid numbers (outside the range between 0 and order.length-1).
      * @param order:array indicating the player selected order;
      * @return ErrorType;
-     * @throws Error
      */
 
-    public ErrorType checkPermuteSelection(int[] order) throws Error {
+    public ErrorType checkPermuteSelection(int[] order) {
         int maxIndex = selectedItems.size() - 1;
         if(order.length!=selectedItems.size()){
             return ErrorType.INVALID_INPUT;
@@ -107,59 +119,110 @@ public class Player {
 
     //PERSONALGOAL
     private int personalGoalPoints;
+    /**
+     * Returns the personal goal points of the player.
+     * @return The personal goal points.
+     */
     public int getPersonalGoalPoints() {
         return personalGoalPoints;
     }
+    /**
+     * Sets the personal goal points of the player.
+     * @param personalGoalPoints The personal goal points to set.
+     */
     public void setPersonalGoalPoints(int personalGoalPoints) {
         this.personalGoalPoints = personalGoalPoints;
     }
     private PersonalGoalCard personalGoalCard;
+    /**
+     * Returns the personal goal card of the player.
+     * @return The personal goal card.
+     */
     public PersonalGoalCard getPersonalGoalCard() {
         return personalGoalCard;
     }
+    /**
+     * Sets the personal goal card of the player.
+     * @param personalGoalCard The personal goal card to set.
+     */
     public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
         this.personalGoalCard = personalGoalCard;
     }
     //BOOKSHELF AND POINTS
     private Bookshelf bookshelf;
+    /**
+     * Returns the bookshelf of the player.
+     * @return The bookshelf.
+     */
     public Bookshelf getBookshelf() {
         return bookshelf;
     }
+    /**
+     * Sets the bookshelf of the player.
+     * @param bookshelf The bookshelf to set.
+     */
     public void setBookshelf(Bookshelf bookshelf) {
         this.bookshelf = bookshelf;
     }
-
-    public void insertBookshelf(int column) throws Error {
+    /**
+     * Inserts the selected items into the bookshelf at the specified column.
+     * @param column The column index.
+     * @throws Error if an error occurs during the insertion.
+     */
+    public void insertBookshelf(int column) {
         bookshelf.insertTiles(selectedItems,column);
     }
     private int adjacentPoints;
+    /**
+     * Returns the adjacent points of the player.
+     * @return The adjacent points.
+     */
     public int getAdjacentPoints() {
         return adjacentPoints;
     }
+    /**
+     * Sets the adjacent points of the player.
+     * @param adjacentPoints The adjacent points to set.
+     */
     public void setAdjacentPoints(int adjacentPoints) {
         this.adjacentPoints = adjacentPoints;
     }
     //COMMONGOALPOINTS
     private int[] commonGoalPoints;
+    /**
+     * Returns the array of common goal points of the player.
+     * @return The array of common goal points.
+     */
     public int[] getCommonGoalPoints() {
         return commonGoalPoints;
     }
+    /**
+     * Sets the array of common goal points of the player.
+     * @param commonGoalPoints The array of common goal points to set.
+     */
     public void setCommonGoalPoints(int[] commonGoalPoints) {
         this.commonGoalPoints = commonGoalPoints;
     }
-    public int getCommonGoalPoints(int index) throws IndexOutOfBoundsException {
-        return commonGoalPoints[index];
-    }
-    public void setCommonGoalPoints(int index, int num) throws IndexOutOfBoundsException {
-        commonGoalPoints[index] = num;
-    }
+    /**
+     * Sets the token at the specified index with the specified points.
+     * @param index The index of the token.
+     * @param points The points to set.
+     */
     public void setToken(int index, int points) {
         this.commonGoalPoints[index] = points;
     }
+    /**
+     * Sets the selected items of the player.
+     * @param selectedItems The list of selected items to set.
+     */
     public void setSelectedItems(ArrayList<ItemTile> selectedItems){
         this.selectedItems=selectedItems;
     }
 
+    /**
+     * Sets the model view of the game.
+     * @param modelView:model view of the game.
+     */
     public void setModelView(ModelView modelView) {
         this.modelView = modelView;
     }

@@ -183,7 +183,7 @@ public class GameController {
      *end of turn: if pass all checks sets the next player and wakes up the EndTurnListener;
      */
     public void finishTurn() {
-        game.getBoard().resetBoard();
+        game.getBoard().changeBoardAfterUserChoice();
         Boolean[] activePlayers=game.getModelView().getActivePlayers();
         //System.out.println("ULTIMO GIOCATORE CONNESSO ATTIVO è:"+game.getLastPlayer(activePlayers));
         if(game.isEndGame() && getTurnNickname().equals(game.getLastPlayer())){

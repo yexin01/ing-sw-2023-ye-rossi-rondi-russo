@@ -249,7 +249,7 @@ public class Game {
         for (int i = 0; i< getTurnPlayerOfTheGame().getCommonGoalPoints().length; i++){
             CommonGoalCard c=commonGoalCards.get(i);
             if (getTurnPlayerOfTheGame().getCommonGoalPoints()[i]==0 && true/*c).checkGoal(turnBookshelf().getMatrix())*/){
-                int pointsWon=commonGoalCards.get(i).removeToken(i);
+                int pointsWon=commonGoalCards.get(i).removeToken();
                 modelview.getToken()[i]=pointsWon;
                 modelview.setIdCommon(1,i,c.getLastPoint());
                 getTurnPlayerOfTheGame().setToken(i,pointsWon);

@@ -34,10 +34,9 @@ public abstract class CommonGoalCard {
 
     /**
      * Method to remove the last point of the ArrayList points
-     * @param index index of the point to remove
      * @return the point removed
      */
-    public int removeToken(int index){
+    public int removeToken(){
         if(points.size()>0){
             int point=points.get(points.size()-1);
             points.remove(points.size()-1);

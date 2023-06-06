@@ -12,7 +12,8 @@ import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
 /**
- * Class that contains immutable objects to send to the client.
+ * The ModelView class represents a set of immutable objects that are sent to the client.
+ * It provides a snapshot of the game state that can be used for rendering and displaying information to the players.
  */
 public class ModelView {
 
@@ -35,13 +36,13 @@ public class ModelView {
     private ItemTileView[] selectedItems;
 
     /**
-     * Constructor ModelView
-     * @param numPlayers: of the game associated;
-     * @param gameRules:
+     * Constructs a ModelView object.
+     * @param numPlayers The number of players in the associated game.
+     * @param gameRules Used to read the game rules from a JSON file.
+     *                 It provides the rules and settings for the game.
      */
 
     public ModelView(int numPlayers,GameRules gameRules){
-        //pointsLeftCommon=new int[gameRules.getNumOfCommonGoals()];
         bookshelfView=new ItemTileView[numPlayers][gameRules.getRowsBookshelf()][gameRules.getColumnsBookshelf()];
         playerPoints=new PlayerPointsView[numPlayers];
         playerPersonalGoal=new PersonalGoalCard[numPlayers];
@@ -52,46 +53,27 @@ public class ModelView {
         personalPoints=new int[numPlayers];
         MAX_SELECTABLE_TILES= gameRules.getMaxSelectableTiles();
     }
-
+    /**
+     * Gets the index of a player based on their nickname.
+     * @param nickname The nickname of the player.
+     * @return The index of the player. Returns -1 if the player is not found.
+     */
     public int getIntegerValue(String nickname) {
         OptionalInt index = IntStream.range(0, playerPoints.length)
                 .filter(i -> playerPoints[i].getNickname().equals(nickname))
                 .findFirst();
         return index.orElse(-1);
     }
-    public <T> T[] deleteObjectByIndex(T[] array, int indexToDelete) {
-        int length = array.length;
-        if (indexToDelete < 0 || indexToDelete >= length) {
-            return array;
-        }
-        T[] newArray = (T[]) Array.newInstance(array.getClass().getComponentType(), length-1);
-        int counter = 0;
-        for (int i = 0; i < length; i++) {
-            if (i != indexToDelete) {
-                newArray[counter++] = array[i];
-            }
-        }
-        return newArray;
-    }
 
-    public int deleteAllObjectByIndex(String nickname){
-        int index=getIntegerValue(nickname);
+    /**
+     * Sorts the player points and personal points to determine the winner at the end of the game.
+     */
 
-        playerPoints = deleteObjectByIndex(playerPoints, index);
-        playerPersonalGoal=deleteObjectByIndex(playerPersonalGoal,index);
-        bookshelfView=deleteObjectByIndex(bookshelfView,index);
-
-        //playersOrder.remove(nickname);
-        return index;
-
-    }
     public void winnerEndGame() {
         Integer[] indices = new Integer[playerPoints.length];
         for (int i = 0; i < playerPoints.length; i++) {
             indices[i] = i;
         }
-
-        //Arrays.sort(indices, Comparator.comparingInt(index -> playerPoints[index].getPoints() + personalPoints[index]));
         Arrays.sort(indices, Comparator.comparingInt(index -> {
             if (index == getIntegerValue(bookshelfFullPoints)) {
                 return playerPoints[index].getPoints() + personalPoints[index] + 1;
@@ -109,21 +91,23 @@ public class ModelView {
 
         playerPoints = sortedPlayerPoints;
         personalPoints = sortedPersonalPoints;
-        int i=0;
-        for (PlayerPointsView obj : playerPoints) {
-            System.out.println(obj.getPoints()+"  "+personalPoints[i++]+" "+obj.getNickname());
-        }
     }
+    /**
+     * Sets the turn to the next active player in the game.
+     * If the current player is the last active player, the turn is set to the first active player.
+     */
     public void setNextPlayer() {
-        int first=turnPlayer;
         do{
 
             if(turnPlayer>= (playerPoints.length - 1))
                 setTurnPlayer(0);
             else setTurnPlayer(turnPlayer+1);
         }while(!activePlayers[turnPlayer]);
-        System.out.println("Il prossimo giocatore che deve giocare ed é attivo é: "+playerPoints[turnPlayer].getNickname());
     }
+    /**
+     * Finds the previous active player in the game.
+     * @return The PlayerPointsView object representing the previous active player.
+     */
     public PlayerPointsView findPreviousPlayer() {
         int currentIndex =turnPlayer;
          do{
@@ -135,45 +119,80 @@ public class ModelView {
                 break;
             }
         }while (!activePlayers[currentIndex]);
-        System.out.println("Primo attivo: "+playerPoints[currentIndex].getNickname());
         return playerPoints[currentIndex];
     }
 
-
+    /**
+     * Retrieves the bookshelf view for a specific player.
+     * @param nickname The nickname of the player.
+     * @return The bookshelf view for the player.
+     */
 
     public ItemTileView[][] getBookshelfView(String nickname) {
         return bookshelfView[getIntegerValue(nickname)];
     }
-
+    /**
+     * Sets the bookshelf view for a specific player.
+     * @param bookshelfView The bookshelf view to set.
+     * @param nickname The nickname of the player.
+     */
     public void setBookshelfView(ItemTileView[][] bookshelfView,String nickname) {
         this.bookshelfView[getIntegerValue(nickname)] = bookshelfView;
     }
+    /**
 
+     Retrieves the player points for all players.
+     @return An array of PlayerPointsView objects representing the player points.
+     */
     public PlayerPointsView[] getPlayerPoints() {
         return playerPoints;
     }
-
+    /**
+     * Sets the player points for a specific player.
+     * @param playerPoints The PlayerPointsView object representing the player points.
+     * @param index The index of the player.
+     */
     public void setPlayerPoints(PlayerPointsView playerPoints,int index) {
         this.playerPoints[index] = playerPoints;
     }
-
+    /**
+     * Retrieves the personal points of a player.
+     * @param nickname The nickname of the player.
+     * @return The personal points of the player.
+     */
     public int getPersonalPoint(String nickname) {
         return personalPoints[getIntegerValue(nickname)];
     }
 
-
+    /**
+     * Retrieves the personal goal card of a player.
+     * @param nickname The nickname of the player.
+     * @return The personal goal card of the player.
+     */
 
     public PersonalGoalCard getPlayerPersonalGoal(String nickname) {
         return playerPersonalGoal[getIntegerValue(nickname)];
     }
+    /**
+     * Sets the personal goal card for a specific player.
+     * @param playerPersonalGoal The PersonalGoalCard to set.
+     * @param nickname The nickname of the player.
+     */
     public void setPlayerPersonalGoal(PersonalGoalCard playerPersonalGoal, String nickname) {
         this.playerPersonalGoal[getIntegerValue(nickname)] = playerPersonalGoal;
     }
-
+    /**
+     * Retrieves the player personal goal card of a player.
+     * @param nickname The nickname of the player.
+     * @return The player personal goal card.
+     */
     public PersonalGoalCard getPlayerPersonal(String nickname) {
         return playerPersonalGoal[getIntegerValue(nickname)] ;
     }
-
+    /**
+     * Checks the winner based on player points.
+     * @return An array of PlayerPointsView objects sorted in ascending order of points.
+     */
     public PlayerPointsView[] checkWinner() {
         PlayerPointsView[] sortedObjects = Arrays.copyOf(playerPoints, playerPoints.length);
 
@@ -188,104 +207,183 @@ public class ModelView {
         }
         return sortedObjects;
     }
+    /**
+     * Retrieves the nickname of the player whose turn it is.
+     * @return The nickname of the current player.
+     */
     public String getTurnNickname(){
         return playerPoints[turnPlayer].getNickname();
     }
+    /**
+     * Retrieves the nickname of the player with a full bookshelf.
+     * @return The nickname of the player with a full bookshelf.
+     */
     public String getBookshelfFullPoints(){
         return bookshelfFullPoints;
     }
+    /**
+     * Sets the nickname of the player with a full bookshelf.
+     * @param nickname The nickname of the player with a full bookshelf.
+     */
     public void setBookshelfFullPoints(String nickname){
         bookshelfFullPoints=nickname;
     }
 
 
+    /**
+     * Retrieves the selected items.
+     * @return An array of ItemTileView representing the selected items.
+     */
 
 
     public ItemTileView[] getSelectedItems() {
         return selectedItems;
     }
-
+    /**
+     * Sets the selected items.
+     * @param selectedItems An array of ItemTileView representing the selected items.
+     */
     public void setSelectedItems(ItemTileView[] selectedItems) {
         this.token=new int[commonGoalView[0].length];
         this.selectedItems = selectedItems;
     }
-
+    /**
+     * Retrieves the board view.
+     * @return A 2D array of BoardBoxView representing the board view.
+     */
     public BoardBoxView[][] getBoardView() {
         return boardView;
     }
-
+    /**
+     * Sets the board view.
+     * @param boardView A 2D array of BoardBoxView representing the board view.
+     */
     public void setBoardView(BoardBoxView[][] boardView) {
         this.boardView = boardView;
     }
-
+    /**
+     * Retrieves the turn phase.
+     * @return The current turn phase.
+     */
 
     public TurnPhase getTurnPhase() {
         return turnPhase;
     }
-
+    /**
+     * Sets the turn phase.
+     * @param turnPhase The turn phase to set.
+     */
     public void setTurnPhase(TurnPhase turnPhase) {
         this.turnPhase = turnPhase;
     }
 
 
-
+    /**
+     * Retrieves the common goal view.
+     * @return A 2D array of int representing the common goal view.
+     */
 
     public int[][] getCommonGoalView() {
         return commonGoalView;
     }
-
+    /**
+     * Sets the points left for a specific common goal.
+     * @param row The row index of the common goal.
+     * @param index The index within the common goal.
+     * @param pointsLeft The points left to set.
+     */
     public void setIdCommon(int row,int index,int pointsLeft) {
         this.commonGoalView[row][index]= pointsLeft;
     }
 
 
 
-
+    /**
+     * Retrieves the index of the current turn player.
+     * @return The index of the current turn player.
+     */
 
     public int getTurnPlayer() {
         return turnPlayer;
     }
-
+    /**
+     * Sets the index of the current turn player.
+     * @param turnPlayer The index of the current turn player.
+     */
     public void setTurnPlayer(int turnPlayer) {
         this.turnPlayer = turnPlayer;
     }
-
+    /**
+     * Sets the player points for all players.
+     * @param playerPoints An array of PlayerPointsView representing the player points for all players.
+     */
 
     public void setPlayersPoints(PlayerPointsView[] playerPoints){
         this.playerPoints=playerPoints;
     }
+    /**
+     * Sets the personal goal cards for all players.
+     * @param playerPersonalGoal An array of PersonalGoalCard representing the personal goal cards for all players.
+     */
     public void setPlayerPersonalGoal(PersonalGoalCard[] playerPersonalGoal){
         this.playerPersonalGoal=playerPersonalGoal;
     }
 
-
+    /**
+     * Retrieves the token values.
+     * @return An array of int representing the token values.
+     */
     public int[] getToken() {
         return token;
     }
-
+    /**
+     * Sets the token values.
+     * @param token An array of int representing the token values.
+     */
     public void setToken(int[] token) {
         this.token = token;
     }
-
+    /**
+     * Retrieves the personal points for all players.
+     * @return An array of int representing the personal points for all players.
+     */
     public int[] getPersonalPoints() {
         return personalPoints;
     }
-
+    /**
+     * Sets the personal points for all players.
+     * @param personalPoints An array of int representing the personal points for all players.
+     */
     public void setPersonalPoints(int[] personalPoints) {
         this.personalPoints = personalPoints;
     }
+    /**
+     * Retrieves the active players status.
+     * @return An array of Boolean representing the active players status.
+     */
     public Boolean[] getActivePlayers() {
         return activePlayers;
     }
 
+    /**
+     * Sets the active players status.
+     * @param activePlayers An array of Boolean representing the active players status.
+     */
+
     public void setActivePlayers(Boolean[] activePlayers) {
         this.activePlayers = activePlayers;
     }
-
+    /**
+     * Retrieves the maximum number of selectable tiles.
+     * @return The maximum number of selectable tiles.
+     */
     public int getMAX_SELECTABLE_TILES() {
         return MAX_SELECTABLE_TILES;
     }
-
+    /**
+     * Sets the maximum number of selectable tiles.
+     * @param MAX_SELECTABLE_TILES The maximum number of selectable tiles.
+     */
     public void setMAX_SELECTABLE_TILES(int MAX_SELECTABLE_TILES) {
         this.MAX_SELECTABLE_TILES = MAX_SELECTABLE_TILES;
     }
