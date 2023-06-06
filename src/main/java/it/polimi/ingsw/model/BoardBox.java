@@ -94,7 +94,7 @@ public class BoardBox {
     /**
      * Increases the number of free edges on the cell by 1.
      */
-    public void increasefreeEdges() {
+    public void increaseFreeEdges() {
         freeEdges++;
     }
 }

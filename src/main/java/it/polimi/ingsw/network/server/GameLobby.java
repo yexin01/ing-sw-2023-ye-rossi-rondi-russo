@@ -46,9 +46,8 @@ public class GameLobby {
      */
     public synchronized void createGame() throws Exception {
         ArrayList<String> playersGame=new ArrayList<>();
-        for (String player : players.keySet()) { playersGame.add(player); }
         this.gameController=new GameController();
-        this.gameController.createGame(this,playersGame);
+        this.gameController.createGame(this);
     }
 
     /**

@@ -157,23 +157,23 @@ public class Board{
         if(x>0) {
             //up
             if (matrix[x - 1][y].getTile()==null || !matrix[x - 1][y].isOccupiable())
-                matrix[x][y].increasefreeEdges();
-        }else matrix[x][y].increasefreeEdges();
+                matrix[x][y].increaseFreeEdges();
+        }else matrix[x][y].increaseFreeEdges();
         if(x< matrix.length-1) {
             //down
             if (matrix[x+1][y].getTile()==null|| !matrix[x + 1][y].isOccupiable())
-                matrix[x][y].increasefreeEdges();
-        }else matrix[x][y].increasefreeEdges();
+                matrix[x][y].increaseFreeEdges();
+        }else matrix[x][y].increaseFreeEdges();
         if(y>0) {
             //left
             if (matrix[x][y-1].getTile()==null|| !matrix[x][y-1].isOccupiable())
-                matrix[x][y].increasefreeEdges();
-        }else matrix[x][y].increasefreeEdges();
+                matrix[x][y].increaseFreeEdges();
+        }else matrix[x][y].increaseFreeEdges();
         if(y< matrix.length-1) {
             //right
             if (matrix[x][y+1].getTile()==null|| !matrix[x][y+1].isOccupiable())
-                matrix[x][y].increasefreeEdges();
-        }else matrix[x][y].increasefreeEdges();
+                matrix[x][y].increaseFreeEdges();
+        }else matrix[x][y].increaseFreeEdges();
     }
 
     /**
@@ -187,22 +187,22 @@ public class Board{
         if(x>0) {
             //up
             if (matrix[x-1][y].getTile()!=null)
-                matrix[x-1][y].increasefreeEdges();
+                matrix[x-1][y].increaseFreeEdges();
         }
         if(x< matrix.length-1) {
             //down
             if (matrix[x+1][y].getTile()!=null)
-                matrix[x+1][y].increasefreeEdges();
+                matrix[x+1][y].increaseFreeEdges();
         }
         if(y>0) {
             //left
             if (matrix[x][y-1].getTile()!=null)
-                matrix[x][y-1].increasefreeEdges();
+                matrix[x][y-1].increaseFreeEdges();
         }
         if(y< matrix.length-1) {
             //right
             if (matrix[x][y+1].getTile()!=null)
-                matrix[x][y+1].increasefreeEdges();
+                matrix[x][y+1].increaseFreeEdges();
         }
     }
     /**
