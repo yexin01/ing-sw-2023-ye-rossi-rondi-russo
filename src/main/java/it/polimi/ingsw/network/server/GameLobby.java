@@ -41,6 +41,7 @@ public class GameLobby implements Serializable {
         players = new ConcurrentHashMap<>();
         infoAndEndGameListener=new InfoAndEndGameListener(this,globalLobby);
         playersDisconnected = new CopyOnWriteArrayList<>();
+        gameLobbyInfo=new GameLobbyInfo(idGameLobby,wantedPlayers);
         messageEndGame=null;
     }
 
@@ -345,5 +346,13 @@ public class GameLobby implements Serializable {
 
     public void setPlayersDisconnected(CopyOnWriteArrayList<String> playersDisconnected) {
         this.playersDisconnected = playersDisconnected;
+    }
+
+    public GameLobbyInfo getGameLobbyInfo() {
+        return gameLobbyInfo;
+    }
+
+    public void setGameLobbyInfo(GameLobbyInfo gameLobbyInfo) {
+        this.gameLobbyInfo = gameLobbyInfo;
     }
 }

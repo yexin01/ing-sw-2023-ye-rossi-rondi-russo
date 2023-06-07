@@ -6,34 +6,36 @@ import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.*;
 import it.polimi.ingsw.network.server.GameLobby;
+import it.polimi.ingsw.network.server.persistence.SaveGame;
 
 import java.io.IOException;
 
 /**
- * EndTurnListener listen the game controller: it is awakened when a player's turn is over or when the
- * current player has disconnected.
+ * The EndTurnListener class is an event listener that listens to the game controller.
+ * It is awakened when a player's turn is over or when the turn player has disconnected.
  */
-
 public class EndTurnListener extends EventListener{
     /**
-     * Constructor EndTurnListener
-     * @param gameLobby
+     * Constructs an EndTurnListener with the specified game lobby.
+     * @param gameLobby The game lobby associated with the listener.
      */
     public EndTurnListener(GameLobby gameLobby) {
         super(gameLobby);
     }
 
     /**
-     *Sends the same end of turn message to all connected players
-     * @param event:end of the current player's turn
-     * @param playerNickname:next connected player
-     * @param newValue:modelView updated
-     * @throws IOException
+     * Sends the end of turn message to all connected players.
+     * The message contains the updated model view and information to continue the game.
+     * @param event The end of turn event.
+     * @param playerNickname The nickname of the next connected player.
+     * @param newValue The updated model view.
+     * @throws IOException If an I/O error occurs while sending the end of turn message.
      */
 
     @Override
     public void fireEvent(KeyAbstractPayload event, String playerNickname, Object newValue) throws IOException {
-        //System.out.println(playerNickname);
+        getGameLobby().getGameLobbyInfo().setGameLobbyState(getGameLobby());
+        SaveGame.serializeGameLobby(getGameLobby().getGameLobbyInfo());
         ModelView model=(ModelView) newValue;
         Boolean[] activePlayers=model.getActivePlayers();
         for(PlayerPointsView nickname: model.getPlayerPoints()){
@@ -44,12 +46,10 @@ public class EndTurnListener extends EventListener{
     }
 
     /**
-     * End of round message creation.Includes: board updated, next player, player who just played, token scores,
-     * player scores sorted from lowest to highest score, common goal with points left,
-     * player's personal goal score to whom the message is addressed.
-     * @param nickname:message addressee;
-     * @param modelView: modelView updated;
-     * @return: message;
+     * Creates the end of turn message.
+     * @param nickname The message addressee.
+     * @param modelView The updated model view.
+     * @return The end of turn message.
      */
     public Message creationMessageEndTurn(String nickname,ModelView modelView){
         BoardBoxView[][] boardView= modelView.getBoardView();

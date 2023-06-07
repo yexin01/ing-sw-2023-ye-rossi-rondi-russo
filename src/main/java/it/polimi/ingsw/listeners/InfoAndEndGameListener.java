@@ -12,28 +12,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *InfoAndEndGameListener send all the data needed to continue the game, listen to both the game controller and the gameLobby.
- * CASE ALL_INFO:
- * GameController:
- * 1)at the beginning of the game;
- * 2)when the number of connected is equal to 2  (following various disconnections that have led to a number of participants <=1).
- * GameLobby:
- * 1)message is sent to the player who has reconnected and the number of connected participants is greater than 2;
- * 2)this message can be sent even if the player does not disconnect. It is sent after gameLobby receives the something wrong message.
- *
- *
- * CASE END_GAME:
- * GameController: endGame message is sent to all connected players;
- * GameLobby: when all players have received the endGame message the endGame method is called from the game lobby.
+ * The InfoAndEndGameListener class is responsible for sending necessary game data and handling end game events.
+ * It listens to both the game controller and the game lobby.
+ * For the "ALL_INFO" event:
+ * In the game controller, it is triggered at the beginning of the game or when the number of connected players is equal to 2
+ * after various disconnections have led to a number of participants <= 1.
+ * In the game lobby, it is triggered when a player has reconnected and the number of connected participants is greater than 2.
+ * It can also be triggered without player disconnection, after the game lobby receives a "something wrong" message.
+ * For the "END_GAME" event:
+ * In the game controller, it sends an "endGame" message to all connected players.
+ * In the game lobby, it is triggered when all players have received the "endGame" message, and it calls the "endGame" method
+ * in the game lobby to finalize the game.
  */
 
 public class InfoAndEndGameListener extends EventListener{
     private final GlobalLobby globalLobby;
 
     /**
-     * Constructor InfoAndEndGameListener
-     * @param gameLobby
-     * @param globalLobby
+     * Constructs an InfoAndEndGameListener.
+     * @param gameLobby The game lobby associated with the listener.
+     * @param globalLobby The global lobby.
      */
     public InfoAndEndGameListener(GameLobby gameLobby, GlobalLobby globalLobby) {
         super(gameLobby);
@@ -41,17 +39,17 @@ public class InfoAndEndGameListener extends EventListener{
     }
 
     /**
-     *sends the message: -to all connected players in case of game start, -to two connected players following disconnections ,
-     * -only to the user who has just reconnected;
-     * @param event:1)start of the game; 2) a player has requested the updated data up to that moment; 3) end of the game;
-     * @param playerNickname:next player to play or null in case of game start;
-     * @param newValue: modelView updated;
-     * @throws IOException
+     * Fires the specified event and notifies the appropriate listeners.
+     * - For the "ALL_INFO" event, it sends the message containing the updated model view to the appropriate players.
+     * - For the "END_GAME" event, it sends the "endGame" message to all connected players in the game lobby.
+     * @param event The event to fire.
+     * @param playerNickname The nickname of the next player or null for game start.
+     * @param newValue The updated model view or relevant data.
+     * @throws IOException If an I/O error occurs while sending the message.
      */
 
     @Override
     public synchronized void fireEvent(KeyAbstractPayload event, String playerNickname, Object newValue) throws IOException {
-        //System.out.println("SONO NEL LISTENER STARTGAME e NEL caso something wrong LATO SERVER sto inviando");
         ModelView modelView=(ModelView) newValue;
         switch((TurnPhase)event){
             case ALL_INFO ->{
@@ -64,11 +62,6 @@ public class InfoAndEndGameListener extends EventListener{
                     }
                 }
             }
-            /**
-             * END_GAME message contains: all the scores -common,-adjacent and -personal points,first player
-             * to completely fill the bookshelf.
-             * Players are sorted from lowest to highest score;
-             */
             case END_GAME ->{
                 MessageHeader header=new MessageHeader(MessageType.DATA,null);
                 MessagePayload payload=new MessagePayload(TurnPhase.END_GAME);
@@ -83,12 +76,10 @@ public class InfoAndEndGameListener extends EventListener{
     }
 
     /**
-     *creation of the ALL_INFO message that contains: board, player's bookshelf, commonGoal scores remaining,
-     * personalGoal player score, selected tiles of the player whose turn it is, max number of tiles selectable
-     * according to the rules of the game (with these rules 3), scores of players, current player, current phase of the game;
-     * @param nickname: message addressee;
-     * @param modelView: modelView updated;
-     * @return message ALL_INFO
+     * Creates an "ALL_INFO" message containing the relevant game data to continue the game:
+     * @param nickname The nickname of the message recipient.
+     * @param modelView The updated model view.
+     * @return The "ALL_INFO" message.
      */
     public Message creationMessageInfo(String nickname,ModelView modelView){
         MessageHeader header;
@@ -111,11 +102,11 @@ public class InfoAndEndGameListener extends EventListener{
        return m;
     }
 
+
     /**
-     *called from the gameLobby when all players have received the endGame message
+     * Called from the game lobby when all players have received the "endGame" message.
      */
     public synchronized void endGame(){
-        //System.out.println("SONO NELL END GAME");
         try {
             globalLobby.endGameLobbyFromGlobalLobby(getGameLobby().getIdGameLobby());
         } catch (IOException e) {

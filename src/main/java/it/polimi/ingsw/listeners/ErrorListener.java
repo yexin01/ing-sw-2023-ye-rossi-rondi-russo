@@ -7,24 +7,26 @@ import it.polimi.ingsw.network.server.GameLobby;
 import java.io.IOException;
 
 /**
- *EndTurnListener listen the game controller:if the data received does not pass the controls send an error.
- * message to the player.
+ * The ErrorListener class is an event listener that listens to the game controller and handles error events.
+ *  If the received data does not pass the required checks, it sends an error message to the player.
  */
+
 public class ErrorListener extends EventListener {
     /**
-     * Constructor of ErrorListener
-     * @param gameLobby
+     * Constructs an ErrorListener with the specified game lobby.
+     * @param gameLobby The game lobby associated with the listener.
      */
     public ErrorListener(GameLobby gameLobby) {
         super(gameLobby);
     }
 
     /**
-     *Message contains the error (type ERROR_DATA).
-     * @param event:error;
-     * @param playerNickname:nickname of the player who sent the message;
-     * @param newValue: ErrorrType;
-     * @throws IOException
+     * Handles the error event by sending an error message to the player.
+     * The message contains the error type.
+     * @param event The error event.
+     * @param playerNickname The nickname of the player who sent the message.
+     * @param newValue The error type or details.
+     * @throws IOException If an I/O error occurs while sending the error message.
      */
     @Override
     public void fireEvent(KeyAbstractPayload event, String playerNickname, Object newValue) throws IOException {
