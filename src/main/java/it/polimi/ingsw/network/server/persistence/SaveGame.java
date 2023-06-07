@@ -100,6 +100,7 @@ public class SaveGame {
     private static int extractIdFromFile(String filename) {
         // Rimuovi la parte iniziale "gamelobby_with_id"
         String idString = filename.substring("Game_With_ID_".length());
+        idString = idString.replace(".tmp", "");
         // Parsa l'id come intero
         return Integer.parseInt(idString);
     }
