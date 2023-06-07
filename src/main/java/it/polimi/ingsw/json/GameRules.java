@@ -1,6 +1,5 @@
 package it.polimi.ingsw.json;
 
-import com.google.gson.Gson;
 import it.polimi.ingsw.model.PersonalGoalBox;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.Type;
@@ -13,47 +12,57 @@ import java.io.*;
 import java.util.ArrayList;
 
 /**
- *class that allows to read from the json file
+ * The GameRules class represents the game rules and provides access to various game-related
+ * settings and configurations.
  */
 public class GameRules {
     private JSONObject json;
-    private String boardJsonFile="gameRules.json";
+    private String gameRulesJsonFile ="gameRules.json";
+    /**
+     * Constructs a new instance of the GameRules class.
+     * @throws Exception If an error occurs while reading the JSON file.
+     */
     public GameRules() throws Exception {
         this.json = readJsonFromFile();
     }
 
     /**
-     *
-     * @return: maximum number of selectable tiles. According to the rules of the game it corresponds to 3.
+     * Returns the maximum number of selectable tiles.
+     * According to the rules of the game, it corresponds to 3.
+     * @return The maximum number of selectable tiles.
      */
-
     public int getMaxSelectableTiles() {
         return ((Long) json.get("max_selectable_tiles")).intValue();
     }
 
     /**
-     *
-     * @return: maximum number of letters acceptable for the player's nickname.
+     * Returns the maximum number of letters acceptable for the player's nickname.
+     * @return The maximum number of letters acceptable for the player's nickname.
      */
     public int getMaxCharactersPlayers() {
         return ((Long) json.get("max_characters_players")).intValue();
     }
 
     /**
-     *
-     * @return: minimum number of letters acceptable for the player's nickname.
+     * Returns the minimum number of letters acceptable for the player's nickname.
+     * @return The minimum number of letters acceptable for the player's nickname.
      */
     public int getMinCharactersPlayers() {
         return ((Long) json.get("min_characters_players")).intValue();
     }
 
     /**
-     *
-     * @return: minimum number of players to start a game.
+     * Returns the minimum number of players to start a game.
+     * According to the rules of the game, it corresponds to 2.
+     * @return The minimum number of players to start a game.
      */
     public int getMinPlayers() {
         return ((Long) json.get("min_players")).intValue();
     }
+    /**
+     * Returns an array of the number of tiles per type.
+     * @return An array of the number of tiles per type.
+     */
     public int[] getNumTilesPerType() {
         JSONArray numTilesArr = (JSONArray) json.get("num_tiles_per_type");
         int[] numTiles = new int[numTilesArr.size()];
@@ -62,7 +71,10 @@ public class GameRules {
         }
         return numTiles;
     }
-
+    /**
+     * Returns an array of the personal goal points.
+     * @return An array of the personal goal points.
+     */
     public int[] getPersonalGoalPoints() {
         JSONArray numTilesArr = (JSONArray) json.get("personalGoalPoints");
         int[] numTiles = new int[numTilesArr.size()];
@@ -71,7 +83,10 @@ public class GameRules {
         }
         return numTiles;
     }
-
+    /**
+     * Returns an array of the adjacent array points.
+     * @return An array of the adjacent array points.
+     */
     public int[] getAdjacentArray() {
         JSONArray pointsArr = (JSONArray) json.get("adjacentPoints");
         int[] points = new int[pointsArr.size()];
@@ -80,16 +95,36 @@ public class GameRules {
         }
         return points;
     }
-
+    /**
+     * Returns the maximum number of players.
+     * According to the rules of the game, it corresponds to 4.
+     * @return The maximum number of players.
+     */
     public int getMaxPlayers() {
         return ((Long) json.get("max_players")).intValue();
     }
+    /**
+     * Returns the number of rows for the bookshelf.
+     * @return The number of rows for the bookshelf.
+     */
     public int getRowsBookshelf() {
         return ((Long) json.get("maxRowsBookshelf")).intValue();
     }
+
+    /**
+     * Returns the number of columns for the bookshelf.
+     *@return The number of columns for the bookshelf.
+     */
+
     public int getColumnsBookshelf() {
         return ((Long) json.get("maxColumnsBookshelf")).intValue();
     }
+    /**
+     * Returns the common goal card at the specified index.
+     * @param index The index of the common goal card.
+     * @return The common goal card at the specified index.
+     * @throws IndexOutOfBoundsException If the index is out of bounds.
+     */
     public String getCommonGoalCard(int index) throws IndexOutOfBoundsException {
         JSONArray jsonArray = (JSONArray) json.get("commonGoalCards");
         if (index < 0 || index >= jsonArray.size()) {
@@ -98,52 +133,34 @@ public class GameRules {
         String card = (String) jsonArray.get(index);
         return card;
     }
-
+    /**
+     * Returns the number of common goal cards.
+     * @return The number of common goal cards.
+     */
     public int getCommonGoalCardsSize() {
         JSONArray jsonArray = (JSONArray) json.get("commonGoalCards");
         int count = jsonArray.size();
         return count;
     }
 
-    public ArrayList<Integer> getPersonalGoalCardCoordinates(int index) throws IndexOutOfBoundsException {
-        JSONArray jsonArray = (JSONArray) json.get("personalGoalsCoordinates");
-        if (index < 0 || index >= jsonArray.size()) {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for array of size " + jsonArray.size());
-        }
-        JSONArray innerArray = (JSONArray) jsonArray.get(index);
-        ArrayList<Integer> goals = new ArrayList<>();
-        for (Object innerObj : innerArray) {
-            int goal = ((Long) innerObj).intValue();
-            goals.add(goal);
-        }
-        return goals;
-
-    }
-
-    public ArrayList<Type> getPersonalGoalCardTypes(int index) throws IndexOutOfBoundsException {
-        JSONArray jsonArray = (JSONArray) json.get("personalGoalsTypes");
-        if (index < 0 || index >= jsonArray.size()) {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for array of size " + jsonArray.size());
-        }
-        JSONArray innerArray = (JSONArray) jsonArray.get(index);
-        ArrayList<Type> types = new ArrayList<>();
-        for (Object innerObj : innerArray) {
-            Type type = Type.valueOf((String) innerObj);
-            types.add(type);
-        }
-        return types;
-    }
-
+    /**
+     * Returns the number of possible personal goals.
+     * @return The number of possible personal goals.
+     */
     public int getPossiblePersonalGoalsSize() {
         JSONArray jsonArray = (JSONArray) json.get("personalGoalCard");
         int count = jsonArray.size();
         return count;
     }
-
+    /**
+     * Reads a JSON file and returns the JSON object.
+     * @return The JSON object read from the file.
+     * @throws Exception If the file is not found or there is an error reading the file.
+     */
     private JSONObject readJsonFromFile() throws Exception {
         JSONParser parser = new JSONParser();
         try {
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(boardJsonFile);
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(gameRulesJsonFile);
             if (inputStream != null) {
                 InputStreamReader reader = new InputStreamReader(inputStream);
                 Object obj = parser.parse(reader);
@@ -157,7 +174,11 @@ public class GameRules {
 
 
     }
-
+    /**
+     * Parses a matrix from a JSON array.
+     * @param matrixData The JSON array containing the matrix data.
+     * @return The parsed matrix as a 2D integer array.
+     */
     private int[][] parseMatrix(JSONArray matrixData) {
         int[][] matrix = new int[matrixData.size()][((JSONArray) matrixData.get(0)).size()];
         for (int i = 0; i < matrixData.size(); i++) {
@@ -168,16 +189,13 @@ public class GameRules {
         }
         return matrix;
     }
-    private ArrayList<Integer> parseArray(JSONArray pointsData) {
-        ArrayList<Integer> points = new ArrayList<>();
-        for (Object innerObj : points) {
-            int point = ((Long) innerObj).intValue();
-            points.add(point);
-        }
-        return points;
-    }
 
-
+    /**
+     * Returns a matrix of occupaiable cells based on the number of players.
+     * @param numPlayers The number of players.
+     * @return The matrix based on the number of players.
+     * @throws Exception If the number of players is invalid.
+     */
     public int[][] getMatrix(int numPlayers) throws Exception {
         JSONArray matrices = (JSONArray) json.get("matrices");
         int maxPlayers = ((Long) json.get("max_players")).intValue();
@@ -203,7 +221,12 @@ public class GameRules {
 
         return matrix;
     }
-
+    /**
+     * Returns the common goal points based on the number of players.
+     * @param numPlayers The number of players.
+     * @return The common goal points based on the number of players.
+     * @throws Exception If the number of players is invalid.
+     */
     public ArrayList<Integer> getCommonGoalPoints(int numPlayers) throws Exception {
         JSONArray commonGoals = (JSONArray) json.get("pointsCommonGoal");
         int maxPlayers = ((Long) json.get("max_players")).intValue();
@@ -224,18 +247,22 @@ public class GameRules {
                 return points;
             }
         }
-        //TODO add default case
-       /* if (points.size() == 0) {
-
-        }
-
-        */
         return null;
     }
+    /**
+     * Returns the number of common goals.
+     * According to the rules of the game, it corresponds to 2.
+     * @return The number of common goals.
+     */
     public int getNumOfCommonGoals() {
         return ((Long) json.get("numOfCommonGoals")).intValue();
     }
-
+    /**
+     * Returns the personal goal card at the specified index.
+     * @param index The index of the personal goal card.
+     * @return The personal goal card at the specified index.
+     * @throws IndexOutOfBoundsException If the index is out of bounds.
+     */
     public PersonalGoalCard getPersonalGoalCard(int index) throws IndexOutOfBoundsException {
         JSONArray jsonArray = (JSONArray) json.get("personalGoalCard");
         if (index < 0 || index >= jsonArray.size()) {
@@ -251,9 +278,6 @@ public class GameRules {
             int y = ((Long) jsonType.get("y")).intValue();
             String s = (String) jsonType.get("type");
             Type type=Type.valueOf(s);
-
-            //Type type= Parse(Type, s);
-            //Type type = (Type) jsonType.get("type");
             cells.add(new PersonalGoalBox( type, x, y));
         }
         PersonalGoalCard card = new PersonalGoalCard(index, cells);
