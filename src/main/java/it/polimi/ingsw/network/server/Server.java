@@ -2,9 +2,11 @@ package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.message.*;
+import it.polimi.ingsw.network.server.persistence.SaveGame;
 import it.polimi.ingsw.view.CLI.Colors;
-import javafx.scene.paint.Color;
+//import javafx.scene.paint.Color;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
@@ -63,6 +65,7 @@ public class Server implements Runnable{
         startServers(ipAddress);
         executor = new ThreadPoolExecutor(4, 20, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
         globalLobby = new GlobalLobby();
+        SaveGame.loadGameLobbies(globalLobby, gameRules);
     }
 
     /**

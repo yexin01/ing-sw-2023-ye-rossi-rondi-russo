@@ -4,6 +4,7 @@ import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.message.*;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -16,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * if so, the server will reconnect the player to the game lobby and the game will continue from where it is,
  * it won't ask but is automatically reconnected to the game lobby when the player reconnects to the server with the same username.
  */
-public class GlobalLobby {
+public class GlobalLobby implements Serializable {
     private ConcurrentHashMap<Integer, GameLobby> gameLobbies; //maps all the games in progress or waiting to be created, GameLobby refers to 1 game in progress
     private ConcurrentHashMap<String, Connection> waitingPlayersWithNoGame; //map of all the players waiting to be added to a game lobby
 
@@ -244,6 +245,10 @@ public class GlobalLobby {
             }
         }
         return null;
+    }
+
+    public ConcurrentHashMap<Integer, GameLobby> getGameLobbies() {
+        return gameLobbies;
     }
 
 }

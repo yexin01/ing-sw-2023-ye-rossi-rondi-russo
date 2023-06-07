@@ -5,8 +5,10 @@ import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.listeners.InfoAndEndGameListener;
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.modelView.*;
+import it.polimi.ingsw.network.server.persistence.GameLobbyInfo;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -16,7 +18,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * It contains all the players that are in the game lobby: who created the game and who wants to join the game,
  * when it reaches the number of players wanted, it starts the game and creates a new game controller and a new model view for the game itself.
  */
-public class GameLobby {
+public class GameLobby implements Serializable {
     private final int idGameLobby;
     private final int wantedPlayers;
     private GameController gameController;
@@ -25,6 +27,8 @@ public class GameLobby {
     private Message messageEndGame;
     private ConcurrentHashMap<String, Connection> players; //maps of all the active players of the game
     private CopyOnWriteArrayList<String> playersDisconnected; //maps of all the disconnected players of the game
+
+    private GameLobbyInfo gameLobbyInfo;
 
     /**
      * Constructor of the class GameLobby that creates a new game lobby with the generated given id and the given number of players wanted
@@ -327,4 +331,19 @@ public class GameLobby {
             players.get(nickname).sendMessageToClient(message);
     }
 
+    public ConcurrentHashMap<String, Connection> getPlayers() {
+        return players;
+    }
+
+    public CopyOnWriteArrayList<String> getPlayersDisconnected() {
+        return playersDisconnected;
+    }
+
+    public void setPlayers(ConcurrentHashMap<String, Connection> players) {
+        this.players = players;
+    }
+
+    public void setPlayersDisconnected(CopyOnWriteArrayList<String> playersDisconnected) {
+        this.playersDisconnected = playersDisconnected;
+    }
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.modelView;
 
+import it.polimi.ingsw.model.BoardBox;
 import it.polimi.ingsw.model.Type;
 
 import java.io.Serial;
@@ -83,6 +84,14 @@ public class BoardBoxView implements Serializable {
      */
     public int getFreeEdges() {
         return freeEdges;
+    }
+
+    public BoardBox restoreBoardBox(){
+        BoardBox boardBox = new BoardBox(this.x, this.y);
+        boardBox.setTile(this.itemTileView.restoreItemTile());
+        boardBox.setOccupiable(this.occupiable);
+        boardBox.setFreeEdges(this.freeEdges);
+        return boardBox;
     }
 }
 

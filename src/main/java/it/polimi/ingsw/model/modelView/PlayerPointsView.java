@@ -62,4 +62,8 @@ public class PlayerPointsView implements Serializable {
     public String getNickname() {
         return nickname;
     }
+
+    public int[] getCommonGoalPoints() {
+        return commonGoalPoints;
+    }
 }

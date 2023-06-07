@@ -3,8 +3,12 @@ package it.polimi.ingsw.model.modelView;
 import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.json.GameRules;
 
+import it.polimi.ingsw.model.Board;
+import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.PersonalGoalCard;
+import it.polimi.ingsw.model.Player;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -15,7 +19,7 @@ import java.util.stream.IntStream;
  * The ModelView class represents a set of immutable objects that are sent to the client.
  * It provides a snapshot of the game state that can be used for rendering and displaying information to the players.
  */
-public class ModelView {
+public class ModelView implements Serializable {
 
     private int turnPlayer;
     private Boolean[] activePlayers;
@@ -53,6 +57,29 @@ public class ModelView {
         personalPoints=new int[numPlayers];
         MAX_SELECTABLE_TILES= gameRules.getMaxSelectableTiles();
     }
+
+    public Board restoreBoard(){
+        Board board = new Board(this);
+        for(int i=0; i<board.getMatrix().length; i++){
+            for(int j=0; j<board.getMatrix()[0].length; j++){
+                board.getMatrix()[i][j]= boardView[i][j].restoreBoardBox();
+            }
+        }
+        //TODO: controlla altri attributi di Board, così ho restorato solo la matrix (manca maxSelectableTiles)
+        return board;
+    }
+
+    public Bookshelf restoreBookshelf(GameRules gamerules, Player p){
+        Bookshelf bookshelf = new Bookshelf(bookshelfView.length, bookshelfView[0].length, gamerules.getMaxSelectableTiles());
+        for(int i=0; i<bookshelfView.length; i++){
+            for(int j=0; j<bookshelfView[0].length; i++){
+                bookshelf.setTile(bookshelfView[getIntegerValue(p.getNickname())][i][j].restoreItemTile(), i, j);
+            }
+        }
+        bookshelf.computeFreeShelves();
+        return bookshelf;
+    }
+
     /**
      * Gets the index of a player based on their nickname.
      * @param nickname The nickname of the player.

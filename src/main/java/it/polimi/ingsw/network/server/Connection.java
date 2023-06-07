@@ -3,11 +3,12 @@ package it.polimi.ingsw.network.server;
 import it.polimi.ingsw.message.Message;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Abstract class that creates a new connection between server and client (server side)
  */
-public abstract class Connection {
+public abstract class Connection implements Serializable {
     private boolean connected = true;
     private String token;
 

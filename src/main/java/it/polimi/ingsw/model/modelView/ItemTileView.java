@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.modelView;
 
+import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Type;
 
 import java.io.Serial;
@@ -42,5 +43,10 @@ public class ItemTileView implements Serializable {
      */
     public int getTileID() {
         return tileID;
+    }
+
+    public ItemTile restoreItemTile(){
+        ItemTile itemTile = new ItemTile(this.type, this.tileID);
+        return itemTile;
     }
 }
