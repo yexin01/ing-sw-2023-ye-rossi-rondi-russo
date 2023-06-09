@@ -46,7 +46,7 @@ public class CLI implements ClientInterface {
             if (commandsLobby == null) {
                 continue;
             }
-            Colors.colorize(Colors.BLUE_CODE, "You choose " + commandsLobby.getCommand() + " ");
+            Colors.colorize(Colors.LIGHT_BLUE_CODE, "You choose " + commandsLobby.getCommand() + " ");
             out.println();
             switch (commandsLobby) {
                 case CREATE_GAME_LOBBY -> {
@@ -103,7 +103,7 @@ public class CLI implements ClientInterface {
         out.println();
         for(int i=0;i<titlePhase.length;i++){
             if(phase==i || i==commandsPhase.length-1){
-                Colors.colorizeSize(Colors.YELLOW_CODE,titlePhase[i], 28+5);
+                Colors.colorizeSize(Colors.LIGHT_BLUE_CODE,titlePhase[i], 28+5);
                 //TODO
             }else Colors.colorizeSize(Colors.WHITE_CODE,titlePhase[i], 28+5);
             Colors.printFreeSpaces(2);
@@ -116,17 +116,17 @@ public class CLI implements ClientInterface {
             String commandString = command.toString();
             while(!commandString.toLowerCase().startsWith(commandsPhase[typeCommand%(commandsPhase.length+1)])){
                 String noCommands=" ";
-                Colors.colorizeSize(Colors.YELLOW_CODE,noCommands, 28+5);
+                Colors.colorizeSize(Colors.LIGHT_BLUE_CODE,noCommands, 28+5);
                 Colors.colorize(Colors.WHITE_CODE, "│ ");
                 i++;
                 typeCommand++;
             }
             if(commandString.toLowerCase().startsWith(commandsPhase[commandsPhase.length-1])){
-                Colors.colorizeSize(Colors.YELLOW_CODE, "·["+(command.ordinal()+1)+"]",5);
-                Colors.colorizeSize(Colors.YELLOW_CODE,command.getCommand(), 15);
+                Colors.colorizeSize(Colors.LIGHT_BLUE_CODE, "·["+(command.ordinal()+1)+"]",5);
+                Colors.colorizeSize(Colors.LIGHT_BLUE_CODE,command.getCommand(), 15);
                 if(!firstPrint){
                     firstPrint=true;
-                    Colors.colorize(Colors.YELLOW_CODE, "  ");
+                    Colors.colorize(Colors.LIGHT_BLUE_CODE, "  ");
                     if(command.equals(CommandsTurn.values()[CommandsTurn.values().length-1])){
                         out.println();
                     }
@@ -138,10 +138,9 @@ public class CLI implements ClientInterface {
                 }
             }else{
                 if (commandString.toLowerCase().startsWith(commandsPhase[phase])/* || commandString.toLowerCase().startsWith(commandsPhase[commandsPhase.length-1])*/) {
-                    Colors.colorizeSize(Colors.YELLOW_CODE, "·["+(command.ordinal()+1)+"]",5);
-                    Colors.colorizeSize(Colors.YELLOW_CODE,command.getCommand(), 28);
+                    Colors.colorizeSize(Colors.LIGHT_BLUE_CODE, "·["+(command.ordinal()+1)+"]",5);
+                    Colors.colorizeSize(Colors.LIGHT_BLUE_CODE,command.getCommand(), 28);
                 }else{
-                    //TODO
                     Colors.colorizeSize(Colors.WHITE_CODE, "·["+(command.ordinal()+1)+"]",5);
                     Colors.colorizeSize(Colors.WHITE_CODE,command.getCommand(), 28);
                 }
@@ -150,7 +149,7 @@ public class CLI implements ClientInterface {
                 Colors.colorize(Colors.WHITE_CODE, "│ ");
             }
         }
-        Colors.colorize(Colors.YELLOW_CODE,"Insert command: ");
+        Colors.colorize(Colors.LIGHT_BLUE_CODE,"Insert command: ");
 
     }
     /**
@@ -546,7 +545,7 @@ public class CLI implements ClientInterface {
     public void displayMessage(String string) {
         out.println();
         Colors.printCharacter("» ", 1, Colors.WHITE_CODE);
-        Colors.colorize(Colors.BLUE_CODE, string);
+        Colors.colorize(Colors.LIGHT_BLUE_CODE, string);
         Colors.printCharacter(" «", 1,Colors.WHITE_CODE);
         out.println();
     }
@@ -641,17 +640,17 @@ public class CLI implements ClientInterface {
         int connectionType = -1;
 
         String nickname = askNickname();
-        Colors.colorize(Colors.BLUE_CODE,"\nHi "+ nickname +"!\n" );
+        Colors.colorize(Colors.LIGHT_BLUE_CODE,"\nHi "+ nickname +"!\n" );
         connectionType = askConnection();
         if (connectionType == 0) {
-            Colors.colorize(Colors.BLUE_CODE,"\nYou chose Socket connection\n");
+            Colors.colorize(Colors.LIGHT_BLUE_CODE,"\nYou chose Socket connection\n");
 
-        } else Colors.colorize(Colors.BLUE_CODE,"\nYou chose RMI connection\n");
+        } else Colors.colorize(Colors.LIGHT_BLUE_CODE,"\nYou chose RMI connection\n");
 
 
         String ip = askIp();
         int port = askPort(connectionType);
-        Colors.colorize(Colors.BLUE_CODE,"\nYou choose: -Server Ip Address: " + ip+" -Server Port: " + port + "\n");
+        Colors.colorize(Colors.LIGHT_BLUE_CODE,"\nYou choose: -Server Ip Address: " + ip+" -Server Port: " + port + "\n");
         ClientHandler clientHandler=new ClientHandler();
         try{
             clientHandler.createConnection(connectionType, ip, port,this);

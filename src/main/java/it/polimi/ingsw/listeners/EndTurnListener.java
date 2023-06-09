@@ -34,8 +34,8 @@ public class EndTurnListener extends EventListener{
 
     @Override
     public void fireEvent(KeyAbstractPayload event, String playerNickname, Object newValue) throws IOException {
-        //getGameLobby().getGameLobbyInfo().setGameLobbyState(getGameLobby());
-        //SaveGame.serializeGameLobby(getGameLobby().getGameLobbyInfo());
+        getGameLobby().getGameLobbyInfo().setGameLobbyState(getGameLobby());
+        SaveGame.serializeGameLobby(getGameLobby().getGameLobbyInfo());
         ModelView model=(ModelView) newValue;
         Boolean[] activePlayers=model.getActivePlayers();
         for(PlayerPointsView nickname: model.getPlayerPoints()){
