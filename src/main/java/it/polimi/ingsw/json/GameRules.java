@@ -191,9 +191,9 @@ public class GameRules {
     }
 
     /**
-     * Returns a matrix of occupaiable cells based on the number of players.
+     * Returns a matrix of occupiable cells based on the number of players.
      * @param numPlayers The number of players.
-     * @return The matrix based on the number of players.
+     * @return The matrix of occupiable cells based on the number of players.
      * @throws Exception If the number of players is invalid.
      */
     public int[][] getMatrix(int numPlayers) throws Exception {

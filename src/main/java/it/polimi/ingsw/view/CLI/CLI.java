@@ -37,7 +37,7 @@ public class CLI implements ClientInterface {
      */
     @Override
     public void askLobbyDecision() {
-        PrinterLogo.printGlobalLobbyPhase(50);
+        PrinterLogo.printGlobalLobbyPhase();
         out.println();
         boolean continueToAsk = true;
         CommandsLobby commandsLobby = null;
@@ -50,13 +50,13 @@ public class CLI implements ClientInterface {
             out.println();
             switch (commandsLobby) {
                 case CREATE_GAME_LOBBY -> {
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "Insert number of players for the new Lobby: ");
+                    Colors.colorize(Colors.WHITE_CODE, "Insert number of players for the new Lobby: ");
                     int num = in.nextInt();
                     clientView.lobby(KeyLobbyPayload.CREATE_GAME_LOBBY,num);
                     continueToAsk=false;
                 }
                 case JOIN_SPECIFIC_GAME_LOBBY -> {
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "Insert id Lobby you want to join: ");
+                    Colors.colorize(Colors.WHITE_CODE, "Insert id Lobby you want to join: ");
                     int num = in.nextInt();
                     clientView.lobby(KeyLobbyPayload.JOIN_SPECIFIC_GAME_LOBBY,num);
                     continueToAsk=false;
@@ -83,12 +83,12 @@ public class CLI implements ClientInterface {
         T[] enumValues = enumClass.getEnumConstants();
         out.println();
         for(T enumValue : enumValues){
-            Colors.colorizeSize(Colors.GAME_INSTRUCTION, "·["+(enumValue.ordinal()+1)+"]",5);
-            Colors.colorizeSize(Colors.GAME_INSTRUCTION,enumValue.getCommand(), 30);
-            Colors.colorize(Colors.GAME_INSTRUCTION, "│ ");
+            Colors.colorizeSize(Colors.WHITE_CODE, "·["+(enumValue.ordinal()+1)+"]",5);
+            Colors.colorizeSize(Colors.WHITE_CODE,enumValue.getCommand(), 28);
+            Colors.colorize(Colors.WHITE_CODE, "│ ");
         }
         out.println();
-        Colors.colorize(Colors.GAME_INSTRUCTION,"Insert command: ");
+        Colors.colorize(Colors.WHITE_CODE,"Insert command: ");
     }
     /**
      * Prints CommandsTurn based on the given phase.
@@ -103,8 +103,9 @@ public class CLI implements ClientInterface {
         out.println();
         for(int i=0;i<titlePhase.length;i++){
             if(phase==i || i==commandsPhase.length-1){
-                Colors.colorizeSize(Colors.GAME_INSTRUCTION,titlePhase[i], 30+5);
-            }else Colors.colorizeSize(Colors.BLACK_CODE,titlePhase[i], 30+5);
+                Colors.colorizeSize(Colors.YELLOW_CODE,titlePhase[i], 28+5);
+                //TODO
+            }else Colors.colorizeSize(Colors.WHITE_CODE,titlePhase[i], 28+5);
             Colors.printFreeSpaces(2);
 
         }
@@ -115,40 +116,41 @@ public class CLI implements ClientInterface {
             String commandString = command.toString();
             while(!commandString.toLowerCase().startsWith(commandsPhase[typeCommand%(commandsPhase.length+1)])){
                 String noCommands=" ";
-                Colors.colorizeSize(Colors.GAME_INSTRUCTION,noCommands, 30+5);
-                Colors.colorize(Colors.GAME_INSTRUCTION, "│ ");
+                Colors.colorizeSize(Colors.YELLOW_CODE,noCommands, 28+5);
+                Colors.colorize(Colors.WHITE_CODE, "│ ");
                 i++;
                 typeCommand++;
             }
             if(commandString.toLowerCase().startsWith(commandsPhase[commandsPhase.length-1])){
-                Colors.colorizeSize(Colors.GAME_INSTRUCTION, "·["+(command.ordinal()+1)+"]",5);
-                Colors.colorizeSize(Colors.GAME_INSTRUCTION,command.getCommand(), 15);
+                Colors.colorizeSize(Colors.YELLOW_CODE, "·["+(command.ordinal()+1)+"]",5);
+                Colors.colorizeSize(Colors.YELLOW_CODE,command.getCommand(), 15);
                 if(!firstPrint){
                     firstPrint=true;
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "  ");
+                    Colors.colorize(Colors.YELLOW_CODE, "  ");
                     if(command.equals(CommandsTurn.values()[CommandsTurn.values().length-1])){
                         out.println();
                     }
                 }else {
                     firstPrint=false;
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "│ ");
+                    Colors.colorize(Colors.WHITE_CODE, "│ ");
                     out.println();
                     typeCommand=0;
                 }
             }else{
                 if (commandString.toLowerCase().startsWith(commandsPhase[phase])/* || commandString.toLowerCase().startsWith(commandsPhase[commandsPhase.length-1])*/) {
-                    Colors.colorizeSize(Colors.GAME_INSTRUCTION, "·["+(command.ordinal()+1)+"]",5);
-                    Colors.colorizeSize(Colors.GAME_INSTRUCTION,command.getCommand(), 30);
+                    Colors.colorizeSize(Colors.YELLOW_CODE, "·["+(command.ordinal()+1)+"]",5);
+                    Colors.colorizeSize(Colors.YELLOW_CODE,command.getCommand(), 28);
                 }else{
-                    Colors.colorizeSize(Colors.BLACK_CODE, "·["+(command.ordinal()+1)+"]",5);
-                    Colors.colorizeSize(Colors.BLACK_CODE,command.getCommand(), 30);
+                    //TODO
+                    Colors.colorizeSize(Colors.WHITE_CODE, "·["+(command.ordinal()+1)+"]",5);
+                    Colors.colorizeSize(Colors.WHITE_CODE,command.getCommand(), 28);
                 }
                 i++;
                 typeCommand++;
-                Colors.colorize(Colors.GAME_INSTRUCTION, "│ ");
+                Colors.colorize(Colors.WHITE_CODE, "│ ");
             }
         }
-        Colors.colorize(Colors.GAME_INSTRUCTION,"Insert command: ");
+        Colors.colorize(Colors.YELLOW_CODE,"Insert command: ");
 
     }
     /**
@@ -158,20 +160,20 @@ public class CLI implements ClientInterface {
     public void printCommands(CommandsTurn commandsTurn) {
         switch (commandsTurn){
             case PRINT1 ->{
-                PrinterLogo.printBoardLogo(10);
+                PrinterLogo.printBoardLogo();
                 printerBoard.printMatrixBoard(getClientView().getBoardView(),null);
             }
             case PRINT2 ->{
-                PrinterLogo.printBookshelfLogo(10);
-                printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3,1,60,false,false,0);
+                PrinterLogo.printBookshelfLogo();
+                printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3,1,52,false,false,0);
 
             }
             case PRINT3 -> {
                 printerBookshelfAndPersonal.printPersonal(getClientView(),2,35);
             }
             case PRINT4 ->{
-                PrinterLogo.printBookshelfLogo(10);
-                printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,1,60,true,false,0);
+                PrinterLogo.printBookshelfLogo();
+                printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(),3,1,52,true,false,0);
 
             }
             case PRINT5 -> printerCommonGoalAndPoints.printPoints(getClientView());
@@ -257,7 +259,7 @@ public class CLI implements ClientInterface {
     @Override
     public  synchronized  void askCoordinates() {
         out.println();
-        PrinterLogo.printBoardPhase(50);
+        PrinterLogo.printBoardPhase();
         out.println();
         ArrayList<Integer> selection=new ArrayList<>();
         printerBoard.printMatrixBoard(getClientView().getBoardView(),null);
@@ -280,7 +282,7 @@ public class CLI implements ClientInterface {
                     break;
                 case SELECT_FROM_BOARD4:
                     if(!selection.isEmpty()){
-                        Colors.colorize(Colors.GAME_INSTRUCTION, "Confirmation successful.");
+                        Colors.colorize(Colors.WHITE_CODE, "Confirmation successful.");
                         clientView.setCoordinatesSelected(selection);;
                         clientView.setTilesSelected(Check.createItemTileView(selection, clientView.getBoardView()));
                         continueToAsk = false;
@@ -294,13 +296,13 @@ public class CLI implements ClientInterface {
                     continue;
             }
             if (!selection.isEmpty()) {
-                Colors.colorize(Colors.GAME_INSTRUCTION, "Your current selections: ");
+                Colors.colorize(Colors.WHITE_CODE, "Your current selections: ");
                 for (int i = 0; i < selection.size(); i += 2) {
                     int x = selection.get(i);
                     int y = selection.get(i + 1);
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "(" + x + ", " + y + ") ");
+                    Colors.colorize(Colors.WHITE_CODE, "(" + x + ", " + y + ") ");
                     out.print(Colors.printTiles(getClientView().getBoardView()[x][y].getType(), 3));
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "; ");
+                    Colors.colorize(Colors.WHITE_CODE, "; ");
 
                 }
             }
@@ -327,12 +329,12 @@ public class CLI implements ClientInterface {
         } else {
             while (true) {
                 try {
-                    Colors.colorizeSize(Colors.GAME_INSTRUCTION, "Insert row", 14);
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "(x): ");
+                    Colors.colorizeSize(Colors.WHITE_CODE, "Insert row", 14);
+                    Colors.colorize(Colors.WHITE_CODE, "(x): ");
                     x = Integer.parseInt(scanner.nextLine());
 
-                    Colors.colorizeSize(Colors.GAME_INSTRUCTION, "Insert column", 14);
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "(y): ");
+                    Colors.colorizeSize(Colors.WHITE_CODE, "Insert column", 14);
+                    Colors.colorize(Colors.WHITE_CODE, "(y): ");
                     y = Integer.parseInt(scanner.nextLine());
 
                     error = Check.checkCoordinates(x, y, clientView.getBoardView());
@@ -375,7 +377,7 @@ public class CLI implements ClientInterface {
         ErrorType error=Check.resetChoiceBoard(lastOrAll,coordinatesSelected);
         if (error==null) {
             printerBoard.printMatrixBoard(getClientView().getBoardView(),coordinatesSelected);
-            Colors.colorize(Colors.GAME_INSTRUCTION, "Reset successful\n");
+            Colors.colorize(Colors.WHITE_CODE, "Reset successful\n");
         }
     }
 
@@ -390,7 +392,7 @@ public class CLI implements ClientInterface {
     @Override
     public  synchronized void askOrder() {
         out.println();
-        PrinterLogo.printOrderPhase(50);
+        PrinterLogo.printOrderPhase();
         out.println();
         boolean continueToAsk = true;
         int[] orderTiles = new int[getClientView().getTilesSelected().length];
@@ -403,21 +405,21 @@ public class CLI implements ClientInterface {
             }
             switch (commandsTurn) {
                 case ORDER_TILES1:
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "Insert numbers from 0 to " + (getClientView().getTilesSelected().length - 1) + "\n");
+                    Colors.colorize(Colors.WHITE_CODE, "Insert numbers from 0 to " + (getClientView().getTilesSelected().length - 1) + "\n");
                     out.println();
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "These are the tiles selected by YOU: ");
+                    Colors.colorize(Colors.WHITE_CODE, "These are the tiles selected by YOU: ");
                     int j = 0;
                     for (ItemTileView t : getClientView().getTilesSelected()) {
                         Colors.colorize(Colors.ERROR_MESSAGE, Integer.toString(j++) + " ");
                         out.print(Colors.printTiles(t.getTypeView(), sizetile));
-                        Colors.colorize(Colors.GAME_INSTRUCTION, "; ");
+                        Colors.colorize(Colors.WHITE_CODE, "; ");
                     }
                     out.println();
 
                     while (error != null) {
                         try {
                             for (int i = 0; i < getClientView().getTilesSelected().length; i++) {
-                                Colors.colorize(Colors.GAME_INSTRUCTION, "Insert number: ");
+                                Colors.colorize(Colors.WHITE_CODE, "Insert number: ");
                                 orderTiles[i] = Integer.parseInt(scanner.nextLine());
                             }
                             error = Check.checkPermuteSelection(orderTiles, clientView.getTilesSelected());
@@ -437,7 +439,7 @@ public class CLI implements ClientInterface {
                     if(error!=null){
                         displayError(ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
                     }
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "Choice has been reset");
+                    Colors.colorize(Colors.WHITE_CODE, "Choice has been reset");
                     error = ErrorType.INVALID_ORDER_TILE_NUMBER;
                     continue;
                 case ORDER_TILES3:
@@ -468,7 +470,7 @@ public class CLI implements ClientInterface {
     @Override
     public  synchronized void askColumn(){
         out.println();
-        PrinterLogo.printColumnPhase(50);
+        PrinterLogo.printColumnPhase();
         out.println();
         ErrorType error = ErrorType.INVALID_COLUMN;
         int column=-1;
@@ -483,7 +485,7 @@ public class CLI implements ClientInterface {
                     printerBookshelfAndPersonal.printMatrixBookshelf(getClientView(), 3, 1, 60, false, true, 50);
                     while (error != null) {
                         try {
-                            Colors.colorize(Colors.GAME_INSTRUCTION, "To select a column, write a number from 0 to " + (getClientView().getBookshelfView()[0].length - 1) + ": ");
+                            Colors.colorize(Colors.WHITE_CODE, "To select a column, write a number from 0 to " + (getClientView().getBookshelfView()[0].length - 1) + ": ");
                             column = Integer.parseInt(scanner.nextLine());
                             error = Check.checkBookshelf(column, clientView.getBookshelfView(), clientView.getTilesSelected());
 
@@ -503,7 +505,7 @@ public class CLI implements ClientInterface {
                         displayError(ErrorType.NOT_VALUE_SELECTED.getErrorMessage());
                         continue;
                     }
-                    Colors.colorize(Colors.GAME_INSTRUCTION, "Choice has been reset");
+                    Colors.colorize(Colors.WHITE_CODE, "Choice has been reset");
                     error=ErrorType.INVALID_COLUMN;
                     continue;
                 case COLUMN3:
@@ -543,9 +545,9 @@ public class CLI implements ClientInterface {
     @Override
     public void displayMessage(String string) {
         out.println();
-        Colors.printCharacter("» ", 1, Colors.GAME_INSTRUCTION);
+        Colors.printCharacter("» ", 1, Colors.WHITE_CODE);
         Colors.colorize(Colors.BLUE_CODE, string);
-        Colors.printCharacter(" «", 1,Colors.GAME_INSTRUCTION);
+        Colors.printCharacter(" «", 1,Colors.WHITE_CODE);
         out.println();
     }
 
@@ -567,7 +569,7 @@ public class CLI implements ClientInterface {
 
         while(continueToAsk){
             out.println();
-            Colors.colorize(Colors.GAME_INSTRUCTION, "Write |ok| to return to lobby:  ");
+            Colors.colorize(Colors.WHITE_CODE, "Write |ok| to return to lobby:  ");
             String input = scanner.next();
             if (input.equals("ok")){
                 continueToAsk=false;
@@ -597,10 +599,10 @@ public class CLI implements ClientInterface {
      */
     @Override
     public synchronized void waitingRoom() {
-        PrinterLogo.printWaitingTurnPhase(50);
+        PrinterLogo.printWaitingTurnPhase();
         printCommands(CommandsTurn.PRINT1);
         printCommands(CommandsTurn.PRINT5);
-        Colors.colorize(Colors.GAME_INSTRUCTION, "Turn player: "+clientView.getTurnPlayer());
+        Colors.colorize(Colors.WHITE_CODE, "Turn player: "+clientView.getTurnPlayer());
     }
     /**
      * Displays the player who won a token and the associated score.
@@ -610,7 +612,7 @@ public class CLI implements ClientInterface {
     @Override
     public void displayToken(int num, String nickname) {
         printerCommonGoalAndPoints.printToken(num, nickname);
-        Colors.colorize(Colors.GAME_INSTRUCTION, "\nPress ENTER to continue...>> ");
+        Colors.colorize(Colors.WHITE_CODE, "\nPress ENTER to continue...>> ");
         scanner.nextLine();
     }
 
@@ -668,7 +670,7 @@ public class CLI implements ClientInterface {
         String nickname = "";
 
         do {
-            Colors.colorize(Colors.GAME_INSTRUCTION, "\nEnter your username >> ");
+            Colors.colorize(Colors.WHITE_CODE, "\nEnter your username >> ");
             nickname = in.nextLine().toLowerCase();
 
             if (nickname.length() < 2) {
@@ -687,7 +689,7 @@ public class CLI implements ClientInterface {
         int connectionType = -1;
 
         do {
-            Colors.colorize(Colors.GAME_INSTRUCTION, "\nEnter your connection type: (0 for Socket, 1 for RMI) >> ");
+            Colors.colorize(Colors.WHITE_CODE, "\nEnter your connection type: (0 for Socket, 1 for RMI) >> ");
             try {
                 connectionType = Integer.parseInt(in.next());
                 in.nextLine();
@@ -710,7 +712,7 @@ public class CLI implements ClientInterface {
         boolean validInput = false;
 
         do {
-            Colors.colorize(Colors.GAME_INSTRUCTION, "\nEnter the server IP Address (default " + defaultIp + ") \nPress ENTER button to choose default >> ");
+            Colors.colorize(Colors.WHITE_CODE, "\nEnter the server IP Address (default " + defaultIp + ") \nPress ENTER button to choose default >> ");
             String line = in.nextLine();
 
             if (line.equals("")) {
@@ -764,7 +766,7 @@ public class CLI implements ClientInterface {
         boolean validInput = false;
 
         do {
-            Colors.colorize(Colors.GAME_INSTRUCTION,"\nEnter the server port (default " + defaultPort + ") \nPress ENTER button to choose default >> ");
+            Colors.colorize(Colors.WHITE_CODE,"\nEnter the server port (default " + defaultPort + ") \nPress ENTER button to choose default >> ");
             String line = in.nextLine();
 
             if (line.equals("")) {

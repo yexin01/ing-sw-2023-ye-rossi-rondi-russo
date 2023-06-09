@@ -8,22 +8,19 @@ import java.util.Map;
 public class Colors {
 
     public final static String ERROR_MESSAGE = "\033[31m";
+    public final static String WHITE_CODE ="\033[37m";
     public final static String YELLOW_CODE = "\033[33m";
-    public final static String GAME_INSTRUCTION ="\033[97m";;
-    public final static String WHITE_CODE ="\033[97m";;
+
+
     public final static String BLACK_CODE = "\033[30m";
 
     public final static String GREEN_CODE = "\033[32m";
     ;
     public final static String LIGHT_BLUE_CODE = "\033[36m";
-    public final static String OCHRE_YELLOW_CODE = "\033[93m";
     public final static String ORANGE_CODE = "\033[33m";
     public final static String BLUE_CODE = "\033[34m";
-    public final static String PINK_CODE = "\033[95m";
-    public final static String BEIGE_CODE = "\033[38;2;139;69;19m";
-    public final static String GOLD_CODE = "\u001B[38;2;255;215;0m";
-    public final static String SILVER_CODE = "\u001B[38;2;192;192;192m";
-    public final static String BRONZE_CODE = "\u001B[38;2;205;127;50m";
+    public final static String PINK_CODE = "\033[35m";
+
 
     public final static String RESET_CODE = "\u001B[0m";
 
@@ -32,7 +29,7 @@ public class Colors {
 
     static {
         TYPE_COLORS.put(Type.CAT, GREEN_CODE);
-        TYPE_COLORS.put(Type.BOOK, OCHRE_YELLOW_CODE);
+        TYPE_COLORS.put(Type.BOOK, WHITE_CODE);
         TYPE_COLORS.put(Type.GAME, ORANGE_CODE);
         TYPE_COLORS.put(Type.FRAME, BLUE_CODE);
         TYPE_COLORS.put(Type.TROPHY, LIGHT_BLUE_CODE);
@@ -133,14 +130,6 @@ public class Colors {
         return (color + text + "\033[0m");
     }
 
-    public static void printSize2(String text, int size) {
-        int lengthDifference = size - text.length();
-        String space = "";
-        for (int i = 0; i < lengthDifference; i++) {
-            space += " ";
-        }
-        System.out.printf("%s%s", text, space);
-    }
 
 }
 

@@ -14,7 +14,7 @@ import java.util.Arrays;
  * The attribute terminalWidth is initialized with a default value of 80 and is used to center the output in the terminal.
  */
 public class PrinterCommonGoalAndPoints {
-    private String borderColor = Colors.BEIGE_CODE;
+    private String borderColor = Colors.WHITE_CODE;
     private int lineLength = 16;
     private int terminalWidth = 80;
     private String margin = " ".repeat(50);
@@ -30,8 +30,7 @@ public class PrinterCommonGoalAndPoints {
     String ut = borderColor+"┴"+"\u001B[0m"; //upside down t
     String ri = borderColor+"┤"+"\u001B[0m"; //right intersection
     String li = borderColor+"├"+"\u001B[0m"; //left intersection
-
-    String oc = Colors.OCHRE_YELLOW_CODE+"▄▄"+"\u001B[0m"; //yellow
+    String oc = Colors.WHITE_CODE +"▄▄"+"\u001B[0m"; //yellow
     String or = Colors.ORANGE_CODE+"▄▄"+"\u001B[0m"; //orange
     String g = Colors.GREEN_CODE+"▄▄"+"\u001B[0m"; //green
     String l = Colors.LIGHT_BLUE_CODE+"▄▄"+"\u001B[0m"; //lightblue
@@ -398,6 +397,7 @@ public class PrinterCommonGoalAndPoints {
         for (int i=playersRanking.length-1;i>=0;i--) {
             String symbol = new String();
             String color = new String();
+            /*
             switch (playersRanking.length-1-i){
                 case 0 :
                     symbol = "\uD83E\uDD47" + Colors.paint(Colors.GOLD_CODE, "1st PLACE!");
@@ -417,6 +417,8 @@ public class PrinterCommonGoalAndPoints {
                     color = Colors.WHITE_CODE;
                 break;
             }
+
+             */
             System.out.printf(tab+vd+" %s"+" ".repeat(nickLenght-playersRanking[i].getNickname().length()+1)+vd+" %6d "+vd+" %6d "+vd+" %8d "+vd+" %8s "+vd+"  "+symbol+"%n", Colors.paint(color, playersRanking[i].getNickname()), playersRanking[i].getPoints()+personalPoints[i]+(playersRanking[i].getNickname().equals(nickWhoFilledBookshelf)?1:0), Arrays.stream(playersRanking[i].getPointsToken()).sum(), playersRanking[i].getAdjacentPoints(), clientView.getPersonalPoints());
         }
         System.out.println(tab+blc+hd.repeat(nickLenght+2)+ut+hd.repeat(8)+ut+hd.repeat(8)+ut+hd.repeat(10)+ut+hd.repeat(10)+brc);
@@ -428,28 +430,44 @@ public class PrinterCommonGoalAndPoints {
      * @param clientView
      */
     public  void printCommonGoalCards(ClientView clientView){
+        /*
+        int numOfCommonGoalCards = clientView.getCommonGoalView()[0].length;
+        int index;
+        int pointsLeft;
+        for(int i=0;i<numOfCommonGoalCards;i++){
+            index=clientView.getCommonGoalView()[0][i];
+            pointsLeft=clientView.getCommonGoalView()[1][i];
+            Colors.colorizeSize(Colors.WHITE_CODE,margin+getCommonGoalCard(index)[i]+getCommonGoalCardDescription(index)[i],432+60);
+            buildToken(pointsLeft);
+        }
+
+         */
+        int pointsLeft;
         int numOfCommonGoalCards = clientView.getCommonGoalView()[0].length;
         for(int i=0; i<numOfCommonGoalCards; i++){
             int index =  clientView.getCommonGoalView()[0][i];
             int rows = getCommonGoalCard(index).length;
             for(int j=0; j<rows; j++){
                 if(j==0 || j==rows-1){
-                    Colors.printSize2(margin+getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 432+60);
+                    Colors.colorizeSize(Colors.WHITE_CODE,margin+getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 432+60);
                     //Colors.printSize2(getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 432+60);
                     System.out.println("");
                 }
                 else {
-                    Colors.printSize2(margin+getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 124);
+                    Colors.colorizeSize(Colors.WHITE_CODE,margin+getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 124);
                     //Colors.printSize2(getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 124);
                     System.out.println("");
 
                 }
             }
+            pointsLeft=clientView.getCommonGoalView()[1][i];
             System.out.println(margin+"Tokens left: ");
-            printTokensLeft(i, clientView);
+            //TODO stampare solo il token con pointsLeft
+            //printTokensLeft(i, clientView);
             //printTokens(i, clientView);
             System.out.println("");
         }
+
     }
 
     /**
@@ -461,6 +479,7 @@ public class PrinterCommonGoalAndPoints {
      * @param clientView
      */
     public void printTokensLeft(int indexCGC, ClientView clientView){
+        //TODO questa verra cancellata
         ArrayList<String[]> tokensToPrint = new ArrayList<>();
         switch (clientView.getPlayerPointsViews().length) {
             case 2: tokensToPrint.addAll(Arrays.asList(buildToken(4), buildToken(8)));
@@ -470,8 +489,7 @@ public class PrinterCommonGoalAndPoints {
             case 4: tokensToPrint.addAll(Arrays.asList(buildToken(2),buildToken(4), buildToken(6), buildToken(8)));
                 break;
         }
-
-        for(int j=0; j<3; j++){
+        for(int j=0; j<1; j++){
             System.out.printf(margin);
             for (int i=0; i<tokensToPrint.size(); i++){
                 int points = Integer.parseInt(tokensToPrint.get(i)[1].replaceAll("[^0-9]", ""));
@@ -481,6 +499,7 @@ public class PrinterCommonGoalAndPoints {
             }
             System.out.println("");
         }
+
 
     }
 

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class PrinterBoard {
 
     private boolean waitingForFirst;
-    private int freeSpacesFromTableTypesSelected=30;
+    private int freeSpacesFromTableTypesSelected=20;
     private int sizeCoordinates=3;
     private int sizeTile =3;
     private int sizeWordType=8;

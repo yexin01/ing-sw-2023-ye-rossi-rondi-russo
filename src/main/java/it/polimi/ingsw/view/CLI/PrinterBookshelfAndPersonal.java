@@ -94,7 +94,7 @@ public class PrinterBookshelfAndPersonal {
                     index = (i == 0) ? 1 : 4;
                 }
 
-                System.out.print(Colors.BEIGE_CODE + lineRepresentations[index] + "\033[0m");
+                System.out.print(Colors.WHITE_CODE + lineRepresentations[index] + "\033[0m");
             }
 
             if (i != bookshelfView.length) {
@@ -102,7 +102,7 @@ public class PrinterBookshelfAndPersonal {
                 personalLine= printPersonalGoalWithOrWithoutFrame(personalLine,clientView,spaceBetweenPersonal,false, this.sizeLengthFromBord, this.sizeLengthFromBord -bookshelfView[0].length*2*spaceBetweenPersonal-bookshelfView[0].length-1-10);
                 Colors.printCharacter(characterBetweenPersonalAndBookshelf,characterBetweenPersonalAndBookshelf.length(),Colors.WHITE_CODE);
                 for (int j = 0; j < bookshelfView[0].length; j++) {
-                    Colors.colorize(Colors.BEIGE_CODE, "│");
+                    Colors.colorize(Colors.WHITE_CODE, "│");
                     Colors.printFreeSpaces(spaceBetweenTiles);
                     if (bookshelfView[i][j].getTileID() != -1) {
                         System.out.print(Colors.printTiles(bookshelfView[i][j].getTypeView(), sizeTile));
@@ -110,7 +110,7 @@ public class PrinterBookshelfAndPersonal {
                     } else System.out.print(lineRepresentations[5]);
                     Colors.printFreeSpaces(spaceBetweenTiles);
                 }
-                Colors.colorize(Colors.BEIGE_CODE, "│");
+                Colors.colorize(Colors.WHITE_CODE, "│");
 
             }
             System.out.println();
@@ -118,7 +118,7 @@ public class PrinterBookshelfAndPersonal {
         }
 
         Colors.printFreeSpaces(this.sizeLengthFromBord - charForSide+characterBetweenPersonalAndBookshelf.length());
-        Colors.printCharacter("█", size + 2 * charForSide, Colors.BEIGE_CODE);
+        Colors.printCharacter("█", size + 2 * charForSide, Colors.WHITE_CODE);
 
         System.out.println();
     }
@@ -170,7 +170,7 @@ public class PrinterBookshelfAndPersonal {
                     if (j == bookshelfView[0].length - 1) {
                         index = (personalLine == 0) ? 2 : (personalLine < bookshelfView.length) ? 5 : 8;
                     }
-                    System.out.print(Colors.BEIGE_CODE + lineRepresentations[index] + "\033[0m");
+                    System.out.print(Colors.WHITE_CODE + lineRepresentations[index] + "\033[0m");
 
                 }
                 fromBoardBookshelf=fromBoardBookshelf-lineRepresentations[index].length();
@@ -179,7 +179,7 @@ public class PrinterBookshelfAndPersonal {
                 if(personalLine!= bookshelfView.length){
                     for(int j=0;j<bookshelfView[0].length;j++){
                         boolean found = false;
-                        Colors.colorize(Colors.BEIGE_CODE,"│");
+                        Colors.colorize(Colors.WHITE_CODE,"│");
                         fromBoardBookshelf--;
                         Colors.printFreeSpaces(spaceBetweenPersonal);
                         fromBoardBookshelf=fromBoardBookshelf-spaceBetweenPersonal;
@@ -200,7 +200,7 @@ public class PrinterBookshelfAndPersonal {
                             fromBoardBookshelf=fromBoardBookshelf-spaceBetweenPersonal;
                         }
                     }
-                    Colors.colorize(Colors.BEIGE_CODE,"│");
+                    Colors.colorize(Colors.WHITE_CODE,"│");
                     fromBoardBookshelf--;
                     Colors.printFreeSpaces(spaceBetweenPersonal);
                     fromBoardBookshelf=fromBoardBookshelf-spaceBetweenPersonal;

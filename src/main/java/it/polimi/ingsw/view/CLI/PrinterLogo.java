@@ -8,26 +8,26 @@ import static java.lang.System.out;
  * and the Unicode characters to print the drawings in the terminal
  */
 public class PrinterLogo {
-
+    private static int terminalWidth = 70;
     public synchronized static void printMyShelfieLogo() {
         String myShelfieLogo = """
                                                                                                                                           
-                             ███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
-                             █                                                                                                                                 █
-                             █                                                                                                                                 █
-                             █                           ███╗   ███╗██╗   ██╗    ███████╗██╗  ██╗███████╗██╗     ███████╗██╗███████╗                           █
-                             █                           ████╗ ████║╚██╗ ██╔╝    ██╔════╝██║  ██║██╔════╝██║     ██╔════╝██║██╔════╝                           █
-                             █                           ██╔████╔██║ ╚████╔╝     ███████╗███████║█████╗  ██║     █████╗  ██║█████╗                             █
-                             █                           ██║╚██╔╝██║  ╚██╔╝      ╚════██║██╔══██║██╔══╝  ██║     ██╔══╝  ██║██╔══╝                             █
-                             █                           ██║ ╚═╝ ██║   ██║       ███████║██║  ██║███████╗███████╗██║     ██║███████╗                           █
-                             █                           ╚═╝     ╚═╝   ╚═╝       ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝     ╚═╝╚══════╝                           █
-                             █                                                                                                                                 █
-                             █           Welcome to MyShelfie Board Game made by Andrea Rondi, Giulia Rossi, Samuele Russo and Xin Ye.                         █
-                             █                                                                                                                                 █
-                             █                                                                                                                                 █
-                             █        C:\\> _Before starting playing you need to setup some things:                                                             █
-                             █                                                                                                                                 █
-                             ███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
+                             ████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
+                             █                                                                                                                              █
+                             █                                                                                                                              █
+                             █                           ███╗   ███╗██╗   ██╗    ███████╗██╗  ██╗███████╗██╗     ███████╗██╗███████╗                        █
+                             █                           ████╗ ████║╚██╗ ██╔╝    ██╔════╝██║  ██║██╔════╝██║     ██╔════╝██║██╔════╝                        █
+                             █                           ██╔████╔██║ ╚████╔╝     ███████╗███████║█████╗  ██║     █████╗  ██║█████                           █
+                             █                           ██║╚██╔╝██║  ╚██╔╝      ╚════██║██╔══██║██╔══╝  ██║     ██╔══╝  ██║██╔══╝                          █
+                             █                           ██║ ╚═╝ ██║   ██║       ███████║██║  ██║███████╗███████╗██║     ██║███████╗                        █
+                             █                           ╚═╝     ╚═╝   ╚═╝       ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝     ╚═╝╚══════╝                        █
+                             █                                                                                                                              █
+                             █           Welcome to MyShelfie Board Game made by Andrea Rondi, Giulia Rossi, Samuele Russo and Xin Ye.                      █
+                             █                                                                                                                              █
+                             █                                                                                                                              █
+                             █        C:\\> _Before starting playing you need to setup some things:                                                          █
+                             █                                                                                                                              █
+                             ████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
                                                
                                                                             ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
                                                                            █──▄────▄─▄─▄─▄─▄─▄▄▄─▄─▄─▄─▄─▄─▄─▄──▄───█
@@ -65,7 +65,7 @@ public class PrinterLogo {
         out.println();
         for (String line : lines) {
             Colors.printFreeSpaces(freeSpaces);
-            Colors.colorize(Colors.GAME_INSTRUCTION,line);
+            Colors.colorize(Colors.WHITE_CODE,line);
             System.out.println();
         }
     }
@@ -73,7 +73,7 @@ public class PrinterLogo {
 
 
     // titles for the infos
-    public synchronized static void printBoardLogo(int freeSpaces) {
+    public synchronized static void printBoardLogo() {
         String boardLogo[] = {
 
                 "╔╦╗╦ ╦╔═╗  ╔╗ ╔═╗╔═╗╦═╗╔╦╗",
@@ -85,7 +85,7 @@ public class PrinterLogo {
         //printLogo(boardLogo,freeSpaces);
     }
 
-    public synchronized static void printBookshelfLogo(int freeSpaces) {
+    public synchronized static void printBookshelfLogo() {
         String[] bookshelfLogo = {
                 "╔╦╗╦ ╦  ╔╗ ╔═╗╔═╗╦╔═╔═╗╦ ╦╔═╗╦  ╔═╗",
                 "║║║╚╦╝  ╠╩╗║ ║║ ║╠╩╗╚═╗╠═╣║╣ ║  ╠╣",
@@ -96,7 +96,7 @@ public class PrinterLogo {
         printLogo(bookshelfLogo,shift);
         //printLogo(bookshelfLogo, freeSpaces);
     }
-    private static int terminalWidth = 80;
+
     public synchronized static void printGamesRulesLogo() {
         String[] gamesRulesLogo = {
                 Colors.paint(Colors.YELLOW_CODE, "╔═╗╔═╗╔╦╗╔═╗╔═╗  ╦═╗╦ ╦╦  ╔═╗╔═╗"),
@@ -161,7 +161,7 @@ public class PrinterLogo {
     }
 
 
-    public synchronized static void printGlobalLobbyPhase(int freeSpaces) {
+    public synchronized static void printGlobalLobbyPhase() {
         String[] globalLobbyPhaseLogo = {
                 "╔═╗╦  ╔═╗╔╗ ╔═╗╦    ╦  ╔═╗╔╗ ╔╗ ╦ ╦",
                 "║ ╦║  ║ ║╠╩╗╠═╣║    ║  ║ ║╠╩╗╠╩╗╚╦╝",
@@ -173,7 +173,7 @@ public class PrinterLogo {
         //printLogo(globalLobbyPhaseLogo, freeSpaces);
     }
 
-    public synchronized static void printGameLobbyPhase(int freeSpaces) {
+    public synchronized static void printGameLobbyPhase() {
         String[] gameLobbyPhaseLogo = {
                 "╔═╗╔═╗╔╦╗╔═╗  ╦  ╔═╗╔╗ ╔╗ ╦ ╦",
                 "║ ╦╠═╣║║║║╣   ║  ║ ║╠╩╗╠╩╗╚╦╝",
@@ -196,7 +196,7 @@ public class PrinterLogo {
         out.println(yourTurnPhaseLogo);
     }
 
-    public synchronized static void printWaitingTurnPhase(int freeSpaces) {
+    public synchronized static void printWaitingTurnPhase() {
         String[] waitingTurnPhaseLogo = {
                 "╦ ╦╔═╗╦╔╦╗╦╔╗╔╔═╗  ╦ ╦╔═╗╦ ╦╦═╗  ╔╦╗╦ ╦╦═╗╔╗╔",
                 "║║║╠═╣║ ║ ║║║║║ ╦  ╚╦╝║ ║║ ║╠╦╝   ║ ║ ║╠╦╝║║║",
@@ -209,7 +209,7 @@ public class PrinterLogo {
     }
 
 
-    public synchronized static void printBoardPhase(int freeSpaces) {
+    public synchronized static void printBoardPhase() {
         String[] boardPhaseLogo = {
                 "╔╗ ╔═╗╔═╗╦═╗╔╦╗  ╔═╗╦ ╦╔═╗╔═╗╔═╗",
                 "╠╩╗║ ║╠═╣╠╦╝ ║║  ╠═╝╠═╣╠═╣╚═╗║╣",
@@ -220,7 +220,7 @@ public class PrinterLogo {
         //printLogo(boardPhaseLogo, freeSpaces);
     }
 
-    public synchronized static void printOrderPhase(int freeSpaces) {
+    public synchronized static void printOrderPhase() {
         String[] orderPhaseLogo = {
                 "╔═╗╦═╗╔╦╗╔═╗╦═╗  ╔═╗╦ ╦╔═╗╔═╗╔═╗",
                 "║ ║╠╦╝ ║║║╣ ╠╦╝  ╠═╝╠═╣╠═╣╚═╗║╣",
@@ -231,7 +231,7 @@ public class PrinterLogo {
         //printLogo(orderPhaseLogo, freeSpaces);
     }
 
-    public synchronized static void printColumnPhase(int freeSpaces) {
+    public synchronized static void printColumnPhase() {
         String[] columnPhaseLogo = {
                 "╔═╗╔═╗╦  ╦ ╦╔╦╗╔╗╔  ╔═╗╦ ╦╔═╗╔═╗╔═╗",
                 "║  ║ ║║  ║ ║║║║║║║  ╠═╝╠═╣╠═╣╚═╗║╣",
@@ -242,7 +242,7 @@ public class PrinterLogo {
         //printLogo(columnPhaseLogo, freeSpaces);
     }
 
-    public synchronized static void printFinalRankingPhase(int freeSpaces) {
+    public synchronized static void printFinalRankingPhase() {
         String[] finalRankingPhaseLogo = {
                 "╔═╗╦╔╗╔╔═╗╦    ╦═╗╔═╗╔╗╔╦╔═╦╔╗╔╔═╗",
                 "╠╣ ║║║║╠═╣║    ╠╦╝╠═╣║║║╠╩╗║║║║║ ╦",
