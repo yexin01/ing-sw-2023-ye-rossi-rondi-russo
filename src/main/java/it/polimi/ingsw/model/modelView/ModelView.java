@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.Player;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -20,7 +21,8 @@ import java.util.stream.IntStream;
  * It provides a snapshot of the game state that can be used for rendering and displaying information to the players.
  */
 public class ModelView implements Serializable {
-
+    @Serial
+    private static final long serialVersionUID = -5158808756179690476L;
     private int turnPlayer;
     private Boolean[] activePlayers;
     private int MAX_SELECTABLE_TILES;
@@ -30,14 +32,14 @@ public class ModelView implements Serializable {
     private int[] personalPoints;
     private String bookshelfFullPoints;
 
-    private BoardBoxView[][] boardView;
+    private BoardBoxView[][] boardView; //Adapter ready
 
     private TurnPhase turnPhase;
 
-    private ItemTileView[][][] bookshelfView;
-    private PlayerPointsView[] playerPoints;
-    private PersonalGoalCard[] playerPersonalGoal;
-    private ItemTileView[] selectedItems;
+    private ItemTileView[][][] bookshelfView; //Adapter ready
+    private PlayerPointsView[] playerPoints; //Adapter ready
+    private PersonalGoalCard[] playerPersonalGoal; //Adapter ready
+    private ItemTileView[] selectedItems; //Adapter ready
 
     /**
      * Constructs a ModelView object.
@@ -56,6 +58,10 @@ public class ModelView implements Serializable {
         token=new int[gameRules.getNumOfCommonGoals()];
         personalPoints=new int[numPlayers];
         MAX_SELECTABLE_TILES= gameRules.getMaxSelectableTiles();
+    }
+
+    public ModelView() {
+
     }
 
     public Board restoreBoard(){
@@ -166,6 +172,14 @@ public class ModelView implements Serializable {
     public void setBookshelfView(ItemTileView[][] bookshelfView,String nickname) {
         this.bookshelfView[getIntegerValue(nickname)] = bookshelfView;
     }
+
+    public ItemTileView[][][] getBookshelfView(){
+        return bookshelfView;
+    }
+
+    public void setBookshelfView(ItemTileView[][][] bookshelfView){
+        this.bookshelfView = bookshelfView;
+    }
     /**
 
      Retrieves the player points for all players.
@@ -179,8 +193,14 @@ public class ModelView implements Serializable {
      * @param playerPoints The PlayerPointsView object representing the player points.
      * @param index The index of the player.
      */
+
+
     public void setPlayerPoints(PlayerPointsView playerPoints,int index) {
         this.playerPoints[index] = playerPoints;
+    }
+
+    public void setPlayerPoints(PlayerPointsView[] playerPoints){
+        this.playerPoints = playerPoints;
     }
     /**
      * Retrieves the personal points of a player.
@@ -199,6 +219,10 @@ public class ModelView implements Serializable {
 
     public PersonalGoalCard getPlayerPersonalGoal(String nickname) {
         return playerPersonalGoal[getIntegerValue(nickname)];
+    }
+
+    public PersonalGoalCard[] getPlayerPersonalGoal(){
+        return playerPersonalGoal;
     }
     /**
      * Sets the personal goal card for a specific player.
@@ -413,6 +437,18 @@ public class ModelView implements Serializable {
      */
     public void setMAX_SELECTABLE_TILES(int MAX_SELECTABLE_TILES) {
         this.MAX_SELECTABLE_TILES = MAX_SELECTABLE_TILES;
+    }
+
+    public int getMaxSelectableTiles() {
+        return MAX_SELECTABLE_TILES;
+    }
+
+    public void setMaxSelectableTiles(int maxSelectableTiles) {
+        MAX_SELECTABLE_TILES = maxSelectableTiles;
+    }
+
+    public void setCommonGoalView(int[][] commonGoalView) {
+        this.commonGoalView = commonGoalView;
     }
 }
 

@@ -14,6 +14,8 @@ import it.polimi.ingsw.network.server.GameLobby;
 import it.polimi.ingsw.network.server.GlobalLobby;
 
 import java.io.IOException;
+import java.io.Serial;
+import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,14 +23,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-public class GameLobbyInfo {
+public class GameLobbyInfo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -5158808756179690476L;
     private final int idGameLobby;
     private final int wantedPlayers;
     //private GameController gameController;
     private ModelView modelView;
     //private InfoAndEndGameListener infoAndEndGameListener;
     private Message messageEndGame=null;
-    private ConcurrentHashMap<String, Connection> players; //maps of all the active players of the game
+    //private ConcurrentHashMap<String, Connection> players; //maps of all the active players of the game
     private CopyOnWriteArrayList<String> playersDisconnected; //maps of all the disconnected players of the game
 
 
@@ -44,13 +48,17 @@ public class GameLobbyInfo {
     public void setGameLobbyState(GameLobby gameLobby){
         this.modelView = gameLobby.getModelView();
         this.messageEndGame = gameLobby.getMessageEndGame();
-        this.players = gameLobby.getPlayers();
+        //this.players = gameLobby.getPlayers();
         this.playersDisconnected = gameLobby.getPlayersDisconnected();
+        for(PlayerPointsView p : modelView.getPlayerPoints()){
+            playersDisconnected.add(p.getNickname());
+        }
+
     }
 
    /*
     public GameController restoreGameState() {
-        return restoreControllers(restoreModel());
+        return restoreControllers(restoreModel());th
     }
 
     public void saveGame() throws URISyntaxException, IOException {
@@ -65,7 +73,7 @@ public class GameLobbyInfo {
         GameLobby gamelobby = new GameLobby(idGameLobby, wantedPlayers, globalLobby);
         gamelobby.setModelView(modelView);
         gamelobby.setMessageEndGame(messageEndGame);
-        gamelobby.setPlayers(players);
+        //gamelobby.setPlayers(players);
         gamelobby.setPlayersDisconnected(playersDisconnected);
         gamelobby.setGameController(restoreControllers(restoreModel(gameRules)));
         return gamelobby;
@@ -133,5 +141,46 @@ public class GameLobbyInfo {
         GameController gameController = new GameController();
         gameController.setGame(game);
         return gameController;
+    }
+
+
+    public int getWantedPlayers() {
+        return wantedPlayers;
+    }
+
+    public ModelView getModelView() {
+        return modelView;
+    }
+
+    public Message getMessageEndGame() {
+        return messageEndGame;
+    }
+
+    /*
+    public ConcurrentHashMap<String, Connection> getPlayers() {
+        return players;
+    }
+    public void setPlayers(ConcurrentHashMap<String, Connection> players) {
+        this.players = players;
+    }
+
+     */
+
+    public CopyOnWriteArrayList<String> getPlayersDisconnected() {
+        return playersDisconnected;
+    }
+
+    public void setModelView(ModelView modelView) {
+        this.modelView = modelView;
+    }
+
+    public void setMessageEndGame(Message messageEndGame) {
+        this.messageEndGame = messageEndGame;
+    }
+
+
+
+    public void setPlayersDisconnected(CopyOnWriteArrayList<String> playersDisconnected) {
+        this.playersDisconnected = playersDisconnected;
     }
 }

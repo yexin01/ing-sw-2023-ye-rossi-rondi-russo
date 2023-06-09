@@ -7,7 +7,6 @@ import java.io.Serializable;
  *Immutable class that represents the single player with his scores
  */
 public class PlayerPointsView implements Serializable {
-
     private final int[] commonGoalPoints;
     private final int adjacentPoints;
     private final String nickname;
