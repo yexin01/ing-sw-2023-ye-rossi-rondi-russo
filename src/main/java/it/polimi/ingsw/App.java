@@ -44,7 +44,7 @@ public class App{
          mo.winnerEndGame();
 
  */
-
+/*
          ArrayList<String> playerNames = new ArrayList<>(List.of("TIZIO", "CAIO", "SEMPRONIO", "PIPPO"));
 
 
@@ -107,8 +107,8 @@ public class App{
             cl.getClientView().setCoordinatesSelected( new ArrayList<>(List.of(7, 3, 7, 4,7, 5)));
            // puu.printMatrixBoard(cl.getClientView());
             //cl.askLobbyDecision();
-
-            Bookshelf bo = new Bookshelf(6, 5, 3);
+/*
+            Bookshelf bo =new Bookshelf(6, 5, 3);
             bo.setTile(new ItemTile(Type.CAT, 9), 5, 0);
             bo.setTile(new ItemTile(Type.PLANT, 9), 4, 0);
             bo.setTile(new ItemTile(Type.PLANT, 9), 3, 0);
@@ -240,7 +240,7 @@ public class App{
             game.setNextPlayer();
             game.updatePointsCommonGoals();
 
-
+*/
         }
 }
-*/
+

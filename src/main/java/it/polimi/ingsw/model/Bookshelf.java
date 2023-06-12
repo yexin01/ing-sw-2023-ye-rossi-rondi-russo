@@ -11,10 +11,22 @@ public class Bookshelf {
 
     private ItemTile[][] matrix;
     private int[] freeShelves; //freeShelves[i] = # celle libere nell'i-esima colonna
-    private final int maxSelectableTiles;
+    private int maxSelectableTiles;
 
-
+/*
     public Bookshelf(int rows, int columns, int maxSelectableTiles) {
+        freeShelves = new int[columns];
+        this.maxSelectableTiles = maxSelectableTiles;
+        matrix = new ItemTile[rows][columns];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                matrix[i][j] = new ItemTile(null, -1);
+            }
+        }
+    }
+
+ */
+    public void matrix(int rows, int columns, int maxSelectableTiles) {
         freeShelves = new int[columns];
         this.maxSelectableTiles = maxSelectableTiles;
         matrix = new ItemTile[rows][columns];
@@ -47,6 +59,9 @@ public class Bookshelf {
             }
         }
         return bookshelfView;
+    }
+    public void setMaxSelectableTiles(int maxSelectableTiles){
+        this.maxSelectableTiles=maxSelectableTiles;
     }
 
     public int maxFreeShelves() {

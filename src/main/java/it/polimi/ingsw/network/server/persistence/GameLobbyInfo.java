@@ -76,6 +76,7 @@ public class GameLobbyInfo implements Serializable {
         //gamelobby.setPlayers(players);
         gamelobby.setPlayersDisconnected(playersDisconnected);
         gamelobby.setGameController(restoreControllers(restoreModel(gameRules)));
+        gamelobby.getGameController().addListeners(gamelobby);
         return gamelobby;
     }
 
@@ -117,6 +118,7 @@ public class GameLobbyInfo implements Serializable {
             p.setCommonGoalPoints(game.getModelView().getPlayerPoints()[i].getCommonGoalPoints());
             i++;
         }
+
 
         /*
         //TODO: tbd

@@ -202,7 +202,8 @@ public class Game {
             p.setPersonalGoalCard(turnPersonal);
             modelview.setPlayerPersonalGoal(turnPersonal,p.getNickname());
 
-            Bookshelf bookshelf=new Bookshelf(rows,columns, maxSelectableTiles);
+            Bookshelf bookshelf=new Bookshelf();
+            bookshelf.matrix(rows,columns, maxSelectableTiles);
             p.setBookshelf(bookshelf);
             modelview.setBookshelfView(bookshelf.cloneBookshelf(),p.getNickname());
             i++;

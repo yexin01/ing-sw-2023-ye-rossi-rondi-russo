@@ -4,6 +4,9 @@ import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.json.GameRules;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.view.CLI.PrinterBoard;
+import it.polimi.ingsw.view.CLI.PrinterBookshelfAndPersonal;
+import it.polimi.ingsw.view.ClientView;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -74,17 +77,28 @@ public class ModelView implements Serializable {
         //TODO ho settato la matrice e maxSelectableTiles
         board.setMatrix(boardBox);
         board.MAX_SELECTABLE_TILES= gameRules.getMaxSelectableTiles();
+        PrinterBoard printerBoard=new PrinterBoard();
+        printerBoard.printMatrixBoard(board.cloneBoard(),null);
         return board;
     }
 
     public synchronized Bookshelf restoreBookshelf(GameRules gamerules, Player p){
-        Bookshelf bookshelf = new Bookshelf(bookshelfView.length, bookshelfView[0].length, gamerules.getMaxSelectableTiles());
-        for(int i=0; i<bookshelfView.length; i++){
-            for(int j=0; j<bookshelfView[0].length; i++){
-                bookshelf.setTile(bookshelfView[getIntegerValue(p.getNickname())][i][j].restoreItemTile(), i, j);
+        int row= gamerules.getRowsBookshelf();
+        int column= gamerules.getColumnsBookshelf();
+        System.out.println(row+" "+column);
+        ItemTile[][] itemTiles=new ItemTile[row][column];
+        for(int i=0; i<row; i++){
+            for(int j=0; j<column; j++){
+                itemTiles[i][j]=bookshelfView[getIntegerValue(p.getNickname())][i][j].restoreItemTile();
             }
         }
-        bookshelf.computeFreeShelves();
+        Bookshelf bookshelf=new Bookshelf();
+        bookshelf.setMatrix(itemTiles);
+        bookshelf.setMaxSelectableTiles(gamerules.getMaxSelectableTiles());
+        ClientView clientView=new ClientView();
+        clientView.setBookshelfView(bookshelf.cloneBookshelf());
+        PrinterBookshelfAndPersonal printerBookshelfAndPersonal=new PrinterBookshelfAndPersonal();
+        printerBookshelfAndPersonal.printMatrixBookshelf(clientView,3,1,10,false,false,0);
         return bookshelf;
     }
 
