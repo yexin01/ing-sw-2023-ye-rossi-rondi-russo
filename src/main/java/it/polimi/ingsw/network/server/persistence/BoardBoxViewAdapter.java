@@ -10,18 +10,16 @@ import it.polimi.ingsw.model.modelView.ModelView;
 import java.io.IOException;
 
 public class BoardBoxViewAdapter extends TypeAdapter<BoardBoxView> {
-    private Gson gson = new GsonBuilder()
-            .registerTypeAdapter(ItemTileView.class, new ItemTileViewAdapter())
-            .create();
+    private Gson gson;
 
-    /*
+
     public BoardBoxViewAdapter() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(ItemTileView.class, new ItemTileViewAdapter());
         gson = gsonBuilder.create();
     }
 
-     */
+
 
     @Override
     public void write(JsonWriter out, BoardBoxView boardBoxView) throws IOException {

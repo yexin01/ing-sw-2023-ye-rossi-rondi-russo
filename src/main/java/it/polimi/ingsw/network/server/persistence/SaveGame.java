@@ -2,7 +2,14 @@ package it.polimi.ingsw.network.server.persistence;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.json.GameRules;
+import it.polimi.ingsw.message.Message;
+import it.polimi.ingsw.message.MessageHeader;
+import it.polimi.ingsw.message.MessagePayload;
+import it.polimi.ingsw.model.PersonalGoalCard;
+import it.polimi.ingsw.model.modelView.BoardBoxView;
+import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.model.modelView.ModelView;
+import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.network.server.GameLobby;
 import it.polimi.ingsw.network.server.GlobalLobby;
 import it.polimi.ingsw.network.server.Server;
@@ -28,7 +35,6 @@ public class SaveGame {
         new File(jarPathString + "/persistence").mkdir();
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(GameLobbyInfo.class, new GameLobbyInfoAdapter());
         gson = gsonBuilder.create();
     }
 
@@ -68,9 +74,12 @@ public class SaveGame {
         try (FileWriter writer = new FileWriter(fileName)) {
             gson.toJson(gameLobbyInfo, writer);
         } catch (IOException e) {
+            System.out.println("Wasn't able to save the game " + gameLobbyInfo.getIdGameLobby() + " on disk");
             e.printStackTrace();
         }
     }
+
+
 /*
     public static void saveGame(GameLobbyInfo gameLobbyInfo) throws IOException {
         String fileName = jarPathString + "/persistence/Game_With_ID_" + gameLobbyInfo.getIdGameLobby() + ".json";

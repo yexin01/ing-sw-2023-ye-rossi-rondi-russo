@@ -11,26 +11,36 @@ import it.polimi.ingsw.model.modelView.*;
 import java.io.IOException;
 
 public class ModelViewAdapter extends TypeAdapter<ModelView> {
+    private Gson gson;
 
-    private Gson gson = new GsonBuilder()
-            .registerTypeAdapter(BoardBoxView.class, new BoardBoxViewAdapter())
-            .registerTypeAdapter(ItemTileView.class, new ItemTileViewAdapter())
-            .registerTypeAdapter(PlayerPointsView.class, new PlayerPointsViewAdapter())
-            .registerTypeAdapter(PersonalGoalCard.class, new PersonalGoalCardAdapter())
-            .create();
-
-
-    /*
-    public ModelViewAdapter() {
+    public ModelViewAdapter(){
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(BoardBoxView.class, new BoardBoxViewAdapter());
-        gsonBuilder.registerTypeAdapter(ItemTileView.class, new ItemTileViewAdapter());
-        gsonBuilder.registerTypeAdapter(PlayerPointsView.class, new PlayerPointsViewAdapter());
-        gsonBuilder.registerTypeAdapter(PersonalGoalCard.class, new PersonalGoalCardAdapter());
+
+        gsonBuilder.registerTypeAdapter(ItemTileView.class, new ItemTileViewAdapter())
+                .registerTypeAdapter(ItemTileView[].class, new ItemTileViewAdapter())
+                .registerTypeAdapter(ItemTileView[][][].class, new ItemTileViewAdapter())
+                .registerTypeAdapter(BoardBoxView[][].class, new BoardBoxViewAdapter())
+                .registerTypeAdapter(PlayerPointsView[].class, new PlayerPointsViewAdapter())
+                .registerTypeAdapter(PersonalGoalCard[].class, new PersonalGoalCardAdapter());
+
+
         gson = gsonBuilder.create();
     }
 
+    /*
+    private Gson gson = new GsonBuilder()
+            .registerTypeAdapter(ItemTileView.class, new ItemTileViewAdapter())
+            .registerTypeAdapter(ItemTileView[].class, new ItemTileViewAdapter())
+            .registerTypeAdapter(ItemTileView[][][].class, new ItemTileViewAdapter())
+            .registerTypeAdapter(BoardBoxView[][].class, new BoardBoxViewAdapter())
+            .registerTypeAdapter(PlayerPointsView[].class, new PlayerPointsViewAdapter())
+            .registerTypeAdapter(PersonalGoalCard[].class, new PersonalGoalCardAdapter())
+            .create();
+
      */
+
+
+//---------------------------
 
     @Override
     public void write(JsonWriter out, ModelView modelView) throws IOException {
@@ -43,6 +53,7 @@ public class ModelViewAdapter extends TypeAdapter<ModelView> {
         jsonObject.add("personalPoints", gson.toJsonTree(modelView.getPersonalPoints()));
         jsonObject.addProperty("bookshelfFullPoints", modelView.getBookshelfFullPoints());
         jsonObject.add("boardView", gson.toJsonTree(modelView.getBoardView()));
+
         jsonObject.addProperty("turnPhase", modelView.getTurnPhase().toString());
         jsonObject.add("bookshelfView", gson.toJsonTree(modelView.getBookshelfView()));
         jsonObject.add("playerPoints", gson.toJsonTree(modelView.getPlayerPoints()));
@@ -50,6 +61,9 @@ public class ModelViewAdapter extends TypeAdapter<ModelView> {
         jsonObject.add("selectedItems", gson.toJsonTree(modelView.getSelectedItems()));
         out.jsonValue(jsonObject.toString());
     }
+
+
+    //---------------------------
 
     @Override
     public ModelView read(JsonReader in) throws IOException {

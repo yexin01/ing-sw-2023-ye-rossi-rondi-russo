@@ -6,8 +6,13 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import it.polimi.ingsw.message.Message;
+import it.polimi.ingsw.message.MessageHeader;
+import it.polimi.ingsw.message.MessagePayload;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.modelView.BoardBoxView;
+import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.network.server.Connection;
@@ -20,10 +25,22 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameLobbyInfoAdapter extends TypeAdapter<GameLobbyInfo> {
-    private Gson gson = new GsonBuilder()
-            .registerTypeAdapter(ModelView.class, new ModelViewAdapter())
-            .registerTypeAdapter(Message.class, new MessageAdapter())
-            .create();
+    private Gson gson;
+
+    public GameLobbyInfoAdapter() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(ItemTileView.class, new ItemTileViewAdapter())
+                .registerTypeAdapter(ItemTileView[].class, new ItemTileViewAdapter())
+                .registerTypeAdapter(ItemTileView[][][].class, new ItemTileViewAdapter())
+                .registerTypeAdapter(BoardBoxView[][].class, new BoardBoxViewAdapter())
+                .registerTypeAdapter(PlayerPointsView[].class, new PlayerPointsViewAdapter())
+                .registerTypeAdapter(PersonalGoalCard[].class, new PersonalGoalCardAdapter())
+                .registerTypeAdapter(ModelView.class, new ModelViewAdapter())
+                .registerTypeAdapter(MessageHeader.class, new MessageHeaderAdapter())
+                .registerTypeAdapter(MessagePayload.class, new MessagePayloadAdapter())
+                .registerTypeAdapter(Message.class, new MessageAdapter());
+        gson = gsonBuilder.create();
+    }
 
     @Override
     public void write(JsonWriter out, GameLobbyInfo gameLobbyInfo) throws IOException {
