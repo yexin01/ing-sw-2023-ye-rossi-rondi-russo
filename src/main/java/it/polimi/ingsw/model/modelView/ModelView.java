@@ -3,10 +3,7 @@ package it.polimi.ingsw.model.modelView;
 import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.json.GameRules;
 
-import it.polimi.ingsw.model.Board;
-import it.polimi.ingsw.model.Bookshelf;
-import it.polimi.ingsw.model.PersonalGoalCard;
-import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -64,14 +61,19 @@ public class ModelView implements Serializable {
 
     }
 
-    public synchronized Board restoreBoard(){
+    public synchronized Board restoreBoard(int players,GameRules gameRules) throws Exception {
         Board board = new Board(this);
-        for(int i=0; i<board.getMatrix().length; i++){
-            for(int j=0; j<board.getMatrix()[0].length; j++){
-                board.getMatrix()[i][j]= boardView[i][j].restoreBoardBox();
+        int row= gameRules.getMatrix(players).length;
+        int column=gameRules.getMatrix(players)[0].length;
+        BoardBox[][] boardBox = new BoardBox[row][column];
+        for(int i=0; i< row; i++){
+            for(int j=0; j<column; j++){
+                boardBox[i][j]= boardView[i][j].restoreBoardBox();
             }
         }
-        //TODO: controlla altri attributi di Board, così ho restorato solo la matrix (manca maxSelectableTiles)
+        //TODO ho settato la matrice e maxSelectableTiles
+        board.setMatrix(boardBox);
+        board.MAX_SELECTABLE_TILES= gameRules.getMaxSelectableTiles();
         return board;
     }
 
@@ -297,6 +299,7 @@ public class ModelView implements Serializable {
     public synchronized void setSelectedItems(ItemTileView[] selectedItems) {
         this.token=new int[commonGoalView[0].length];
         this.selectedItems = selectedItems;
+        System.out.println("QUI CI PASSA SELECTED ITEMS");
     }
     /**
      * Retrieves the board view.

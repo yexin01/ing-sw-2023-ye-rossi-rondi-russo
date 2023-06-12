@@ -15,12 +15,14 @@ public class Board{
     private ModelView modelView;
 
 
-    private static int MAX_SELECTABLE_TILES;
+    public static int MAX_SELECTABLE_TILES;
     private BoardBox[][] matrix;
 
     public Board(ModelView modelView) {
         this.modelView=modelView;
     }
+
+
     /**
      * Gets the matrix of BoardBox objects representing the game board.
      * @return The matrix of BoardBox objects.

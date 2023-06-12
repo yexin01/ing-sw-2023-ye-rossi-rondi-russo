@@ -37,6 +37,8 @@ public class EndTurnListener extends EventListener{
         System.out.println("FINE TURNO");
 
         ModelView model=(ModelView) newValue;
+        BoardBoxView[][] b= model.getBoardView();
+        System.out.println("END TURN  GAME LOBBY 7,3 "+b[7][3].getType()+" 7 4 "+b[7][4].getType()+" 7 5  "+b[7][5].getType());
         Boolean[] activePlayers=model.getActivePlayers();
         for(PlayerPointsView nickname: model.getPlayerPoints()){
             if(activePlayers[model.getIntegerValue(nickname.getNickname())]){

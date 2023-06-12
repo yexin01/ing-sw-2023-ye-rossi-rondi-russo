@@ -94,6 +94,7 @@ public class GameLobbyInfo implements Serializable {
         //restore players...
         ArrayList<String> nicknames = new ArrayList<String>();
         nicknames.addAll(Arrays.stream(game.getModelView().getPlayerPoints()).map(PlayerPointsView::getNickname).collect(Collectors.toList()));
+        game.setPlayers(new ArrayList<>());
         for(String name : nicknames){
             game.getPlayers().add(new Player(name, modelView, gamerules));
         }
@@ -104,7 +105,7 @@ public class GameLobbyInfo implements Serializable {
         game.createCommonGoalCard(gamerules, cgcNumbers);
 
         //restore Board...
-        game.setBoard(game.getModelView().restoreBoard());
+        game.setBoard(game.getModelView().restoreBoard(game.getPlayers().size(),gamerules));
 
         //restore Bookshelves, personal goal cards and points
         int i=0;
