@@ -22,7 +22,7 @@ public class GameLobby implements Serializable {
     private final int idGameLobby;
     private final int wantedPlayers;
     private GameController gameController;
-    private ModelView modelView;
+
     private InfoAndEndGameListener infoAndEndGameListener;
     private Message messageEndGame;
     private ConcurrentHashMap<String, Connection> players; //maps of all the active players of the game
@@ -101,17 +101,22 @@ public class GameLobby implements Serializable {
     /**
      * @return the model view of the game
      */
+    /*
     public ModelView getModelView() {
         return modelView;
     }
 
+     */
+
     /**
      * Method to set the model view of the game
-     * @param modelView the model view of the game
+     //* @param modelView the model view of the game
      */
-    public void setModelView(ModelView modelView) {
+    /*public void setModelView(ModelView modelView) {
         this.modelView = modelView;
     }
+
+     */
 
     /**
      * @return the game controller of the game
@@ -231,7 +236,7 @@ public class GameLobby implements Serializable {
     public synchronized void handleErrorFromClient(Message message) throws IOException {
         if(messageEndGame==null){
             if(message.getPayload().getKey().equals(KeyErrorPayload.ERROR_DATA)){
-                infoAndEndGameListener.fireEvent(TurnPhase.ALL_INFO,message.getHeader().getNickname(),modelView);
+                infoAndEndGameListener.fireEvent(TurnPhase.ALL_INFO,message.getHeader().getNickname(),gameLobbyInfo.getModelView());
             }
         }else{
             sendMessageToSpecificPlayer(messageEndGame,message.getHeader().getNickname());

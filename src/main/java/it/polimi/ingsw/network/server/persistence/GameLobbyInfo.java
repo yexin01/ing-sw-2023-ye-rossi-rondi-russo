@@ -46,7 +46,7 @@ public class GameLobbyInfo implements Serializable {
 
     //TODO: @giuliaRossi va chiamata ad ogni fine turno prima di SaveGame.serializeGameLobby()
     public void setGameLobbyState(GameLobby gameLobby){
-        this.modelView = gameLobby.getModelView();
+        //this.modelView = modelView;
         this.messageEndGame = gameLobby.getMessageEndGame();
         //this.players = gameLobby.getPlayers();
         this.playersDisconnected = gameLobby.getPlayersDisconnected();
@@ -71,7 +71,7 @@ public class GameLobbyInfo implements Serializable {
     //TODO: funzione per spostare tutti i players in playersDisconnected
     public  GameLobby restoreGameLobby(GlobalLobby globalLobby, GameRules gameRules) throws Exception {
         GameLobby gamelobby = new GameLobby(idGameLobby, wantedPlayers, globalLobby);
-        gamelobby.setModelView(modelView);
+        //gamelobby.setModelView(modelView);
         gamelobby.setMessageEndGame(messageEndGame);
         //gamelobby.setPlayers(players);
         gamelobby.setPlayersDisconnected(playersDisconnected);

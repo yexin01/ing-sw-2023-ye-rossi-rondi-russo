@@ -34,8 +34,8 @@ public class EndTurnListener extends EventListener{
 
     @Override
     public void fireEvent(KeyAbstractPayload event, String playerNickname, Object newValue) throws IOException {
-        getGameLobby().getGameLobbyInfo().setGameLobbyState(getGameLobby());
-        SaveGame.saveGame(getGameLobby().getGameLobbyInfo());
+        System.out.println("FINE TURNO");
+
         ModelView model=(ModelView) newValue;
         Boolean[] activePlayers=model.getActivePlayers();
         for(PlayerPointsView nickname: model.getPlayerPoints()){
@@ -43,6 +43,9 @@ public class EndTurnListener extends EventListener{
                 getGameLobby().sendMessageToSpecificPlayer(creationMessageEndTurn(nickname.getNickname(),model),nickname.getNickname()) ;
             }
         }
+        getGameLobby().getGameLobbyInfo().setGameLobbyState(getGameLobby());
+        SaveGame.saveGame(getGameLobby().getGameLobbyInfo());
+        System.out.println("FINE TURNO TOTALE");
     }
 
     /**

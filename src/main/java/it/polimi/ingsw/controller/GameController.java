@@ -10,7 +10,9 @@ import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.network.server.GameLobby;
+import it.polimi.ingsw.network.server.persistence.SaveGame;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -52,7 +54,7 @@ public class GameController {
 
         numbers = game.generateRandomNumber(gameRules.getPossiblePersonalGoalsSize(), game.getPlayers().size());
         game.createPersonalGoalCard(gameRules,numbers);
-        gameLobby.setModelView(modelView);
+        gameLobby.getGameLobbyInfo().setModelView(modelView);
         listenerManager.fireEvent(TurnPhase.ALL_INFO,null,game.getModelView());
         modelView.setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
     }
@@ -61,13 +63,15 @@ public class GameController {
      * Associates listeners with the game lobby.
      * @param gameLobby The game lobby to associate listeners with.
      */
-    public void addListeners(GameLobby gameLobby){
+    public void addListeners(GameLobby gameLobby) throws IOException {
         listenerManager=new ListenerManager();
         listenerManager.addListener(KeyErrorPayload.ERROR_DATA,new ErrorListener(gameLobby));
         listenerManager.addListener(TurnPhase.ALL_INFO, gameLobby.getStartAndEndGameListener());
         listenerManager.addListener(TurnPhase.END_GAME, gameLobby.getStartAndEndGameListener());
         listenerManager.addListener(TurnPhase.END_TURN,new EndTurnListener(gameLobby));
         listenerManager.addListener(Data.PHASE,new PhaseListener(gameLobby));
+        //gameLobby.getGameLobbyInfo().setGameLobbyState(gameLobby);
+        //SaveGame.saveGame(gameLobby.getGameLobbyInfo());
     }
     /**
      * Returns the game model.
@@ -183,7 +187,9 @@ public class GameController {
                 game.getModelView().setBookshelfFullPoints(game.getTurnPlayerOfTheGame().getNickname());
                 game.setEndGame(true);
             }
+            System.out.println("FINE TURNO2");
             game.updateAllPoints();
+            System.out.println("FINE TURNO1");
             finishTurn();
         }
     }

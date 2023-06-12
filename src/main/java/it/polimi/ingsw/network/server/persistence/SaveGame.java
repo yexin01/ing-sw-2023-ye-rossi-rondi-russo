@@ -31,7 +31,7 @@ public class SaveGame {
             throw new RuntimeException(e);
         }
         //jarPathString = jarPath.getParentFile().getAbsolutePath();
-        jarPathString = "/Users/andrearondi/Desktop";
+        jarPathString = ".\\src\\main\\resources";
         new File(jarPathString + "/persistence").mkdir();
 
         GsonBuilder gsonBuilder = new GsonBuilder();

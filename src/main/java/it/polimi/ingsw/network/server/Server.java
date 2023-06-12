@@ -98,66 +98,7 @@ public class Server implements Runnable{
         int portRmi = 1099;
         int portSocket = 1100;
         String ipAddress = "127.0.0.1";
-//TODO verranno cancellati, diversi colori da visualizzare con il jar su terminale
         boolean correctInput = false;
-        String testo = "colore2";
-
-        System.out.println("\033[31m" + testo);        // Rosso
-        System.out.println("\033[30m" + testo);        // Nero
-        System.out.println("\033[37m" + testo);        // Bianco
-        System.out.println("\033[97m" + testo);   // Bianco più acceso
-        System.out.println("\033[32m" + testo);        // Verde
-        System.out.println("\033[36m" + testo);        // Azzurro
-        System.out.println("\033[34m" + testo);        // Blu
-        System.out.println("\033[35m" + testo);        // Viola
-        System.out.println("\033[95m" + testo);        // Rosa
-        System.out.println("\033[33m" + testo);        // Beige
-        System.out.println("\033[33m" + testo);        // Oro
-        System.out.println("\033[30m" + testo);        // Argento
-        System.out.println("\033[33m" + testo);        // Bronzo
-
-
-        System.out.println("\033[33m" + testo);        // Giallo
-        System.out.println("\033[34m" + testo);        // Blu
-        System.out.println("\033[36m" + testo);        // Azzurro
-        System.out.println("\033[95m" + testo);        // Rosa
-        System.out.println("\033[32m" + testo);        // Verde
-
-        System.out.println("\033[93m" + testo);        // Giallo chiaro
-        System.out.println("\033[31m" + testo);        // Rosso
-        System.out.println("\033[33m" + testo);        // Giallo
-        System.out.println("\033[93m" + testo);       // Giallo più forte
-
-        System.out.println("\033[32m" + testo);        // Verde
-        System.out.println("\033[96m" + testo);        // Azzurro più forte
-        System.out.println("\033[94m" + testo);        // Blu più forte
-        System.out.println("\033[95m" + testo);        // Viola più forte
-        System.out.println("\033[96m" + testo);        // Rosa più forte
-
-        System.out.println("\033[33m" + testo);        // Oro
-        System.out.println("\033[37m" + testo);        // Argento più forte
-        System.out.println("\033[33m" + testo);        // Bronzo più forte
-        System.out.println("QUESTE SARANN0 LE TESSERE");
-        System.out.println("\033[38;2;255;165;0m" + testo);   // Arancione
-        System.out.println("\033[34m" + testo);        // Blu
-        System.out.println("\033[36m" + testo);        // Azzurro
-        System.out.println("\033[32m" + testo);        // Verde
-        System.out.println("\033[33m" + testo);        // Giallo
-        System.out.println("\033[38;2;204;119;34m" + testo);   // Ocra
-        System.out.println("\033[93m" + testo);        // Giallo chiaro
-        System.out.println("\033[95m" + testo);        // Rosa
-        System.out.println("\033[33m" + testo);        // Giallo
-        System.out.println("\033[93m" + testo);       // Giallo più forte
-        System.out.println("BOOKKSELF E BOARD, ISTRUZIONI BOANCHE E NERE(prima bianco e poi nero), alla fine il rosso per gli errori");
-        System.out.println("\033[33m" + testo);        // Beige
-        System.out.println("\033[97m" + testo);   // Bianco più acceso
-        System.out.println("\033[30m" + testo);        // Nero
-        System.out.println("\033[31m" + testo);        // Rosso
-
-        System.out.println("\033[33;43m" + testo);
-        System.out.println("\033[33;47m" + testo);
-        System.out.println("\033[0;33m"  + testo);
-        System.out.print("\033[0m");
 
         while (!correctInput) {
             try {
