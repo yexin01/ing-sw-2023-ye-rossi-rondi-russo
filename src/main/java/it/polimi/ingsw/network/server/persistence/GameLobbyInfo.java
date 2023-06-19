@@ -44,7 +44,6 @@ public class GameLobbyInfo implements Serializable {
         return idGameLobby;
     }
 
-    //TODO: @giuliaRossi va chiamata ad ogni fine turno prima di SaveGame.serializeGameLobby()
     public void setGameLobbyState(GameLobby gameLobby){
         //this.modelView = modelView;
         this.messageEndGame = gameLobby.getMessageEndGame();
@@ -106,7 +105,7 @@ public class GameLobbyInfo implements Serializable {
         game.createCommonGoalCard(gamerules, cgcNumbers);
 
         //restore Board...
-        game.setBoard(game.getModelView().restoreBoard(game.getPlayers().size(),gamerules));
+        game.setBoard(game.getModelView().restoreBoard(gamerules));
 
         //restore Bookshelves, personal goal cards and points
         int i=0;

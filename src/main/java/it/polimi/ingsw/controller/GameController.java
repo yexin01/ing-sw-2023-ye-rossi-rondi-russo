@@ -109,6 +109,7 @@ public class GameController {
                 }
             }
         }catch(Exception e){
+            e.printStackTrace();
         }
     }
 

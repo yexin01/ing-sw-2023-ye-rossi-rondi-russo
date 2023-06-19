@@ -64,17 +64,16 @@ public class ModelView implements Serializable {
 
     }
 
-    public synchronized Board restoreBoard(int players,GameRules gameRules) throws Exception {
+    public synchronized Board restoreBoard(GameRules gameRules) throws Exception {
         Board board = new Board(this);
-        int row= gameRules.getMatrix(players).length;
-        int column=gameRules.getMatrix(players)[0].length;
+        int row= boardView.length;
+        int column=boardView[0].length;
         BoardBox[][] boardBox = new BoardBox[row][column];
-        for(int i=0; i< row; i++){
-            for(int j=0; j<column; j++){
+        for(int i=0; i< boardView.length; i++){
+            for(int j=0; j<boardView[0].length; j++){
                 boardBox[i][j]= boardView[i][j].restoreBoardBox();
             }
         }
-        //TODO ho settato la matrice e maxSelectableTiles
         board.setMatrix(boardBox);
         board.MAX_SELECTABLE_TILES= gameRules.getMaxSelectableTiles();
         PrinterBoard printerBoard=new PrinterBoard();
