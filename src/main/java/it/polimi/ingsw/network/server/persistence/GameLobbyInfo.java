@@ -49,6 +49,9 @@ public class GameLobbyInfo implements Serializable {
         this.messageEndGame = gameLobby.getMessageEndGame();
         //this.players = gameLobby.getPlayers();
         this.playersDisconnected = gameLobby.getPlayersDisconnected();
+        //TODO @andreaRondi il puntatore di modelView é null
+        System.out.println("setGameLobbyState");
+        System.out.println(modelView.getBookshelfView()[0][0][0].getTileID());
         for(PlayerPointsView p : modelView.getPlayerPoints()){
             if (!playersDisconnected.contains(p.getNickname())) playersDisconnected.add(p.getNickname());
         }
@@ -71,7 +74,6 @@ public class GameLobbyInfo implements Serializable {
     public  GameLobby restoreGameLobby(GlobalLobby globalLobby, GameRules gameRules) throws Exception {
         GameLobby gamelobby = new GameLobby(idGameLobby, wantedPlayers, globalLobby);
         //gamelobby.setModelView(modelView);
-        gamelobby.setMessageEndGame(messageEndGame);
         //gamelobby.setPlayers(players);
         gamelobby.setPlayersDisconnected(playersDisconnected);
         gamelobby.setGameController(restoreControllers(restoreModel(gameRules)));
@@ -117,6 +119,9 @@ public class GameLobbyInfo implements Serializable {
             p.setCommonGoalPoints(game.getModelView().getPlayerPoints()[i].getCommonGoalPoints());
             i++;
         }
+        Boolean[] activePlayers=new Boolean[game.getPlayers().size()];
+        Arrays.fill(activePlayers, false);
+        game.getModelView().setActivePlayers(activePlayers);
 
 
         /*

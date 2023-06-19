@@ -135,6 +135,9 @@ public class Bookshelf {
         return null;
     }
 
+    public void setFreeShelves(int[] freeShelves) {
+        this.freeShelves = freeShelves;
+    }
 
     /**
      * @return a list with the cardinalities of the groups of adjacent tiles found by the algorithm

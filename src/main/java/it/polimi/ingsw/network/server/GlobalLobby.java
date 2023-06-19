@@ -134,7 +134,11 @@ public class GlobalLobby implements Serializable {
      */
     public synchronized void reconnectPlayerToGameLobby(String nickname, Connection connection) throws IOException {
         for (GameLobby gameLobby : gameLobbies.values()) {
+            System.out.println("Ci entra5");
+            System.out.println(nickname);
             if (gameLobby.containsPlayerDisconnectedInThisGame(nickname)) {
+                System.out.println(nickname);
+                System.out.println("Lo trova ");
                 gameLobby.changePlayerInActive(nickname, connection);
                 return;
             }
@@ -245,6 +249,14 @@ public class GlobalLobby implements Serializable {
             }
         }
         return null;
+    }
+
+    public void setGameLobbies(ConcurrentHashMap<Integer, GameLobby> gameLobbies) {
+        this.gameLobbies = gameLobbies;
+    }
+//TODO @andreaRondi risettare i waitingPlayers dopo la caduta del server
+    public void setWaitingPlayersWithNoGame(ConcurrentHashMap<String, Connection> waitingPlayersWithNoGame) {
+        this.waitingPlayersWithNoGame = waitingPlayersWithNoGame;
     }
 
     public ConcurrentHashMap<Integer, GameLobby> getGameLobbies() {

@@ -104,7 +104,6 @@ public class CLI implements ClientInterface {
         for(int i=0;i<titlePhase.length;i++){
             if(phase==i || i==commandsPhase.length-1){
                 Colors.colorizeSize(Colors.LIGHT_BLUE_CODE,titlePhase[i], 28+5);
-                //TODO
             }else Colors.colorizeSize(Colors.WHITE_CODE,titlePhase[i], 28+5);
             Colors.printFreeSpaces(2);
 

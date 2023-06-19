@@ -462,7 +462,7 @@ public class PrinterCommonGoalAndPoints {
             }
             pointsLeft=clientView.getCommonGoalView()[1][i];
             System.out.println(margin+"Tokens left: ");
-            //TODO stampare solo il token con pointsLeft
+            //TODO @andreaRondi stampare solo il token con pointsLeft
             //printTokensLeft(i, clientView);
             //printTokens(i, clientView);
             System.out.println("");
@@ -479,7 +479,7 @@ public class PrinterCommonGoalAndPoints {
      * @param clientView
      */
     public void printTokensLeft(int indexCGC, ClientView clientView){
-        //TODO questa verra cancellata
+        //TODO @andreaRondi questa verra cancellata
         ArrayList<String[]> tokensToPrint = new ArrayList<>();
         switch (clientView.getPlayerPointsViews().length) {
             case 2: tokensToPrint.addAll(Arrays.asList(buildToken(4), buildToken(8)));

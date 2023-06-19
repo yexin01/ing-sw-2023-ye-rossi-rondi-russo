@@ -18,6 +18,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SaveGame {
     private static final String jarPathString;
@@ -54,24 +55,45 @@ public class SaveGame {
     }
 
     public static void loadGameLobbies(GlobalLobby globalLobby, GameRules gamerules) {
+        System.out.println("CI ENTRA");
         File persistenceFolder = new File(jarPathString + "/persistence");
         File[] files = persistenceFolder.listFiles();
-        List<GameLobby> gameLobbies = new ArrayList<>();
+        //TODO settare i waitingPlayers
+        ConcurrentHashMap<Integer,GameLobby> gameLobbies=new ConcurrentHashMap<>();
+        //List<GameLobby> gameLobbies = new ArrayList<>();
         if (files != null) {
             for (File file : files) {
                 if (file.isFile() && file.getName().startsWith("Game_With_ID_")) {
                     try {
                         int id = extractIdFromFile(file.getName());
                         GameLobby gameLobby = getGameInfo(id).restoreGameLobby(globalLobby, gamerules);
-                        gameLobbies.add(gameLobby);
+                        gameLobbies.put(id,gameLobby);
+                        //gameLobbies.add(gameLobby);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
+            System.out.println("CI ARRIVA  ");
+            for(GameLobby s:gameLobbies.values()){
+                System.out.println("ID "+s.getIdGameLobby());
+                for(String p:s.getPlayersDisconnectedInGameLobby()){
+                    System.out.println(p);
+                }
+            }
+            globalLobby.setGameLobbies(gameLobbies);
+            for(GameLobby s:globalLobby.getGameLobbies().values()){
+                System.out.println("GLOBAL "+s.getIdGameLobby());
+                for(String p:s.getPlayersDisconnectedInGameLobby()){
+                    System.out.println(p);
+                }
+            }
+            /*
             for (GameLobby gl : gameLobbies) {
                 globalLobby.getGameLobbies().put(gl.getIdGameLobby(), gl);
             }
+
+             */
         }
     }
 

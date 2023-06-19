@@ -84,7 +84,6 @@ public class ModelView implements Serializable {
     public synchronized Bookshelf restoreBookshelf(GameRules gamerules, Player p){
         int row= gamerules.getRowsBookshelf();
         int column= gamerules.getColumnsBookshelf();
-        System.out.println(row+" "+column);
         ItemTile[][] itemTiles=new ItemTile[row][column];
         for(int i=0; i<row; i++){
             for(int j=0; j<column; j++){
@@ -93,6 +92,7 @@ public class ModelView implements Serializable {
         }
         Bookshelf bookshelf=new Bookshelf();
         bookshelf.setMatrix(itemTiles);
+        bookshelf.setFreeShelves(new int[column]);
         bookshelf.setMaxSelectableTiles(gamerules.getMaxSelectableTiles());
         ClientView clientView=new ClientView();
         clientView.setBookshelfView(bookshelf.cloneBookshelf());
@@ -264,13 +264,6 @@ public class ModelView implements Serializable {
 
         Arrays.sort(sortedObjects, Comparator.comparingInt(PlayerPointsView::getPoints));
 
-
-        for (PlayerPointsView obj : playerPoints) {
-            System.out.println(obj.getPoints()+" "+obj.getNickname());
-        }
-        for (PlayerPointsView obj : sortedObjects) {
-            System.out.println(obj.getPoints()+" "+obj.getNickname());
-        }
         return sortedObjects;
     }
     /**
@@ -312,7 +305,6 @@ public class ModelView implements Serializable {
     public synchronized void setSelectedItems(ItemTileView[] selectedItems) {
         this.token=new int[commonGoalView[0].length];
         this.selectedItems = selectedItems;
-        System.out.println("QUI CI PASSA SELECTED ITEMS");
     }
     /**
      * Retrieves the board view.
