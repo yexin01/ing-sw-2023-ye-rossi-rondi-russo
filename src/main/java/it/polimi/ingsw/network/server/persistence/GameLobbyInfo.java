@@ -51,7 +51,7 @@ public class GameLobbyInfo implements Serializable {
         //this.players = gameLobby.getPlayers();
         this.playersDisconnected = gameLobby.getPlayersDisconnected();
         for(PlayerPointsView p : modelView.getPlayerPoints()){
-            playersDisconnected.add(p.getNickname());
+            if (!playersDisconnected.contains(p.getNickname())) playersDisconnected.add(p.getNickname());
         }
 
     }

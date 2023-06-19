@@ -361,4 +361,5 @@ public class GameLobby implements Serializable {
     public void setGameLobbyInfo(GameLobbyInfo gameLobbyInfo) {
         this.gameLobbyInfo = gameLobbyInfo;
     }
+
 }

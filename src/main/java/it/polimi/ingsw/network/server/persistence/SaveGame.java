@@ -30,9 +30,24 @@ public class SaveGame {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        String currentWorkingDir = System.getProperty("user.dir");
+        String persistenceDirPath = currentWorkingDir + File.separator + "backups";
+
+        // Crea la directory "persistence" se non esiste
+        File persistenceDir = new File(persistenceDirPath);
+        if (!persistenceDir.exists()) {
+            persistenceDir.mkdir();
+        }
+
+         jarPathString = persistenceDirPath;
+
         //jarPathString = jarPath.getParentFile().getAbsolutePath();
-        jarPathString = ".\\src\\main\\resources";
+        //jarPathString = ".\\src\\main\\resources";
+        //jarPathString = "/Users/andrearondi/Desktop";
+
         new File(jarPathString + "/persistence").mkdir();
+
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
