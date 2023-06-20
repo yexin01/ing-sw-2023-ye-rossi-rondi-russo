@@ -4,6 +4,7 @@ import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.json.GameRules;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.network.server.persistence.BoardBoxViewAdapter;
 import it.polimi.ingsw.view.CLI.PrinterBoard;
 import it.polimi.ingsw.view.CLI.PrinterBookshelfAndPersonal;
 import it.polimi.ingsw.view.ClientView;
@@ -64,42 +65,6 @@ public class ModelView implements Serializable {
 
     }
 
-    public synchronized Board restoreBoard(GameRules gameRules) throws Exception {
-        Board board = new Board(this);
-        int row= boardView.length;
-        int column=boardView[0].length;
-        BoardBox[][] boardBox = new BoardBox[row][column];
-        for(int i=0; i< boardView.length; i++){
-            for(int j=0; j<boardView[0].length; j++){
-                boardBox[i][j]= boardView[i][j].restoreBoardBox();
-            }
-        }
-        board.setMatrix(boardBox);
-        board.MAX_SELECTABLE_TILES= gameRules.getMaxSelectableTiles();
-        PrinterBoard printerBoard=new PrinterBoard();
-        printerBoard.printMatrixBoard(board.cloneBoard(),null);
-        return board;
-    }
-
-    public synchronized Bookshelf restoreBookshelf(GameRules gamerules, Player p){
-        int row= gamerules.getRowsBookshelf();
-        int column= gamerules.getColumnsBookshelf();
-        ItemTile[][] itemTiles=new ItemTile[row][column];
-        for(int i=0; i<row; i++){
-            for(int j=0; j<column; j++){
-                itemTiles[i][j]=bookshelfView[getIntegerValue(p.getNickname())][i][j].restoreItemTile();
-            }
-        }
-        Bookshelf bookshelf=new Bookshelf();
-        bookshelf.setMatrix(itemTiles);
-        bookshelf.setFreeShelves(new int[column]);
-        bookshelf.setMaxSelectableTiles(gamerules.getMaxSelectableTiles());
-        ClientView clientView=new ClientView();
-        clientView.setBookshelfView(bookshelf.cloneBookshelf());
-        PrinterBookshelfAndPersonal printerBookshelfAndPersonal=new PrinterBookshelfAndPersonal();
-        printerBookshelfAndPersonal.printMatrixBookshelf(clientView,3,1,10,false,false,0);
-        return bookshelf;
-    }
 
     /**
      * Gets the index of a player based on their nickname.
@@ -457,6 +422,58 @@ public class ModelView implements Serializable {
 
     public synchronized void setCommonGoalView(int[][] commonGoalView) {
         this.commonGoalView = commonGoalView;
+    }
+
+
+    public synchronized Board restoreBoard(GameRules gameRules) throws Exception {
+        Board board = new Board(this);
+        int row= boardView.length;
+        int column=boardView[0].length;
+        BoardBox[][] boardBox = new BoardBox[row][column];
+        for(int i=0; i< boardView.length; i++){
+            for(int j=0; j<boardView[0].length; j++){
+                boardBox[i][j]= restoreBoardBox(i,j);
+            }
+        }
+        board.setMatrix(boardBox);
+        board.MAX_SELECTABLE_TILES= gameRules.getMaxSelectableTiles();
+        PrinterBoard printerBoard=new PrinterBoard();
+        printerBoard.printMatrixBoard(board.cloneBoard(),null);
+        return board;
+    }
+    public BoardBox restoreBoardBox(int x,int y){
+        BoardBoxView boardBoxView=boardView[x][y];
+        BoardBox boardBox = new BoardBox(x, y);
+        boardBox.setTile(restoreItemTile(boardBoxView.getItemTileView()));
+        boardBox.setOccupiable(boardBoxView.isOccupiable());
+        boardBox.setFreeEdges(boardBoxView.getFreeEdges());
+        return boardBox;
+    }
+    public ItemTile restoreItemTile(ItemTileView itemTileView){
+        ItemTile itemTile = new ItemTile(itemTileView.getTypeView(), itemTileView.getTileID());
+        return itemTile;
+    }
+
+    public synchronized Bookshelf restoreBookshelf(GameRules gamerules, Player p){
+        int intPlayer=getIntegerValue(p.getNickname());
+        int row= gamerules.getRowsBookshelf();
+        int column= gamerules.getColumnsBookshelf();
+        ItemTile[][] itemTiles=new ItemTile[row][column];
+        for(int i=0; i<row; i++){
+            for(int j=0; j<column; j++){
+                ItemTile tile=restoreItemTile(bookshelfView[intPlayer][i][j]);
+                itemTiles[i][j]=tile;
+            }
+        }
+        Bookshelf bookshelf=new Bookshelf();
+        bookshelf.setMatrix(itemTiles);
+        bookshelf.setFreeShelves(new int[column]);
+        bookshelf.setMaxSelectableTiles(gamerules.getMaxSelectableTiles());
+        ClientView clientView=new ClientView();
+        clientView.setBookshelfView(bookshelf.cloneBookshelf());
+        PrinterBookshelfAndPersonal printerBookshelfAndPersonal=new PrinterBookshelfAndPersonal();
+        printerBookshelfAndPersonal.printMatrixBookshelf(clientView,3,1,10,false,false,0);
+        return bookshelf;
     }
 }
 

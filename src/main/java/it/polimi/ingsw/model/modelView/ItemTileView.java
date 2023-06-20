@@ -44,9 +44,4 @@ public class ItemTileView implements Serializable {
     public int getTileID() {
         return tileID;
     }
-
-    public ItemTile restoreItemTile(){
-        ItemTile itemTile = new ItemTile(this.type, this.tileID);
-        return itemTile;
-    }
 }

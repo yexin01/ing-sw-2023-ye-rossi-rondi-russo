@@ -86,12 +86,5 @@ public class BoardBoxView implements Serializable {
         return freeEdges;
     }
 
-    public BoardBox restoreBoardBox(){
-        BoardBox boardBox = new BoardBox(this.x, this.y);
-        boardBox.setTile(this.itemTileView.restoreItemTile());
-        boardBox.setOccupiable(this.occupiable);
-        boardBox.setFreeEdges(this.freeEdges);
-        return boardBox;
-    }
 }
 
