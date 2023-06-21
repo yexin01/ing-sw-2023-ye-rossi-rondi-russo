@@ -75,6 +75,7 @@ public class GameLobbyInfo implements Serializable {
         GameLobby gamelobby = new GameLobby(idGameLobby, wantedPlayers, globalLobby);
         //gamelobby.setModelView(modelView);
         //gamelobby.setPlayers(players);
+        gamelobby.setGameLobbyInfo(this);
         gamelobby.setPlayersDisconnected(playersDisconnected);
         gamelobby.setGameController(restoreControllers(restoreModel(gameRules)));
         gamelobby.getGameController().addListeners(gamelobby);
