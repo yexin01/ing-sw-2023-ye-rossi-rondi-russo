@@ -107,13 +107,9 @@ public class SaveGame {
 
     public static void saveGame(GameLobbyInfo gameLobbyInfo) throws IOException {
         BoardBoxView[][] b=gameLobbyInfo.getModelView().getBoardView();
-        System.out.println("GAME LOBBY 7,3 "+b[7][3].getType()+" 7 4 "+b[7][4].getType()+" 7 5  "+b[7][5].getType());
         String fileName = jarPathString + "/persistence/Game_With_ID_" + gameLobbyInfo.getIdGameLobby() + ".json";
-        System.out.println("ci entra1");
         try (FileWriter writer = new FileWriter(fileName)) {
-            System.out.println("ci entra2");
             gson.toJson(gameLobbyInfo, writer);
-            System.out.println("ci entra3");
         } catch (IOException e) {
             System.out.println("Wasn't able to save the game " + gameLobbyInfo.getIdGameLobby() + " on disk");
             e.printStackTrace();

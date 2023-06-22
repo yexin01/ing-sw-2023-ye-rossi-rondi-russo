@@ -4,14 +4,12 @@ import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.json.GameRules;
 
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.network.server.persistence.BoardBoxViewAdapter;
 import it.polimi.ingsw.view.CLI.PrinterBoard;
 import it.polimi.ingsw.view.CLI.PrinterBookshelfAndPersonal;
 import it.polimi.ingsw.view.ClientView;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.OptionalInt;
@@ -26,21 +24,21 @@ public class ModelView implements Serializable {
     private static final long serialVersionUID = -5158808756179690476L;
     private int turnPlayer;
     private Boolean[] activePlayers;
-    private int MAX_SELECTABLE_TILES;
+    public static int MAX_SELECTABLE_TILES;
 
     private int[][] commonGoalView;
     private int[] token;
     private int[] personalPoints;
     private String bookshelfFullPoints;
 
-    private BoardBoxView[][] boardView; //Adapter ready
+    private BoardBoxView[][] boardView;
 
     private TurnPhase turnPhase;
 
-    private ItemTileView[][][] bookshelfView; //Adapter ready
-    private PlayerPointsView[] playerPoints; //Adapter ready
-    private PersonalGoalCard[] playerPersonalGoal; //Adapter ready
-    private ItemTileView[] selectedItems; //Adapter ready
+    private ItemTileView[][][] bookshelfView;
+    private PlayerPointsView[] playerPoints;
+    private PersonalGoalCard[] playerPersonalGoal;
+    private ItemTileView[] selectedItems;
 
     /**
      * Constructs a ModelView object.
@@ -319,6 +317,19 @@ public class ModelView implements Serializable {
     public synchronized void setIdCommon(int row,int index,int pointsLeft) {
         this.commonGoalView[row][index]= pointsLeft;
     }
+    /**
+     * Updates the connection status of a player.
+     * @param nickname The nickname of the player.
+     * @param discOrRec Indicates whether the player is being reconnected (true) or disconnected (false).
+     */
+    public void disconnectionAndReconnectionPlayer(String nickname,boolean discOrRec) {
+        for(int i=0;i<activePlayers.length;i++){
+            if(playerPoints[i].getNickname().equals(nickname)){
+                activePlayers[i]=discOrRec;
+                break;
+            }
+        }
+    }
 
 
 
@@ -411,21 +422,35 @@ public class ModelView implements Serializable {
     public void setMAX_SELECTABLE_TILES(int MAX_SELECTABLE_TILES) {
         this.MAX_SELECTABLE_TILES = MAX_SELECTABLE_TILES;
     }
-
+    /**
+     * Returns the maximum number of selectable tiles.
+     * @return The maximum number of selectable tiles.
+     */
     public int getMaxSelectableTiles() {
         return MAX_SELECTABLE_TILES;
     }
-
+    /**
+     * Sets the maximum number of selectable tiles.
+     * @param maxSelectableTiles The maximum number of selectable tiles to set (3).
+     */
     public synchronized void setMaxSelectableTiles(int maxSelectableTiles) {
         MAX_SELECTABLE_TILES = maxSelectableTiles;
     }
 
+    /**
+     * Sets the common goal view of the board.
+     * @param commonGoalView The common goal view to set.
+     */
     public synchronized void setCommonGoalView(int[][] commonGoalView) {
         this.commonGoalView = commonGoalView;
     }
 
 
-    public synchronized Board restoreBoard(GameRules gameRules) throws Exception {
+    /**
+     * Restores the board based on the saved state.
+     * @return The restored Board object.
+     */
+    public Board restoreBoard() {
         Board board = new Board(this);
         int row= boardView.length;
         int column=boardView[0].length;
@@ -436,11 +461,16 @@ public class ModelView implements Serializable {
             }
         }
         board.setMatrix(boardBox);
-        board.MAX_SELECTABLE_TILES= gameRules.getMaxSelectableTiles();
         PrinterBoard printerBoard=new PrinterBoard();
         printerBoard.printMatrixBoard(board.cloneBoard(),null);
         return board;
     }
+    /**
+     * Restores the board box based on the saved game state.
+     * @param x The x-coordinate of the board box.
+     * @param y The y-coordinate of the board box.
+     * @return The restored board box.
+     */
     public BoardBox restoreBoardBox(int x,int y){
         BoardBoxView boardBoxView=boardView[x][y];
         BoardBox boardBox = new BoardBox(x, y);
@@ -449,15 +479,24 @@ public class ModelView implements Serializable {
         boardBox.setFreeEdges(boardBoxView.getFreeEdges());
         return boardBox;
     }
+    /**
+     * Restores the item tile based on the saved game state.
+     * @param itemTileView The item tile view to restore.
+     * @return The restored item tile.
+     */
     public ItemTile restoreItemTile(ItemTileView itemTileView){
         ItemTile itemTile = new ItemTile(itemTileView.getTypeView(), itemTileView.getTileID());
         return itemTile;
     }
-
-    public synchronized Bookshelf restoreBookshelf(GameRules gamerules, Player p){
-        int intPlayer=getIntegerValue(p.getNickname());
-        int row= gamerules.getRowsBookshelf();
-        int column= gamerules.getColumnsBookshelf();
+    /**
+     * Restores the bookshelf associated with a specific player based on the saved state.
+     * @param player The player whose bookshelf is being restored.
+     * @return The restored Bookshelf object.
+     */
+    public Bookshelf restoreBookshelf(Player player){
+        int intPlayer=getIntegerValue(player.getNickname());
+        int row= bookshelfView[intPlayer].length;
+        int column= bookshelfView[intPlayer][0].length;
         ItemTile[][] itemTiles=new ItemTile[row][column];
         for(int i=0; i<row; i++){
             for(int j=0; j<column; j++){
@@ -468,7 +507,6 @@ public class ModelView implements Serializable {
         Bookshelf bookshelf=new Bookshelf();
         bookshelf.setMatrix(itemTiles);
         bookshelf.setFreeShelves(new int[column]);
-        bookshelf.setMaxSelectableTiles(gamerules.getMaxSelectableTiles());
         ClientView clientView=new ClientView();
         clientView.setBookshelfView(bookshelf.cloneBookshelf());
         PrinterBookshelfAndPersonal printerBookshelfAndPersonal=new PrinterBookshelfAndPersonal();

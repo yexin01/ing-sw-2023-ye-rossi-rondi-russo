@@ -108,12 +108,12 @@ public class GameLobbyInfo implements Serializable {
         game.createCommonGoalCard(gamerules, cgcNumbers);
 
         //restore Board...
-        game.setBoard(game.getModelView().restoreBoard(gamerules));
+        game.setBoard(game.getModelView().restoreBoard());
 
         //restore Bookshelves, personal goal cards and points
         int i=0;
         for(Player p: game.getPlayers()){
-            p.setBookshelf(game.getModelView().restoreBookshelf(gamerules, p));
+            p.setBookshelf(game.getModelView().restoreBookshelf(p));
             p.setPersonalGoalCard(game.getModelView().getPlayerPersonalGoal(p.getNickname()));
             p.setPersonalGoalPoints(game.getModelView().getPersonalPoint(p.getNickname()));
             p.setAdjacentPoints(game.getModelView().getPlayerPoints()[i].getAdjacentPoints());

@@ -109,7 +109,6 @@ public class GameController {
                 }
             }
         }catch(Exception e){
-            e.printStackTrace();
         }
     }
 
@@ -184,7 +183,7 @@ public class GameController {
         }else{
             game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
             game.getTurnPlayerOfTheGame().insertBookshelf(column);
-            if(game.getTurnPlayerOfTheGame().getBookshelf().isFull()&& !game.getEndGame()){
+            if(game.getTurnPlayerOfTheGame().getBookshelf().isFull()&& !game.isEndGame()){
                 game.getModelView().setBookshelfFullPoints(game.getTurnPlayerOfTheGame().getNickname());
                 game.setEndGame(true);
             }
@@ -258,7 +257,7 @@ public class GameController {
      * @param nickname The nickname of the disconnected player.
      */
     public void disconnectionPlayer(String nickname){
-        game.getModelView().setActivePlayers(game.disconnectionAndReconnectionPlayer(nickname,false));
+        game.getModelView().disconnectionAndReconnectionPlayer(nickname,false);
         if(nickname.equals(getTurnNickname()) && Arrays.stream(getActivePlayers()).filter(element -> element).count()>1){
             game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
             game.getModelView().setNextPlayer();
@@ -272,9 +271,9 @@ public class GameController {
      * @param nickname The nickname of the reconnected player.
      */
     public void reconnectionPlayer(String nickname){
-        game.getModelView().setActivePlayers(game.disconnectionAndReconnectionPlayer(nickname,true));
+        game.getModelView().disconnectionAndReconnectionPlayer(nickname,true);
         if(Arrays.stream(getActivePlayers()).filter(element -> element).count()==2){
-            if(!getActivePlayers()[game.turnPlayerInt()]){
+            if(!getActivePlayers()[game.getModelView().getTurnPlayer()]){
                 game.getModelView().setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
                 game.getModelView().setNextPlayer();
             }

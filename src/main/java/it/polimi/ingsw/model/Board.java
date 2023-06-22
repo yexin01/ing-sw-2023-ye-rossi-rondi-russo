@@ -14,8 +14,6 @@ import java.util.Random;
 public class Board{
     private ModelView modelView;
 
-
-    public static int MAX_SELECTABLE_TILES;
     private BoardBox[][] matrix;
 
     public Board(ModelView modelView) {
@@ -109,7 +107,7 @@ public class Board{
      @throws Exception if an error occurs during the reading of game rules from the JSON file.
      */
     public void firstFillBoard(int numPlayers, GameRules gameRules) throws Exception {
-        MAX_SELECTABLE_TILES= gameRules.getMaxSelectableTiles();
+        //MAX_SELECTABLE_TILES= gameRules.getMaxSelectableTiles();
         int[][] matrix = gameRules.getMatrix(numPlayers);
         this.matrix=new BoardBox[matrix.length][matrix[0].length];
         Random random=new Random();

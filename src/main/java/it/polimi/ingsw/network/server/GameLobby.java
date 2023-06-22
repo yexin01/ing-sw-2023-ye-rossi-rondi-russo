@@ -212,7 +212,7 @@ public class GameLobby implements Serializable {
         if(messageEndGame==null){
            gameController.receiveMessageFromClient(message);
         }else{
-            int index=gameController.getModel().getIntByNickname(message.getHeader().getNickname());
+            int index=gameController.getModel().getModelView().getIntegerValue(message.getHeader().getNickname());
             gameController.getActivePlayers()[index]=false;
             MessageHeader header = new MessageHeader(MessageType.LOBBY,message.getHeader().getNickname());
             MessagePayload payload = new MessagePayload(KeyLobbyPayload.GLOBAL_LOBBY_DECISION);
