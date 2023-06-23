@@ -183,7 +183,7 @@ public class GameLobby implements Serializable {
      * @return true if the game lobby is full, false otherwise
      */
     public boolean isFull(){
-        return players.size() == wantedPlayers;
+        return players.size() == wantedPlayers || getGameController()!=null;
     }
 
     /**

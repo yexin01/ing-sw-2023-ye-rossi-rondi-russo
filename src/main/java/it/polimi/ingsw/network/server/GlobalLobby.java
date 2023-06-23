@@ -105,7 +105,7 @@ public class GlobalLobby implements Serializable {
     public synchronized void playerJoinsFirstFreeSpotInRandomGame(String nickname,int minPlayers, Connection connection) throws IOException {
         boolean done = false;
         for (GameLobby gameLobby : gameLobbies.values()) {
-            if (!gameLobby.isFull() && !done && gameLobby.getGameController()==null) {
+            if (!gameLobby.isFull() && !done) {
                 gameLobby.addPlayerToGame(nickname, connection);
                 done = true;
             }

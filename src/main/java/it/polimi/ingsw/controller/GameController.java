@@ -121,7 +121,6 @@ public class GameController {
      */
     public boolean checkError(ErrorType possibleInvalidArgument) throws Exception {
         if(possibleInvalidArgument!=null){
-            System.out.println(possibleInvalidArgument.getErrorMessage());
             listenerManager.fireEvent(KeyErrorPayload.ERROR_DATA,getTurnNickname(),possibleInvalidArgument);
             return true;
         }
@@ -187,9 +186,7 @@ public class GameController {
                 game.getModelView().setBookshelfFullPoints(game.getTurnPlayerOfTheGame().getNickname());
                 game.setEndGame(true);
             }
-            System.out.println("FINE TURNO2");
             game.updateAllPoints();
-            System.out.println("FINE TURNO1");
             finishTurn();
         }
     }

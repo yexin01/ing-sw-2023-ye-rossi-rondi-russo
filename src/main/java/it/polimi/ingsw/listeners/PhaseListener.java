@@ -33,12 +33,10 @@ public class PhaseListener extends EventListener {
 
     @Override
     public void fireEvent(KeyAbstractPayload event, String playerNickname, Object newValue) throws IOException {
-        System.out.println("QUI CI ARRIVA");
        TurnPhase turnPhase=(TurnPhase) newValue;
        MessageHeader header=new MessageHeader(MessageType.DATA,playerNickname);
        MessagePayload payload=new MessagePayload(turnPhase);
        Message message=new Message(header,payload);
-        System.out.println("Sta per mandare il messaggio");
        getGameLobby().sendMessageToSpecificPlayer(message,playerNickname);
 
     }
