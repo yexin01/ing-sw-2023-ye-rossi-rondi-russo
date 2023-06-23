@@ -11,7 +11,8 @@ class CommonGoalCard9Test {
     @DisplayName("Generic true check for CommonGoal9")
     void checkGoal() {
         CommonGoalCard9 commonGoalCard9 = new CommonGoalCard9();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int tileID = 0;
         //Set the shelves where you want to insert the tiles
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -29,7 +30,8 @@ class CommonGoalCard9Test {
     @DisplayName("Corner case: 8 adjacent tiles")
     void checkGoalCC1() {
         CommonGoalCard9 commonGoalCard9 = new CommonGoalCard9();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -46,7 +48,8 @@ class CommonGoalCard9Test {
     @DisplayName("Corner case: 8 tiles separated from each other")
     void checkGoalCC2() {
         CommonGoalCard9 commonGoalCard9 = new CommonGoalCard9();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][2] = new ItemTile(Type.CAT, tileID); tileID++;

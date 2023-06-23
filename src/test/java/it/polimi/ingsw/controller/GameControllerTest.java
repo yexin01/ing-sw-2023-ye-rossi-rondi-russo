@@ -12,6 +12,7 @@ import it.polimi.ingsw.network.server.GameLobby;
 import it.polimi.ingsw.network.server.GlobalLobby;
 import it.polimi.ingsw.network.server.RMIConnection;
 import it.polimi.ingsw.network.server.Server;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -21,6 +22,10 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 class GameControllerTest {
 
+    /**
+     * Initializes a game between 2 players
+     * @return initialized game's gameController
+     */
     public GameController initializeGame () throws Exception {
         GameRules gameRules = new GameRules();
         Server server = new Server(1099, 1100, "127.0.0.1");
@@ -28,11 +33,9 @@ class GameControllerTest {
         GameLobby gameLobby = new GameLobby(0, 2, globalLobby);
         gameLobby.addPlayerToGame("player1", new RMIConnection(server, new ClientRMI("player1", "127.0.0.1", 1100)));
         gameLobby.addPlayerToGame("player2", new RMIConnection(server, new ClientRMI("player2", "127.0.0.1", 1100)));
-        ArrayList<String> nicknames = new ArrayList<>();
-        nicknames.add("player1"); nicknames.add("player2");
         GameController gameController = new GameController();
-        gameController.createGame(gameLobby, nicknames);
-        gameController.getModel().getTurnPlayerOfTheGame().setBookshelf(new Bookshelf(6,5,3));
+        gameController.createGame(gameLobby);
+        gameController.getModel().getTurnPlayerOfTheGame().setBookshelf(new Bookshelf());
         gameController.getModel().getBoard().fillBag(gameRules);
         gameController.getModel().getBoard().firstFillBoard(2, gameRules);
         return gameController;
@@ -41,14 +44,17 @@ class GameControllerTest {
 
 
     @Test
+    @DisplayName("createGame: check for the right turn phase")
     void createGame() throws Exception {
         GameController gameController = initializeGame();
         assertEquals(TurnPhase.SELECT_FROM_BOARD, gameController.getModel().getModelView().getTurnPhase());
     }
 
     @Test
+    @DisplayName("checkAndInsertBoardBox: check for the right selection from board")
     void checkAndInsertBoardBox() throws Exception {
         GameController gameController = initializeGame();
+        gameController.getModel().getModelView().setTurnPlayer(1);
         int[] value = new int[] {1, 3};
         MessagePayload messagePayload = new MessagePayload(TurnPhase.SELECT_FROM_BOARD);
         messagePayload.put(Data.VALUE_CLIENT, value);
@@ -62,6 +68,7 @@ class GameControllerTest {
     }
 
     @Test
+    @DisplayName("checkAndInsertBoardBox: wrong value inside message's payload")
     void checkAndInsertBoardBoxCC1() throws Exception {
         GameController gameController = initializeGame();
         int[] value = new int[] {1, 3, 3, 3};
@@ -77,6 +84,7 @@ class GameControllerTest {
     }
 
     @Test
+    @DisplayName("permutePlayerTiles: checks the tiles' order after a permutation")
     void permutePlayerTiles() throws Exception {
         GameController gameController = initializeGame();
         ArrayList<BoardBox> selectedBoard = new ArrayList<>();
@@ -106,9 +114,10 @@ class GameControllerTest {
     }
 
     @Test
+    @DisplayName("selectingColumn: checks the right insertion inside the bookshelf")
     void selectingColumn() throws Exception {
         GameController gameController = initializeGame();
-        gameController.getModel().setTurnPlayer(0);
+        gameController.getModel().getModelView().setTurnPlayer(1);
         gameController.getModel().getTurnPlayerOfTheGame().getBookshelf().computeFreeShelves();
         ArrayList<BoardBox> selectedBoard = new ArrayList<>();
         int a=1; int b=3;

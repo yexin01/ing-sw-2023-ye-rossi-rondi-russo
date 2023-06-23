@@ -11,7 +11,8 @@ class CommonGoalCard7Test {
     @DisplayName("Generic true check for CommonGoal7")
     void checkGoal() {
         CommonGoalCard7 commonGoalCard7 = new CommonGoalCard7();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         //Set the rows where you want to add the tiles, and the number of different types
         int x = 5;
         int y = 4;
@@ -58,7 +59,8 @@ class CommonGoalCard7Test {
     @DisplayName("Corner case: only one type for each line")
     void checkGoalCC1() {
         CommonGoalCard7 commonGoalCard7 = new CommonGoalCard7();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int x = 5;
         int y = 4;
         int z = 3;
@@ -104,7 +106,8 @@ class CommonGoalCard7Test {
     @DisplayName("Corner case: 4 types for 2 lines")
     void checkGoalCC2() {
         CommonGoalCard7 commonGoalCard7 = new CommonGoalCard7();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int x = 5;
         int y = 4;
         int z = 3;

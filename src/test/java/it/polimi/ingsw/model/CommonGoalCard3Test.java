@@ -12,7 +12,8 @@ class CommonGoalCard3Test {
     @DisplayName("Generic false check for CommonGoal3")
     void checkGoal() {
         CommonGoalCard3 commonGoalCard3 = new CommonGoalCard3();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         //Insert the tiles you want inside the matrix
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -41,7 +42,8 @@ class CommonGoalCard3Test {
     @DisplayName("Corner case: L-shape groups")
     void checkGoalCC1() {
         CommonGoalCard3 commonGoalCard3 = new CommonGoalCard3();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -72,7 +74,7 @@ class CommonGoalCard3Test {
         bookshelf.getMatrix()[3][3] = new ItemTile(Type.BOOK, tileID); tileID++;
         bookshelf.getMatrix()[3][4] = new ItemTile(Type.BOOK, tileID); tileID++;
         bookshelf.getMatrix()[2][4] = new ItemTile(Type.BOOK, tileID); tileID++;
-        bookshelf.getMatrix()[1][4] = new ItemTile(Type.BOOK, tileID); tileID++;
+        bookshelf.getMatrix()[1][4] = new ItemTile(Type.BOOK, tileID);
 
         assertTrue(commonGoalCard3.checkGoal(bookshelf.getMatrix()));
     }
@@ -81,7 +83,8 @@ class CommonGoalCard3Test {
     @DisplayName("Corner case: only 3 groups")
     void checkGoalCC2() {
         CommonGoalCard3 commonGoalCard3 = new CommonGoalCard3();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][1] = new ItemTile(Type.CAT, tileID); tileID++;

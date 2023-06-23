@@ -14,6 +14,12 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 class PlayerTest {
 
+    /**
+     * Creates an arrayList of BoardBox,
+     * regardless of tiles' type
+     * @param size : size of the arraylist
+     * @return initialized arraylist
+     */
     ArrayList<BoardBox> createSelectedTiles (int size) {
         ArrayList<BoardBox> selectedTiles = new ArrayList<>();
         int tileID = 0;

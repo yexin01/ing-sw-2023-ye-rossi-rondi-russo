@@ -14,6 +14,12 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 class GameTest {
 
+    /**
+     * Creates a game with a default "player1" player
+     * Generate a case that makes testing easier and more immediate,
+     * but at the same time effective and fully functional
+     * @return : initialized game
+     */
     public Game singlePlayer () throws Exception {
         GameRules gameRules = new GameRules();
         ModelView modelView = new ModelView(2, gameRules);
@@ -96,7 +102,7 @@ class GameTest {
         ArrayList<Integer> ids = new ArrayList<>();
         ids.add(1);
         game.createPersonalGoalCard(new GameRules(), ids);
-        assertEquals(1, game.getPlayerByNickname("player1").getPersonalGoalCard().getIdPersonal());
+        assertEquals(1, game.getPlayers().get(0).getPersonalGoalCard().getIdPersonal());
     }
 
 
@@ -104,8 +110,9 @@ class GameTest {
     @DisplayName("updateAdjacentPoints: one 5 tiles group")
     void updateAdjacentPoints() throws Exception {
         Game game = singlePlayer();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        game.getPlayerByNickname("player1").setBookshelf(bookshelf);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
+        game.getPlayers().get(0).setBookshelf(bookshelf);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -120,8 +127,9 @@ class GameTest {
     @DisplayName("updateAdjacentPoints: one 7 tiles group")
     void updateAdjacentPointsCC1() throws Exception {
         Game game = singlePlayer();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        game.getPlayerByNickname("player1").setBookshelf(bookshelf);
+        Bookshelf bookshelf = new Bookshelf();
+        game.getPlayers().get(0).setBookshelf(bookshelf);
+        bookshelf.matrix(6,5);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -138,8 +146,9 @@ class GameTest {
     @DisplayName("updateAdjacentPoints: 3 two tiles groups")
     void updateAdjacentPointsCC2() throws Exception {
         Game game = singlePlayer();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        game.getPlayerByNickname("player1").setBookshelf(bookshelf);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
+        game.getPlayers().get(0).setBookshelf(bookshelf);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -155,8 +164,9 @@ class GameTest {
     @DisplayName("updateAdjacentPoints: 3, 4, 5, 6 tiles groups")
     void updateAdjacentPointsCC3() throws Exception {
         Game game = singlePlayer();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        game.getPlayerByNickname("player1").setBookshelf(bookshelf);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
+        game.getPlayers().get(0).setBookshelf(bookshelf);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -188,7 +198,8 @@ class GameTest {
         Game game = new Game(modelView);
         Player player1 = new Player("player1", modelView, gameRules);
         Player player2 = new Player("player2", modelView, gameRules);
-        Bookshelf bookshelf1 = new Bookshelf(6,5,3);
+        Bookshelf bookshelf1 = new Bookshelf();
+        bookshelf1.matrix(6,5);
         player1.setBookshelf(bookshelf1);
         ArrayList<Player> players = new ArrayList<>();
         players.add(player1);
@@ -209,7 +220,8 @@ class GameTest {
         bookshelf1.getMatrix()[5][4] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf1.getMatrix()[0][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf1.getMatrix()[0][4] = new ItemTile(Type.CAT, tileID);
-        Bookshelf bookshelf2 = new Bookshelf(6,5,3);
+        Bookshelf bookshelf2 = new Bookshelf();
+        bookshelf2.matrix(6,5);
         player2.setBookshelf(bookshelf2);
         bookshelf2.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf2.getMatrix()[5][4] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -227,8 +239,9 @@ class GameTest {
     @DisplayName("updatePersonalGoalPoints: 6/6 tiles")
     void updatePersonalGoalPoints() throws Exception {
         Game game = singlePlayer();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        game.getPlayerByNickname("player1").setBookshelf(bookshelf);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
+        game.getPlayers().get(0).setBookshelf(bookshelf);
         ArrayList<PersonalGoalBox> personalGoalBoxes = new ArrayList<>();
         personalGoalBoxes.add(new PersonalGoalBox(Type.CAT, 5, 0));
         personalGoalBoxes.add(new PersonalGoalBox(Type.BOOK, 5, 1));
@@ -244,7 +257,7 @@ class GameTest {
         bookshelf.getMatrix()[5][3] = new ItemTile(Type.FRAME, tileID); tileID++;
         bookshelf.getMatrix()[5][4] = new ItemTile(Type.TROPHY, tileID); tileID++;
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.PLANT, tileID);
-        game.getPlayerByNickname("player1").setPersonalGoalCard(personalGoalCard);
+        game.getPlayers().get(0).setPersonalGoalCard(personalGoalCard);
         game.updatePersonalGoalPoints(new GameRules());
         assertEquals(12, game.getTurnPlayerOfTheGame().getPersonalGoalPoints());
     }
@@ -253,8 +266,9 @@ class GameTest {
     @DisplayName("updatePersonalGoalPoints: 5/6 tiles")
     void updatePersonalGoalPointsCC1() throws Exception {
         Game game = singlePlayer();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        game.getPlayerByNickname("player1").setBookshelf(bookshelf);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
+        game.getPlayers().get(0).setBookshelf(bookshelf);
         ArrayList<PersonalGoalBox> personalGoalBoxes = new ArrayList<>();
         personalGoalBoxes.add(new PersonalGoalBox(Type.CAT, 5, 0));
         personalGoalBoxes.add(new PersonalGoalBox(Type.BOOK, 5, 1));
@@ -270,7 +284,7 @@ class GameTest {
         bookshelf.getMatrix()[5][3] = new ItemTile(Type.FRAME, tileID); tileID++;
         bookshelf.getMatrix()[5][4] = new ItemTile(Type.TROPHY, tileID); tileID++;
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID);
-        game.getPlayerByNickname("player1").setPersonalGoalCard(personalGoalCard);
+        game.getPlayers().get(0).setPersonalGoalCard(personalGoalCard);
         game.updatePersonalGoalPoints(new GameRules());
         assertEquals(9, game.getTurnPlayerOfTheGame().getPersonalGoalPoints());
     }
@@ -279,8 +293,9 @@ class GameTest {
     @DisplayName("updatePersonalGoalPoints: 4/6 tiles")
     void updatePersonalGoalPointsCC2() throws Exception {
         Game game = singlePlayer();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        game.getPlayerByNickname("player1").setBookshelf(bookshelf);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
+        game.getPlayers().get(0).setBookshelf(bookshelf);
         ArrayList<PersonalGoalBox> personalGoalBoxes = new ArrayList<>();
         personalGoalBoxes.add(new PersonalGoalBox(Type.CAT, 5, 0));
         personalGoalBoxes.add(new PersonalGoalBox(Type.BOOK, 5, 1));
@@ -296,7 +311,7 @@ class GameTest {
         bookshelf.getMatrix()[5][3] = new ItemTile(Type.FRAME, tileID); tileID++;
         bookshelf.getMatrix()[5][4] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID);
-        game.getPlayerByNickname("player1").setPersonalGoalCard(personalGoalCard);
+        game.getPlayers().get(0).setPersonalGoalCard(personalGoalCard);
         game.updatePersonalGoalPoints(new GameRules());
         assertEquals(6, game.getTurnPlayerOfTheGame().getPersonalGoalPoints());
     }
@@ -305,8 +320,9 @@ class GameTest {
     @DisplayName("updatePersonalGoalPoints: 3/6 tiles")
     void updatePersonalGoalPointsCC3() throws Exception {
         Game game = singlePlayer();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        game.getPlayerByNickname("player1").setBookshelf(bookshelf);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
+        game.getPlayers().get(0).setBookshelf(bookshelf);
         ArrayList<PersonalGoalBox> personalGoalBoxes = new ArrayList<>();
         personalGoalBoxes.add(new PersonalGoalBox(Type.CAT, 5, 0));
         personalGoalBoxes.add(new PersonalGoalBox(Type.BOOK, 5, 1));
@@ -322,7 +338,7 @@ class GameTest {
         bookshelf.getMatrix()[5][3] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][4] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID);
-        game.getPlayerByNickname("player1").setPersonalGoalCard(personalGoalCard);
+        game.getPlayers().get(0).setPersonalGoalCard(personalGoalCard);
         game.updatePersonalGoalPoints(new GameRules());
         assertEquals(4, game.getTurnPlayerOfTheGame().getPersonalGoalPoints());
     }
@@ -331,8 +347,9 @@ class GameTest {
     @DisplayName("updatePersonalGoalPoints: 2/6 tiles")
     void updatePersonalGoalPointsCC4() throws Exception {
         Game game = singlePlayer();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        game.getPlayerByNickname("player1").setBookshelf(bookshelf);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
+        game.getPlayers().get(0).setBookshelf(bookshelf);
         ArrayList<PersonalGoalBox> personalGoalBoxes = new ArrayList<>();
         personalGoalBoxes.add(new PersonalGoalBox(Type.CAT, 5, 0));
         personalGoalBoxes.add(new PersonalGoalBox(Type.BOOK, 5, 1));
@@ -348,7 +365,7 @@ class GameTest {
         bookshelf.getMatrix()[5][3] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][4] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID);
-        game.getPlayerByNickname("player1").setPersonalGoalCard(personalGoalCard);
+        game.getPlayers().get(0).setPersonalGoalCard(personalGoalCard);
         game.updatePersonalGoalPoints(new GameRules());
         assertEquals(2, game.getTurnPlayerOfTheGame().getPersonalGoalPoints());
     }
@@ -357,8 +374,9 @@ class GameTest {
     @DisplayName("updatePersonalGoalPoints: 1/6 tiles")
     void updatePersonalGoalPointsCC5() throws Exception {
         Game game = singlePlayer();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        game.getPlayerByNickname("player1").setBookshelf(bookshelf);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
+        game.getPlayers().get(0).setBookshelf(bookshelf);
         ArrayList<PersonalGoalBox> personalGoalBoxes = new ArrayList<>();
         personalGoalBoxes.add(new PersonalGoalBox(Type.CAT, 5, 0));
         personalGoalBoxes.add(new PersonalGoalBox(Type.BOOK, 5, 1));
@@ -374,7 +392,7 @@ class GameTest {
         bookshelf.getMatrix()[5][3] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][4] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID);
-        game.getPlayerByNickname("player1").setPersonalGoalCard(personalGoalCard);
+        game.getPlayers().get(0).setPersonalGoalCard(personalGoalCard);
         game.updatePersonalGoalPoints(new GameRules());
         assertEquals(1, game.getTurnPlayerOfTheGame().getPersonalGoalPoints());
     }
@@ -383,8 +401,9 @@ class GameTest {
     @DisplayName("updatePersonalGoalPoints: 0/6 tiles")
     void updatePersonalGoalPointsCC6() throws Exception {
         Game game = singlePlayer();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
-        game.getPlayerByNickname("player1").setBookshelf(bookshelf);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
+        game.getPlayers().get(0).setBookshelf(bookshelf);
         ArrayList<PersonalGoalBox> personalGoalBoxes = new ArrayList<>();
         personalGoalBoxes.add(new PersonalGoalBox(Type.CAT, 5, 0));
         personalGoalBoxes.add(new PersonalGoalBox(Type.BOOK, 5, 1));
@@ -400,7 +419,7 @@ class GameTest {
         bookshelf.getMatrix()[5][3] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][4] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[4][0] = new ItemTile(Type.CAT, tileID);
-        game.getPlayerByNickname("player1").setPersonalGoalCard(personalGoalCard);
+        game.getPlayers().get(0).setPersonalGoalCard(personalGoalCard);
         game.updatePersonalGoalPoints(new GameRules());
         assertEquals(0, game.getTurnPlayerOfTheGame().getPersonalGoalPoints());
     }

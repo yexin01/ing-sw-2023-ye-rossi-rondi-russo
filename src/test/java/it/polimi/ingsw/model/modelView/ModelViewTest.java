@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.modelView;
 
 import it.polimi.ingsw.json.GameRules;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -8,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ModelViewTest {
 
     @Test
+    @DisplayName("winnerEndGame: equal points, the first one to fill the bookshelf wins")
     void winnerEndGame() throws Exception {
         ModelView modelView = new ModelView(2, new GameRules());
         modelView.setPlayerPoints(new PlayerPointsView(new int[] {4, 16}, 2, "player1"), 0);
@@ -20,6 +22,7 @@ class ModelViewTest {
     }
 
     @Test
+    @DisplayName("checkWinner: check for right ranking at the end game")
     void checkWinner() throws Exception {
         ModelView modelView = new ModelView(2, new GameRules());
         modelView.setPlayerPoints(new PlayerPointsView(new int[] {4, 8}, 2, "player1"), 0);

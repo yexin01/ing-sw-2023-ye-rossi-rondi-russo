@@ -12,7 +12,8 @@ class CommonGoalCard6Test {
     @DisplayName("Generic true check for CommonGoal6")
     void checkGoal() {
         CommonGoalCard6 commonGoalCard6 = new CommonGoalCard6();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         //Set the rows in which you want the check to be verified
         int x = 5; int y = 2; int tileId = 0;
         for (int i=0; i<5; i++) {
@@ -30,7 +31,8 @@ class CommonGoalCard6Test {
     @DisplayName("Corner case: 2 adjacent rows")
     void checkGoalCC1() {
         CommonGoalCard6 commonGoalCard6 = new CommonGoalCard6();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int x = 5; int y = 4; int tileId = 0;
         for (int i=0; i<5; i++) {
             bookshelf.getMatrix()[x][i] = new ItemTile(Type.values()[i], tileId);
@@ -47,7 +49,8 @@ class CommonGoalCard6Test {
     @DisplayName("Corner case: 3 rows")
     void checkGoalCC2() {
         CommonGoalCard6 commonGoalCard6 = new CommonGoalCard6();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int x = 5; int y = 4; int z = 3; int tileId = 0;
         for (int i=0; i<5; i++) {
             bookshelf.getMatrix()[x][i] = new ItemTile(Type.values()[i], tileId);
@@ -68,7 +71,8 @@ class CommonGoalCard6Test {
     @DisplayName("Corner case: only 4 types for each row")
     void checkGoalCC3() {
         CommonGoalCard6 commonGoalCard6 = new CommonGoalCard6();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int x = 5; int y = 4; int tileId = 0;
         for (int i=0; i<5; i++) {
             if (i == 4) {
