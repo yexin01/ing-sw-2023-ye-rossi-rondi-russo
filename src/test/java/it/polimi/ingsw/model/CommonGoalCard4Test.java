@@ -11,7 +11,8 @@ class CommonGoalCard4Test {
     @DisplayName("Generic true check for CommonGoal4")
     void checkGoal() {
         CommonGoalCard4 commonGoalCard4 = new CommonGoalCard4();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         //Insert the tiles you want inside the matrix
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -38,7 +39,8 @@ class CommonGoalCard4Test {
     @DisplayName("Corner case: some adjacent groups")
     void checkGoalCC1() {
         CommonGoalCard4 commonGoalCard4 = new CommonGoalCard4();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][1] = new ItemTile(Type.CAT, tileID); tileID++;

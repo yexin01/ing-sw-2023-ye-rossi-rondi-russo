@@ -14,6 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTest {
 
+    /**
+     * Creates and fills a board
+     * @param numPlayers : number of players
+     * @return initialized board
+     */
     Board initializeBoard (int numPlayers) throws Exception {
         GameRules gameRules = new GameRules();
         ModelView modelView = new ModelView(2, gameRules);
@@ -23,6 +28,11 @@ class BoardTest {
         return board;
     }
 
+    /**
+     * Fills a board only with a predetermined tile
+     * @param board : board to be filled
+     * @param matrix : matrix of 1/0 (0 for empty tile)
+     */
     void fillMatrix (Board board, int[][] matrix) {
         int dimension = 9;
         board.setMatrix(new BoardBox[dimension][dimension]);
@@ -260,8 +270,8 @@ class BoardTest {
     }
 
     @Test
-    @DisplayName("resetBoard: generic check")
-    void resetBoard() throws Exception {
+    @DisplayName("changeBoardAfterUserChoice: generic check")
+    void changeBoardAfterUserChoice() throws Exception {
         Board board = initializeBoard(2);
         ArrayList<BoardBox> selectedBoard = new ArrayList<>();
         int a=1; int b=3; int tileID=0;
@@ -269,7 +279,7 @@ class BoardTest {
         BoardBox boardBox1 = new BoardBox(a,b); boardBox1.setTile(itemTile1);
         selectedBoard.add(boardBox1);
         board.setSelectedBoard(selectedBoard);
-        board.resetBoard();
+        board.changeBoardAfterUserChoice();
         assertEquals(0, board.getMatrix()[a][b].getFreeEdges());
     }
 

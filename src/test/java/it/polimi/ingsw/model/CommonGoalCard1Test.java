@@ -10,7 +10,8 @@ class CommonGoalCard1Test {
     @DisplayName("Generic true check for CommonGoal1")
     void checkGoal() {
         CommonGoalCard1 commonGoalCard1 = new CommonGoalCard1();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         //Set the lower left coordinate of matrix in which you want to create one square
         int x = 5; int y = 0; int tileID = 0;
         bookshelf.getMatrix()[x][y] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -30,7 +31,8 @@ class CommonGoalCard1Test {
     @DisplayName("Corner case: 2 adjacent squares, one above the other one")
     void checkGoalCC1() {
         CommonGoalCard1 commonGoalCard1 = new CommonGoalCard1();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][1] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -47,7 +49,8 @@ class CommonGoalCard1Test {
     @DisplayName("Corner case: 2 adjacent squares, one next to the other one")
     void checkGoalCC2() {
         CommonGoalCard1 commonGoalCard1 = new CommonGoalCard1();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][1] = new ItemTile(Type.CAT, tileID); tileID++;
@@ -64,7 +67,8 @@ class CommonGoalCard1Test {
     @DisplayName("Corner case: 2 squares in the two opposite corners")
     void checkGoalCC3() {
         CommonGoalCard1 commonGoalCard1 = new CommonGoalCard1();
-        Bookshelf bookshelf = new Bookshelf(6,5,3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int tileID = 0;
         bookshelf.getMatrix()[5][0] = new ItemTile(Type.CAT, tileID); tileID++;
         bookshelf.getMatrix()[5][1] = new ItemTile(Type.CAT, tileID); tileID++;

@@ -11,7 +11,8 @@ class CommonGoalCard12Test {
     @DisplayName("Generic true check for CommonGoal12")
     void checkGoal() {
         CommonGoalCard12 commonGoalCard12 = new CommonGoalCard12();
-        Bookshelf bookshelf = new Bookshelf(6, 5, 3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int tileID = 0;
         //Set right to '0' if you want to start from left, to '1' if you want to start from right
         //(Always set on decreasing height, since increasing from left is decreasing from right and vice versa)
@@ -42,7 +43,8 @@ class CommonGoalCard12Test {
     @DisplayName("Corner case: start from right")
     void checkGoalCC1() {
         CommonGoalCard12 commonGoalCard12 = new CommonGoalCard12();
-        Bookshelf bookshelf = new Bookshelf(6, 5, 3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int tileID = 0;
         int right = 1;
         if (right == 0) {
@@ -71,7 +73,8 @@ class CommonGoalCard12Test {
     @DisplayName("Corner case: upper left tile missing")
     void checkGoalCC2() {
         CommonGoalCard12 commonGoalCard12 = new CommonGoalCard12();
-        Bookshelf bookshelf = new Bookshelf(6, 5, 3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int tileID = 0;
         int right = 0;
         if (right == 0) {
@@ -102,7 +105,8 @@ class CommonGoalCard12Test {
     @DisplayName("Corner case: lower right tile missing")
     void checkGoalCC3() {
         CommonGoalCard12 commonGoalCard12 = new CommonGoalCard12();
-        Bookshelf bookshelf = new Bookshelf(6, 5, 3);
+        Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int tileID = 0;
         int right = 0;
         if (right == 0) {
