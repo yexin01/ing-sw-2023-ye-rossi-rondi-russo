@@ -123,7 +123,10 @@ public class GameLobbyInfo implements Serializable {
         Boolean[] activePlayers=new Boolean[game.getPlayers().size()];
         Arrays.fill(activePlayers, false);
         game.getModelView().setActivePlayers(activePlayers);
-
+        try {
+            modelView.setMAX_SELECTABLE_TILES((new GameRules()).getMaxSelectableTiles());
+        } catch (Exception e) {
+        }
 
         /*
         //TODO: tbd

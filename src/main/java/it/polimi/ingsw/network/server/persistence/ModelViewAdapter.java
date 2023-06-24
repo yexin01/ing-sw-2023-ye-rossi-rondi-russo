@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import it.polimi.ingsw.controller.TurnPhase;
+import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.message.Message;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.*;
@@ -67,11 +68,13 @@ public class ModelViewAdapter extends TypeAdapter<ModelView> {
 
     @Override
     public ModelView read(JsonReader in) throws IOException {
+        System.out.println("ci entra restore model ");
         JsonElement jsonElement = JsonParser.parseReader(in);
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         int turnPlayer = jsonObject.get("turnPlayer").getAsInt();
         //Boolean[] activePlayers = gson.fromJson(jsonObject.get("activePlayers"), Boolean[].class);
-        int maxSelectableTiles = jsonObject.get("MAX_SELECTABLE_TILES").getAsInt();
+        //TODO questo non lo salverei e gia nel json delle rules
+        //int maxSelectableTiles = jsonObject.get("MAX_SELECTABLE_TILES").getAsInt();
         int[][] commonGoalView = gson.fromJson(jsonObject.get("commonGoalView"), int[][].class);
         int[] token = gson.fromJson(jsonObject.get("token"), int[].class);
         int[] personalPoints = gson.fromJson(jsonObject.get("personalPoints"), int[].class);
@@ -86,7 +89,7 @@ public class ModelViewAdapter extends TypeAdapter<ModelView> {
         ModelView modelView = new ModelView();
         modelView.setTurnPlayer(turnPlayer);
         modelView.setActivePlayers(new Boolean[playerPoints.length]);
-        modelView.setMaxSelectableTiles(maxSelectableTiles);
+        //modelView.setMaxSelectableTiles(maxSelectableTiles);
         modelView.setCommonGoalView(commonGoalView);
         modelView.setToken(token);
         modelView.setPersonalPoints(personalPoints);

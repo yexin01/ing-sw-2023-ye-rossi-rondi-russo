@@ -55,10 +55,8 @@ public class SaveGame {
     }
 
     public static void loadGameLobbies(GlobalLobby globalLobby, GameRules gamerules) {
-        System.out.println("CI ENTRA");
         File persistenceFolder = new File(jarPathString + "/persistence");
         File[] files = persistenceFolder.listFiles();
-        //TODO settare i waitingPlayers
         ConcurrentHashMap<Integer,GameLobby> gameLobbies=new ConcurrentHashMap<>();
         //List<GameLobby> gameLobbies = new ArrayList<>();
         if (files != null) {
@@ -74,7 +72,6 @@ public class SaveGame {
                     }
                 }
             }
-            System.out.println("CI ARRIVA  ");
             for(GameLobby s:gameLobbies.values()){
                 System.out.println("ID "+s.getIdGameLobby());
                 for(String p:s.getPlayersDisconnectedInGameLobby()){
@@ -82,12 +79,6 @@ public class SaveGame {
                 }
             }
             globalLobby.setGameLobbies(gameLobbies);
-            for(GameLobby s:globalLobby.getGameLobbies().values()){
-                System.out.println("GLOBAL "+s.getIdGameLobby());
-                for(String p:s.getPlayersDisconnectedInGameLobby()){
-                    System.out.println(p);
-                }
-            }
             /*
             for (GameLobby gl : gameLobbies) {
                 globalLobby.getGameLobbies().put(gl.getIdGameLobby(), gl);
