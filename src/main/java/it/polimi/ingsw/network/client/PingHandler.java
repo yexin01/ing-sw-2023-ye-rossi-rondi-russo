@@ -33,6 +33,10 @@ public class PingHandler extends TimerTask {
         payload.put(Data.ERROR, ErrorType.PING_NOT_RECEIVED);
         Message message = new Message(header, payload);
 
+        System.out.println("Server might not be working, disconnecting client...");
+        //TODO: aggiungi per gui
+        System.exit(0);
+
         client.messageQueue.add(message);
     }
 

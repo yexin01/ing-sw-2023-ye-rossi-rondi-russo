@@ -15,7 +15,7 @@ public abstract class Client extends UnicastRemoteObject {
     @Serial
     private static final long serialVersionUID = 1922163671273214749L;
 
-    static final int DISCONNECTION_TIME = 1500;
+    static final int DISCONNECTION_TIME = 15000;
 
     private final String nickname;
     private final String ip;
