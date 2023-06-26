@@ -292,7 +292,6 @@ public class GameLobby implements Serializable {
             sendMessageToAllPlayers(message);
             System.out.println(content);
         }
-        System.out.println("GameLobby "+ idGameLobby+" changed "+nickname+" in disconnected");
     }
 
     /**
@@ -334,7 +333,6 @@ public class GameLobby implements Serializable {
      */
     public synchronized void sendMessageToSpecificPlayer(Message message, String nickname) throws IOException {
         if(!playersDisconnected.contains(nickname))
-            System.out.println("Manda il messaggio al giocatore specifico");
             players.get(nickname).sendMessageToClient(message);
     }
 

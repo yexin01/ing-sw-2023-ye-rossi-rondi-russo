@@ -134,11 +134,7 @@ public class GlobalLobby implements Serializable {
      */
     public synchronized void reconnectPlayerToGameLobby(String nickname, Connection connection) throws IOException {
         for (GameLobby gameLobby : gameLobbies.values()) {
-            System.out.println("Ci entra5");
-            System.out.println(nickname);
             if (gameLobby.containsPlayerDisconnectedInThisGame(nickname)) {
-                System.out.println(nickname);
-                System.out.println("Lo trova ");
                 gameLobby.changePlayerInActive(nickname, connection);
                 return;
             }

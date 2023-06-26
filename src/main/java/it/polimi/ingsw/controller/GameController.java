@@ -57,6 +57,8 @@ public class GameController {
         gameLobby.getGameLobbyInfo().setModelView(modelView);
         listenerManager.fireEvent(TurnPhase.ALL_INFO,null,game.getModelView());
         modelView.setTurnPhase(TurnPhase.SELECT_FROM_BOARD);
+        gameLobby.getGameLobbyInfo().setGameLobbyState(gameLobby);
+        SaveGame.saveGame(gameLobby.getGameLobbyInfo());
     }
 
     /**
