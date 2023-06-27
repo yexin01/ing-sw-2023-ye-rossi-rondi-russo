@@ -5,7 +5,6 @@ import it.polimi.ingsw.message.Message;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.view.ClientInterface;
 
-import java.rmi.RemoteException;
 /**
  * The MessageHandler class is an abstract class that provides a base implementation for handling messages received from the server.
  * It contains references to the ClientInterface and Client objects for communication and interaction with the client application.

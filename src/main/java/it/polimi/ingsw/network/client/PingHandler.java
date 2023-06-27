@@ -33,10 +33,7 @@ public class PingHandler extends TimerTask {
         Message message = new Message(header, payload);
 
         System.out.println("Server might not be working, disconnecting client...");
-        //TODO: aggiungi per gui
         System.exit(0);
-
-        //TODO: @giuliaR cancelliamo qua? o serve per la gui
         client.messageQueue.add(message);
     }
 

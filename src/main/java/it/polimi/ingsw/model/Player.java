@@ -7,7 +7,7 @@ import it.polimi.ingsw.model.modelView.*;
 
 
 import java.util.ArrayList;
-import java.util.Objects;
+
 
 /**
  *Player: Class that contains all the information related to the player during the game.

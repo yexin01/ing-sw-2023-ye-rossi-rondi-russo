@@ -82,7 +82,6 @@ public class PrinterLogo {
 
         int shift = terminalWidth-boardLogo[0].length()/2;
         printLogo(boardLogo,shift);
-        //printLogo(boardLogo,freeSpaces);
     }
 
     public synchronized static void printBookshelfLogo() {
@@ -94,7 +93,6 @@ public class PrinterLogo {
 
         int shift = terminalWidth-bookshelfLogo[0].length()/2;
         printLogo(bookshelfLogo,shift);
-        //printLogo(bookshelfLogo, freeSpaces);
     }
 
     public synchronized static void printGamesRulesLogo() {
@@ -134,7 +132,6 @@ public class PrinterLogo {
             System.out.println(" ".repeat(terminalWidth-getPrintableLength(str)/2)+str);
         }
 
-        //printLogo(gamesRulesLogo, freeSpaces);
     }
 
     public static int getPrintableLength(String input) {
@@ -170,7 +167,6 @@ public class PrinterLogo {
 
         int shift = terminalWidth-globalLobbyPhaseLogo[0].length()/2;
         printLogo(globalLobbyPhaseLogo,shift);
-        //printLogo(globalLobbyPhaseLogo, freeSpaces);
     }
 
     public synchronized static void printGameLobbyPhase() {
@@ -182,7 +178,6 @@ public class PrinterLogo {
 
         int shift = terminalWidth-gameLobbyPhaseLogo[0].length()/2;
         printLogo(gameLobbyPhaseLogo,shift);
-        //printLogo(gameLobbyPhaseLogo, freeSpaces);
     }
 
     public synchronized static void printYourTurnPhase() {
@@ -205,7 +200,6 @@ public class PrinterLogo {
 
         int shift = terminalWidth-waitingTurnPhaseLogo[0].length()/2;
         printLogo(waitingTurnPhaseLogo,shift);
-        //printLogo(waitingTurnPhaseLogo, freeSpaces);
     }
 
 
@@ -217,7 +211,6 @@ public class PrinterLogo {
         };
         int shift = terminalWidth-boardPhaseLogo[0].length()/2;
         printLogo(boardPhaseLogo,shift);
-        //printLogo(boardPhaseLogo, freeSpaces);
     }
 
     public synchronized static void printOrderPhase() {
@@ -228,7 +221,6 @@ public class PrinterLogo {
         };
         int shift = terminalWidth-orderPhaseLogo[0].length()/2;
         printLogo(orderPhaseLogo,shift);
-        //printLogo(orderPhaseLogo, freeSpaces);
     }
 
     public synchronized static void printColumnPhase() {
@@ -239,7 +231,6 @@ public class PrinterLogo {
         };
         int shift = terminalWidth-columnPhaseLogo[0].length()/2;
         printLogo(columnPhaseLogo,shift);
-        //printLogo(columnPhaseLogo, freeSpaces);
     }
 
     public synchronized static void printFinalRankingPhase() {
@@ -250,12 +241,8 @@ public class PrinterLogo {
         };
         int shift = terminalWidth-finalRankingPhaseLogo[0].length()/2;
         printLogo(finalRankingPhaseLogo,shift);
-        //printLogo(finalRankingPhaseLogo, freeSpaces);
     }
 
-
-
-    // drawings :)
     public synchronized static void printWinnerLogo(int m) {
         out.println();
         String[] winnerLogo = {
@@ -283,13 +270,6 @@ public class PrinterLogo {
 
 
         };
-        /*
-        for (String str : winnerLogo){
-            System.out.println(" ".repeat(terminalWidth-(getPrintableLength(str)/2))+str);
-        }
-
-         */
-
         printLogo(winnerLogo, m);
     }
 

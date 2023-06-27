@@ -1,11 +1,8 @@
 package it.polimi.ingsw.network.client.handlers;
 
-import it.polimi.ingsw.message.KeyAbstractPayload;
+
 import it.polimi.ingsw.message.Message;
-
 import it.polimi.ingsw.message.MessageType;
-
-import java.rmi.RemoteException;
 import java.util.HashMap;
 /**
  * The ManagerHandlers class manages the mapping between message types and their corresponding message handlers.

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.modelView;
 
-import it.polimi.ingsw.model.BoardBox;
+
 import it.polimi.ingsw.model.Type;
 
 import java.io.Serial;

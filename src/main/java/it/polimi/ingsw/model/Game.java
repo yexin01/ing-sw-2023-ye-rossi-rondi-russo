@@ -234,11 +234,11 @@ public class Game {
     /**
      * Updates the common goal points of the current player and updates the modelView if a token is reached.
      */
-    //TODO levre il flag true
+
     public void updatePointsCommonGoals(){
         for (int i = 0; i< getTurnPlayerOfTheGame().getCommonGoalPoints().length; i++){
             CommonGoalCard c=commonGoalCards.get(i);
-            if (getTurnPlayerOfTheGame().getCommonGoalPoints()[i]==0 && true/*c).checkGoal(turnBookshelf().getMatrix())*/){
+            if (getTurnPlayerOfTheGame().getCommonGoalPoints()[i]==0 && commonGoalCards.get(i).checkGoal(getTurnPlayerOfTheGame().getBookshelf().getMatrix())){
                 int pointsWon=commonGoalCards.get(i).removeToken();
                 modelview.getToken()[i]=pointsWon;
                 modelview.setIdCommon(1,i,c.getLastPoint());

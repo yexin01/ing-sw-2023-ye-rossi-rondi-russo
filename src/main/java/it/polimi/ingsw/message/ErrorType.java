@@ -39,10 +39,6 @@ public enum ErrorType implements KeyAbstractPayload {
     NOT_ENOUGH_FREE_EDGES("The selected tile has no free edges"),
     WRONG_PHASE("You can't do this action now.");
 
-
-    //TODO: da togliere se non usato
-    //NOT_RECEIVED_TILES("Problem with receiving tiles"),
-
     private final String errorMessage;
 
     /**
