@@ -45,9 +45,13 @@ public class GameLobbyInfo implements Serializable {
     }
 
     public void setGameLobbyState(GameLobby gameLobby){
+        //this.modelView = modelView;
         this.messageEndGame = gameLobby.getMessageEndGame();
+        //this.players = gameLobby.getPlayers();
         this.playersDisconnected = gameLobby.getPlayersDisconnected();
+        //TODO @andreaRondi il puntatore di modelView é null
         System.out.println("setGameLobbyState");
+        System.out.println(modelView.getBookshelfView()[0][0][0].getTileID());
         for(PlayerPointsView p : modelView.getPlayerPoints()){
             if (!playersDisconnected.contains(p.getNickname())) playersDisconnected.add(p.getNickname());
         }
@@ -122,6 +126,9 @@ public class GameLobbyInfo implements Serializable {
         try {
             modelView.setMAX_SELECTABLE_TILES((new GameRules()).getMaxSelectableTiles());
         } catch (Exception e) {
+        }
+        for(String s:playersDisconnected){
+            System.out.println("DISCONNESSSI"+s);
         }
 
         /*

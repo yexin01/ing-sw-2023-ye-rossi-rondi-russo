@@ -153,7 +153,6 @@ public class SocketConnection extends Connection implements Runnable {
     public void ping() throws IOException {
         MessageHeader header = new MessageHeader(MessageType.PING, super.getClientPinger().getNickname());
         Message message = new Message(header);
-
         sendMessageToClient(message);
     }
 

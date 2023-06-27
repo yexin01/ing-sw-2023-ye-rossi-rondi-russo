@@ -8,8 +8,6 @@ import it.polimi.ingsw.network.server.GameLobby;
 import it.polimi.ingsw.network.server.GlobalLobby;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The InfoAndEndGameListener class is responsible for sending necessary game data and handling end game events.

@@ -293,6 +293,17 @@ public class GameLobby implements Serializable {
         }else sendMessageToSpecificPlayer(messageEndGame,nickname);
 
         System.out.println("GameLobby "+ idGameLobby+" changed "+nickname+" in active");
+        int m=0;
+        for(String s:playersDisconnected){
+            System.out.println(m);
+            System.out.println("DISCONNECTED"+s);
+            m++;
+        }
+        for(String s:players.keySet()){
+            System.out.println(m);
+            System.out.println("RECONNECTED"+s);
+            m++;
+        }
     }
 
     /**
@@ -360,6 +371,7 @@ public class GameLobby implements Serializable {
      */
     public synchronized void sendMessageToSpecificPlayer(Message message, String nickname) throws IOException {
         if(!playersDisconnected.contains(nickname))
+        System.out.println(players.get(nickname).isConnected());
             players.get(nickname).sendMessageToClient(message);
     }
 

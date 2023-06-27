@@ -72,8 +72,6 @@ public class GameController {
         listenerManager.addListener(TurnPhase.END_GAME, gameLobby.getStartAndEndGameListener());
         listenerManager.addListener(TurnPhase.END_TURN,new EndTurnListener(gameLobby));
         listenerManager.addListener(Data.PHASE,new PhaseListener(gameLobby));
-        //gameLobby.getGameLobbyInfo().setGameLobbyState(gameLobby);
-        //SaveGame.saveGame(gameLobby.getGameLobbyInfo());
     }
     /**
      * Returns the game model.

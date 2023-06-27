@@ -41,7 +41,7 @@ public class SaveGame {
             persistenceDir.mkdir();
         }
 
-         jarPathString = persistenceDirPath;
+        jarPathString = persistenceDirPath;
 
         //jarPathString = jarPath.getParentFile().getAbsolutePath();
         //jarPathString = ".\\src\\main\\resources";

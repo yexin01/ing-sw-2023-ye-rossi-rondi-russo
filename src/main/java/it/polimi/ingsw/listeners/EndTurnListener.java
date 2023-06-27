@@ -3,7 +3,6 @@ package it.polimi.ingsw.listeners;
 
 import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.message.*;
-import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.*;
 import it.polimi.ingsw.network.server.GameLobby;
 import it.polimi.ingsw.network.server.persistence.SaveGame;
