@@ -20,7 +20,6 @@ public abstract class Client extends UnicastRemoteObject {
     private final String nickname;
     private final String ip;
     private final int port;
-    private String token;
 
     transient Timer pingTimer;
 
@@ -64,21 +63,6 @@ public abstract class Client extends UnicastRemoteObject {
     }
 
     /**
-     * @return the token of the client
-     */
-    public String getToken() {
-        return token;
-    }
-
-    /**
-     * Method to set the token of the client
-     * @param token the token of the client
-     */
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    /**
      * Method to start the connection between client and server regardless of the type of connection (socket or RMI)
      * @throws Exception if there are problems with the connection
      */
@@ -92,7 +76,7 @@ public abstract class Client extends UnicastRemoteObject {
 
     /**
      * Method to get the next message from the queue of messages of the client.
-     * while the queue is empty the thread waits,
+     * while the queue is empty the thread waits
      * when a new message is added to the queue the thread is notified and the message is polled from the queue
      * @return the next message from the queue of messages of the client
      */

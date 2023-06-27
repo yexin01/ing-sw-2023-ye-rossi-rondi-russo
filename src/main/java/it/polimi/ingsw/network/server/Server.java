@@ -3,10 +3,7 @@ package it.polimi.ingsw.network.server;
 import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.network.server.persistence.SaveGame;
-import it.polimi.ingsw.view.CLI.Colors;
-//import javafx.scene.paint.Color;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
@@ -80,18 +77,6 @@ public class Server implements Runnable{
         return Server.ipAddress;
     }
 
-    /*
-    Per avviare il server da terminale macbook: (da cambiare il path in base alla posizione del progetto):
-    
-    cd ~/Desktop/prog_sw/progsw_ingsw2023/ing-sw-2023-ye-rossi-rondi-russo
-    mvn clean install
-    javac src/main/java/it/polimi/ingsw/network/server/Server.java
-    java src/main/java/it/polimi/ingsw/network/server/Server 6000 7000 192.168.1.100
-    //costruire l'artifact da project structure, ricordarsi di selezionare Start come MainClass
-    poi build->build artifacts...
-
-     */
-    //TODO: da fare il jar per lanciare da terminale windows e mac
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
@@ -208,7 +193,6 @@ public class Server implements Runnable{
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                System.out.println("Server ping interrupted");
                 Thread.currentThread().interrupt();
             }
         }
@@ -233,7 +217,6 @@ public class Server implements Runnable{
      * @throws Exception if the player is already connected or if the nickname is already used
      */
     public synchronized void loginToServer(String nickname, Connection connection) throws Exception {
-        //it works on the map of clientsConnected then it will enter in the globalLobby and then in the gameLobby
         try {
             synchronized (clientsLock) {
                 if (globalLobby.isPlayerDisconnectedInAnyGameLobby(nickname) || clientsConnected.containsKey(nickname)) {
@@ -334,7 +317,6 @@ public class Server implements Runnable{
 
         if (username != null) {
             synchronized (clientsLock) {
-                System.out.println(username + " disconnected from server!");
                 this.globalLobby.disconnectPlayerFromGlobalLobby(username);
                 clientsConnected.remove(username);
             }

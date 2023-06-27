@@ -25,7 +25,7 @@ public class ClientPinger implements Runnable {
 
     /**
      * Method that pings the client to check if the connection is still alive or not through the RMI connection
-     * if the connection is lost, the client is disconnected from the server and the thread is interrupted
+     * if the connection is lost, the client is disconnected from the server, and the thread is interrupted
      */
     @Override
     public void run() {

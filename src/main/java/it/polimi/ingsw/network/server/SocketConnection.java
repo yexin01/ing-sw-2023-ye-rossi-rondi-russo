@@ -93,7 +93,7 @@ public class SocketConnection extends Connection implements Runnable {
 
     /**
      * Method that checks if the socket connection is active or not
-     * @return true if the socket connection is active, false otherwise
+     * @return true, if the socket connection is active, false otherwise
      */
     @Override
     public boolean isConnected() {

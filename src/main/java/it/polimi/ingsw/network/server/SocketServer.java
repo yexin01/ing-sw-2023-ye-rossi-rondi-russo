@@ -5,7 +5,6 @@ import it.polimi.ingsw.message.Message;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.rmi.RemoteException;
 
 /**
  * Socket server that creates a new socket connection between server and client (server side) that extends Thread so that it can run in parallel with the other threads

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.message.*;
 
 import java.io.IOException;
@@ -21,7 +20,6 @@ public class GlobalLobby implements Serializable {
     private ConcurrentHashMap<Integer, GameLobby> gameLobbies; //maps all the games in progress or waiting to be created, GameLobby refers to 1 game in progress
     private ConcurrentHashMap<String, Connection> waitingPlayersWithNoGame; //map of all the players waiting to be added to a game lobby
 
-
     /**
      * Constructor of the class GlobalLobby that creates a new Global Lobby for the server
      */
@@ -30,16 +28,33 @@ public class GlobalLobby implements Serializable {
         this.waitingPlayersWithNoGame = new ConcurrentHashMap<>();
     }
 
+    /**
+     * Method to set the game lobbies of the global lobby of the server
+     * @param gameLobbies the game lobbies of the global lobby of the server
+     */
+    public void setGameLobbies(ConcurrentHashMap<Integer, GameLobby> gameLobbies) {
+        this.gameLobbies = gameLobbies;
+    }
 
     /**
-     * Method that adds a player to the waiting list of the global lobby of the server
+     * Method to set the waiting players of the global lobby of the server
+     * @param waitingPlayersWithNoGame the waiting players of the global lobby of the server
+     */
+    //TODO: @andrea risettare i waitingPlayers dopo la caduta del server, o cancellare se non ti serve
+    public void setWaitingPlayersWithNoGame(ConcurrentHashMap<String, Connection> waitingPlayersWithNoGame) {
+        this.waitingPlayersWithNoGame = waitingPlayersWithNoGame;
+    }
+
+    /**
+     * Method that adds a player to the waiting list of the global lobby of the server and asks him what he wants to do next
+     * (create a new game, join a game with a specific id, join the first free spot in a random game or quit the server)
+     * if the game is not in progress or waiting to be created, otherwise it will add the player to the game lobby and the game will continue from where it is
      * @param nickname the nickname of the player that wants to be added to the waiting list of the global lobby of the server
      * @param connection the connection of the player that wants to be added to the waiting list of the global lobby of the server
      * @throws IOException if there are problems with the connection
      */
-    public synchronized void addPlayerToWaiting(String nickname, Connection connection,boolean afterEndGame) throws IOException {
+    public synchronized void addPlayerToWaiting(String nickname, Connection connection, boolean afterEndGame) throws IOException {
         waitingPlayersWithNoGame.put(nickname,connection);
-        System.out.println("Player "+nickname+" added to the waiting list in server's global lobby!");
         if(!afterEndGame){
             MessageHeader header = new MessageHeader(MessageType.LOBBY, nickname);
             MessagePayload payload = new MessagePayload(KeyLobbyPayload.GLOBAL_LOBBY_DECISION);
@@ -55,7 +70,7 @@ public class GlobalLobby implements Serializable {
      * @param connection the connection of the player that wants to create a new game lobby
      * @throws IOException if there are problems with the connection
      */
-    public synchronized void playerCreatesGameLobby(int wantedPlayers, String nickname,Connection connection) throws IOException {
+    public synchronized void playerCreatesGameLobby(int wantedPlayers, String nickname, Connection connection) throws IOException {
         int gameId = getFirstFreeGameLobbyId();
         GameLobby gameLobby = new GameLobby(gameId, wantedPlayers,this);
         gameLobbies.put(gameId, gameLobby);
@@ -67,7 +82,7 @@ public class GlobalLobby implements Serializable {
     }
 
     /**
-     * Method to join a game lobby with a specific id given by the player, if the game lobby exists and it's not full/started,
+     * Method to join a game lobby with a specific id given by the player, if the game lobby exists, and it's not full/started,
      * otherwise it sends an error message to the player
      * @param gameId the id of the game lobby that the player wants to join
      * @param nickname the nickname of the player that wants to join a game lobby
@@ -102,7 +117,7 @@ public class GlobalLobby implements Serializable {
      * @param connection the connection of the player that wants to join a random game lobby
      * @throws IOException if there are problems with the connection
      */
-    public synchronized void playerJoinsFirstFreeSpotInRandomGame(String nickname,int minPlayers, Connection connection) throws IOException {
+    public synchronized void playerJoinsFirstFreeSpotInRandomGame(String nickname, int minPlayers, Connection connection) throws IOException {
         boolean done = false;
         for (GameLobby gameLobby : gameLobbies.values()) {
             if (!gameLobby.isFull() && !done) {
@@ -144,12 +159,11 @@ public class GlobalLobby implements Serializable {
     /**
      * Method that checks if a player is disconnected in any game lobby
      * @param nickname the nickname of the player that wants to check if he is disconnected in any game lobby
-     * @return true if the player is disconnected in any game lobby, false otherwise
+     * @return true, if the player is disconnected in any game lobby, false otherwise
      */
     public synchronized boolean isPlayerDisconnectedInAnyGameLobby(String nickname) {
         for (GameLobby gameLobby : gameLobbies.values()) {
             if (gameLobby.containsPlayerDisconnectedInThisGame(nickname)) {
-                System.out.println("Found Player "+nickname+" is disconnected in game lobby "+gameLobby.getIdGameLobby());
                 return true;
             }
         }
@@ -159,12 +173,11 @@ public class GlobalLobby implements Serializable {
     /**
      * Method that checks if a player is active in any game lobby (not disconnected)
      * @param nickname the nickname of the player that wants to check if he is active in any game lobby
-     * @return true if the player is active in any game lobby, false otherwise
+     * @return true, if the player is active in any game lobby, false otherwise
      */
     public synchronized boolean isPlayerActiveInAnyGameLobby(String nickname) {
         for (GameLobby gameLobby : gameLobbies.values()) {
             if (gameLobby.isPlayerActiveInThisGame(nickname)) {
-                System.out.println("Found Player "+nickname+" is active in game lobby "+gameLobby.getIdGameLobby());
                 return true;
             }
         }
@@ -219,6 +232,7 @@ public class GlobalLobby implements Serializable {
 
     /**
      * Method that ends a game lobby, removing it from the global lobby and moving all the players in the waiting list of the global lobby
+     * where they can decide what to do next or quit the game application
      * @param gameId the id of the game lobby that we want to end
      * @throws IOException if there are problems with the connection
      */
@@ -228,9 +242,8 @@ public class GlobalLobby implements Serializable {
         for (String nickname : players.keySet()) {
             addPlayerToWaiting(nickname,players.get(nickname),true);
         }
-        System.out.println("All players in game lobby "+gameId+" have been moved to waitingList in the global lobby!");
         gameLobbies.remove(gameId);
-        System.out.println("Game lobby "+gameId+" has ended and been removed from the global lobby!");
+        System.out.println("Game lobby "+gameId+" has ended and been removed from the global lobby and all players moved to waiting!");
     }
 
     /**
@@ -245,18 +258,6 @@ public class GlobalLobby implements Serializable {
             }
         }
         return null;
-    }
-
-    public void setGameLobbies(ConcurrentHashMap<Integer, GameLobby> gameLobbies) {
-        this.gameLobbies = gameLobbies;
-    }
-//TODO @andreaRondi risettare i waitingPlayers dopo la caduta del server
-    public void setWaitingPlayersWithNoGame(ConcurrentHashMap<String, Connection> waitingPlayersWithNoGame) {
-        this.waitingPlayersWithNoGame = waitingPlayersWithNoGame;
-    }
-
-    public ConcurrentHashMap<Integer, GameLobby> getGameLobbies() {
-        return gameLobbies;
     }
 
 }

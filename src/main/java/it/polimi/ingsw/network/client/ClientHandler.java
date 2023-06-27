@@ -89,27 +89,27 @@ public class ClientHandler implements Runnable {
     }
 
     /**
-     * Method to create a new connection between client and server and to create a new message handler thread that handles the messages received from the server through the connection created
+     * Method to create a new connection between a client and server
+     * and creates all the handlers in the managerHandlers class for each type of message received from the server
      * @param isRMI 0 if the connection is a socket connection, 1 if the connection is an RMI connection
      * @param ip the ip of the server
      * @param port the port of the server
      * @param clientInterface the client interface of the client
      * @throws Exception if there are problems with the connection
      */
-    public void createConnection(int isRMI,String ip, int port,ClientInterface clientInterface) throws Exception {
-        String nickname=clientInterface.getClientView().getNickname();
-        if (isRMI==0) {
+    public void createConnection(int isRMI, String ip, int port, ClientInterface clientInterface) throws Exception {
+        String nickname = clientInterface.getClientView().getNickname();
+        if (isRMI == 0) {
             client = new ClientSocket(nickname, ip, port);
             this.isRMI = false;
         } else {
             client = new ClientRMI(nickname, ip, port);
             this.isRMI = true;
         }
-        managerHandlers.registerEventHandler(MessageType.DATA,new TurnHandler(clientInterface,client,new StartAndEndGameHandler(clientInterface,this.client)));
-        LobbyHandler lobbyHandler=new LobbyHandler(clientInterface,client);
-        managerHandlers.registerEventHandler(MessageType.LOBBY,lobbyHandler);
-        managerHandlers.registerEventHandler(MessageType.ERROR,new ErrorHandler(clientInterface,client));
-        managerHandlers.registerEventHandler(MessageType.CONNECTION,new ConnectionHandler(clientInterface,client));
+        managerHandlers.registerEventHandler(MessageType.DATA, new TurnHandler(clientInterface, client, new StartAndEndGameHandler(clientInterface,this.client)));
+        managerHandlers.registerEventHandler(MessageType.LOBBY, new LobbyHandler(clientInterface,client));
+        managerHandlers.registerEventHandler(MessageType.ERROR, new ErrorHandler(clientInterface,client));
+        managerHandlers.registerEventHandler(MessageType.CONNECTION, new ConnectionHandler(clientInterface,client));
         clientInterface.getClientView().setMessageToserverHandler(new MessageToserverHandlerTurn(clientInterface,client));
         createMessageHandlerThread(client);
         client.startConnection();

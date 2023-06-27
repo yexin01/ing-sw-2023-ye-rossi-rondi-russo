@@ -4,18 +4,16 @@ import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.controller.TurnPhase;
 import it.polimi.ingsw.listeners.InfoAndEndGameListener;
 import it.polimi.ingsw.message.*;
-import it.polimi.ingsw.model.modelView.*;
 import it.polimi.ingsw.network.server.persistence.GameLobbyInfo;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Class GameLobby is the class that represents the game lobby of a single game.
- * It contains all the players that are in the game lobby: who created the game and who wants to join the game,
+ * It contains all the players that are in the game lobby: who created the game and who want to join the game,
  * when it reaches the number of players wanted, it starts the game and creates a new game controller and a new model view for the game itself.
  */
 public class GameLobby implements Serializable {
@@ -35,14 +33,14 @@ public class GameLobby implements Serializable {
      * @param idGameLobby the id of the game lobby
      * @param wantedPlayers the number of players wanted in the game lobby
      */
-    public GameLobby(int idGameLobby, int wantedPlayers,GlobalLobby globalLobby){
-        this.idGameLobby= idGameLobby;
+    public GameLobby(int idGameLobby, int wantedPlayers, GlobalLobby globalLobby){
+        this.idGameLobby = idGameLobby;
         this.wantedPlayers = wantedPlayers;
         players = new ConcurrentHashMap<>();
-        infoAndEndGameListener=new InfoAndEndGameListener(this,globalLobby);
+        infoAndEndGameListener = new InfoAndEndGameListener(this,globalLobby);
         playersDisconnected = new CopyOnWriteArrayList<>();
-        gameLobbyInfo=new GameLobbyInfo(idGameLobby,wantedPlayers);
-        messageEndGame=null;
+        gameLobbyInfo = new GameLobbyInfo(idGameLobby,wantedPlayers);
+        messageEndGame = null;
     }
 
     /**
@@ -50,7 +48,6 @@ public class GameLobby implements Serializable {
      * @throws Exception if something goes wrong in the creation of the game controller
      */
     public synchronized void createGame() throws Exception {
-        ArrayList<String> playersGame=new ArrayList<>();
         this.gameController=new GameController();
         this.gameController.createGame(this);
     }
@@ -99,26 +96,6 @@ public class GameLobby implements Serializable {
     }
 
     /**
-     * @return the model view of the game
-     */
-    /*
-    public ModelView getModelView() {
-        return modelView;
-    }
-
-     */
-
-    /**
-     * Method to set the model view of the game
-     //* @param modelView the model view of the game
-     */
-    /*public void setModelView(ModelView modelView) {
-        this.modelView = modelView;
-    }
-
-     */
-
-    /**
      * @return the game controller of the game
      */
     public GameController getGameController() {
@@ -146,6 +123,51 @@ public class GameLobby implements Serializable {
      */
     public void setMessageEndGame(Message messageEndGame) {
         this.messageEndGame = messageEndGame;
+    }
+
+    /**
+     * @return the players in the game lobby
+     */
+    public ConcurrentHashMap<String, Connection> getPlayers() {
+        return players;
+    }
+
+    /**
+     * Method to set the players in the game lobby
+     * @param players the players in the game lobby
+     */
+    public void setPlayers(ConcurrentHashMap<String, Connection> players) {
+        this.players = players;
+    }
+
+    /**
+     * @return the players disconnected in the game lobby
+     */
+    public CopyOnWriteArrayList<String> getPlayersDisconnected() {
+        return playersDisconnected;
+    }
+
+    /**
+     * Method to set the players disconnected in the game lobby
+     * @param playersDisconnected the players disconnected in the game lobby
+     */
+    public void setPlayersDisconnected(CopyOnWriteArrayList<String> playersDisconnected) {
+        this.playersDisconnected = playersDisconnected;
+    }
+
+    /**
+     * @return the game lobby info
+     */
+    public GameLobbyInfo getGameLobbyInfo() {
+        return gameLobbyInfo;
+    }
+
+    /**
+     * Method to set the game lobby info
+     * @param gameLobbyInfo the game lobby info
+     */
+    public void setGameLobbyInfo(GameLobbyInfo gameLobbyInfo) {
+        this.gameLobbyInfo = gameLobbyInfo;
     }
 
     /**
@@ -180,7 +202,7 @@ public class GameLobby implements Serializable {
     }
 
     /**
-     * @return true if the game lobby is full, false otherwise
+     * @return true, if the game lobby is full, false otherwise
      */
     public boolean isFull(){
         return players.size() == wantedPlayers || getGameController()!=null;
@@ -189,7 +211,7 @@ public class GameLobby implements Serializable {
     /**
      * Method to check if a player is active in the game lobby
      * @param nickname the nickname of the player to check
-     * @return true if the player is active in the game lobby, false otherwise
+     * @return true, if the player is active in the game lobby, false otherwise
      */
     public boolean isPlayerActiveInThisGame(String nickname){
         return players.containsKey(nickname);
@@ -198,22 +220,23 @@ public class GameLobby implements Serializable {
     /**
      * Method to check if a player is disconnected in the game lobby
      * @param nickname the nickname of the player to check
-     * @return true if the player is disconnected in the game lobby, false otherwise
+     * @return true, if the player is disconnected in the game lobby, false otherwise
      */
     public boolean containsPlayerDisconnectedInThisGame(String nickname) {
         return playersDisconnected.contains(nickname);
     }
 
     /**
-     * Method that sends a message to the game controller to handle the turn of the player
+     * Method that sends a message to the game controller to handle the turn of the player if the game is not ended yet,
+     * otherwise it sends a message to the player to notify him that the game is ended
      * @param message the message received from the player
      */
     public synchronized void handleTurn(Message message) throws IOException {
         if(messageEndGame==null){
            gameController.receiveMessageFromClient(message);
-        }else{
+        } else {
             int index=gameController.getModel().getModelView().getIntegerValue(message.getHeader().getNickname());
-            gameController.getActivePlayers()[index]=false;
+            gameController.getActivePlayers()[index] = false;
             MessageHeader header = new MessageHeader(MessageType.LOBBY,message.getHeader().getNickname());
             MessagePayload payload = new MessagePayload(KeyLobbyPayload.GLOBAL_LOBBY_DECISION);
             sendMessageToSpecificPlayer(new Message(header,payload),message.getHeader().getNickname());
@@ -229,7 +252,8 @@ public class GameLobby implements Serializable {
     }
 
     /**
-     * Method that sends a message to the game controller to handle the error of the player
+     * Method that sends a message to the game controller to handle the error of the player if the game is not ended yet,
+     * otherwise it sends a message to the player to notify him that the game is ended
      * @param message the message received from the player
      * @throws IOException if there are problems with the connection
      */
@@ -244,8 +268,10 @@ public class GameLobby implements Serializable {
     }
 
     /**
-     * Method to change the player from disconnected to active in the game lobby
-     * and sends a message to all the players in the game lobby to notify the reconnection of the player
+     * Method to change the player from disconnected to active in the game lobby:
+     * if he is the only player in the game lobby, it sends a message to the player to notify him that he is the only player in the game lobby,
+     * if he is not the only player in the game lobby, it sends a message to all the players in the game lobby to notify them that the player reconnected,
+     * if the game is ended, it sends a message to the player to notify him that the game is ended
      * @param nickname the nickname of the player to change
      * @param connection the connection of the player to change
      * @throws IOException if there are problems with the connection
@@ -271,7 +297,9 @@ public class GameLobby implements Serializable {
 
     /**
      * Method to change the player from active to disconnected in the game lobby
-     * and sends a message to all the players in the game lobby to notify the disconnection of the player
+     * if he is the only player in the game lobby, it sends a message to the player to notify him that he is the only player in the game lobby,
+     * if he is not the only player in the game lobby, it sends a message to all the players in the game lobby to notify them that the player disconnected,
+     * if the game is ended, it sends a message to the player to notify him that the game is ended
      * @param nickname the nickname of the player to change
      * @throws IOException if there are problems with the connection
      */
@@ -281,21 +309,20 @@ public class GameLobby implements Serializable {
         if(gameController!=null){
             gameController.disconnectionPlayer(nickname);
         }
-        if( checkOnlyPlayer()){
+        if(checkOnlyPlayer()){
             sendOnlyOnePlayer(nickname);
         }else if(messageEndGame==null){
             MessageHeader header = new MessageHeader(MessageType.CONNECTION, nickname);
             MessagePayload payload = new MessagePayload(KeyConnectionPayload.BROADCAST);
-            String content = "Player "+nickname+" disconnected to Game Lobby "+ idGameLobby + "!";
+            String content = "Player "+nickname+" disconnected from Game Lobby "+ idGameLobby + "!";
             payload.put(Data.CONTENT,content);
             Message message = new Message(header,payload);
             sendMessageToAllPlayers(message);
-            System.out.println(content);
         }
     }
 
     /**
-     * @return true if there is only one player in the game lobby and the game is not ended, false otherwise
+     * @return true, if there is only one player in the game lobby and the game is not ended, false otherwise
      */
     public boolean checkOnlyPlayer(){
         return players.size()==1 && messageEndGame==null;
@@ -334,30 +361,6 @@ public class GameLobby implements Serializable {
     public synchronized void sendMessageToSpecificPlayer(Message message, String nickname) throws IOException {
         if(!playersDisconnected.contains(nickname))
             players.get(nickname).sendMessageToClient(message);
-    }
-
-    public ConcurrentHashMap<String, Connection> getPlayers() {
-        return players;
-    }
-
-    public CopyOnWriteArrayList<String> getPlayersDisconnected() {
-        return playersDisconnected;
-    }
-
-    public void setPlayers(ConcurrentHashMap<String, Connection> players) {
-        this.players = players;
-    }
-
-    public void setPlayersDisconnected(CopyOnWriteArrayList<String> playersDisconnected) {
-        this.playersDisconnected = playersDisconnected;
-    }
-
-    public GameLobbyInfo getGameLobbyInfo() {
-        return gameLobbyInfo;
-    }
-
-    public void setGameLobbyInfo(GameLobbyInfo gameLobbyInfo) {
-        this.gameLobbyInfo = gameLobbyInfo;
     }
 
 }

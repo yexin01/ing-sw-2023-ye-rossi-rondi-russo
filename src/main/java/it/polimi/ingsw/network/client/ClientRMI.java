@@ -39,7 +39,6 @@ public class ClientRMI extends Client implements RMIClientConnection {
     public void startConnection() throws Exception {
         Registry registry = LocateRegistry.getRegistry(getIp(), getPort());
         server = (RMIHandler) registry.lookup("MyShelfieServer");
-        System.out.println("CI ENTRA");
         server.login(getNickname(), this);
     }
 
@@ -93,7 +92,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
 
     /**
      * Method that pings the server RMI handler to check if the connection is still active creating a new timer that calls the ping method on the server RMI handler
-     * and if it is not active it starts the disconnection procedure
+     * and if it is not active, it starts the disconnection procedure
      * @throws RemoteException if there are problems with the connection
      */
     @Override

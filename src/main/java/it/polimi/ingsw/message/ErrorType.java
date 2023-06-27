@@ -5,33 +5,25 @@ package it.polimi.ingsw.message;
  */
 public enum ErrorType implements KeyAbstractPayload {
 
-    //Connection error
+    //Connection errors
     PING_NOT_RECEIVED("Ping not received. Disconnection started.."),
     DISCONNECTION_FORCED("Something went wrong during login. Connection refused! Disconnection started.."),
     DISCONNECTION("Disconnection from the server"),
     ERROR_CONNECTION("Error in creating connection, try again"),
-
     ERR_NICKNAME_LENGTH("Invalid username length. Disconnection.."),
     ERR_NICKNAME_TAKEN("This nickname is already taken  Disconnection.."),
     ONLY_PLAYER("You are the only player connected, wait for another to continue the game"),
 
-
-
-
-    //Lobby error
+    //Lobby errors
     ERR_NUM_PLAYER_WANTED("You must select a number of players between 2 and 4.  You will be sent back to GlobalLobby.."),
     ERR_JOINING_GAME_LOBBY("Failed in joining the Game Lobby! You will be sent back to GlobalLobby.."),
     ERR_GAME_FULL("Failed in joining the requested game lobby because is full! You will be sent back to GlobalLobby.."),
     ERR_GAME_NOT_FOUND("Failed in joining the requested game lobby because it doesn't exist! You will be sent back to GlobalLobby.."),
-
-
     ERR_NO_FREE_SPOTS("Failed in joining a random game lobby because all games are full!Creating a new Game Lobby for min num players..."),
-
-
     ERR_RECONNECT_TO_GAME_LOBBY("Failed to reconnect to previous game lobby! Disconnection.."),
     ERR_JOIN_GLOBAL_LOBBY("Failed in joining the Global Lobby! Disconnection.."),
 
-    //Data error
+    //Data errors
     ILLEGAL_TURN("it isn't your turn"),
     ILLEGAL_PHASE("This isn't the phase"),
     INVALID_COLUMN("Invalid Column"),
@@ -48,20 +40,8 @@ public enum ErrorType implements KeyAbstractPayload {
     WRONG_PHASE("You can't do this action now.");
 
 
-
-
-
-
-
-
-    //da dividere
-
+    //TODO: da togliere se non usato
     //NOT_RECEIVED_TILES("Problem with receiving tiles"),
-
-
-
-
-
 
     private final String errorMessage;
 

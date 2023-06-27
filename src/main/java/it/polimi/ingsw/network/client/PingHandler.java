@@ -23,8 +23,7 @@ public class PingHandler extends TimerTask {
     }
 
     /**
-     * the run method of the class PingHandler that sends a message to the client if the ping is not received in time
-     * the message is added to the queue of messages and the client handler thread handles the disconnection of the client from the server
+     * the run method of the class PingHandler that prints a message to the client if the ping is not received in time and exits the client
      */
     @Override
     public void run() {
@@ -37,6 +36,7 @@ public class PingHandler extends TimerTask {
         //TODO: aggiungi per gui
         System.exit(0);
 
+        //TODO: @giuliaR cancelliamo qua? o serve per la gui
         client.messageQueue.add(message);
     }
 

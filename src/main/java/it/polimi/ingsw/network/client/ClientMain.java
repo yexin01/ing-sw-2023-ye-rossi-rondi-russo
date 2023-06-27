@@ -2,12 +2,9 @@ package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.Start;
 import it.polimi.ingsw.view.CLI.CLI;
-import it.polimi.ingsw.view.CLI.Colors;
 import it.polimi.ingsw.view.GUI.GUIApplication;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-
-import java.util.Scanner;
 
 /**
  * Main class of the client that starts the client application and asks the user if he wants to play with CLI or GUI.

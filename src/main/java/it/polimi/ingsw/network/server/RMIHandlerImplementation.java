@@ -47,7 +47,6 @@ public class RMIHandlerImplementation extends UnicastRemoteObject implements RMI
     @Override
     public void login(String nickname, RMIClientConnection client) throws Exception {
         rmiSession = new RMIConnection(server, client);
-        System.out.println("chiamo login sul server quello vero...");
         server.loginToServer(nickname, rmiSession);
     }
 

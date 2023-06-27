@@ -5,7 +5,6 @@ import it.polimi.ingsw.network.client.RMIClientConnection;
 
 import java.io.IOException;
 import java.rmi.Remote;
-import java.rmi.RemoteException;
 
 /**
  * RMI handler interface that is sent to the client to communicate with the server
