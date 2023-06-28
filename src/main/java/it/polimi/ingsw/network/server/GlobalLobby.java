@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.message.*;
+import it.polimi.ingsw.network.server.persistence.SaveGame;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -243,6 +244,7 @@ public class GlobalLobby implements Serializable {
             addPlayerToWaiting(nickname,players.get(nickname),true);
         }
         gameLobbies.remove(gameId);
+        SaveGame.deleteGameInfo(gameId);
         System.out.println("Game lobby "+gameId+" has ended and been removed from the global lobby and all players moved to waiting!");
     }
 

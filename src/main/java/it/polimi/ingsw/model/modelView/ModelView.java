@@ -83,7 +83,7 @@ public class ModelView implements Serializable {
      * Sorts the player points and personal points to determine the winner at the end of the game.
      */
 
-    public synchronized void winnerEndGame() {
+    public void winnerEndGame() {
         Integer[] indices = new Integer[playerPoints.length];
         for (int i = 0; i < playerPoints.length; i++) {
             indices[i] = i;
@@ -110,7 +110,7 @@ public class ModelView implements Serializable {
      * Sets the turn to the next active player in the game.
      * If the current player is the last active player, the turn is set to the first active player.
      */
-    public synchronized void setNextPlayer() {
+    public void setNextPlayer() {
         do{
 
             if(turnPlayer>= (playerPoints.length - 1))
@@ -150,7 +150,7 @@ public class ModelView implements Serializable {
      * @param bookshelfView The bookshelf view to set.
      * @param nickname The nickname of the player.
      */
-    public synchronized void setBookshelfView(ItemTileView[][] bookshelfView,String nickname) {
+    public void setBookshelfView(ItemTileView[][] bookshelfView,String nickname) {
         this.bookshelfView[getIntegerValue(nickname)] = bookshelfView;
     }
     /**
@@ -186,7 +186,7 @@ public class ModelView implements Serializable {
      * @param index The index of the player.
      */
 
-    public synchronized void setPlayerPoints(PlayerPointsView playerPoints,int index) {
+    public void setPlayerPoints(PlayerPointsView playerPoints,int index) {
         this.playerPoints[index] = playerPoints;
     }
     /**
@@ -195,7 +195,7 @@ public class ModelView implements Serializable {
      * @param playerPoints An array of PlayerPointsView objects representing the points views for each player.
      *                     The index of each element in the array corresponds to the player index.
      */
-    public synchronized void setPlayerPoints(PlayerPointsView[] playerPoints){
+    public void setPlayerPoints(PlayerPointsView[] playerPoints){
         this.playerPoints = playerPoints;
     }
     /**
@@ -229,7 +229,7 @@ public class ModelView implements Serializable {
      * @param playerPersonalGoal The PersonalGoalCard to set.
      * @param nickname The nickname of the player.
      */
-    public synchronized void setPlayerPersonalGoal(PersonalGoalCard playerPersonalGoal, String nickname) {
+    public void setPlayerPersonalGoal(PersonalGoalCard playerPersonalGoal, String nickname) {
         this.playerPersonalGoal[getIntegerValue(nickname)] = playerPersonalGoal;
     }
 
@@ -262,7 +262,7 @@ public class ModelView implements Serializable {
      * Sets the nickname of the player with a full bookshelf.
      * @param nickname The nickname of the player with a full bookshelf.
      */
-    public synchronized void setBookshelfFullPoints(String nickname){
+    public void setBookshelfFullPoints(String nickname){
         bookshelfFullPoints=nickname;
     }
 
@@ -277,7 +277,7 @@ public class ModelView implements Serializable {
      * Sets the selected items.
      * @param selectedItems An array of ItemTileView representing the selected items.
      */
-    public synchronized void setSelectedItems(ItemTileView[] selectedItems) {
+    public void setSelectedItems(ItemTileView[] selectedItems) {
         this.token=new int[commonGoalView[0].length];
         this.selectedItems = selectedItems;
     }
@@ -292,7 +292,7 @@ public class ModelView implements Serializable {
      * Sets the board view.
      * @param boardView A 2D array of BoardBoxView representing the board view.
      */
-    public synchronized void setBoardView(BoardBoxView[][] boardView) {
+    public void setBoardView(BoardBoxView[][] boardView) {
         this.boardView = boardView;
     }
     /**
@@ -307,7 +307,7 @@ public class ModelView implements Serializable {
      * Sets the turn phase.
      * @param turnPhase The turn phase to set.
      */
-    public synchronized void setTurnPhase(TurnPhase turnPhase) {
+    public void setTurnPhase(TurnPhase turnPhase) {
         this.turnPhase = turnPhase;
     }
 
@@ -326,7 +326,7 @@ public class ModelView implements Serializable {
      * @param index The index within the common goal.
      * @param pointsLeft The points left to set.
      */
-    public synchronized void setIdCommon(int row,int index,int pointsLeft) {
+    public void setIdCommon(int row,int index,int pointsLeft) {
         this.commonGoalView[row][index]= pointsLeft;
     }
     /**
@@ -357,7 +357,7 @@ public class ModelView implements Serializable {
      * Sets the index of the current turn player.
      * @param turnPlayer The index of the current turn player.
      */
-    public synchronized void setTurnPlayer(int turnPlayer) {
+    public void setTurnPlayer(int turnPlayer) {
         this.turnPlayer = turnPlayer;
     }
 
@@ -365,7 +365,7 @@ public class ModelView implements Serializable {
      * Sets the personal goal cards for all players.
      * @param playerPersonalGoal An array of PersonalGoalCard representing the personal goal cards for all players.
      */
-    public synchronized void setPlayerPersonalGoal(PersonalGoalCard[] playerPersonalGoal){
+    public void setPlayerPersonalGoal(PersonalGoalCard[] playerPersonalGoal){
         this.playerPersonalGoal=playerPersonalGoal;
     }
 
@@ -380,7 +380,7 @@ public class ModelView implements Serializable {
      * Sets the token values.
      * @param token An array of int representing the token values.
      */
-    public synchronized void setToken(int[] token) {
+    public void setToken(int[] token) {
         this.token = token;
     }
     /**
@@ -394,7 +394,7 @@ public class ModelView implements Serializable {
      * Sets the personal points for all players.
      * @param personalPoints An array of int representing the personal points for all players.
      */
-    public synchronized void setPersonalPoints(int[] personalPoints) {
+    public void setPersonalPoints(int[] personalPoints) {
         this.personalPoints = personalPoints;
     }
     /**
@@ -410,7 +410,7 @@ public class ModelView implements Serializable {
      * @param activePlayers An array of Boolean representing the active players status.
      */
 
-    public synchronized void setActivePlayers(Boolean[] activePlayers) {
+    public void setActivePlayers(Boolean[] activePlayers) {
         this.activePlayers = activePlayers;
     }
     /**
@@ -439,7 +439,7 @@ public class ModelView implements Serializable {
      * Sets the common goal view of the board.
      * @param commonGoalView The common goal view to set.
      */
-    public synchronized void setCommonGoalView(int[][] commonGoalView) {
+    public void setCommonGoalView(int[][] commonGoalView) {
         this.commonGoalView = commonGoalView;
     }
 
@@ -492,6 +492,8 @@ public class ModelView implements Serializable {
      * @return The restored Bookshelf object.
      */
     public Bookshelf restoreBookshelf(Player player){
+        System.out.println();
+        System.out.println("Player: "+player.getNickname());
         int intPlayer=getIntegerValue(player.getNickname());
         int row= bookshelfView[intPlayer].length;
         int column= bookshelfView[intPlayer][0].length;
@@ -508,7 +510,7 @@ public class ModelView implements Serializable {
         ClientView clientView=new ClientView();
         clientView.setBookshelfView(bookshelf.cloneBookshelf());
         PrinterBookshelfAndPersonal printerBookshelfAndPersonal=new PrinterBookshelfAndPersonal();
-        printerBookshelfAndPersonal.printMatrixBookshelf(clientView,3,1,10,false,false,0);
+        printerBookshelfAndPersonal.printMatrixBookshelf(clientView,3,1,50,false,false,0);
         return bookshelf;
     }
 }
