@@ -2,10 +2,8 @@ package it.polimi.ingsw.network.server.persistence;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import it.polimi.ingsw.message.Message;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
-import it.polimi.ingsw.model.modelView.ModelView;
 
 import java.io.IOException;
 

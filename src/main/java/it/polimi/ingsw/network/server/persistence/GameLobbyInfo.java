@@ -17,6 +17,9 @@ import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
+/**
+ * This class is used to store the current state of a gameLobby.
+ */
 public class GameLobbyInfo implements Serializable {
     @Serial
     private static final long serialVersionUID = -5158808756179690476L;
@@ -31,10 +34,13 @@ public class GameLobbyInfo implements Serializable {
         this.idGameLobby = idGameLobby;
         this.wantedPlayers = wantedPlayers;
     }
-    public int getIdGameLobby() {
-        return idGameLobby;
-    }
 
+    /**
+     * Stores the current state of the gameLobby passed as a parameter in the attributes of this class.
+     * This method is called at the end of each turn to update the gameLobbyInfo right before they're saved
+     * to disk by the SaveGame class.
+     * @param gameLobby The GameLobby object from which information are to be extracted and saved.
+     */
     public void setGameLobbyState(GameLobby gameLobby){
         this.messageEndGame = gameLobby.getMessageEndGame();
         this.playersDisconnected = gameLobby.getPlayersDisconnected();
@@ -43,28 +49,32 @@ public class GameLobbyInfo implements Serializable {
         for(PlayerPointsView p : modelView.getPlayerPoints()){
             if (!playersDisconnected.contains(p.getNickname())) playersDisconnected.add(p.getNickname());
         }
-
     }
 
+    /**
+     * Restores the gameLobby whose infos where saved in this instance of GameLobbyInfo.
+     * @param globalLobby The GlobalLobby object to which the restored gameLobby will be added.
+     * @param gameRules The GameRules object containing the rules of the game.
+     * @return The restored GameLobby object.
+     * @throws Exception If an error occurs while restoring the gameLobby.
+     */
     public  GameLobby restoreGameLobby(GlobalLobby globalLobby, GameRules gameRules) throws Exception {
         GameLobby gamelobby = new GameLobby(idGameLobby, wantedPlayers, globalLobby);
         gamelobby.setGameLobbyInfo(this);
         gamelobby.setPlayersDisconnected(playersDisconnected);
-        gamelobby.setGameController(restoreControllers(restoreModel(gameRules)));
+        gamelobby.setGameController(restoreController(restoreModel(gameRules)));
         gamelobby.getGameController().addListeners(gamelobby);
         return gamelobby;
     }
 
 
-
-
-
     /**
-     * Restore the model of the previously saved game associated to this class and returns the Game instance of the game
-     *
-     * @return the Game instance of the restored game
+     * restores the model of the game by restoring the players, the common goal cards, the board, the bookshelves,
+     * the personal goal cards and the player points.
+     * @param gamerules the gamerules of the game
+     * @return the restored game
+     * @throws Exception if an error occurs while restoring the game
      */
-
     private Game restoreModel(GameRules gamerules) throws Exception {
         Game game = new Game(modelView);
         //restore players...
@@ -107,41 +117,51 @@ public class GameLobbyInfo implements Serializable {
         return game;
     }
 
-
-
     /**
-     * Restore controllers of the previously saved game associated to this class and returns the GameController
-     * that will control the restored game
-     *
+     * Associates the restored game to a new controller
      * @param game the restored game
-     * @return the game controller of the restored game
+     * @return the new controller associated to the game
      */
-    private GameController restoreControllers(final Game game) {
+    private GameController restoreController(final Game game) {
         GameController gameController = new GameController();
         gameController.setGame(game);
         return gameController;
     }
 
+    /**
+     * ModelView getter
+     * @return the modelView
+     */
+    public ModelView getModelView() {
+        return modelView;
+    }
+
+   /**
+    * ModelView setter
+    * @param modelView the modelView to set
+    */
+    public void setModelView(ModelView modelView) {
+        this.modelView = modelView;
+    }
+
+    /**
+     * IdGameLobby getter
+     * @return the idGameLobby
+     */
+    public int getIdGameLobby() {
+        return idGameLobby;
+    }
 
     public int getWantedPlayers() {
         return wantedPlayers;
-    }
-
-    public ModelView getModelView() {
-        return modelView;
     }
 
     public Message getMessageEndGame() {
         return messageEndGame;
     }
 
-
     public CopyOnWriteArrayList<String> getPlayersDisconnected() {
         return playersDisconnected;
-    }
-
-    public void setModelView(ModelView modelView) {
-        this.modelView = modelView;
     }
 
     public void setMessageEndGame(Message messageEndGame) {
@@ -151,4 +171,5 @@ public class GameLobbyInfo implements Serializable {
     public void setPlayersDisconnected(CopyOnWriteArrayList<String> playersDisconnected) {
         this.playersDisconnected = playersDisconnected;
     }
+
 }
