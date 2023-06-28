@@ -2,8 +2,12 @@ package it.polimi.ingsw.view.GUI;
 
 import com.sun.tools.javac.Main;
 import it.polimi.ingsw.message.ErrorType;
+import it.polimi.ingsw.message.KeyLobbyPayload;
+import it.polimi.ingsw.view.ClientView;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -20,7 +24,7 @@ public class DisconnectionPanel extends BasePanel{
      * Creates a panel to be shown when the player is the last
      * active player inside a game
      */
-    public DisconnectionPanel() throws IOException {
+    public DisconnectionPanel(ClientView clientView) throws IOException {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         Image backgroundImage = new Image(Objects.requireNonNull(Main.class.getClassLoader().getResource("Display_2.jpg")).openStream());
         BackgroundSize backgroundSize = new BackgroundSize(screenBounds.getWidth(), screenBounds.getHeight(), true, true, true, false);
@@ -38,5 +42,18 @@ public class DisconnectionPanel extends BasePanel{
         vBox.setAlignment(Pos.CENTER);
         getChildren().add(vBox);
         setAlignment(vBox, Pos.CENTER);
+
+        Button quit = new Button("Quit server");
+        quit.setOnMouseClicked(mouseEvent -> {
+            try {
+                clientView.lobby(KeyLobbyPayload.QUIT_SERVER,-1);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            Platform.exit();
+            System.exit(0);
+        });
+        getChildren().add(quit);
+        setAlignment(quit, Pos.TOP_RIGHT);
     }
 }

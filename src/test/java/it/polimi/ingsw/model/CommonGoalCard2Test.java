@@ -12,6 +12,7 @@ class CommonGoalCard2Test {
     void checkGoal() {
         CommonGoalCard2 commonGoalCard2 = new CommonGoalCard2();
         Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         //Set the two columns with six different types of tiles
         int x = 0; int y = 2; int tileID = 0;
         for (int i = 0; i < 6; i++) {
@@ -30,6 +31,7 @@ class CommonGoalCard2Test {
     void checkGoalCC1() {
         CommonGoalCard2 commonGoalCard2 = new CommonGoalCard2();
         Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int x = 0; int y = 1; int tileID = 0;
         for (int i = 0; i < 6; i++) {
             bookshelf.getMatrix()[i][x] = new ItemTile(Type.values()[i], tileID);
@@ -47,6 +49,7 @@ class CommonGoalCard2Test {
     void checkGoalCC2() {
         CommonGoalCard2 commonGoalCard2 = new CommonGoalCard2();
         Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int x = 0; int y = 1; int z = 4; int tileID = 0;
         for (int i = 0; i < 6; i++) {
             bookshelf.getMatrix()[i][x] = new ItemTile(Type.values()[i], tileID);
@@ -68,6 +71,7 @@ class CommonGoalCard2Test {
     void checkGoalCC3() {
         CommonGoalCard2 commonGoalCard2 = new CommonGoalCard2();
         Bookshelf bookshelf = new Bookshelf();
+        bookshelf.matrix(6,5);
         int x = 0; int y = 1; int tileID = 0;
         for (int i = 0; i < 6; i++) {
             bookshelf.getMatrix()[i][x] = new ItemTile(Type.values()[i], tileID);

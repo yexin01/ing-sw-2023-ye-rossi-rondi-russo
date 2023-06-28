@@ -30,6 +30,7 @@ public class LobbyDecisionPanel extends BasePanel{
             Button confirmButton = new Button("Create new Lobby");
             Button confirmButton1 = new Button("Join specific lobby");
             Button random = new Button("Join random game");
+            Button quit = new Button("Quit server");
             confirmButton.setOnAction(actionEvent -> {
                 numPlayers = textField.getText();
                 if (numPlayers.isEmpty()) {
@@ -44,6 +45,7 @@ public class LobbyDecisionPanel extends BasePanel{
                         confirmButton.setDisable(true);
                         confirmButton1.setDisable(true);
                         random.setDisable(true);
+                        quit.setDisable(true);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -68,6 +70,7 @@ public class LobbyDecisionPanel extends BasePanel{
                         confirmButton.setDisable(true);
                         confirmButton1.setDisable(true);
                         random.setDisable(true);
+                        quit.setDisable(true);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -81,12 +84,13 @@ public class LobbyDecisionPanel extends BasePanel{
                     confirmButton.setDisable(true);
                     confirmButton1.setDisable(true);
                     random.setDisable(true);
+                    quit.setDisable(true);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             });
 
-            Button quit = new Button("Quit server");
+
             quit.setOnMouseClicked(mouseEvent -> {
                 try {
                     clientView.lobby(KeyLobbyPayload.QUIT_SERVER,-1);

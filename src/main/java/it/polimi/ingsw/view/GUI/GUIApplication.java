@@ -257,7 +257,7 @@ public class GUIApplication extends Application implements ClientInterface {
         Platform.runLater(()-> {
             DisconnectionPanel disconnectionPanel;
             try {
-                disconnectionPanel = new DisconnectionPanel();
+                disconnectionPanel = new DisconnectionPanel(clientView);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
