@@ -110,7 +110,7 @@ public class ClientHandler implements Runnable {
         managerHandlers.registerEventHandler(MessageType.LOBBY, new LobbyHandler(clientInterface,client));
         managerHandlers.registerEventHandler(MessageType.ERROR, new ErrorHandler(clientInterface,client));
         managerHandlers.registerEventHandler(MessageType.CONNECTION, new ConnectionHandler(clientInterface,client));
-        clientInterface.getClientView().setMessageToserverHandler(new MessageToserverHandlerTurn(clientInterface,client));
+        clientInterface.getClientView().setMessageToserverHandler(new MessageToserverHandlerTurn(client));
         createMessageHandlerThread(client);
         client.startConnection();
     }

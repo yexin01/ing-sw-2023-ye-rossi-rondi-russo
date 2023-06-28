@@ -3,22 +3,19 @@ package it.polimi.ingsw.network.client.handlers;
 
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.network.client.Client;
-import it.polimi.ingsw.view.ClientInterface;
 
 /**
  *The MessageToServerHandler class handles sending messages to the server.
 
  */
 public class MessageToserverHandlerTurn {
-    private final ClientInterface clientInterface;
+
     private final Client client;
     /**
      * Constructs a MessageToServerHandler object with the specified client interface and client.
-     * @param clientInterface The client interface used for communication with the server.
      * @param client The client used for sending messages to the server.
      */
-    public MessageToserverHandlerTurn(ClientInterface clientInterface, Client client) {
-        this.clientInterface = clientInterface;
+    public MessageToserverHandlerTurn(Client client) {
         this.client = client;
     }
 

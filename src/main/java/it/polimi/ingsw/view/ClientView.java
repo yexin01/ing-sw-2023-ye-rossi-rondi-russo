@@ -1,11 +1,9 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.TurnPhase;
-import it.polimi.ingsw.json.GameRules;
 import it.polimi.ingsw.message.*;
 import it.polimi.ingsw.model.PersonalGoalCard;
 import it.polimi.ingsw.model.modelView.*;
-import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.handlers.MessageToserverHandlerTurn;
 
 import java.util.ArrayList;
