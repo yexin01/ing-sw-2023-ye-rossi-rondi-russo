@@ -7,10 +7,17 @@ import it.polimi.ingsw.model.modelView.ItemTileView;
 
 import java.io.IOException;
 
+/**
+ * The BoardBoxViewAdapter class is a Gson TypeAdapter used for serializing and deserializing
+ * BoardBoxView objects. It converts an ItemTileView object to JSON and vice versa.
+ */
 public class BoardBoxViewAdapter extends TypeAdapter<BoardBoxView> {
     private Gson gson;
 
-
+    /**
+     * Constructs a new BoardBoxViewAdapter instance.
+     * Initializes the Gson instance with the necessary TypeAdapters.
+     */
     public BoardBoxViewAdapter() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(ItemTileView.class, new ItemTileViewAdapter());
@@ -18,7 +25,12 @@ public class BoardBoxViewAdapter extends TypeAdapter<BoardBoxView> {
     }
 
 
-
+    /**
+     * Writes the JSON representation of a BoardBoxView object to the specified JsonWriter.
+     * @param out The JsonWriter to write the JSON representation to.
+     * @param boardBoxView The BoardBoxView object to be serialized.
+     * @throws IOException If an I/O error occurs during writing.
+     */
     @Override
     public void write(JsonWriter out, BoardBoxView boardBoxView) throws IOException {
         JsonObject jsonObject = new JsonObject();
@@ -30,6 +42,12 @@ public class BoardBoxViewAdapter extends TypeAdapter<BoardBoxView> {
         out.jsonValue(jsonObject.toString());
     }
 
+    /**
+     * Reads a BoardBoxView object from the specified JsonReader.
+     * @param in The JsonReader to read the JSON representation from.
+     * @return The deserialized BoardBoxView object.
+     * @throws IOException If an I/O error occurs during reading.
+     */
     @Override
     public BoardBoxView read(JsonReader in) throws IOException {
         JsonElement jsonElement = JsonParser.parseReader(in);
