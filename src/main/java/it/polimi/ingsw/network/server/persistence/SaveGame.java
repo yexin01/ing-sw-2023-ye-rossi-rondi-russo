@@ -53,12 +53,7 @@ public class SaveGame {
                     }
                 }
             }
-            for(GameLobby s:gameLobbies.values()){
-                System.out.println("ID "+s.getIdGameLobby());
-                for(String p:s.getPlayersDisconnectedInGameLobby()){
-                    System.out.println(p);
-                }
-            }
+
             globalLobby.setGameLobbies(gameLobbies);
 
         }
