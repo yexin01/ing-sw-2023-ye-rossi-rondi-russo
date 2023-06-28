@@ -337,15 +337,11 @@ public class PrinterCommonGoalAndPoints {
      */
 
     /**
-     * Whenever a common goal is scored, this method is called to notify everyone
-     * that a certain player has taken the topmost token.
+     * This method prints the token according to the points passed as parameter
      * @param num : token points
-     * @param player : player nickname
      */
-    public void printToken(int num,String player){
+    public void printToken(int num){
         String [] token = {"┌"+"───"+"┐","│ "+ num +" │","└"+"───"+"┘"};
-        String str = player+" has won the following common goal card token!";
-        System.out.println(" ".repeat((terminalWidth-str.length()/2))+str);
         for(String s:token){
             System.out.println(" ".repeat((terminalWidth-s.length()/2))+s);
         }
@@ -430,18 +426,6 @@ public class PrinterCommonGoalAndPoints {
      * @param clientView
      */
     public  void printCommonGoalCards(ClientView clientView){
-        /*
-        int numOfCommonGoalCards = clientView.getCommonGoalView()[0].length;
-        int index;
-        int pointsLeft;
-        for(int i=0;i<numOfCommonGoalCards;i++){
-            index=clientView.getCommonGoalView()[0][i];
-            pointsLeft=clientView.getCommonGoalView()[1][i];
-            Colors.colorizeSize(Colors.WHITE_CODE,margin+getCommonGoalCard(index)[i]+getCommonGoalCardDescription(index)[i],432+60);
-            buildToken(pointsLeft);
-        }
-
-         */
         int pointsLeft;
         int numOfCommonGoalCards = clientView.getCommonGoalView()[0].length;
         for(int i=0; i<numOfCommonGoalCards; i++){
@@ -450,56 +434,21 @@ public class PrinterCommonGoalAndPoints {
             for(int j=0; j<rows; j++){
                 if(j==0 || j==rows-1){
                     Colors.colorizeSize(Colors.WHITE_CODE,margin+getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 432+60);
-                    //Colors.printSize2(getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 432+60);
                     System.out.println("");
                 }
                 else {
                     Colors.colorizeSize(Colors.WHITE_CODE,margin+getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 124);
-                    //Colors.printSize2(getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 124);
                     System.out.println("");
 
                 }
             }
             pointsLeft=clientView.getCommonGoalView()[1][i];
-            System.out.println(margin+"Tokens left: ");
-            //TODO @andreaRondi stampare solo il token con pointsLeft
-            //printTokensLeft(i, clientView);
-            //printTokens(i, clientView);
+            System.out.println("");
+            String str = "Topmost token for this common goal card: ";
+            System.out.println(" ".repeat((terminalWidth-str.length()/2))+str);
+            printToken(pointsLeft);
             System.out.println("");
         }
-
-    }
-
-    /**
-     * Prints the tokens left for the common goal card with index indexCGC.
-     * The switch statement guarantees that tokensToPrint contains the right tokens for
-     * the number of players,according to the rules.
-     * Available tokens are printed in white, while the ones already taken are shaded in black.
-     * @param indexCGC
-     * @param clientView
-     */
-    public void printTokensLeft(int indexCGC, ClientView clientView){
-        //TODO @andreaRondi questa verra cancellata
-        ArrayList<String[]> tokensToPrint = new ArrayList<>();
-        switch (clientView.getPlayerPointsViews().length) {
-            case 2: tokensToPrint.addAll(Arrays.asList(buildToken(4), buildToken(8)));
-                break;
-            case 3: tokensToPrint.addAll(Arrays.asList(buildToken(4), buildToken(6), buildToken(8)));
-                break;
-            case 4: tokensToPrint.addAll(Arrays.asList(buildToken(2),buildToken(4), buildToken(6), buildToken(8)));
-                break;
-        }
-        for(int j=0; j<1; j++){
-            System.out.printf(margin);
-            for (int i=0; i<tokensToPrint.size(); i++){
-                int points = Integer.parseInt(tokensToPrint.get(i)[1].replaceAll("[^0-9]", ""));
-                if (points<= clientView.getCommonGoalView()[1][indexCGC]) Colors.colorize(Colors.WHITE_CODE, tokensToPrint.get(i)[j]);
-                else Colors.colorize(Colors.BLACK_CODE, tokensToPrint.get(i)[j]);
-                //System.out.println("");
-            }
-            System.out.println("");
-        }
-
 
     }
 

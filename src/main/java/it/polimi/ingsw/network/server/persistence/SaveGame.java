@@ -33,13 +33,16 @@ public class SaveGame {
         }
 
         String currentWorkingDir = System.getProperty("user.dir");
+
         String persistenceDirPath = currentWorkingDir + File.separator + "backups";
 
+        /*
         // Crea la directory "persistence" se non esiste
         File persistenceDir = new File(persistenceDirPath);
         if (!persistenceDir.exists()) {
             persistenceDir.mkdir();
         }
+         */
 
         jarPathString = persistenceDirPath;
 
