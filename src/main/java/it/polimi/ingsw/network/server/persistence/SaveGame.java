@@ -21,7 +21,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SaveGame {
-    private static final String jarPathString;
+    //private static final String jarPathString;
+    private static final String persistenceDirPath;
     private static final Gson gson;
 
     static {
@@ -34,7 +35,7 @@ public class SaveGame {
 
         String currentWorkingDir = System.getProperty("user.dir");
 
-        String persistenceDirPath = currentWorkingDir + File.separator + "backups";
+        persistenceDirPath = currentWorkingDir + File.separator + "persistence";
 
         /*
         // Crea la directory "persistence" se non esiste
@@ -44,13 +45,13 @@ public class SaveGame {
         }
          */
 
-        jarPathString = persistenceDirPath;
+        //jarPathString = persistenceDirPath;
 
         //jarPathString = jarPath.getParentFile().getAbsolutePath();
         //jarPathString = ".\\src\\main\\resources";
         //jarPathString = "/Users/andrearondi/Desktop";
 
-        new File(jarPathString + "/persistence").mkdir();
+        new File(persistenceDirPath).mkdir();
 
 
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -58,7 +59,7 @@ public class SaveGame {
     }
 
     public static void loadGameLobbies(GlobalLobby globalLobby, GameRules gamerules) {
-        File persistenceFolder = new File(jarPathString + "/persistence");
+        File persistenceFolder = new File(persistenceDirPath);
         File[] files = persistenceFolder.listFiles();
         ConcurrentHashMap<Integer,GameLobby> gameLobbies=new ConcurrentHashMap<>();
         //List<GameLobby> gameLobbies = new ArrayList<>();
@@ -101,7 +102,7 @@ public class SaveGame {
 
     public static void saveGame(GameLobbyInfo gameLobbyInfo) throws IOException {
         BoardBoxView[][] b=gameLobbyInfo.getModelView().getBoardView();
-        String fileName = jarPathString + "/persistence/Game_With_ID_" + gameLobbyInfo.getIdGameLobby() + ".json";
+        String fileName = persistenceDirPath + File.separator+ "Game_With_ID_" + gameLobbyInfo.getIdGameLobby() + ".json";
         try (FileWriter writer = new FileWriter(fileName)) {
             gson.toJson(gameLobbyInfo, writer);
         } catch (IOException e) {
@@ -137,7 +138,7 @@ public class SaveGame {
  */
 
     public static GameLobbyInfo getGameInfo(int gameId) throws FileNotFoundException, IOException {
-        FileInputStream fileInputStream = new FileInputStream(jarPathString + "/persistence/Game_With_ID_" + gameId + ".json");
+        FileInputStream fileInputStream = new FileInputStream(persistenceDirPath + File.separator + "Game_With_ID_" + gameId + ".json");
         InputStreamReader streamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
         GameLobbyInfo gameLobbyInfo = gson.fromJson(streamReader, GameLobbyInfo.class);
         streamReader.close();
@@ -145,7 +146,7 @@ public class SaveGame {
     }
 
     public static void deleteGameInfo(int gameId) {
-        File fileToDelete = new File(jarPathString + "/persistence/Game_With_ID_" + gameId + ".json");
+        File fileToDelete = new File(persistenceDirPath + File.separator + "Game_With_ID_" + gameId + ".json");
         try {
             if (!fileToDelete.delete()) throw new Exception();
             System.out.println("Deleted file of game " + gameId);
