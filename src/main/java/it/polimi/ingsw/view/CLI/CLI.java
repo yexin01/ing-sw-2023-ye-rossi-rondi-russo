@@ -19,7 +19,7 @@ public class CLI implements ClientInterface {
     private Scanner in = new Scanner(System.in);
     private ClientView clientView;
 
-    private int terminalWidth = 80;
+
 
     private Scanner scanner;
     private PrinterBoard printerBoard;
@@ -611,9 +611,7 @@ public class CLI implements ClientInterface {
      */
     @Override
     public void displayToken(int num, String nickname) {
-        String str = nickname+" has won the following common goal card token!";
-        System.out.println(" ".repeat((terminalWidth-str.length()/2))+str);
-        printerCommonGoalAndPoints.printToken(num);
+        printerCommonGoalAndPoints.printNameAndToken(num,nickname);
         Colors.colorize(Colors.WHITE_CODE, "\nPress ENTER to continue...>> ");
         scanner.nextLine();
     }

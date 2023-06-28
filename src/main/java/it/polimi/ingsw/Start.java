@@ -3,16 +3,11 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.network.client.ClientMain;
 import it.polimi.ingsw.network.server.Server;
-import it.polimi.ingsw.view.CLI.CLI;
 import it.polimi.ingsw.view.CLI.Colors;
-import it.polimi.ingsw.view.GUI.GUIApplication;
-import javafx.application.Platform;
-import javafx.stage.Stage;
+
 
 import java.util.Scanner;
-import java.util.Scanner;
 
-import java.util.Scanner;
 
 /**
  * The Start class is the entry point of the program.

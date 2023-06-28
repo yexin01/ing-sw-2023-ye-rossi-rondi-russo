@@ -87,13 +87,6 @@ public class GameLobby implements Serializable {
         return infoAndEndGameListener;
     }
 
-    /**
-     * Method to set the info and end game listener
-     * @param infoAndEndGameListener the info and end game listener
-     */
-    public void setStartAndEndGameListener(InfoAndEndGameListener infoAndEndGameListener){
-        this.infoAndEndGameListener = infoAndEndGameListener;
-    }
 
     /**
      * @return the game controller of the game

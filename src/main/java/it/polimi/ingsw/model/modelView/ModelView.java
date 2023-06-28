@@ -58,7 +58,10 @@ public class ModelView implements Serializable {
         personalPoints=new int[numPlayers];
         MAX_SELECTABLE_TILES= gameRules.getMaxSelectableTiles();
     }
-
+    /**
+     * Constructs a new instance of the ModelView class.
+     * This constructor creates a ModelView object without any parameters.
+     */
     public ModelView() {
 
     }
@@ -150,12 +153,23 @@ public class ModelView implements Serializable {
     public synchronized void setBookshelfView(ItemTileView[][] bookshelfView,String nickname) {
         this.bookshelfView[getIntegerValue(nickname)] = bookshelfView;
     }
-
+    /**
+     * Retrieves the bookshelf view.
+     *
+     * @return The bookshelf view represented as a three-dimensional array of ItemTileView objects.
+     *         The first dimension represents the player index,
+     *         the second dimension represents the rows of the bookshelf, and
+     *         the third dimension represents the columns of the bookshelf.
+     */
     public ItemTileView[][][] getBookshelfView(){
         return bookshelfView;
     }
-
-    public synchronized void setBookshelfView(ItemTileView[][][] bookshelfView){
+    /**
+     * Sets the bookshelf view.
+     *
+     * @param bookshelfView The new bookshelf view to be set.
+     */
+    public void setBookshelfView(ItemTileView[][][] bookshelfView){
         this.bookshelfView = bookshelfView;
     }
     /**
@@ -172,11 +186,15 @@ public class ModelView implements Serializable {
      * @param index The index of the player.
      */
 
-
     public synchronized void setPlayerPoints(PlayerPointsView playerPoints,int index) {
         this.playerPoints[index] = playerPoints;
     }
-
+    /**
+     * Sets the player points views for all players.
+     *
+     * @param playerPoints An array of PlayerPointsView objects representing the points views for each player.
+     *                     The index of each element in the array corresponds to the player index.
+     */
     public synchronized void setPlayerPoints(PlayerPointsView[] playerPoints){
         this.playerPoints = playerPoints;
     }
@@ -198,7 +216,11 @@ public class ModelView implements Serializable {
     public PersonalGoalCard getPlayerPersonalGoal(String nickname) {
         return playerPersonalGoal[getIntegerValue(nickname)];
     }
-
+    /**
+     * Retrieves the personal goal cards for each player.
+     * @return An array of PersonalGoalCard objects representing the personal goal cards for each player.
+     *         The index of each element in the array corresponds to the player index.
+     */
     public PersonalGoalCard[] getPlayerPersonalGoal(){
         return playerPersonalGoal;
     }
@@ -210,14 +232,7 @@ public class ModelView implements Serializable {
     public synchronized void setPlayerPersonalGoal(PersonalGoalCard playerPersonalGoal, String nickname) {
         this.playerPersonalGoal[getIntegerValue(nickname)] = playerPersonalGoal;
     }
-    /**
-     * Retrieves the player personal goal card of a player.
-     * @param nickname The nickname of the player.
-     * @return The player personal goal card.
-     */
-    public PersonalGoalCard getPlayerPersonal(String nickname) {
-        return playerPersonalGoal[getIntegerValue(nickname)] ;
-    }
+
     /**
      * Checks the winner based on player points.
      * @return An array of PlayerPointsView objects sorted in ascending order of points.
@@ -251,13 +266,10 @@ public class ModelView implements Serializable {
         bookshelfFullPoints=nickname;
     }
 
-
     /**
      * Retrieves the selected items.
      * @return An array of ItemTileView representing the selected items.
      */
-
-
     public ItemTileView[] getSelectedItems() {
         return selectedItems;
     }
@@ -348,14 +360,7 @@ public class ModelView implements Serializable {
     public synchronized void setTurnPlayer(int turnPlayer) {
         this.turnPlayer = turnPlayer;
     }
-    /**
-     * Sets the player points for all players.
-     * @param playerPoints An array of PlayerPointsView representing the player points for all players.
-     */
 
-    public void setPlayersPoints(PlayerPointsView[] playerPoints){
-        this.playerPoints=playerPoints;
-    }
     /**
      * Sets the personal goal cards for all players.
      * @param playerPersonalGoal An array of PersonalGoalCard representing the personal goal cards for all players.
@@ -428,13 +433,6 @@ public class ModelView implements Serializable {
      */
     public int getMaxSelectableTiles() {
         return MAX_SELECTABLE_TILES;
-    }
-    /**
-     * Sets the maximum number of selectable tiles.
-     * @param maxSelectableTiles The maximum number of selectable tiles to set (3).
-     */
-    public synchronized void setMaxSelectableTiles(int maxSelectableTiles) {
-        MAX_SELECTABLE_TILES = maxSelectableTiles;
     }
 
     /**

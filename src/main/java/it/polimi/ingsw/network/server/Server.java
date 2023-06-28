@@ -87,6 +87,7 @@ public class Server implements Runnable{
 
         while (!correctInput) {
             try {
+                System.out.println("Insert the RMI port (default "+portRmi+"): (Press Enter to use default port)");
                 System.out.print("> ");
                 String input = sc.nextLine();
                 if (input.equals("")) {

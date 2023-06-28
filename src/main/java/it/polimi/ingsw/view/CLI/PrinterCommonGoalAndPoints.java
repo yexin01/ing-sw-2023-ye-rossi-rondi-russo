@@ -3,7 +3,6 @@ package it.polimi.ingsw.view.CLI;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.view.ClientView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -16,7 +15,7 @@ import java.util.Arrays;
 public class PrinterCommonGoalAndPoints {
     private String borderColor = Colors.WHITE_CODE;
     private int lineLength = 16;
-    private int terminalWidth = 80;
+    private int terminalWidth = 70;
     private String margin = " ".repeat(50);
 
     String tlc = borderColor+"┌"+"\u001B[0m"; //topLeftCorner
@@ -319,22 +318,34 @@ public class PrinterCommonGoalAndPoints {
             commonGoalCard7Description, commonGoalCard8Description, commonGoalCard9Description, commonGoalCard10Description,
             commonGoalCard11Description, commonGoalCard12Description};
 
-    //private String[][] tokens = {token2, token4, token6, token8};
-
+    /**
+     * Retrieves the common goal card figures for a given index.
+     * @param i The index of the common goal card.
+     * @return The common goal card figures at the specified index.
+     */
     public String[] getCommonGoalCard (int i){
         return cgcFigures[i];
     }
-
+    /**
+     * Retrieves the common goal card descriptions for a given index.
+     * @param i The index of the common goal card.
+     * @return The common goal card descriptions at the specified index.
+     */
     public String[] getCommonGoalCardDescription(int i) {
         return cgcDescriptions[i];
     }
 
-    /*
-    public String[] getToken(int i){
-        return tokens[i];
-    }
-
+    /**
+     * Prints the name and token for a given player.
+     * @param num       The number of tokens won by the player.
+     * @param nickname  The nickname of the player.
      */
+    public void printNameAndToken(int num, String nickname){
+        Colors.printFreeSpaces(5);
+        String str = nickname+" has won the following common goal card token!";
+        System.out.println(" ".repeat((terminalWidth-str.length()/2))+str);
+        printToken(num);
+    }
 
     /**
      * This method prints the token according to the points passed as parameter
@@ -393,28 +404,6 @@ public class PrinterCommonGoalAndPoints {
         for (int i=playersRanking.length-1;i>=0;i--) {
             String symbol = new String();
             String color = new String();
-            /*
-            switch (playersRanking.length-1-i){
-                case 0 :
-                    symbol = "\uD83E\uDD47" + Colors.paint(Colors.GOLD_CODE, "1st PLACE!");
-                    color = Colors.GOLD_CODE;
-                break;
-                case 1 :
-                    symbol = "\uD83E\uDD48" + Colors.paint(Colors.SILVER_CODE, "2nd PLACE!");
-                    color = Colors.SILVER_CODE;
-
-                    break;
-                case 2 :
-                    symbol = "\uD83E\uDD49" + Colors.paint(Colors.BRONZE_CODE, "3rd PLACE!");
-                    color = Colors.BRONZE_CODE;
-                break;
-                default:
-                    symbol = "";
-                    color = Colors.WHITE_CODE;
-                break;
-            }
-
-             */
             System.out.printf(tab+vd+" %s"+" ".repeat(nickLenght-playersRanking[i].getNickname().length()+1)+vd+" %6d "+vd+" %6d "+vd+" %8d "+vd+" %8s "+vd+"  "+symbol+"%n", Colors.paint(color, playersRanking[i].getNickname()), playersRanking[i].getPoints()+personalPoints[i]+(playersRanking[i].getNickname().equals(nickWhoFilledBookshelf)?1:0), Arrays.stream(playersRanking[i].getPointsToken()).sum(), playersRanking[i].getAdjacentPoints(), clientView.getPersonalPoints());
         }
         System.out.println(tab+blc+hd.repeat(nickLenght+2)+ut+hd.repeat(8)+ut+hd.repeat(8)+ut+hd.repeat(10)+ut+hd.repeat(10)+brc);
