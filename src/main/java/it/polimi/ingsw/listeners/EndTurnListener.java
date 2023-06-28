@@ -41,8 +41,8 @@ public class EndTurnListener extends EventListener{
                 getGameLobby().sendMessageToSpecificPlayer(creationMessageEndTurn(nickname.getNickname(),model),nickname.getNickname()) ;
             }
         }
-        getGameLobby().getGameLobbyInfo().setGameLobbyState(getGameLobby());
-        SaveGame.saveGame(getGameLobby().getGameLobbyInfo());
+        //getGameLobby().getGameLobbyInfo().setGameLobbyState(getGameLobby());
+        //SaveGame.saveGame(getGameLobby().getGameLobbyInfo());
     }
 
     /**
