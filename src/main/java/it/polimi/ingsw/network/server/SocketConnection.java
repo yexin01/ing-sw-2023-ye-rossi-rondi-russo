@@ -41,6 +41,9 @@ public class SocketConnection extends Connection implements Runnable {
 
         this.connected = true;
 
+        listener = new Thread(this);
+        listener.start();
+
         try {
             synchronized (inLock) {
                 this.in = new ObjectInputStream(socket.getInputStream());
@@ -52,8 +55,7 @@ public class SocketConnection extends Connection implements Runnable {
             System.out.println("Error while creating input/output streams");
             disconnect();
         }
-        listener = new Thread(this);
-        listener.start();
+
     }
 
     /**
@@ -135,8 +137,7 @@ public class SocketConnection extends Connection implements Runnable {
                 System.out.println("Error while closing socket");
             }
 
-            assert listener != null;
-            listener.interrupt(); // Interrupts the thread
+            if(listener != null) listener.interrupt(); // Interrupts the thread
 
             connected = false;
 
