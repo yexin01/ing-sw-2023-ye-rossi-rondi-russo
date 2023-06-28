@@ -6,11 +6,11 @@ import it.polimi.ingsw.view.ClientView;
 import java.util.Arrays;
 
 /**
- * This class contains a method used to print each common goal card with its description and available tokens,
+ * This class contains a method used to print each common goal card with its description and topmost token,
  * as well as the methods to visualize the points of each player and the final ranking.
  * The characters defined at the beginning of the class are used to draw the cards' borders and tiles disposition.
  * Every card is constructed line by line, together with its description.
- * The attribute terminalWidth is initialized with a default value of 80 and is used to center the output in the terminal.
+ * The attribute terminalWidth is initialized with a default value of 70 and is used to center the output in the terminal.
  */
 public class PrinterCommonGoalAndPoints {
     private String borderColor = Colors.WHITE_CODE;

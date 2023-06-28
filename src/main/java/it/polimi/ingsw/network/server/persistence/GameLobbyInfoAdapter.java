@@ -8,17 +8,12 @@ import com.google.gson.stream.JsonWriter;
 import it.polimi.ingsw.message.Message;
 import it.polimi.ingsw.message.MessageHeader;
 import it.polimi.ingsw.message.MessagePayload;
-import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.PersonalGoalCard;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.modelView.BoardBoxView;
 import it.polimi.ingsw.model.modelView.ItemTileView;
 import it.polimi.ingsw.model.modelView.ModelView;
 import it.polimi.ingsw.model.modelView.PlayerPointsView;
 import it.polimi.ingsw.network.server.Connection;
-import it.polimi.ingsw.network.server.GameLobby;
-import it.polimi.ingsw.network.server.GlobalLobby;
-import it.polimi.ingsw.network.server.persistence.GameLobbyInfo;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;

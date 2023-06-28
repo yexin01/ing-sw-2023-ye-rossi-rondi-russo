@@ -147,22 +147,42 @@ public class GameLobbyInfo implements Serializable {
         return idGameLobby;
     }
 
+    /**
+     * WantedPlayers getter
+     * @return the wantedPlayers
+     */
     public int getWantedPlayers() {
         return wantedPlayers;
     }
 
+    /**
+     * MessageEndGame getter
+     * @return the messageEndGame
+     */
     public Message getMessageEndGame() {
         return messageEndGame;
     }
 
+    /**
+     * PlayersDisconnected getter
+     * @return the playersDisconnected
+     */
     public CopyOnWriteArrayList<String> getPlayersDisconnected() {
         return playersDisconnected;
     }
 
+    /**
+     * MessageEndGame setter
+     * @param messageEndGame the messageEndGame to set
+     */
     public void setMessageEndGame(Message messageEndGame) {
         this.messageEndGame = messageEndGame;
     }
 
+    /**
+     * PlayersDisconnected setter
+     * @param playersDisconnected the playersDisconnected to set
+     */
     public void setPlayersDisconnected(CopyOnWriteArrayList<String> playersDisconnected) {
         this.playersDisconnected = playersDisconnected;
     }
