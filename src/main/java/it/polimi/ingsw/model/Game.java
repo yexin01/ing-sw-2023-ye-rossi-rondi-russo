@@ -48,7 +48,7 @@ public class Game {
     }
 
     /**
-     * @return:nickname of the last connected player
+     * @return nickname of the last connected player
      */
     public String getLastPlayer() {
         Boolean[] activePlayers= modelview.getActivePlayers();

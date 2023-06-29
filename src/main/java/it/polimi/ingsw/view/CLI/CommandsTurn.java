@@ -20,7 +20,6 @@ public enum CommandsTurn implements Commands {
     PRINT5("Points"),
     PRINT6("CommonGoals"),
     SELECT_FROM_BOARD4("CONFIRM all choices"),
-
     PRINT7("Game-Rules"),
     PRINT8("Something wrong"),
     PRINT9("QUIT app");

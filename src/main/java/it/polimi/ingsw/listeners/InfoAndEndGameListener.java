@@ -14,7 +14,7 @@ import java.io.IOException;
  * It listens to both the game controller and the game lobby.
  * For the "ALL_INFO" event:
  * In the game controller, it is triggered at the beginning of the game or when the number of connected players is equal to 2
- * after various disconnections have led to a number of participants <= 1.
+ * after various disconnections have led to a number of participants less than or equal to 1.
  * In the game lobby, it is triggered when a player has reconnected and the number of connected participants is greater than 2.
  * It can also be triggered without player disconnection, after the game lobby receives a "something wrong" message.
  * For the "END_GAME" event:
