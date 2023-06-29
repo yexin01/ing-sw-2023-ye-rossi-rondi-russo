@@ -35,7 +35,8 @@ public class RMIServer {
             Registry registry = LocateRegistry.createRegistry(port);
             registry.bind("MyShelfieServer", rmiHandler);
         } catch (IOException | AlreadyBoundException e ) {
-            System.out.println("already bound!!");
+            System.out.println("Server rmi already created with port " + port);
+            //System.exit(0);
         }
     }
 
