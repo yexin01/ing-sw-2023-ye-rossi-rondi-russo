@@ -109,6 +109,7 @@ public class ClientRMI extends Client implements RMIClientConnection {
     @Override
     public void disconnectMe() throws RemoteException {
         server = null;
+        messageQueue.clear();
     }
 
     /**
