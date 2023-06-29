@@ -100,7 +100,7 @@ public class LobbyPanel extends BasePanel{
             ip = textField4.getText();
             int chosenPort2 = 0;
             try {
-                int chosenPort = (port.isEmpty() ? 1100 : Integer.parseInt(port));
+                int chosenPort = (port.isEmpty() ? 1099 : Integer.parseInt(port));
                 if (chosenPort >= 1024 && chosenPort <= 65535) {
                     chosenPort2 = chosenPort;
                 } else {
