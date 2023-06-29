@@ -69,15 +69,15 @@ public class ClientHandler implements Runnable {
                 }
                 if (isRMI) {
                     try {
-                        handleMessageFromServer(message);
+                        if(message!=null) handleMessageFromServer(message);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 } else {
                     synchronized (this) {
-                        addMessageToQueue(message);
+                        if(message!=null) addMessageToQueue(message);
                         try {
-                            handleMessageFromServer(message);
+                            if(message!=null) handleMessageFromServer(message);
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
