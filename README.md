@@ -62,6 +62,8 @@ Then you need to insert your nickname (2-20 characters) and the desidered connec
 Inside the global lobby, you will be able to create a new lobby or join a specific/random lobby.
 
 *Note*: It is hardly recommended to use a black background power shell to fully enjoy the CLI functionalities.
+![image](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/55c8cb03-33a9-4ff4-984c-4e44a2efa512)
+
 
 - GUI
 
@@ -75,4 +77,5 @@ Now you will be able to set up the desidered connection: insert port and ip on t
 
 Inside the global lobby, you will be able to create a new lobby or join a specific/random lobby.
 
+![image](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/a4eeb347-d5ee-4b09-a5a3-5d5139d19d4d)
 
