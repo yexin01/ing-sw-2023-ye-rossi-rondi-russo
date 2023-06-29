@@ -1,0 +1,14 @@
+it.polimi.ingsw
+it.polimi.ingsw.controller
+it.polimi.ingsw.json
+it.polimi.ingsw.listeners
+it.polimi.ingsw.message
+it.polimi.ingsw.model
+it.polimi.ingsw.model.modelView
+it.polimi.ingsw.network.client
+it.polimi.ingsw.network.client.handlers
+it.polimi.ingsw.network.server
+it.polimi.ingsw.network.server.persistence
+it.polimi.ingsw.view
+it.polimi.ingsw.view.CLI
+it.polimi.ingsw.view.GUI
