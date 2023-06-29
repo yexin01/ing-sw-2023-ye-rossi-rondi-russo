@@ -9,9 +9,17 @@ import it.polimi.ingsw.model.modelView.*;
 
 import java.io.IOException;
 
+/**
+ * TypeAdapter for serializing and deserializing ModelView objects using Gson library.
+ * This adapter is responsible for converting ModelView objects to JSON and vice versa.
+ */
 public class ModelViewAdapter extends TypeAdapter<ModelView> {
     private Gson gson;
 
+    /**
+     * Constructs a new ModelViewAdapter.
+     * Initializes the Gson object and registers custom TypeAdapters for specific types.
+     */
     public ModelViewAdapter(){
         GsonBuilder gsonBuilder = new GsonBuilder();
 
@@ -26,12 +34,18 @@ public class ModelViewAdapter extends TypeAdapter<ModelView> {
         gson = gsonBuilder.create();
     }
 
-
+    /**
+     * Serializes a ModelView object to JSON.
+     *
+     * @param out The JsonWriter object to write JSON data to.
+     * @param modelView The ModelView object to be serialized.
+     * @throws IOException if an I/O error occurs during serialization.
+     */
     @Override
     public void write(JsonWriter out, ModelView modelView) throws IOException {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("turnPlayer", modelView.getTurnPlayer());
-        jsonObject.add("activePlayers", gson.toJsonTree(modelView.getActivePlayers()));
+        //jsonObject.add("activePlayers", gson.toJsonTree(modelView.getActivePlayers()));
         jsonObject.addProperty("MAX_SELECTABLE_TILES", modelView.getMaxSelectableTiles());
         jsonObject.add("commonGoalView", gson.toJsonTree(modelView.getCommonGoalView()));
         jsonObject.add("token", gson.toJsonTree(modelView.getToken()));
@@ -48,6 +62,12 @@ public class ModelViewAdapter extends TypeAdapter<ModelView> {
     }
 
 
+    /**
+     * Deserializes a ModelView object from JSON.
+     * @param in The JsonReader object to read JSON data from.
+     * @return The deserialized ModelView object.
+     * @throws IOException if an I/O error occurs during deserialization.
+     */
     @Override
     public ModelView read(JsonReader in) throws IOException {
         System.out.println("ci entra restore model ");

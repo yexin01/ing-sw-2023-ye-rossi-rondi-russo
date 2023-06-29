@@ -12,8 +12,18 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A TypeAdapter for serializing and deserializing MessagePayload objects using Gson.
+ * This adapter handles the conversion between JSON representation and MessagePayload instances.
+ */
 public class MessagePayloadAdapter extends TypeAdapter<MessagePayload> {
 
+    /**
+     * Writes the JSON representation of a MessagePayload object to the specified JsonWriter.
+     * @param out The JsonWriter to write the JSON representation to.
+     * @param messagePayload The MessagePayload object to be serialized.
+     * @throws IOException If an I/O error occurs during writing.
+     */
     @Override
     public void write(JsonWriter out, MessagePayload messagePayload) throws IOException {
         out.beginObject();
@@ -23,6 +33,12 @@ public class MessagePayloadAdapter extends TypeAdapter<MessagePayload> {
         out.endObject();
     }
 
+    /**
+     * Reads a MessagePayload object from the specified JsonReader.
+     * @param in  The JsonReader to read the JSON representation from.
+     * @return The deserialized MessagePayload object.
+     * @throws IOException  If an I/O error occurs during reading.
+     */
     @Override
     public MessagePayload read(JsonReader in) throws IOException {
         if (in.peek() == JsonToken.NULL) {
@@ -53,6 +69,12 @@ public class MessagePayloadAdapter extends TypeAdapter<MessagePayload> {
         return messagePayload;
     }
 
+    /**
+     * Reads the data part of the MessagePayload object from the specified JsonReader.
+     * @param in  The JsonReader to read the data part from.
+     * @return A map of Data and Object pairs representing the data part of the MessagePayload.
+     * @throws IOException  If an I/O error occurs during reading.
+     */
     private Map<Data, Object> readData(JsonReader in) throws IOException {
         Map<Data, Object> data = new HashMap<>();
         in.beginObject();
@@ -66,6 +88,12 @@ public class MessagePayloadAdapter extends TypeAdapter<MessagePayload> {
         return data;
     }
 
+    /**
+     * Reads a single data value from the specified JsonReader.
+     * @param in  The JsonReader to read the value from.
+     * @return The value read from the JsonReader.
+     * @throws IOException  If an I/O error occurs during reading.
+     */
     private Object readValue(JsonReader in) throws IOException {
         JsonToken token = in.peek();
         if (token == JsonToken.NULL) {
@@ -82,6 +110,12 @@ public class MessagePayloadAdapter extends TypeAdapter<MessagePayload> {
         }
     }
 
+    /**
+     * Writes the data part of the MessagePayload object to the specified JsonWriter.
+     * @param out The JsonWriter to write the data part to.
+     * @param data The map of Data and Object pairs representing the data part of the MessagePayload.
+     * @throws IOException  If an I/O error occurs during writing.
+     */
     private void writeData(JsonWriter out, Map<Data, Object> data) throws IOException {
         out.beginObject();
         for (Map.Entry<Data, Object> entry : data.entrySet()) {
@@ -91,6 +125,12 @@ public class MessagePayloadAdapter extends TypeAdapter<MessagePayload> {
         out.endObject();
     }
 
+    /**
+     * Writes a single data value to the specified JsonWriter.
+     * @param out The JsonWriter to write the value to.
+     * @param value The value to be written.
+     * @throws IOException  If an I/O error occurs during writing.
+     */
     private void writeValue(JsonWriter out, Object value) throws IOException {
         if (value == null) {
             out.nullValue();
@@ -105,6 +145,11 @@ public class MessagePayloadAdapter extends TypeAdapter<MessagePayload> {
         }
     }
 
+    /**
+     * Retrieves the KeyAbstractPayload object associated with the given name.
+     * @param name The name of the KeyAbstractPayload.
+     * @return The KeyAbstractPayload object associated with the given name, or null if not found.
+     */
     private KeyAbstractPayload getKeyFromName(String name) {
         for (Data data : Data.values()) {
             if (data.toString().equals(name)) {
@@ -114,6 +159,11 @@ public class MessagePayloadAdapter extends TypeAdapter<MessagePayload> {
         return null;
     }
 
+    /**
+     * Retrieves the Data object associated with the given name.
+     * @param name The name of the Data.
+     * @return The Data object associated with the given name, or null if not found.
+     */
     private Data getDataFromName(String name) {
         for (Data data : Data.values()) {
             if (data.toString().equals(name)) {

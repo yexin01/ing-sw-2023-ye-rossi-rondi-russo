@@ -9,8 +9,18 @@ import it.polimi.ingsw.message.MessageType;
 
 import java.io.IOException;
 
+/**
+ * TypeAdapter used for serializing and deserializing MessageHeader objects using Gson.
+ * This adapter handles the conversion between JSON representation and MessageHeader instances.
+ */
 public class MessageHeaderAdapter extends TypeAdapter<MessageHeader> {
 
+    /**
+     * Writes the JSON representation of a MessageHeader object to the specified JsonWriter.
+     * @param out The JsonWriter to write the JSON representation to.
+     * @param messageHeader  The MessageHeader object to be serialized.
+     * @throws IOException  If an I/O error occurs during writing.
+     */
     @Override
     public void write(JsonWriter out, MessageHeader messageHeader) throws IOException {
         out.beginObject();
@@ -19,6 +29,12 @@ public class MessageHeaderAdapter extends TypeAdapter<MessageHeader> {
         out.endObject();
     }
 
+    /**
+     * Reads a MessageHeader object from the specified JsonReader.
+     * @param in The JsonReader to read the JSON representation from.
+     * @return The deserialized MessageHeader object.
+     * @throws IOException  If an I/O error occurs during reading.
+     */
     @Override
     public MessageHeader read(JsonReader in) throws IOException {
         if (in.peek() == JsonToken.NULL) {

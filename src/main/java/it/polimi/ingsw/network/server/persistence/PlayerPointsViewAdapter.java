@@ -7,8 +7,18 @@ import it.polimi.ingsw.model.modelView.PlayerPointsView;
 
 import java.io.IOException;
 
+/**
+ * TypeAdapter for serializing and deserializing PlayerPointsView objects using Gson library.
+ * This adapter is responsible for converting PlayerPointsView objects to JSON and vice versa.
+ */
 public class PlayerPointsViewAdapter extends TypeAdapter<PlayerPointsView> {
 
+    /**
+     * Serializes a PlayerPointsView object to JSON.
+     * @param out The JsonWriter object to write JSON data to.
+     * @param playerPointsView The PlayerPointsView object to be serialized.
+     * @throws IOException if an I/O error occurs during serialization.
+     */
     @Override
     public void write(JsonWriter out, PlayerPointsView playerPointsView) throws IOException {
         out.beginObject();
@@ -23,6 +33,12 @@ public class PlayerPointsViewAdapter extends TypeAdapter<PlayerPointsView> {
         out.endObject();
     }
 
+    /**
+     * Deserializes a PlayerPointsView object from JSON.
+     * @param in The JsonReader object to read JSON data from.
+     * @return The deserialized PlayerPointsView object.
+     * @throws IOException if an I/O error occurs during deserialization.
+     */
     @Override
     public PlayerPointsView read(JsonReader in) throws IOException {
         int[] commonGoalPoints = null;

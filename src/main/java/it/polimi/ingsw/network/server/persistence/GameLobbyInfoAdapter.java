@@ -19,9 +19,18 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+
+/**
+ * TypeAdapter for serializing and deserializing GameLobbyInfo objects using Gson.
+ * This adapter handles the conversion between JSON representation and GameLobbyInfo instances.
+ */
 public class GameLobbyInfoAdapter extends TypeAdapter<GameLobbyInfo> {
     private Gson gson;
 
+    /**
+     * Constructs a new GameLobbyInfoAdapter instance.
+     * Initializes the Gson instance with the necessary TypeAdapters.
+     */
     public GameLobbyInfoAdapter() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(ItemTileView.class, new ItemTileViewAdapter())
@@ -37,6 +46,12 @@ public class GameLobbyInfoAdapter extends TypeAdapter<GameLobbyInfo> {
         gson = gsonBuilder.create();
     }
 
+    /**
+     * Writes the JSON representation of a GameLobbyInfo object to the specified JsonWriter.
+     * @param out The JsonWriter to write the JSON representation to.
+     * @param gameLobbyInfo The GameLobbyInfo object to be serialized.
+     * @throws IOException If an I/O error occurs during writing.
+     */
     @Override
     public void write(JsonWriter out, GameLobbyInfo gameLobbyInfo) throws IOException {
         out.beginObject();
@@ -49,6 +64,12 @@ public class GameLobbyInfoAdapter extends TypeAdapter<GameLobbyInfo> {
         out.endObject();
     }
 
+    /**
+     * Reads a GameLobbyInfo object from the specified JsonReader.
+     * @param in The JsonReader to read the JSON representation from.
+     * @return The deserialized GameLobbyInfo object.
+     * @throws IOException If an I/O error occurs during reading.
+     */
     @Override
     public GameLobbyInfo read(JsonReader in) throws IOException {
         if (in.peek() == JsonToken.NULL) {
@@ -97,6 +118,12 @@ public class GameLobbyInfoAdapter extends TypeAdapter<GameLobbyInfo> {
         return gameLobbyInfo;
     }
 
+    /**
+     * Writes the playersDisconnected list to the specified JsonWriter.
+     * @param out The JsonWriter to write the playersDisconnected list to.
+     * @param playersDisconnected The playersDisconnected list to be serialized.
+     * @throws IOException If an I/O error occurs during writing.
+     */
     private void writePlayersDisconnected(JsonWriter out, CopyOnWriteArrayList<String> playersDisconnected) throws IOException {
         out.beginArray();
         for (String player : playersDisconnected) {
@@ -105,6 +132,12 @@ public class GameLobbyInfoAdapter extends TypeAdapter<GameLobbyInfo> {
         out.endArray();
     }
 
+    /**
+     * Reads the playersDisconnected list from the specified JsonReader.
+     * @param in The JsonReader to read the playersDisconnected list from.
+     * @return The deserialized playersDisconnected list.
+     * @throws IOException If an I/O error occurs during reading.
+     */
     private CopyOnWriteArrayList<String> readPlayersDisconnected(JsonReader in) throws IOException {
         CopyOnWriteArrayList<String> playersDisconnected = new CopyOnWriteArrayList<>();
         in.beginArray();

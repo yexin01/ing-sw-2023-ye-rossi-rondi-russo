@@ -10,8 +10,18 @@ import it.polimi.ingsw.model.Type;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * TypeAdapter for serializing and deserializing PersonalGoalCard objects using Gson library.
+ * This adapter is responsible for converting PersonalGoalCard objects to JSON and vice versa.
+ */
 public class PersonalGoalCardAdapter extends TypeAdapter<PersonalGoalCard> {
 
+    /**
+     * Serializes a PersonalGoalCard object to JSON.
+     * @param out The JsonWriter object to write JSON data to.
+     * @param personalGoalCard The PersonalGoalCard object to be serialized.
+     * @throws IOException if an I/O error occurs during serialization.
+     */
     @Override
     public void write(JsonWriter out, PersonalGoalCard personalGoalCard) throws IOException {
         out.beginObject();
@@ -29,6 +39,12 @@ public class PersonalGoalCardAdapter extends TypeAdapter<PersonalGoalCard> {
         out.endObject();
     }
 
+    /**
+     * Deserializes a PersonalGoalCard object from JSON.
+     * @param in The JsonReader object to read JSON data from.
+     * @return The deserialized PersonalGoalCard object.
+     * @throws IOException if an I/O error occurs during deserialization.
+     */
     @Override
     public PersonalGoalCard read(JsonReader in) throws IOException {
         int idPersonal = 0;

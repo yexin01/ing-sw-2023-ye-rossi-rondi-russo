@@ -17,7 +17,6 @@ public class ItemTileViewAdapter extends TypeAdapter<ItemTileView> {
 
     /**
      * Writes the JSON representation of an ItemTileView object.
-     *
      * @param out The JsonWriter object to write the JSON to.
      * @param itemTileView The ItemTileView object to be converted to JSON.
      * @throws IOException If an I/O error occurs during writing.
@@ -37,7 +36,6 @@ public class ItemTileViewAdapter extends TypeAdapter<ItemTileView> {
 
     /**
      * Reads a JSON representation and converts it into an ItemTileView object.
-     *
      * @param in The JsonReader object to read the JSON from.
      * @return The ItemTileView object created from the JSON representation.
      * @throws IOException If an I/O error occurs during reading.
