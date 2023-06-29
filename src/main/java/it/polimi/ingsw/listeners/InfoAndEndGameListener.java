@@ -53,10 +53,11 @@ public class InfoAndEndGameListener extends EventListener{
             case ALL_INFO ->{
                 if(playerNickname!=null){
                     getGameLobby().sendMessageToSpecificPlayer(creationMessageInfo(playerNickname,modelView),playerNickname) ;
-
              }else{
                     for(PlayerPointsView nickname: modelView.getPlayerPoints()){
-                        getGameLobby().sendMessageToSpecificPlayer(creationMessageInfo(nickname.getNickname(),modelView),nickname.getNickname()) ;
+                        if(modelView.getActivePlayers()[modelView.getIntegerValue(nickname.getNickname())]==true){
+                            getGameLobby().sendMessageToSpecificPlayer(creationMessageInfo(nickname.getNickname(),modelView),nickname.getNickname()) ;
+                        }
                     }
                 }
             }
