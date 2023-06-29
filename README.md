@@ -54,7 +54,7 @@ java -jar ing-sw-2023-ye-rossi-rondi-russo.jar it.polimi.ingsw.Start
 
 <sub>Example for Windows terminal</sub>
 ```
-cd .\Desktop\ing-sw-2023-ye-rossi-rondi-russo\out\artifacts\ing_sw_2023_ye_rossi_rondi_russo_jar\
+C:\Users\Player\Download
 java -jar .\ing-sw-2023-ye-rossi-rondi-russo.jar
 ```
 
