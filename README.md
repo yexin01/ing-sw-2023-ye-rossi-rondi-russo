@@ -10,7 +10,7 @@ Group gc41
 
 - Samuele Russo
 
-- Giulia Ye
+- Xin Ye
 
 # REQUIREMENTS
 
