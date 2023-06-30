@@ -34,7 +34,6 @@ public class SocketServer extends Thread {
             start();
         } catch (IOException e) {
             System.out.println("Server socket already created with port " + port);
-            System.exit(0);
         }
     }
 
