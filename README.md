@@ -39,7 +39,7 @@ Following the table provided within the project specifications, the satisfied re
 - Resilience to disconnections ✅
 
 ## HOW TO START THE GAME
-Inside the "deliverables" directory there are two folders - 'jar for Windows and MacOs Intel' and 'jar for Windows and MacOs M1' - each containing a single jar file `ing-sw-2023-ye-rossi-rondi-russo.jar`. 
+Inside the "deliverables" directory there are two folders - `jar for Windows and MacOs Intel` and `jar for Windows and MacOs M1` - each containing a single jar file `ing-sw-2023-ye-rossi-rondi-russo.jar`. 
 
 It is highly recommended to use a jar specifically built for your operative system.
 
