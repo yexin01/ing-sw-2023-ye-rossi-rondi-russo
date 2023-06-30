@@ -80,7 +80,14 @@ Inside the global lobby, you will be able to create a new lobby or join a specif
 
 <sub>Examples of CLI</sub>
 
-![image](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/55c8cb03-33a9-4ff4-984c-4e44a2efa512)
+![Board4](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/39193de6-3098-47d3-a7d0-b4aa411ae65b)
+
+![PersonalGoal](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/82baee79-5b92-4a91-934b-43878e3f4848)
+
+![Bookshelf](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/62fcfef3-951b-4261-8dfc-c6f7bf7da2d4)
+
+
+
 <sub>Example turn phases in game.</sub>
 <sub>Notice the separation in actions for each phase of the game.</sub>
 
@@ -105,4 +112,10 @@ Inside the global lobby, you will be able to create a new lobby or join a specif
 <sub>Example of GUI</sub>
 
 ![image](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/a4eeb347-d5ee-4b09-a5a3-5d5139d19d4d)
+
+![selectTiles](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/47e5b734-1bf3-4937-8e9e-853224792c97)
+
+![Column](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/cc7b4a27-e484-4f36-b72c-3c1f0a0b08c7)
+
+
 
