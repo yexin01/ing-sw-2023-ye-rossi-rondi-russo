@@ -80,7 +80,7 @@ Inside the global lobby, you will be able to create a new lobby or join a specif
 
 <sub>Example of CLI</sub>
 
-![board](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/5d8f7ca4-428d-428c-8303-9f2911a9f8ed)
+![Board4](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/f65422d6-b9e0-4539-8d28-4f062771491e)
 <sub>Example turn phases in game.</sub>
 <sub>Notice the separation in actions for each phase of the game.</sub>
 
