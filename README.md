@@ -2,7 +2,8 @@
 
 ### Final project 2023 for *Ingegneria del Software* by professor Cugola, at Polimi
 
-![Display_1](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/e7d79104-8706-4850-84dc-f98e4fe96e7a)
+<img width="1417" alt="logo" src="https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/1a3b5fab-b65b-46a1-99ed-c4564cc87a31">
+
 
 
 ## Group GC41 components
@@ -102,7 +103,7 @@ Inside the global lobby, you will be able to create a new lobby or join a specif
 ![image](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/a4eeb347-d5ee-4b09-a5a3-5d5139d19d4d)
 
 ## MORE ABOUT THE GAME
-CLI
+### CLI version
 
 <sub>RULES</sub>
 ![rules](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/3c5e799b-cf9b-496f-8698-a6d33b084be7)
@@ -119,7 +120,7 @@ CLI
 <sub>My bookshelf</sub>
 ![Bookshelf](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/cd918e26-b7e0-49f3-b37f-2449e1c7f550)
 
-GUI
+### GUI version
 
 <sub>Order selection</sub>
 ![selectTiles](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/49652ac6-5a82-43ce-92d8-26cf12c11418)
