@@ -102,6 +102,7 @@ Inside the global lobby, you will be able to create a new lobby or join a specif
 ![image](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/a4eeb347-d5ee-4b09-a5a3-5d5139d19d4d)
 
 ## MORE ABOUT THE GAME
+CLI
 
 <sub>RULES</sub>
 ![rules](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/3c5e799b-cf9b-496f-8698-a6d33b084be7)
@@ -110,13 +111,27 @@ Inside the global lobby, you will be able to create a new lobby or join a specif
 ![common2](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/2da8672a-6288-4c8a-bb7b-cca057b00e40)
 
 <sub>Personal Goal Card</sub>
-![personal](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/8990f6f4-db3d-4e8f-90d9-4babc6208a12)
+![PersonalGoal](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/dc076b50-ef7c-45bb-91d6-02ec6f00226f)
 
 <sub>Board game for 2 players and waiting phase</sub>
 ![waiting](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/a25f95c5-8ae9-48a9-933e-56799ee48abe)
 
 <sub>My bookshelf</sub>
-![bookshelf](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/f066ed2f-8b65-47f1-9eac-b06450b8f458)
+![Bookshelf](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/cd918e26-b7e0-49f3-b37f-2449e1c7f550)
+
+GUI
+
+<sub>Order selection</sub>
+![selectTiles](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/49652ac6-5a82-43ce-92d8-26cf12c11418)
+
+<sub>Column selection</sub>
+![Column](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/86eb1fcb-1b8a-4db1-bac5-0de912275130)
+
+<sub>End Turn</sub>
+![fineTurno](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/58751149-932a-4ac5-8a5b-7033a2cc21b3)
+
+
+
 
 
 *Thanks for reading and enjoy the game! - GC41 from Polimi :)*
