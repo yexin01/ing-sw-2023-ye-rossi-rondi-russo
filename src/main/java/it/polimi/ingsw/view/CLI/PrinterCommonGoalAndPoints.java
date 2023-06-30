@@ -420,13 +420,13 @@ public class PrinterCommonGoalAndPoints {
         for(int i=0; i<numOfCommonGoalCards; i++){
             int index =  clientView.getCommonGoalView()[0][i];
             int rows = getCommonGoalCard(index).length;
-            for(int j=0; j<rows; j++){
+            for(int j=1; j<rows-1; j++){
                 if(j==0 || j==rows-1){
-                    Colors.colorizeSize(Colors.WHITE_CODE,margin+getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 432+60);
+                    Colors.colorizeSize(Colors.WHITE_CODE,margin+(getCommonGoalCard(index)[j])+getCommonGoalCardDescription(index)[j], 432+60);
                     System.out.println("");
                 }
                 else {
-                    Colors.colorizeSize(Colors.WHITE_CODE,margin+getCommonGoalCard(index)[j]+getCommonGoalCardDescription(index)[j], 124);
+                    Colors.colorizeSize(Colors.WHITE_CODE,margin+(getCommonGoalCard(index)[j])+getCommonGoalCardDescription(index)[j], 124);
                     System.out.println("");
 
                 }
