@@ -39,11 +39,11 @@ Following the table provided within the project specifications, the satisfied re
 - Resilience to disconnections ✅
 
 ## HOW TO START THE GAME
-Inside the "deliverables" directory there is a single jar file `ing-sw-2023-ye-rossi-rondi-russo.jar`. 
+Inside the "deliverables" directory there are two folders - 'jar for Windows and MacOs Intel' and 'jar for Windows and MacOs M1' - each containing a single jar file `ing-sw-2023-ye-rossi-rondi-russo.jar`. 
 
-It is hardly recommended to use a jar built on your own operative system.
+It is highly recommended to use a jar specifically built for your operative system.
 
-In order to run the jar and start the game, you firstly need to type `java -jar ing-sw-2023-ye-rossi-rondi-russo.jar` in the command line.
+In order to run the jar and start the game, you first need to type `java -jar ing-sw-2023-ye-rossi-rondi-russo.jar` in the command line.
 
 *Note*: You must be inside the directory where the jar file is placed `cd *path_to_directory`.
 
@@ -69,15 +69,15 @@ The client can be instantiated by typing `1` after running the jar. Then you can
 
 - CLI
 
-The CLI can be runned by inserting `0` after running the jar. 
+The CLI can be run by inserting `0` after running the jar. 
 
 For the best game experience, it is suggested to run the CLI on a default Mac power shell or on Windows Terminal for Windows users.
 
-Then you need to insert your nickname (2-20 characters) and the desidered connection (port and ip for socket/RMI).
+Then you need to insert your nickname (2-20 characters) and the desired connection (port and ip for socket/RMI).
 
 Inside the global lobby, you will be able to create a new lobby or join a specific/random lobby.
 
-*Note*: It is hardly recommended to use a black background power shell to fully enjoy the CLI functionalities.
+*Note*: It is highly recommended to use a black background power shell to fully enjoy the CLI functionalities.
 
 <sub>Example of CLI</sub>
 
@@ -88,13 +88,13 @@ Inside the global lobby, you will be able to create a new lobby or join a specif
 
 - GUI
 
-The GUI can be runned by inserting `1` after running the jar.
+The GUI can be run by inserting `1` after running the jar.
 
 For the best game experience, it is suggested to run the GUI in full-size window on a 1920x1080 resolution.
 
 Then you need to insert your nickname (2-20 characters) and set it.
 
-Now you will be able to set up the desidered connection: insert port and ip on the corresponding row.
+Now you will be able to set up the desired connection: insert port and ip on the corresponding row.
 
 Inside the global lobby, you will be able to create a new lobby or join a specific/random lobby.
 
