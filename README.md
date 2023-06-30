@@ -1,6 +1,6 @@
 # MY SHELFIE APPLICATION
 
-### Final project for Ingegneria del Software by professor Cugola, at Polimi
+### Final project 2023 for *Ingegneria del Software* by professor Cugola, at Polimi
 
 ![Display_1](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/e7d79104-8706-4850-84dc-f98e4fe96e7a)
 
@@ -78,23 +78,11 @@ Inside the global lobby, you will be able to create a new lobby or join a specif
 
 *Note*: It is hardly recommended to use a black background power shell to fully enjoy the CLI functionalities.
 
-<sub>Examples of CLI</sub>
+<sub>Example of CLI</sub>
 
-![Board4](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/39193de6-3098-47d3-a7d0-b4aa411ae65b)
-
-![PersonalGoal](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/82baee79-5b92-4a91-934b-43878e3f4848)
-
-![Bookshelf](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/62fcfef3-951b-4261-8dfc-c6f7bf7da2d4)
-
-
-
+![board](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/5d8f7ca4-428d-428c-8303-9f2911a9f8ed)
 <sub>Example turn phases in game.</sub>
 <sub>Notice the separation in actions for each phase of the game.</sub>
-
-
-![common](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/95d2074f-8905-45f9-aadb-19a0761e00c0)
-
-<sub>Example of Common Goal Cards and description on macOS.</sub>
 
 
 - GUI
@@ -113,9 +101,22 @@ Inside the global lobby, you will be able to create a new lobby or join a specif
 
 ![image](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/a4eeb347-d5ee-4b09-a5a3-5d5139d19d4d)
 
-![selectTiles](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/47e5b734-1bf3-4937-8e9e-853224792c97)
+## MORE ABOUT THE GAME
 
-![Column](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126389691/cc7b4a27-e484-4f36-b72c-3c1f0a0b08c7)
+<sub>RULES</sub>
+![rules](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/3c5e799b-cf9b-496f-8698-a6d33b084be7)
+
+<sub>Common Goal Card</sub>
+![common2](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/2da8672a-6288-4c8a-bb7b-cca057b00e40)
+
+<sub>Personal Goal Card</sub>
+![personal](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/8990f6f4-db3d-4e8f-90d9-4babc6208a12)
+
+<sub>Board game for 2 players and waiting phase</sub>
+![waiting](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/a25f95c5-8ae9-48a9-933e-56799ee48abe)
+
+<sub>My bookshelf</sub>
+![bookshelf](https://github.com/yexin01/ing-sw-2023-ye-rossi-rondi-russo/assets/126525735/f066ed2f-8b65-47f1-9eac-b06450b8f458)
 
 
-
+*Thanks for reading and enjoy the game! - GC41 from Polimi :)*
